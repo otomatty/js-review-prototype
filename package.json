@@ -1,0 +1,21 @@
+{
+  "name": "js-review-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JS自動コードレビューロジックのデモプロトタイプ (クライアント側Lint/AST + サーバ側isolated-vmテスト実行)",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:client": "bun --filter @jsreview/client dev",
+    "dev:server": "bun --filter @jsreview/server dev",
+    "build:shared": "bun --filter @jsreview/shared build",
+    "typecheck": "bun --filter '*' typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
