@@ -10,6 +10,7 @@
     "types": ["vite/client"],
     "noEmit": true,
     "paths": {
+      "@/*": ["./src/*"],
       "@jsreview/shared": ["../shared/src/index.ts"],
       "@jsreview/shared/*": ["../shared/src/*"]
     }

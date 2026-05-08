@@ -1,21 +1,93 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ダークモードは当面ライト固定だが、`dark:` バリアントの口だけ用意。
+   `<html class="dark">` (要素自体に付くケース) と、その配下要素の両方を
+   拾えるよう `:where(.dark, .dark *)` を使う。 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── デザイントークン ───────────────────────────────────
+   shadcn/ui 互換の変数名 (--background / --primary / ...) と、
+   既存クラス互換の旧変数 (--bg / --accent / ...) を併存させる。
+   フェーズ3で既存クラス定義を Tailwind ユーティリティに置き換え終えたら
+   旧変数は削除予定。 */
 :root {
-  --bg: #fafafa;
-  --bg-panel: #ffffff;
-  --bg-soft: #f4f4f5;
-  --bg-code: #1e1e2e;
+  /* shadcn/ui 互換 */
+  --radius: 0.5rem;
+  --background: #fafafa;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #52525b;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
   --border: #e4e4e7;
-  --text: #18181b;
-  --text-soft: #52525b;
+  --input: #e4e4e7;
+  --ring: #6366f1;
+
+  /* 既存クラス互換 (フェーズ3で除去)。
+     1:1 で対応する shadcn/ui トークンが存在するものは固定値ではなく参照にして
+     単一ソース化する。`--bg-code` `--text-mute` `--accent-hover` `--ok` `--warn`
+     は既存の意味論に対応する shadcn トークンが無いので固定値を維持。 */
+  --bg: var(--background);
+  --bg-panel: var(--card);
+  --bg-soft: var(--muted);
+  --bg-code: #1e1e2e;
+  --text: var(--foreground);
+  --text-soft: var(--muted-foreground);
   --text-mute: #a1a1aa;
-  --accent: #6366f1;
   --accent-hover: #4f46e5;
   --ok: #16a34a;
   --warn: #d97706;
-  --err: #dc2626;
+  --err: var(--destructive);
+
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
-  color: var(--text);
-  background: var(--bg);
+  color: var(--foreground);
+  background: var(--background);
+}
+
+/* Tailwind ユーティリティに公開する。
+   `@theme inline` を使って `--background` 変更 = `bg-background` 連動。 */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* セマンティックトークン (採点UI用) */
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-err: var(--err);
 }
 
 * {
@@ -136,9 +208,9 @@ code {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--primary);
   color: white;
-  border-color: var(--accent);
+  border-color: var(--primary);
   padding: 8px 18px;
   font-weight: 600;
 }
@@ -405,7 +477,7 @@ code {
   overflow: hidden;
 }
 .score-bar > div {
-  background: var(--accent);
+  background: var(--primary);
   height: 100%;
 }
 
@@ -569,13 +641,13 @@ code {
   background: white;
 }
 .chip:has(.sr-only:focus-visible) {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 .chip.is-active {
   color: white;
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--primary);
+  border-color: var(--primary);
   font-weight: 600;
 }
 
@@ -610,9 +682,9 @@ code {
   background: white;
 }
 .search-input:focus {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: -1px;
-  border-color: var(--accent);
+  border-color: var(--primary);
 }
 
 .btn-link {
@@ -621,7 +693,7 @@ code {
   padding: 4px 6px;
   font: inherit;
   font-size: 12px;
-  color: var(--accent);
+  color: var(--primary);
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -691,7 +763,7 @@ code {
   text-decoration: none;
 }
 .topic-mdn-link:hover {
-  color: var(--accent);
+  color: var(--primary);
   text-decoration: underline;
 }
 
@@ -723,12 +795,12 @@ code {
     box-shadow 120ms ease;
 }
 .assignment-card:hover {
-  border-color: var(--accent);
+  border-color: var(--primary);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px -6px rgba(99, 102, 241, 0.4);
 }
 .assignment-card:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -819,7 +891,7 @@ code {
 .card-cta {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--primary);
   letter-spacing: 0.01em;
 }
 .assignment-card:hover .card-cta {
