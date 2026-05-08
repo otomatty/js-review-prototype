@@ -142,7 +142,7 @@ parseUrl('ftp://example.com/foo')
 }
 `,
     solution: `function parseUrl(url) {
-  const m = url.match(/^https?:\\/\\/([^/]+)(?:\\/(.*))?$/);
+  const m = url.match(/^https?:\\/\\/([^/?#]+)(?:\\/(.*))?$/);
   if (!m) return null;
   return { host: m[1], path: m[2] ?? '' };
 }
@@ -151,33 +151,38 @@ parseUrl('ftp://example.com/foo')
     tests: [
       {
         name: "通常",
-        weight: 17,
+        weight: 14,
         code: "JSON.stringify(parseUrl('https://example.com/foo/bar')) === JSON.stringify({host:'example.com',path:'foo/bar'})",
       },
       {
         name: "末尾スラッシュのみ",
-        weight: 17,
+        weight: 14,
         code: "JSON.stringify(parseUrl('http://example.com/')) === JSON.stringify({host:'example.com',path:''})",
       },
       {
         name: "ホストのみ (パスなし)",
-        weight: 16,
+        weight: 14,
         code: "JSON.stringify(parseUrl('https://example.com')) === JSON.stringify({host:'example.com',path:''})",
       },
       {
         name: "サブドメイン+クエリ",
-        weight: 17,
+        weight: 15,
         code: "JSON.stringify(parseUrl('https://sub.example.co.jp/a/b/c?x=1')) === JSON.stringify({host:'sub.example.co.jp',path:'a/b/c?x=1'})",
       },
       {
         name: "URLでない",
-        weight: 17,
+        weight: 14,
         code: "parseUrl('not a url') === null",
       },
       {
         name: "対応外スキーム",
-        weight: 16,
+        weight: 14,
         code: "parseUrl('ftp://example.com/foo') === null",
+      },
+      {
+        name: "ホスト直後のクエリは無効",
+        weight: 15,
+        code: "parseUrl('https://example.com?x=1') === null",
       },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },
