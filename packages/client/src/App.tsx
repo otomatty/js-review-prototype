@@ -87,9 +87,6 @@ export function App() {
           </div>
 
           <div className="run-bar">
-            <span className="hint">
-              静的解析は編集中に常時実行。「実行」でサーバ側テストを起動。
-            </span>
             <button
               className="btn-primary"
               onClick={handleRun}
