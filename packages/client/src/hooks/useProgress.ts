@@ -52,9 +52,13 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
     setBestScore(next.bestScore);
   }, [assignmentId, starterCode]);
 
-  // code 変更を debounce して localStorage に保存
+  // 採点直後など debounce を経由しない経路で最新コードを参照したい場合に使う
   const codeRef = useRef(code);
-  codeRef.current = code;
+  useEffect(() => {
+    codeRef.current = code;
+  }, [code]);
+
+  // code 変更を debounce して localStorage に保存
   useEffect(() => {
     const timer = setTimeout(() => {
       // starterCode と完全一致なら entry を作らない (新規ノイズを避ける)
@@ -78,9 +82,11 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
       const existing = loadEntry(assignmentId);
       const prev = existing?.bestScore ?? 0;
       const nextBest = Math.max(prev, score);
+      // debounce 前に Run された場合 existing.lastCode は古い可能性があるため、
+      // スコアと突き合わせるコードは必ずエディタの最新値を採用する。
       const entry: ProgressEntry = {
         bestScore: nextBest,
-        lastCode: existing?.lastCode ?? codeRef.current,
+        lastCode: codeRef.current,
         lastSubmittedAt: Date.now(),
       };
       saveEntry(assignmentId, entry);
