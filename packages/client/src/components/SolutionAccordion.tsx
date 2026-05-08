@@ -8,7 +8,7 @@
  * - コピーボタンで解答テキストをクリップボードへ
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorView } from "@codemirror/view";
@@ -27,6 +27,13 @@ export function SolutionAccordion({ solution, bestScore }: Props) {
     readAlwaysShow(),
   );
 
+  // 配列リテラルを直接渡すと毎レンダで新しい参照になり、CodeMirror が
+  // 拡張を再構成してしまうため安定参照にする。
+  const editorExtensions = useMemo(
+    () => [javascript(), EditorView.lineWrapping],
+    [],
+  );
+
   useEffect(() => {
     if (!copied) return;
     const t = setTimeout(() => setCopied(false), 1500);
@@ -43,7 +50,7 @@ export function SolutionAccordion({ solution, bestScore }: Props) {
     setOpen((v) => !v);
   };
 
-  const handleAlwaysShowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAlwaysShowChange = (e: ChangeEvent<HTMLInputElement>) => {
     const next = e.target.checked;
     setAlwaysShow(next);
     writeAlwaysShow(next);
@@ -118,7 +125,7 @@ export function SolutionAccordion({ solution, bestScore }: Props) {
                 highlightActiveLine: false,
                 foldGutter: false,
               }}
-              extensions={[javascript(), EditorView.lineWrapping]}
+              extensions={editorExtensions}
               theme="light"
             />
           </div>

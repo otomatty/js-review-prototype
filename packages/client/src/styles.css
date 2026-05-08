@@ -478,6 +478,10 @@ code {
 .solution-editor .cm-editor {
   background: var(--bg-soft);
 }
+/* CodeMirror は readonly でもフォーカス可能 (テキスト選択用)。
+   キーボード操作時の手がかりを残すため、ブラウザデフォルトを潰さず
+   独自のフォーカスリングに置き換える。 */
 .solution-editor .cm-editor.cm-focused {
-  outline: none;
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
