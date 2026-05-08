@@ -11,7 +11,8 @@
     "dev:server": "bun --filter @jsreview/server dev",
     "build:shared": "bun --filter @jsreview/shared build",
     "typecheck": "bun --filter '*' typecheck",
-    "test": "bun --filter @jsreview/shared test"
+    "test": "bun --filter @jsreview/shared test",
+    "check-integrity": "bun --filter @jsreview/shared check-integrity"
   },
   "devDependencies": {
     "typescript": "^5.4.5"

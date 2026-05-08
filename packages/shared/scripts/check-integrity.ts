@@ -1,0 +1,115 @@
+/**
+ * 課題データの整合性チェックスクリプト。
+ *
+ * CI と手元の両方から `bun run check-integrity` で実行できる。
+ * 検査項目:
+ *
+ *  1. 重複した Assignment ID が存在しないこと
+ *  2. 各 Assignment の `tests` の weight 合計が 100 であること
+ *  3. 各 Assignment の `starterCode` が `ast.forbidden` を踏んでいないこと
+ *     (`starterCode` がパースエラーにならないことも含む)
+ *  4. 全 Assignment の `topicId` が `topics` に存在すること
+ *
+ * 違反は最後にまとめて出力し、ひとつでもあれば exit code 1 で終了する。
+ *
+ * NOTE: `src/problems/index.ts` は import 時に重複IDで throw するため、
+ * 1 については先回りで例外として観測されることがある。本スクリプトでは
+ * 失敗箇所を列挙したいので、import を try/catch して個別に集計し直す。
+ */
+
+import { analyzeAst } from "../src/grading/ast.js";
+
+interface IntegrityIssue {
+  assignmentId?: string;
+  message: string;
+}
+
+async function main(): Promise<void> {
+  const issues: IntegrityIssue[] = [];
+
+  let assignments: Awaited<typeof import("../src/problems/index.js")>["assignments"];
+  let topics: Awaited<typeof import("../src/problems/index.js")>["topics"];
+  try {
+    const mod = await import("../src/problems/index.js");
+    assignments = mod.assignments;
+    topics = mod.topics;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.error(`[check-integrity] failed to load problems module: ${msg}`);
+    process.exit(1);
+  }
+
+  // 1. 重複IDチェック
+  const idCount = new Map<string, number>();
+  for (const a of assignments) {
+    idCount.set(a.id, (idCount.get(a.id) ?? 0) + 1);
+  }
+  for (const [id, count] of idCount) {
+    if (count > 1) {
+      issues.push({
+        assignmentId: id,
+        message: `duplicate assignment id (appears ${count} times)`,
+      });
+    }
+  }
+
+  // 2. テスト重み合計
+  for (const a of assignments) {
+    const total = a.tests.reduce((s, t) => s + t.weight, 0);
+    if (total !== 100) {
+      issues.push({
+        assignmentId: a.id,
+        message: `tests weight sum is ${total}, expected 100`,
+      });
+    }
+  }
+
+  // 3. starterCode が ast.forbidden を踏んでいない
+  for (const a of assignments) {
+    const result = analyzeAst(a.starterCode, a.ast);
+    if (result.parseError) {
+      issues.push({
+        assignmentId: a.id,
+        message: `starterCode parse error: ${result.parseError}`,
+      });
+      continue;
+    }
+    if (result.forbidden.length > 0) {
+      const labels = result.forbidden.map((v) => v.label).join(", ");
+      issues.push({
+        assignmentId: a.id,
+        message: `starterCode violates forbidden patterns: ${labels}`,
+      });
+    }
+  }
+
+  // 4. topicId が topics に存在
+  const knownTopics = new Set(topics.map((t) => t.id));
+  for (const a of assignments) {
+    if (!knownTopics.has(a.topicId)) {
+      issues.push({
+        assignmentId: a.id,
+        message: `unknown topicId: ${a.topicId}`,
+      });
+    }
+  }
+
+  if (issues.length === 0) {
+    console.log(
+      `[check-integrity] OK: ${assignments.length} assignments across ${topics.length} topics`,
+    );
+    return;
+  }
+
+  console.error(`[check-integrity] FAILED: ${issues.length} issue(s)`);
+  for (const issue of issues) {
+    const prefix = issue.assignmentId ? `  - ${issue.assignmentId}: ` : "  - ";
+    console.error(`${prefix}${issue.message}`);
+  }
+  process.exit(1);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
