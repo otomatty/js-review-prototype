@@ -1,18 +1,30 @@
 import type { Assignment } from "@jsreview/shared/types";
 import { findTopic } from "@jsreview/shared/assignments";
-import { renderMarkdown } from "../lib/markdown.js";
+import javascript from "highlight.js/lib/languages/javascript";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import type { Options as RehypeHighlightOptions } from "rehype-highlight";
+import remarkGfm from "remark-gfm";
 
 interface Props {
   assignment: Assignment;
 }
 
+const rehypeHighlightOptions = {
+  aliases: {
+    javascript: ["js", "jsx", "mjs", "cjs"],
+  },
+  languages: {
+    javascript,
+  },
+} satisfies RehypeHighlightOptions;
+
 /**
  * 課題説明を表示するペイン。
- * Markdown を簡易的にHTMLにレンダリングしている (外部依存を避けるため自前)。
+ * GFM テーブルとコードブロックのシンタックスハイライトに対応する。
  */
 export function AssignmentView({ assignment }: Props) {
   const topic = findTopic(assignment.topicId);
-  const html = renderMarkdown(assignment.description);
   return (
     <div className="assignment-description">
       {topic && (
@@ -23,10 +35,12 @@ export function AssignmentView({ assignment }: Props) {
           {topic.description ? ` — ${topic.description}` : null}
         </div>
       )}
-      <div
-        // 入力は packages/shared/src/problems/ のハードコードのみ。XSSリスクなし。
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[[rehypeHighlight, rehypeHighlightOptions]]}
+      >
+        {assignment.description}
+      </ReactMarkdown>
     </div>
   );
 }
