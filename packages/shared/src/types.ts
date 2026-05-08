@@ -123,6 +123,9 @@ export type ASTNodeType =
   | "FunctionDeclaration"
   | "ClassDeclaration"
   | "ClassExpression"
+  // class member
+  | "ClassPrivateProperty"
+  | "PrivateName"
   // 関数式
   | "FunctionExpression"
   | "ArrowFunctionExpression"

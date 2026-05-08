@@ -113,27 +113,42 @@ fast(3)   // → 9    (calls === 2)
     tests: [
       {
         name: "計算結果が正しい",
-        weight: 20,
+        weight: 14,
         code: "(() => { const f = memoize((n) => n * n); return f(3) === 9 && f(4) === 16; })()",
       },
       {
         name: "同じ引数は1回だけ実行",
-        weight: 30,
+        weight: 18,
         code: "(() => { let c = 0; const f = memoize((n) => { c++; return n; }); f(1); f(1); f(1); return c === 1; })()",
       },
       {
         name: "別の引数は別実行",
-        weight: 25,
+        weight: 14,
         code: "(() => { let c = 0; const f = memoize((n) => { c++; return n; }); f(1); f(2); f(3); return c === 3; })()",
       },
       {
+        name: "false を返してもキャッシュする",
+        weight: 14,
+        code: "(() => { let c = 0; const f = memoize((x) => { c++; return false; }); f(1); f(1); return c === 1 && f(1) === false; })()",
+      },
+      {
+        name: "undefined を返してもキャッシュする",
+        weight: 14,
+        code: "(() => { let c = 0; const f = memoize((x) => { c++; return undefined; }); f(1); f(1); return c === 1 && f(1) === undefined; })()",
+      },
+      {
+        name: "null を返してもキャッシュする",
+        weight: 12,
+        code: "(() => { let c = 0; const f = memoize((x) => { c++; return null; }); f(1); f(1); return c === 1 && f(1) === null; })()",
+      },
+      {
         name: "文字列引数",
-        weight: 15,
+        weight: 8,
         code: "memoize((s) => s.toUpperCase())('hi') === 'HI'",
       },
       {
         name: "別インスタンスはキャッシュを共有しない",
-        weight: 10,
+        weight: 6,
         code: "(() => { let c = 0; const make = () => memoize((n) => { c++; return n; }); make()(1); make()(1); return c === 2; })()",
       },
     ],

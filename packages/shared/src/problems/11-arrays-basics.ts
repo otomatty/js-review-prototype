@@ -177,33 +177,38 @@ chunk([1,2,3], 0)
     tests: [
       {
         name: "5つを2分割",
-        weight: 18,
+        weight: 16,
         code: "JSON.stringify(chunk([1,2,3,4,5], 2)) === JSON.stringify([[1,2],[3,4],[5]])",
       },
       {
         name: "ぴったり分割",
-        weight: 18,
+        weight: 16,
         code: "JSON.stringify(chunk([1,2,3,4,5,6], 3)) === JSON.stringify([[1,2,3],[4,5,6]])",
       },
       {
         name: "size 1",
-        weight: 16,
+        weight: 14,
         code: "JSON.stringify(chunk(['a','b','c'], 1)) === JSON.stringify([['a'],['b'],['c']])",
       },
       {
         name: "size > length",
-        weight: 16,
+        weight: 14,
         code: "JSON.stringify(chunk([1,2,3], 5)) === JSON.stringify([[1,2,3]])",
       },
       {
         name: "空配列",
-        weight: 16,
+        weight: 14,
         code: "JSON.stringify(chunk([], 2)) === JSON.stringify([])",
       },
       {
         name: "size 0",
-        weight: 16,
+        weight: 13,
         code: "JSON.stringify(chunk([1,2,3], 0)) === JSON.stringify([])",
+      },
+      {
+        name: "非整数 size は []",
+        weight: 13,
+        code: "JSON.stringify(chunk([1,2,3], 2.5)) === JSON.stringify([])",
       },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },

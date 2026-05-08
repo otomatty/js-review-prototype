@@ -238,7 +238,7 @@ findPairsSummingTo([1, 1, 1], 2)
 // → [[0,1], [0,2], [1,2]]
 
 findPairsSummingTo([5, -1, 1, 6, 0], 6)
-// → [[0,4], [2,3]]   (5+0=6, 1+5=6 → ただし[0,4]は5+0)
+// → [[0,2], [3,4]]   (5+1=6, 6+0=6)
 
 findPairsSummingTo([], 0)
 // → []
@@ -270,7 +270,7 @@ findPairsSummingTo([], 0)
       {
         name: "負数混在",
         weight: 25,
-        code: "JSON.stringify(findPairsSummingTo([5,-1,1,6,0], 6)) === JSON.stringify([[0,4],[2,3]])",
+        code: "JSON.stringify(findPairsSummingTo([5,-1,1,6,0], 6)) === JSON.stringify([[0,2],[3,4]])",
       },
       {
         name: "空配列",

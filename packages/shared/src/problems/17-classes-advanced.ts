@@ -458,6 +458,16 @@ try { new LimitedCounter(0); } catch(e) { e instanceof Error }  // → true
           nodeType: "ClassDeclaration",
           label: "class 宣言を使う",
         },
+        {
+          kind: "node",
+          nodeType: "ClassPrivateProperty",
+          label: "#フィールド (プライベートフィールド宣言) を使う",
+        },
+        {
+          kind: "node",
+          nodeType: "PrivateName",
+          label: "#count を参照する (this.#count)",
+        },
       ],
       forbidden: [
         { kind: "var", label: "var は使わない" },

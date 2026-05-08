@@ -242,7 +242,7 @@ deepSet({ a: { b: { c: 1 }, x: 9 } }, ['a', 'b', 'c'], 2)
 // → { a: { b: { c: 2 }, x: 9 } }    (兄弟プロパティを保持)
 
 deepSet({ a: 1 }, [], 'ignore')
-// → { a: 1 }   (path が空なら元のオブジェクトのコピーを返す)
+// → { a: 1 }   (path が空ならトップレベルでは value を無視し、元のオブジェクトのコピーを返す)
 \`\`\`
 
 ### 制約
@@ -250,7 +250,21 @@ deepSet({ a: 1 }, [], 'ignore')
 - スプレッド構文で各階層を再構築する
 - \`var\` は使わない
 - 元のオブジェクトを変更しない（テストで検証）
-- 再帰実装が自然
+- 戻り値は **必ず新しい参照** にする（\`return obj\` で済ませない）
+
+### 実装ヒント
+
+トップレベルの呼び出しと再帰の最深部は分けて考えます。
+
+\`\`\`js
+function deepSet(obj, path, value) {
+  if (path.length === 0) return { ...obj };           // トップレベルだけの保護
+  const [head, ...rest] = path;
+  const child = obj[head] ?? {};
+  const nextChild = rest.length === 0 ? value : deepSet(child, rest, value);
+  return { ...obj, [head]: nextChild };
+}
+\`\`\`
 `,
     starterCode: `function deepSet(obj, path, value) {
   return obj;
@@ -274,9 +288,9 @@ deepSet({ a: 1 }, [], 'ignore')
         code: "JSON.stringify(deepSet({a:{b:{c:1},x:9}}, ['a','b','c'], 2)) === JSON.stringify({a:{b:{c:2},x:9}})",
       },
       {
-        name: "空 path",
+        name: "空 path はコピーを返す (新参照)",
         weight: 17,
-        code: "JSON.stringify(deepSet({a:1}, [], 'ignore')) === JSON.stringify({a:1})",
+        code: "(() => { const o = {a:1}; const r = deepSet(o, [], 'ignore'); return JSON.stringify(r) === JSON.stringify({a:1}) && r !== o; })()",
       },
       {
         name: "元オブジェクトを変更しない",

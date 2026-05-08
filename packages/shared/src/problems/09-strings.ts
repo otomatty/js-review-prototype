@@ -177,7 +177,7 @@ isPalindrome('ab')                           // → false
 
 - 文字列メソッドや配列メソッドを駆使する
 - \`var\` は使わない
-- \`for\` 文や \`while\` 文を使わずに書ける（\`split\` + \`reverse\` + \`join\` で十分）
+- \`for\` 文や \`while\` 文を使わずに書ける（英数字以外の除去には \`String.prototype.replace\` と正規表現、または \`Array.prototype.filter\` を使ってよい）
 `,
     starterCode: `function isPalindrome(input) {
   return false;
