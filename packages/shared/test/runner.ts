@@ -5,6 +5,9 @@
  * ネイティブビルドが重く、CI では Node の `vm` モジュールで十分。
  * 評価式の組み立て方 (entryPoints を `__jsreview_scope__` に集めて `with` で参照可能にする) は
  * 本番 runner と同じシェイプを保つことで、テストカバレッジが本番挙動を反映する。
+ *
+ * 非同期対応: テスト式が Promise を返した場合は await して resolve 値を判定する。
+ * Promise チェーンが解決しないケースに備えて、全体タイムアウトを設けている。
  */
 
 import vm from "node:vm";
@@ -12,20 +15,21 @@ import vm from "node:vm";
 import type { TestCase, TestResult } from "../src/types.js";
 
 const PER_TEST_TIMEOUT_MS = 1000;
+const PER_TEST_WALL_TIMEOUT_MS = 3000;
 
-export function runTests(
+export async function runTests(
   code: string,
   tests: TestCase[],
   entryPoints: string[],
-): TestResult[] {
-  return tests.map((test) => runOne(code, test, entryPoints));
+): Promise<TestResult[]> {
+  return Promise.all(tests.map((test) => runOne(code, test, entryPoints)));
 }
 
-function runOne(
+async function runOne(
   code: string,
   test: TestCase,
   entryPoints: string[],
-): TestResult {
+): Promise<TestResult> {
   const exposeStmts = entryPoints
     .map((n) => `try { __jsreview_scope__.${n} = ${n}; } catch (_e) {}`)
     .join("\n");
@@ -68,11 +72,53 @@ ${exposeStmts}
     };
   }
 
+  if (isThenable(result)) {
+    try {
+      result = await withWallTimeout(
+        Promise.resolve(result),
+        PER_TEST_WALL_TIMEOUT_MS,
+      );
+    } catch (e) {
+      const msg = formatErr(e);
+      const error = msg === "TIMEOUT" ? "TIMEOUT" : msg;
+      return {
+        name: test.name,
+        weight: test.weight,
+        passed: false,
+        error,
+      };
+    }
+  }
+
   return {
     name: test.name,
     weight: test.weight,
     passed: Boolean(result),
   };
+}
+
+function isThenable(v: unknown): v is PromiseLike<unknown> {
+  return (
+    typeof v === "object" &&
+    v !== null &&
+    typeof (v as { then?: unknown }).then === "function"
+  );
+}
+
+function withWallTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("TIMEOUT")), ms);
+    promise.then(
+      (v) => {
+        clearTimeout(timer);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(timer);
+        reject(e);
+      },
+    );
+  });
 }
 
 function formatErr(e: unknown): string {

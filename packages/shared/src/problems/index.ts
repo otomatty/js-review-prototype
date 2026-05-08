@@ -26,6 +26,7 @@ import { collections } from "./15-collections.js";
 import { classesBasics } from "./16-classes-basics.js";
 import { classesAdvanced } from "./17-classes-advanced.js";
 import { regex } from "./18-regex.js";
+import { asyncTopic } from "./19-async.js";
 
 const MDN_BASE = "https://developer.mozilla.org/ja/docs/Web/JavaScript";
 
@@ -156,6 +157,13 @@ export const topics: Topic[] = [
     mdnUrl: `${MDN_BASE}/Guide/Regular_expressions`,
     description: "RegExp リテラル / match / replace / キャプチャグループ",
   },
+  {
+    id: "async",
+    order: 19,
+    label: "19. 非同期",
+    mdnUrl: `${MDN_BASE}/Guide/Using_promises`,
+    description: "Promise / async-await / Promise.allSettled",
+  },
 ];
 
 export const assignments: Assignment[] = [
@@ -177,6 +185,7 @@ export const assignments: Assignment[] = [
   ...classesBasics,
   ...classesAdvanced,
   ...regex,
+  ...asyncTopic,
 ];
 
 // 重複ID検出は CI の `check-integrity` スクリプトと `problems.spec.ts` で一括検証する。

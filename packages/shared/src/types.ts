@@ -27,7 +27,8 @@ export type TopicId =
   | "collections"
   | "classes-basics"
   | "classes-advanced"
-  | "regex";
+  | "regex"
+  | "async";
 
 export interface Topic {
   id: TopicId;
@@ -122,12 +123,14 @@ export interface ASTRequirement {
  * - `kind: "node"`   … 特定のNode種別 (`ForStatement`, `WhileStatement`, etc.)
  * - `kind: "var"`    … `var` 宣言
  * - `kind: "loose-eq"` … `==` または `!=`
+ * - `kind: "async-fn"` … `async` 関数 (宣言・式・アロー)
  */
 export type ASTPattern =
   | { kind: "method"; name: string; label?: string }
   | { kind: "node"; nodeType: ASTNodeType; label?: string }
   | { kind: "var"; label?: string }
-  | { kind: "loose-eq"; label?: string };
+  | { kind: "loose-eq"; label?: string }
+  | { kind: "async-fn"; label?: string };
 
 export type ASTNodeType =
   // 制御構文・ループ
@@ -156,6 +159,8 @@ export type ASTNodeType =
   | "LogicalExpression"
   | "NewExpression"
   | "RegExpLiteral"
+  | "AwaitExpression"
+  | "MemberExpression"
   // パターン (分割代入・スプレッド・残余)
   | "SpreadElement"
   | "RestElement"

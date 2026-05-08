@@ -25,8 +25,15 @@ export interface GradeReport {
   parseError?: string;
 }
 
-export function gradeCode(assignment: Assignment, code: string): GradeReport {
-  const testResults = runTests(code, assignment.tests, assignment.entryPoints);
+export async function gradeCode(
+  assignment: Assignment,
+  code: string,
+): Promise<GradeReport> {
+  const testResults = await runTests(
+    code,
+    assignment.tests,
+    assignment.entryPoints,
+  );
   const astResult = analyzeAst(code, assignment.ast);
   const lintViolations = lintCode(code, assignment.eslint.rules, {
     ignoredUnusedNames: assignment.entryPoints,

@@ -3,13 +3,16 @@
  *
  * - 受講者コードを isolated-vm 内で評価 (信頼できないコードのサンドボックス実行)
  * - 各テストケースを並列実行 (Promise.all)
- * - 各テストは1秒のタイムアウト
+ * - 各テストは 1 秒の同期タイムアウト + 全体 3 秒のウォール時計タイムアウト
  *
  * 評価方式:
  *   1. Isolate に context を作る
  *   2. 受講者コードを実行して関数定義を得る (例: function sum(...) {...})
  *   3. テスト式を実行する (例: `sum([1,2,3]) === 6`)
  *   4. テスト式が truthy なら PASS、エラーなら FAIL (errorに格納)
+ *   5. テスト式が Promise を返した場合、isolated-vm が isolate 内で解決した値を取り出す
+ *      (`promise: true` + `copy: true` の組合せ)。
+ *      Promise チェーンが暴走したケースに備え、ホスト側でも全体タイムアウトを設ける。
  */
 
 import ivm from "isolated-vm";
@@ -18,6 +21,8 @@ import type { TestCase, TestResult } from "./types.js";
 import { IsolatePool } from "./isolate-pool.js";
 
 const PER_TEST_TIMEOUT_MS = 1000;
+/** Promise チェーンを許容する全体タイムアウト。 */
+const PER_TEST_WALL_TIMEOUT_MS = 3000;
 
 export class TestRunner {
   private readonly pool: IsolatePool;
@@ -76,14 +81,23 @@ export class TestRunner {
 
       let result: unknown;
       try {
-        result = await script.run(context, {
-          timeout: PER_TEST_TIMEOUT_MS,
-          // 結果値を JS 側に戻すために copy を有効化
-          copy: true,
-        });
+        result = await withWallTimeout(
+          script.run(context, {
+            // 同期実行のタイムアウト (Promise の解決時間は含まない)
+            timeout: PER_TEST_TIMEOUT_MS,
+            // 結果値を JS 側に戻すために copy を有効化
+            copy: true,
+            // テスト式が Promise を返した場合、isolate 内で解決してから値を返す
+            promise: true,
+          }),
+          PER_TEST_WALL_TIMEOUT_MS,
+        );
       } catch (e) {
         const msg = formatErr(e);
-        const error = msg.includes("Script execution timed out") ? "TIMEOUT" : msg;
+        const error =
+          msg.includes("Script execution timed out") || msg === "TIMEOUT"
+            ? "TIMEOUT"
+            : msg;
         return {
           name: test.name,
           weight: test.weight,
@@ -106,4 +120,20 @@ export class TestRunner {
 function formatErr(e: unknown): string {
   if (e instanceof Error) return e.message;
   return String(e);
+}
+
+function withWallTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("TIMEOUT")), ms);
+    promise.then(
+      (v) => {
+        clearTimeout(timer);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(timer);
+        reject(e);
+      },
+    );
+  });
 }
