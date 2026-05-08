@@ -44,6 +44,7 @@ export function ExecutionResultPane({
           ▶ 実行ボタンでテストを実行するとここに結果が表示されます。
         </div>
         <SolutionAccordion
+          key={assignment.id}
           solution={assignment.solution}
           bestScore={bestScore}
         />
@@ -143,6 +144,7 @@ export function ExecutionResultPane({
       </div>
 
       <SolutionAccordion
+        key={assignment.id}
         solution={assignment.solution}
         bestScore={Math.max(bestScore ?? 0, score.total)}
       />
