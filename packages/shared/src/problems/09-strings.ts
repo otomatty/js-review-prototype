@@ -287,7 +287,7 @@ formatYmd({ year: 2024, month: 2, day: 32 })    // → 'invalid'
   return 'invalid';
 }
 `,
-    solution: "function formatYmd(date) {\n  const { year, month, day } = date;\n  if (year < 0 || year > 9999) return 'invalid';\n  if (month < 1 || month > 12) return 'invalid';\n  if (day < 1 || day > 31) return 'invalid';\n  const y = String(year).padStart(4, '0');\n  const m = String(month).padStart(2, '0');\n  const d = String(day).padStart(2, '0');\n  return `${y}-${m}-${d}`;\n}\n",
+    solution: "function formatYmd(date) {\n  const { year, month, day } = date;\n  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return 'invalid';\n  if (year < 0 || year > 9999) return 'invalid';\n  if (month < 1 || month > 12) return 'invalid';\n  if (day < 1 || day > 31) return 'invalid';\n  const y = String(year).padStart(4, '0');\n  const m = String(month).padStart(2, '0');\n  const d = String(day).padStart(2, '0');\n  return `${y}-${m}-${d}`;\n}\n",
     entryPoints: ["formatYmd"],
     tests: [
       {

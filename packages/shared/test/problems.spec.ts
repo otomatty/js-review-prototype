@@ -51,9 +51,11 @@ describe("problems metadata", () => {
 
 describe("solutions", () => {
   const withSolution = assignments.filter((a) => a.solution !== undefined);
+  const missing = assignments.filter((a) => a.solution === undefined).map((a) => a.id);
 
-  it("少なくとも半数 (33+) の課題に solution が付与されている", () => {
-    expect(withSolution.length).toBeGreaterThanOrEqual(33);
+  it("全課題に solution が付与されている", () => {
+    expect(missing, `solution 未定義の課題: ${missing.join(", ") || "(なし)"}`).toEqual([]);
+    expect(withSolution.length).toBe(assignments.length);
   });
 
   for (const a of withSolution) {
@@ -66,6 +68,7 @@ describe("solutions", () => {
           failedTests: report.failedTests,
           missingRequired: report.missingRequired,
           forbiddenViolations: report.forbiddenViolations,
+          lintViolations: report.lintViolations,
           parseError: report.parseError,
         },
         null,

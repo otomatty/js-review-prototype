@@ -3,7 +3,7 @@
  *
  * サーバ本番の runner (`packages/server/src/runner.ts`) は isolated-vm を使うが、
  * ネイティブビルドが重く、CI では Node の `vm` モジュールで十分。
- * 評価式の組み立て方 (entryPoints を `__scope` に集めて `with` で参照可能にする) は
+ * 評価式の組み立て方 (entryPoints を `__jsreview_scope__` に集めて `with` で参照可能にする) は
  * 本番 runner と同じシェイプを保つことで、テストカバレッジが本番挙動を反映する。
  */
 
@@ -27,18 +27,18 @@ function runOne(
   entryPoints: string[],
 ): TestResult {
   const exposeStmts = entryPoints
-    .map((n) => `try { __scope.${n} = ${n}; } catch (_e) {}`)
+    .map((n) => `try { __jsreview_scope__.${n} = ${n}; } catch (_e) {}`)
     .join("\n");
 
   const source = `
 ${code}
-var __scope = {};
+var __jsreview_scope__ = {};
 ${exposeStmts}
 (function (__s) {
   with (__s) {
     return (${test.code});
   }
-})(__scope);
+})(__jsreview_scope__);
 `;
 
   let script: vm.Script;

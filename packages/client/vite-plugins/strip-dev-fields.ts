@@ -39,26 +39,43 @@ export function stripDevFields(): Plugin {
           plugins: ["typescript"],
           ranges: true,
         });
-      } catch {
-        return null;
+      } catch (error) {
+        // fail-closed: パース不能なファイルを素通しすると solution が漏れる可能性があるため
+        // ビルドを止める
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(
+          `[jsreview:strip-dev-fields] Failed to parse ${id}: ${message}`,
+        );
       }
 
       const removals: [number, number][] = [];
 
       traverse(ast as never, {
-        ObjectProperty(path) {
-          const key = path.node.key;
+        "ObjectProperty|ObjectMethod"(path) {
+          // path.node は ObjectProperty | ObjectMethod。両者とも `key` を持つ。
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const node = path.node as any;
+          const key = node.key;
+          // shorthand `{ solution }` のような書き方も含めて、
+          // `Identifier` (`solution: ...`) と `StringLiteral` (`"solution": ...`) を両方拾う。
+          const name =
+            key?.type === "Identifier"
+              ? key.name
+              : key?.type === "StringLiteral"
+                ? key.value
+                : null;
+
           if (
-            key.type === "Identifier" &&
-            STRIPPED_FIELDS.has(key.name) &&
-            path.node.start != null &&
-            path.node.end != null
+            typeof name === "string" &&
+            STRIPPED_FIELDS.has(name) &&
+            node.start != null &&
+            node.end != null
           ) {
             // 後続のカンマも巻き込む (`solution: '..',\n` の最後の `,`)
-            let end = path.node.end;
+            let end = node.end as number;
             const trailing = code.slice(end).match(/^\s*,/);
             if (trailing) end += trailing[0].length;
-            removals.push([path.node.start, end]);
+            removals.push([node.start as number, end]);
           }
         },
       });

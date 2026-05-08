@@ -298,7 +298,8 @@ try { t.celsius = -300 } catch(e) { e instanceof Error }  // → true
 `,
     solution: `class Temperature {
   constructor(celsius) {
-    this._celsius = celsius;
+    // setter 経由で同じバリデーションを通す (constructor 経由でも -273.15 未満を弾く)
+    this.celsius = celsius;
   }
   get celsius() { return this._celsius; }
   set celsius(v) {

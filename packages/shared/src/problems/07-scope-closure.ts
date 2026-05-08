@@ -117,10 +117,9 @@ fast(3)   // → 9    (calls === 2)
     solution: `function memoize(fn) {
   const cache = new Map();
   return (arg) => {
-    const key = String(arg);
-    if (cache.has(key)) return cache.get(key);
+    if (cache.has(arg)) return cache.get(arg);
     const result = fn(arg);
-    cache.set(key, result);
+    cache.set(arg, result);
     return result;
   };
 }
