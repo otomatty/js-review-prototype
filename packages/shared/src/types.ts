@@ -26,7 +26,8 @@ export type TopicId =
   | "objects-basics"
   | "collections"
   | "classes-basics"
-  | "classes-advanced";
+  | "classes-advanced"
+  | "regex";
 
 export interface Topic {
   id: TopicId;
@@ -154,6 +155,7 @@ export type ASTNodeType =
   | "ConditionalExpression"
   | "LogicalExpression"
   | "NewExpression"
+  | "RegExpLiteral"
   // パターン (分割代入・スプレッド・残余)
   | "SpreadElement"
   | "RestElement"
