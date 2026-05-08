@@ -425,11 +425,8 @@ code {
 }
 
 /* ─── 問題選択画面 ────────────────────────────────────── */
-.select-app {
-  /* `.app` は `height: 100vh` だが、一覧画面はページ全体としてスクロール
-     させたいので、メインを縦伸びさせて main 内で overflow させる */
-}
-
+/* `.app` は `height: 100vh` だが、一覧画面はページ全体としてスクロール
+   させたいので、メインを縦伸びさせて main 内で overflow させる */
 .select-main {
   overflow-y: auto;
   padding: 24px clamp(20px, 4vw, 40px) 48px;

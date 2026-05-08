@@ -135,7 +135,7 @@ function PracticePageInner({ assignment }: InnerProps) {
         </div>
       </header>
 
-      <div className="body body-practice">
+      <div className="body-practice">
         <aside className="left-pane">
           <AssignmentView assignment={assignment} />
         </aside>

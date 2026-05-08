@@ -121,7 +121,7 @@ export function SelectPage() {
   }
 
   return (
-    <div className="app select-app">
+    <div className="app">
       <header className="header">
         <div className="header-title">
           <h1>
