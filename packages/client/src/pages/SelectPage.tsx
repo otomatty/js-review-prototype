@@ -56,6 +56,10 @@ export function SelectPage() {
   const [query, setQuery] = useState<string>("");
 
   const normalizedQuery = query.trim().toLowerCase();
+  const assignmentNumbers = useMemo(
+    () => new Map(assignments.map((a, i) => [a.id, i + 1])),
+    [],
+  );
 
   // 全課題ぶんのサマリは生 `assignments` から計算 (フィルタの影響を受けない)。
   const summary = useMemo(() => {
@@ -243,6 +247,7 @@ export function SelectPage() {
               topic={topic}
               items={items}
               bestScores={bestScores}
+              assignmentNumbers={assignmentNumbers}
             />
           ))
         )}
@@ -255,9 +260,15 @@ interface TopicSectionProps {
   topic: Topic;
   items: Assignment[];
   bestScores: Map<string, number>;
+  assignmentNumbers: Map<string, number>;
 }
 
-function TopicSection({ topic, items, bestScores }: TopicSectionProps) {
+function TopicSection({
+  topic,
+  items,
+  bestScores,
+  assignmentNumbers,
+}: TopicSectionProps) {
   // フィルタ後の items だけで完了数を出すと「3問中2問完了」のような誤解を生む。
   // ここでは表示中アイテムの完了状況を素直に出す。
   const completedCount = items.reduce(
@@ -295,9 +306,10 @@ function TopicSection({ topic, items, bestScores }: TopicSectionProps) {
       </header>
 
       <ul className="card-grid">
-        {items.map((a, i) => {
+        {items.map((a) => {
           const score = bestScores.get(a.id);
           const status = statusOf(score);
+          const assignmentNumber = assignmentNumbers.get(a.id);
           return (
             <li key={a.id}>
               <Link
@@ -312,7 +324,7 @@ function TopicSection({ topic, items, bestScores }: TopicSectionProps) {
                 })`}
               >
                 <div className="card-top">
-                  <span className="card-num">#{i + 1}</span>
+                  <span className="card-num">#{assignmentNumber}</span>
                   <CardStatusBadge status={status} score={score} />
                 </div>
                 <div className="card-title">{a.title}</div>

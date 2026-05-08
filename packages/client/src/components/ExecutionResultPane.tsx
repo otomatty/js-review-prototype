@@ -27,9 +27,16 @@ export function ExecutionResultPane({
   lint,
   ast,
 }: Props) {
+  const displayedLint = result?.lintAtRun ?? lint;
+  const displayedAst = result?.astAtRun ?? ast;
+
   return (
     <div className="result-pane">
-      <StaticAnalysisPane lint={lint} ast={ast} assignment={assignment} />
+      <StaticAnalysisPane
+        lint={displayedLint}
+        ast={displayedAst}
+        assignment={assignment}
+      />
 
       {running && !result ? (
         <div className="empty-state">
