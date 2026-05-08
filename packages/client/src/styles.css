@@ -34,18 +34,21 @@
   --input: #e4e4e7;
   --ring: #6366f1;
 
-  /* 既存クラス互換 (フェーズ3で除去) */
-  --bg: #fafafa;
-  --bg-panel: #ffffff;
-  --bg-soft: #f4f4f5;
+  /* 既存クラス互換 (フェーズ3で除去)。
+     1:1 で対応する shadcn/ui トークンが存在するものは固定値ではなく参照にして
+     単一ソース化する。`--bg-code` `--text-mute` `--accent-hover` `--ok` `--warn`
+     は既存の意味論に対応する shadcn トークンが無いので固定値を維持。 */
+  --bg: var(--background);
+  --bg-panel: var(--card);
+  --bg-soft: var(--muted);
   --bg-code: #1e1e2e;
-  --text: #18181b;
-  --text-soft: #52525b;
+  --text: var(--foreground);
+  --text-soft: var(--muted-foreground);
   --text-mute: #a1a1aa;
   --accent-hover: #4f46e5;
   --ok: #16a34a;
   --warn: #d97706;
-  --err: #dc2626;
+  --err: var(--destructive);
 
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
