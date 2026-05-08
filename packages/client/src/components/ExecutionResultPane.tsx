@@ -38,7 +38,7 @@ export function ExecutionResultPane({
         assignment={assignment}
       />
 
-      {running && !result ? (
+      {running ? (
         <div className="empty-state">
           サーバ (isolated-vm) にてテスト実行中...
         </div>

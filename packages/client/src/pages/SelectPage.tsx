@@ -179,42 +179,42 @@ export function SelectPage() {
         </section>
 
         <section className="select-filters" aria-label="絞り込み">
-          <div
-            className="filter-group"
-            role="radiogroup"
-            aria-label="状態で絞り込み"
-          >
+          <fieldset className="filter-group">
+            <legend className="sr-only">状態で絞り込み</legend>
             {STATUS_FILTERS.map((f) => (
-              <button
+              <label
                 key={f.id}
-                type="button"
-                role="radio"
-                aria-checked={statusFilter === f.id}
                 className={`chip${statusFilter === f.id ? " is-active" : ""}`}
-                onClick={() => setStatusFilter(f.id)}
               >
+                <input
+                  type="radio"
+                  name="status-filter"
+                  className="sr-only"
+                  checked={statusFilter === f.id}
+                  onChange={() => setStatusFilter(f.id)}
+                />
                 {f.label}
-              </button>
+              </label>
             ))}
-          </div>
-          <div
-            className="filter-group"
-            role="radiogroup"
-            aria-label="難易度で絞り込み"
-          >
+          </fieldset>
+          <fieldset className="filter-group">
+            <legend className="sr-only">難易度で絞り込み</legend>
             {DIFFICULTY_FILTERS.map((f) => (
-              <button
+              <label
                 key={String(f.id)}
-                type="button"
-                role="radio"
-                aria-checked={difficultyFilter === f.id}
                 className={`chip${difficultyFilter === f.id ? " is-active" : ""}`}
-                onClick={() => setDifficultyFilter(f.id)}
               >
+                <input
+                  type="radio"
+                  name="difficulty-filter"
+                  className="sr-only"
+                  checked={difficultyFilter === f.id}
+                  onChange={() => setDifficultyFilter(f.id)}
+                />
                 {f.label}
-              </button>
+              </label>
             ))}
-          </div>
+          </fieldset>
           <div className="filter-search">
             <input
               type="search"
