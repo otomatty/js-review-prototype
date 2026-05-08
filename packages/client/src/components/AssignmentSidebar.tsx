@@ -7,7 +7,11 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Assignment, Topic } from "@jsreview/shared/types";
+import {
+  assignmentsByTopic,
+  findAssignment,
+} from "@jsreview/shared/assignments";
+import type { Topic } from "@jsreview/shared/types";
 
 type Status = "completed" | "partial" | "untouched";
 
@@ -20,7 +24,6 @@ function statusOf(score: number | undefined): Status {
 
 interface Props {
   topics: Topic[];
-  assignments: Assignment[];
   activeAssignmentId: string;
   bestScores: Map<string, number>;
   onSelect: (assignmentId: string) => void;
@@ -28,7 +31,6 @@ interface Props {
 
 export function AssignmentSidebar({
   topics,
-  assignments,
   activeAssignmentId,
   bestScores,
   onSelect,
@@ -36,20 +38,18 @@ export function AssignmentSidebar({
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const activeRef = useRef<HTMLButtonElement | null>(null);
 
+  // 共有の `assignmentsByTopic` を使い、グルーピングロジックの重複を避ける。
   const groups = useMemo(
     () =>
       topics
-        .map((topic) => ({
-          topic,
-          items: assignments.filter((a) => a.topicId === topic.id),
-        }))
+        .map((topic) => ({ topic, items: assignmentsByTopic(topic.id) }))
         .filter((g) => g.items.length > 0),
-    [topics, assignments],
+    [topics],
   );
 
   const activeTopicId = useMemo(
-    () => assignments.find((a) => a.id === activeAssignmentId)?.topicId,
-    [assignments, activeAssignmentId],
+    () => findAssignment(activeAssignmentId)?.topicId,
+    [activeAssignmentId],
   );
 
   // 課題が切り替わったら所属トピックを必ず展開する。

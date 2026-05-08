@@ -105,21 +105,35 @@ export function loadEntry(assignmentId: string): ProgressEntry | null {
   }
 }
 
-export function saveEntry(assignmentId: string, entry: ProgressEntry): void {
+export interface SaveOptions {
+  /**
+   * 書き込み直前のベストスコア。一括ビュー (サイドバー) のキャッシュを
+   * 無効化すべきかの判定に使う。呼び出し側 (useProgress) が state として
+   * 既に保持しているので、ここで `loadEntry` を再実行しないで済むよう
+   * 引数で受け取る (タイピング毎の `setCode` パスでの不要な JSON.parse 回避)。
+   * 未指定なら従来通り常に通知する (安全側)。
+   */
+  previousBestScore?: number | null;
+}
+
+export function saveEntry(
+  assignmentId: string,
+  entry: ProgressEntry,
+  opts: SaveOptions = {},
+): void {
   const ls = safeStorage();
   if (!ls) return;
-  // bestScore が変化したかを確認するため、書き込み前の値を保持する
-  // (毎タイプ走る編集中の保存では再描画させないための最適化)。
-  const before = loadEntry(assignmentId);
   const payload: StoredEntry = { v: VERSION, ...entry };
   const serialized = JSON.stringify(payload);
   let written = false;
+  let prunedOthers = false;
   try {
     ls.setItem(entryKey(assignmentId), serialized);
     written = true;
   } catch (e) {
     if (isQuotaError(e)) {
       pruneOldest(ls, assignmentId);
+      prunedOthers = true;
       try {
         ls.setItem(entryKey(assignmentId), serialized);
         written = true;
@@ -128,7 +142,18 @@ export function saveEntry(assignmentId: string, entry: ProgressEntry): void {
       }
     }
   }
-  if (written && (before?.bestScore ?? null) !== entry.bestScore) {
+  if (!written) return;
+  // 容量逼迫で他課題のエントリが削除された可能性があるパスでは、
+  // bestScore に変化がなくても一括ビューのキャッシュを無効化する必要がある
+  // (削除済み課題のスコアを表示し続けるのを防ぐ)。
+  if (prunedOthers) {
+    emitChange();
+    return;
+  }
+  // 通常パス: 自課題の bestScore が変わった場合のみ通知する。
+  // `previousBestScore` 未指定なら安全側で通知。
+  const prev = opts.previousBestScore;
+  if (prev === undefined || prev !== entry.bestScore) {
     emitChange();
   }
 }

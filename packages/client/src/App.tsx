@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { assignments, topics } from "@jsreview/shared/assignments";
+import {
+  assignments,
+  assignmentsByTopic,
+  topics,
+} from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
 import { Editor } from "./components/Editor.js";
@@ -39,13 +43,11 @@ export function App() {
   const bestScores = useAllBestScores();
 
   // 課題切替時のリセット (結果ペインのみ。コードは useProgress が復元する)
-  const handleSelectAssignment = useCallback(
-    (id: string) => {
-      setAssignmentId(id);
-      reset();
-    },
-    [reset],
-  );
+  // 結果クリアは下の useEffect で `assignmentId` 変更を起点に一元化する
+  // (任意の経路で setAssignmentId が走っても確実にリセットされるよう)。
+  const handleSelectAssignment = useCallback((id: string) => {
+    setAssignmentId(id);
+  }, []);
 
   // 課題切替時、結果表示は無関係になるのでクリア
   useEffect(() => {
@@ -115,7 +117,7 @@ export function App() {
             aria-label="課題を選択"
           >
             {topics.map((topic) => {
-              const items = assignments.filter((a) => a.topicId === topic.id);
+              const items = assignmentsByTopic(topic.id);
               if (items.length === 0) return null;
               return (
                 <optgroup key={topic.id} label={topic.label}>
@@ -147,7 +149,6 @@ export function App() {
       <div className="body">
         <AssignmentSidebar
           topics={topics}
-          assignments={assignments}
           activeAssignmentId={assignmentId}
           bestScores={bestScores}
           onSelect={handleSelectAssignment}

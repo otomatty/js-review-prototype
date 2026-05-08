@@ -63,11 +63,18 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
       // starterCode と完全一致なら entry を作らない (新規ノイズを避ける)
       const existing = loadEntry(assignmentId);
       if (!existing && code === starterCode) return;
-      saveEntry(assignmentId, {
-        bestScore: existing?.bestScore ?? bestScore ?? 0,
-        lastCode: code,
-        lastSubmittedAt: existing?.lastSubmittedAt,
-      });
+      const nextBest = existing?.bestScore ?? bestScore ?? 0;
+      saveEntry(
+        assignmentId,
+        {
+          bestScore: nextBest,
+          lastCode: code,
+          lastSubmittedAt: existing?.lastSubmittedAt,
+        },
+        // bestScore は通常タイピングでは変わらない。前回値を渡すことで
+        // saveEntry 内の差分判定で `loadEntry` が再走するのを避ける。
+        { previousBestScore: existing?.bestScore ?? null },
+      );
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   }, [code, assignmentId, starterCode, bestScore]);
@@ -89,7 +96,9 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
         lastCode: submittedCode,
         lastSubmittedAt: Date.now(),
       };
-      saveEntry(assignmentId, entry);
+      saveEntry(assignmentId, entry, {
+        previousBestScore: existing?.bestScore ?? null,
+      });
       // 表示中の課題が切り替わっていれば bestScore の state は触らない。
       if (lastAssignmentRef.current === assignmentId) setBestScore(nextBest);
     },
