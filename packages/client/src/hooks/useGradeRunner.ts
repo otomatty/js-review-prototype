@@ -39,60 +39,67 @@ export function useGradeRunner() {
 
   const reset = useCallback(() => setResult(null), []);
 
-  const run = useCallback(async (args: RunArgs) => {
-    setRunning(true);
-    const startedAt = performance.now();
+  const run = useCallback(
+    async (args: RunArgs): Promise<ExecutionResult> => {
+      setRunning(true);
+      const startedAt = performance.now();
 
-    try {
-      const data = await runTests({
-        code: args.code,
-        tests: args.assignment.tests,
-        entryPoints: args.assignment.entryPoints,
-      });
+      try {
+        const data = await runTests({
+          code: args.code,
+          tests: args.assignment.tests,
+          entryPoints: args.assignment.entryPoints,
+        });
 
-      const score = calculateScore(
-        data.results,
-        args.lint,
-        args.ast,
-        args.assignment.weights,
-      );
+        const score = calculateScore(
+          data.results,
+          args.lint,
+          args.ast,
+          args.assignment.weights,
+        );
 
-      setResult({
-        testResults: data.results,
-        serverDurationMs: data.durationMs,
-        totalDurationMs: Math.round(performance.now() - startedAt),
-        score,
-        lintAtRun: args.lint,
-        astAtRun: args.ast,
-      });
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      // テストはすべて失敗として表示。スコアは Lint/AST のみで計算。
-      const failedResults: TestResult[] = args.assignment.tests.map((t) => ({
-        name: t.name,
-        weight: t.weight,
-        passed: false,
-        error: `SERVER_ERROR: ${msg}`,
-      }));
-      const score = calculateScore(
-        failedResults,
-        args.lint,
-        args.ast,
-        args.assignment.weights,
-      );
-      setResult({
-        testResults: failedResults,
-        serverDurationMs: 0,
-        totalDurationMs: Math.round(performance.now() - startedAt),
-        score,
-        lintAtRun: args.lint,
-        astAtRun: args.ast,
-        errorMessage: msg,
-      });
-    } finally {
-      setRunning(false);
-    }
-  }, []);
+        const finalResult: ExecutionResult = {
+          testResults: data.results,
+          serverDurationMs: data.durationMs,
+          totalDurationMs: Math.round(performance.now() - startedAt),
+          score,
+          lintAtRun: args.lint,
+          astAtRun: args.ast,
+        };
+        setResult(finalResult);
+        return finalResult;
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        // テストはすべて失敗として表示。スコアは Lint/AST のみで計算。
+        const failedResults: TestResult[] = args.assignment.tests.map((t) => ({
+          name: t.name,
+          weight: t.weight,
+          passed: false,
+          error: `SERVER_ERROR: ${msg}`,
+        }));
+        const score = calculateScore(
+          failedResults,
+          args.lint,
+          args.ast,
+          args.assignment.weights,
+        );
+        const finalResult: ExecutionResult = {
+          testResults: failedResults,
+          serverDurationMs: 0,
+          totalDurationMs: Math.round(performance.now() - startedAt),
+          score,
+          lintAtRun: args.lint,
+          astAtRun: args.ast,
+          errorMessage: msg,
+        };
+        setResult(finalResult);
+        return finalResult;
+      } finally {
+        setRunning(false);
+      }
+    },
+    [],
+  );
 
   return { running, result, run, reset };
 }

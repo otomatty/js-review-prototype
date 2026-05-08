@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { assignments, topics } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
@@ -9,6 +9,10 @@ import { AssignmentView } from "./components/AssignmentView.js";
 
 import { useStaticAnalysis } from "./hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "./hooks/useGradeRunner.js";
+import { useProgress } from "./hooks/useProgress.js";
+import { initProgressStore } from "./lib/progress-store.js";
+
+initProgressStore();
 
 export function App() {
   const [assignmentId, setAssignmentId] = useState<string>(assignments[0].id);
@@ -17,8 +21,11 @@ export function App() {
     [assignmentId],
   );
 
-  // 課題が変わったら starter code に戻す
-  const [code, setCode] = useState<string>(assignment.starterCode);
+  // localStorage と同期した編集中コード + ベストスコア
+  const { code, setCode, bestScore, recordScore, clear } = useProgress({
+    assignmentId,
+    starterCode: assignment.starterCode,
+  });
 
   // ─── 静的解析 (常時、debounce 500ms) ──────────────────
   const { lint, ast } = useStaticAnalysis(code, assignment);
@@ -26,21 +33,32 @@ export function App() {
   // ─── テスト実行 (実行ボタン押下時) ──────────────────
   const { running, result, run, reset } = useGradeRunner();
 
-  // 課題切替時のリセット
+  // 課題切替時のリセット (結果ペインのみ。コードは useProgress が復元する)
   const handleSelectAssignment = (id: string) => {
     setAssignmentId(id);
-    const next = assignments.find((a) => a.id === id);
-    if (next) setCode(next.starterCode);
     reset();
   };
+
+  // 課題切替時、結果表示は無関係になるのでクリア
+  useEffect(() => {
+    reset();
+  }, [assignmentId, reset]);
 
   const handleReset = () => {
-    setCode(assignment.starterCode);
+    // 確認モーダルで「保存も消す」かを確認
+    const wipeStorage = window.confirm(
+      "編集中のコードと保存済みの進捗 (ベストスコア含む) を消去して、初期コードに戻しますか?\n\n" +
+        "[OK] 保存も含めてリセット\n" +
+        "[キャンセル] このまま編集を続ける",
+    );
+    if (!wipeStorage) return;
+    clear();
     reset();
   };
 
-  const handleRun = () => {
-    void run({ code, assignment, lint, ast });
+  const handleRun = async () => {
+    const res = await run({ code, assignment, lint, ast });
+    recordScore(res.score.total);
   };
 
   return (
@@ -71,6 +89,12 @@ export function App() {
               );
             })}
           </select>
+          <span
+            className="best-score"
+            title="この課題のベストスコア (localStorage に保存)"
+          >
+            {bestScore !== null ? `★ ${bestScore}` : "★ —"}
+          </span>
           <button className="btn" onClick={handleReset}>
             リセット
           </button>
