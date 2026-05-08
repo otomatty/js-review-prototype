@@ -170,16 +170,9 @@ export const assignments: Assignment[] = [
   ...classesAdvanced,
 ];
 
-// 開発時の重複ID検出 (本番ビルドでも軽量なので残す)
-{
-  const seen = new Set<string>();
-  for (const a of assignments) {
-    if (seen.has(a.id)) {
-      throw new Error(`[problems] duplicate assignment id: ${a.id}`);
-    }
-    seen.add(a.id);
-  }
-}
+// 重複ID検出は CI の `check-integrity` スクリプトと `problems.spec.ts` で一括検証する。
+// (以前はここで import 時 throw していたが、整合性スクリプトが全違反を集約するために
+//  load-time エラーを出さない方針に変更。)
 
 export function findAssignment(id: string): Assignment | undefined {
   return assignments.find((a) => a.id === id);
