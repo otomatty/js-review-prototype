@@ -25,6 +25,7 @@ import { objectsBasics } from "./14-objects-basics.js";
 import { collections } from "./15-collections.js";
 import { classesBasics } from "./16-classes-basics.js";
 import { classesAdvanced } from "./17-classes-advanced.js";
+import { regex } from "./18-regex.js";
 
 const MDN_BASE = "https://developer.mozilla.org/ja/docs/Web/JavaScript";
 
@@ -148,6 +149,13 @@ export const topics: Topic[] = [
     mdnUrl: `${MDN_BASE}/Reference/Classes`,
     description: "継承 / static / #private / getter・setter",
   },
+  {
+    id: "regex",
+    order: 18,
+    label: "18. 正規表現",
+    mdnUrl: `${MDN_BASE}/Guide/Regular_expressions`,
+    description: "RegExp リテラル / match / replace / キャプチャグループ",
+  },
 ];
 
 export const assignments: Assignment[] = [
@@ -168,6 +176,7 @@ export const assignments: Assignment[] = [
   ...collections,
   ...classesBasics,
   ...classesAdvanced,
+  ...regex,
 ];
 
 // 重複ID検出は CI の `check-integrity` スクリプトと `problems.spec.ts` で一括検証する。
