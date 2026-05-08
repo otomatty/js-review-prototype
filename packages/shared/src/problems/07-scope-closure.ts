@@ -40,6 +40,11 @@ c()   // → 4   (元の c には影響なし)
   return () => 0;
 }
 `,
+    solution: `function makeCounter() {
+  let count = 0;
+  return () => ++count;
+}
+`,
     entryPoints: ["makeCounter"],
     tests: [
       {
@@ -109,6 +114,32 @@ fast(3)   // → 9    (calls === 2)
   return (arg) => fn(arg);
 }
 `,
+    solution: `function memoize(fn) {
+  const cache = new Map();
+  return (arg) => {
+    if (cache.has(arg)) return cache.get(arg);
+    const result = fn(arg);
+    cache.set(arg, result);
+    return result;
+  };
+}
+`,
+    badSolutions: [
+      {
+        description: "in 演算子だけで判定すると false / undefined / null を再計算してしまう",
+        code: `function memoize(fn) {
+  const cache = {};
+  return (arg) => {
+    const key = String(arg);
+    if (cache[key] !== undefined) return cache[key];
+    const result = fn(arg);
+    cache[key] = result;
+    return result;
+  };
+}
+`,
+      },
+    ],
     entryPoints: ["memoize"],
     tests: [
       {
@@ -205,6 +236,21 @@ v.balance        // 関数 (プロパティとしての残高は存在しない)
     deposit(n) {},
     withdraw(n) {},
     balance() { return 0; },
+  };
+}
+`,
+    solution: `function makeVault(initial) {
+  let balance = initial;
+  return {
+    deposit(n) {
+      if (Number.isInteger(n) && n > 0) balance += n;
+    },
+    withdraw(n) {
+      if (Number.isInteger(n) && n > 0 && n <= balance) balance -= n;
+    },
+    balance() {
+      return balance;
+    },
   };
 }
 `,

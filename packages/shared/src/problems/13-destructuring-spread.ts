@@ -39,6 +39,7 @@ userSummary({ name: '太郎', age: 0, role: 'kid' })
   return '';
 }
 `,
+    solution: "function userSummary({ name, age, role = 'guest' }) {\n  return `${name}(${role}) - ${age}歳`;\n}\n",
     entryPoints: ["userSummary"],
     tests: [
       {
@@ -107,6 +108,12 @@ swap([])             // → []
 `,
     starterCode: `function swap(arr) {
   return arr;
+}
+`,
+    solution: `function swap(arr) {
+  if (arr.length < 2) return [...arr];
+  const [a, b, ...rest] = arr;
+  return [b, a, ...rest];
 }
 `,
     entryPoints: ["swap"],
@@ -190,6 +197,11 @@ omit({}, 'a')
   return obj;
 }
 `,
+    solution: `function omit(obj, key) {
+  const { [key]: _omitted, ...rest } = obj;
+  return rest;
+}
+`,
     entryPoints: ["omit"],
     tests: [
       {
@@ -264,6 +276,14 @@ withDefaults({ port: 8080 }, { port: null })
 `,
     starterCode: `function withDefaults(defaults, overrides) {
   return defaults;
+}
+`,
+    solution: `function withDefaults(defaults, overrides) {
+  const filtered = {};
+  for (const k of Object.keys(overrides)) {
+    if (overrides[k] !== undefined) filtered[k] = overrides[k];
+  }
+  return { ...defaults, ...filtered };
 }
 `,
     entryPoints: ["withDefaults"],

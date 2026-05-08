@@ -34,6 +34,10 @@ lastOf([null, 0])   // → 0
   return undefined;
 }
 `,
+    solution: `function lastOf(arr) {
+  return arr[arr.length - 1];
+}
+`,
     entryPoints: ["lastOf"],
     tests: [
       { name: "[1,2,3]", weight: 20, code: "lastOf([1,2,3]) === 3" },
@@ -85,6 +89,10 @@ appendItem([1, 2, 3], null)  // → [1, 2, 3, null]
 `,
     starterCode: `function appendItem(arr, item) {
   return arr;
+}
+`,
+    solution: `function appendItem(arr, item) {
+  return [...arr, item];
 }
 `,
     entryPoints: ["appendItem"],
@@ -173,6 +181,15 @@ chunk([1,2,3], 0)
   return [];
 }
 `,
+    solution: `function chunk(arr, size) {
+  if (!Number.isInteger(size) || size <= 0) return [];
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+`,
     entryPoints: ["chunk"],
     tests: [
       {
@@ -255,6 +272,19 @@ sortAsc([0.1, 0.01, 0.2])    // → [0.01, 0.1, 0.2]
   return arr;
 }
 `,
+    solution: `function sortAsc(arr) {
+  return [...arr].sort((a, b) => a - b);
+}
+`,
+    badSolutions: [
+      {
+        description: "比較関数なしの sort() は文字列順になり [10,2] が並び替わらない",
+        code: `function sortAsc(arr) {
+  return [...arr].sort();
+}
+`,
+      },
+    ],
     entryPoints: ["sortAsc"],
     tests: [
       {

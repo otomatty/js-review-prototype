@@ -64,6 +64,25 @@ export interface Assignment {
   ast: ASTRequirement;
   /** スコアの重み (合計100が基本) */
   weights: ScoreWeights;
+  /**
+   * 模範解答 (CIの採点回帰テストでのみ使用)。
+   * 全テストにパスし、AST `required` を全充足、`forbidden` 違反ゼロで
+   * 100点満点が取れる必要がある。
+   * クライアントには配信しない (UI 側からは参照しない)。
+   */
+  solution?: string;
+  /**
+   * 採点で 100 点に届かないべき誤実装サンプル (任意)。
+   * `expectMaxScore` を指定するとその値以下で合格扱い (デフォルトは 99)。
+   */
+  badSolutions?: BadSolution[];
+}
+
+export interface BadSolution {
+  code: string;
+  description: string;
+  /** スコアの上限 (これ以下なら合格扱い)。省略時は 99。 */
+  expectMaxScore?: number;
 }
 
 export interface TestCase {

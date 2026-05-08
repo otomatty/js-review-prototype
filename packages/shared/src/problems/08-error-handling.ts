@@ -35,6 +35,21 @@ safeDivide(-10, 4)   // → -2.5
   return a / b;
 }
 `,
+    solution: `function safeDivide(a, b) {
+  if (b === 0) throw new Error('division by zero');
+  return a / b;
+}
+`,
+    badSolutions: [
+      {
+        description: "throw を string で行うと Error インスタンスにならない",
+        code: `function safeDivide(a, b) {
+  if (b === 0) throw 'division by zero';
+  return a / b;
+}
+`,
+      },
+    ],
     entryPoints: ["safeDivide"],
     tests: [
       { name: "10/2", weight: 18, code: "safeDivide(10, 2) === 5" },
@@ -119,6 +134,14 @@ tryParseJson('null')
 `,
     starterCode: `function tryParseJson(text) {
   return { ok: false, error: 'unimplemented' };
+}
+`,
+    solution: `function tryParseJson(text) {
+  try {
+    return { ok: true, value: JSON.parse(text) };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
 }
 `,
     entryPoints: ["tryParseJson"],
@@ -216,6 +239,7 @@ function assertAge(value) {
   return value;
 }
 `,
+    solution: "class ValidationError extends Error {\n  constructor(message) {\n    super(message);\n    this.name = 'ValidationError';\n  }\n}\n\nfunction assertAge(value) {\n  if (!Number.isInteger(value) || value < 0 || value > 150) {\n    throw new ValidationError(`invalid age: ${value}`);\n  }\n  return value;\n}\n",
     entryPoints: ["assertAge", "ValidationError"],
     tests: [
       { name: "0", weight: 12, code: "assertAge(0) === 0" },

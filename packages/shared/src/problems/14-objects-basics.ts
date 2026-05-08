@@ -46,6 +46,10 @@ makeRecord('name', 'Alice', 'admin')
   return {};
 }
 `,
+    solution: `function makeRecord(key, value, tag) {
+  return { [key]: value, tag, createdAt: 'now' };
+}
+`,
     entryPoints: ["makeRecord"],
     tests: [
       {
@@ -98,6 +102,14 @@ countChars('あああ')     // → { 'あ': 3 }
     starterCode: `function countChars(str) {
   // ここに実装してください
   return {};
+}
+`,
+    solution: `function countChars(str) {
+  const counts = {};
+  for (const ch of str) {
+    counts[ch] = (counts[ch] || 0) + 1;
+  }
+  return counts;
 }
 `,
     entryPoints: ["countChars"],
@@ -170,6 +182,12 @@ mapValues({}, (n) => n)
 `,
     starterCode: `function mapValues(obj, fn) {
   return obj;
+}
+`,
+    solution: `function mapValues(obj, fn) {
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [k, fn(v)]),
+  );
 }
 `,
     entryPoints: ["mapValues"],
@@ -268,6 +286,14 @@ function deepSet(obj, path, value) {
 `,
     starterCode: `function deepSet(obj, path, value) {
   return obj;
+}
+`,
+    solution: `function deepSet(obj, path, value) {
+  if (path.length === 0) return { ...obj };
+  const [head, ...rest] = path;
+  const child = obj[head] ?? {};
+  const nextChild = rest.length === 0 ? value : deepSet(child, rest, value);
+  return { ...obj, [head]: nextChild };
 }
 `,
     entryPoints: ["deepSet"],

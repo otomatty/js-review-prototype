@@ -31,6 +31,8 @@ double(0.5)  // → 1
 `,
     starterCode: `const double = (n) => 0;
 `,
+    solution: `const double = (n) => n * 2;
+`,
     entryPoints: ["double"],
     tests: [
       { name: "3", weight: 25, code: "double(3) === 6" },
@@ -92,6 +94,8 @@ applyTwice((arr) => [...arr, 0], [1, 2])
 - \`var\` は使わない
 `,
     starterCode: `const applyTwice = (fn, x) => x;
+`,
+    solution: `const applyTwice = (fn, x) => fn(fn(x));
 `,
     entryPoints: ["applyTwice"],
     tests: [
@@ -171,6 +175,8 @@ pipe((s) => s.trim())('  a  ')
 - \`var\` は使わない
 `,
     starterCode: `const pipe = (...fns) => (x) => x;
+`,
+    solution: `const pipe = (...fns) => (x) => fns.reduce((acc, fn) => fn(acc), x);
 `,
     entryPoints: ["pipe"],
     tests: [
@@ -261,6 +267,7 @@ greetAlice()    // → 'Hello, Alice!'  (Bob を作っても Alice は壊れな�
 `,
     starterCode: `const makeGreeter = (name) => () => '';
 `,
+    solution: "const makeGreeter = (name) => () => `Hello, ${name}!`;\n",
     entryPoints: ["makeGreeter"],
     tests: [
       {

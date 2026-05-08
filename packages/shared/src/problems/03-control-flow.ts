@@ -43,6 +43,15 @@ finalPrice({ price: -50,  isMember: true,  isWeekend: true  })  // → -50
   return 0;
 }
 `,
+    solution: `function finalPrice(input) {
+  const { price, isMember, isWeekend } = input;
+  if (price <= 0) return price;
+  if (isMember && isWeekend) return Math.round(price * 0.7);
+  if (isMember) return Math.round(price * 0.9);
+  if (isWeekend) return Math.round(price * 0.95);
+  return price;
+}
+`,
     entryPoints: ["finalPrice"],
     tests: [
       {
@@ -129,6 +138,19 @@ weekdayJa('0')  // → '不明'  (型違いも不明)
 `,
     starterCode: `function weekdayJa(n) {
   return '不明';
+}
+`,
+    solution: `function weekdayJa(n) {
+  switch (n) {
+    case 0: return '日';
+    case 1: return '月';
+    case 2: return '火';
+    case 3: return '水';
+    case 4: return '木';
+    case 5: return '金';
+    case 6: return '土';
+    default: return '不明';
+  }
 }
 `,
     entryPoints: ["weekdayJa"],
@@ -221,6 +243,26 @@ isBlank({a:undefined}) // → false
   return false;
 }
 `,
+    solution: `function isBlank(value) {
+  if (value === null || value === undefined) return true;
+  if (typeof value === 'string') return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
+  return false;
+}
+`,
+    badSolutions: [
+      {
+        description: "!value で短絡判定すると 0 や false を空扱いしてしまう",
+        code: `function isBlank(value) {
+  if (!value) return true;
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
+  return false;
+}
+`,
+      },
+    ],
     entryPoints: ["isBlank"],
     tests: [
       { name: "null", weight: 8, code: "isBlank(null) === true" },
@@ -303,6 +345,16 @@ bmiCategory('1.7', 60)  // → '不正'
 `,
     starterCode: `function bmiCategory(height, weight) {
   return '不正';
+}
+`,
+    solution: `function bmiCategory(height, weight) {
+  if (!Number.isFinite(height) || !Number.isFinite(weight)) return '不正';
+  if (height <= 0 || weight <= 0) return '不正';
+  const bmi = weight / (height * height);
+  if (bmi < 18.5) return '低体重';
+  if (bmi < 25) return '普通体重';
+  if (bmi < 30) return '肥満(1度)';
+  return '肥満(2度以上)';
 }
 `,
     entryPoints: ["bmiCategory"],

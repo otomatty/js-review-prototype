@@ -38,6 +38,13 @@ greet('Alice', undefined) // → 'Hello, Alice'
   return '';
 }
 `,
+    solution: "function greet(name, prefix = 'Hello,') {\n  if (prefix === '') return name;\n  return `${prefix} ${name}`;\n}\n",
+    badSolutions: [
+      {
+        description: "|| でフォールバックすると空文字を巻き込み 'Hello, Alice' になる",
+        code: "function greet(name, prefix) {\n  const p = prefix || 'Hello,';\n  return `${p} ${name}`;\n}\n",
+      },
+    ],
     entryPoints: ["greet"],
     tests: [
       {
@@ -102,6 +109,12 @@ average(-1, 1)          // → 0
 `,
     starterCode: `function average() {
   return 0;
+}
+`,
+    solution: `function average(...args) {
+  if (args.length === 0) return 0;
+  const total = args.reduce((a, b) => a + b, 0);
+  return total / args.length;
 }
 `,
     entryPoints: ["average"],
@@ -170,6 +183,20 @@ incrementCount({ count: 0, name: 'a' }, 2)
   return state;
 }
 `,
+    solution: `function incrementCount(state, amount) {
+  return { ...state, count: state.count + amount };
+}
+`,
+    badSolutions: [
+      {
+        description: "元のオブジェクトを破壊的に変更してしまう",
+        code: `function incrementCount(state, amount) {
+  state.count += amount;
+  return state;
+}
+`,
+      },
+    ],
     entryPoints: ["incrementCount"],
     tests: [
       {
@@ -241,6 +268,15 @@ power(2, 1.5)   // → NaN
 `,
     starterCode: `const power = function(base, exp) {
   return NaN;
+};
+`,
+    solution: `const power = function(base, exp) {
+  if (!Number.isInteger(exp) || exp < 0) return NaN;
+  let result = 1;
+  for (let i = 0; i < exp; i++) {
+    result *= base;
+  }
+  return result;
 };
 `,
     entryPoints: ["power"],

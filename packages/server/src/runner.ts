@@ -45,21 +45,21 @@ export class TestRunner {
     try {
       const context = await isolate.createContext();
 
-      // entryPoints で指定された関数群を __scope に集める。
-      // テスト式は `with(__scope)` 内で評価することで、これらの関数を識別子で直接呼べる。
+      // entryPoints で指定された関数群を __jsreview_scope__ に集める。
+      // テスト式は `with(__jsreview_scope__)` 内で評価することで、これらの関数を識別子で直接呼べる。
       const exposeStmts = entryPoints
-        .map((n) => `try { __scope.${n} = ${n}; } catch (_e) {}`)
+        .map((n) => `try { __jsreview_scope__.${n} = ${n}; } catch (_e) {}`)
         .join("\n");
 
       const source = `
         ${code}
-        var __scope = {};
+        var __jsreview_scope__ = {};
         ${exposeStmts}
         (function (__s) {
           with (__s) {
             return (${test.code});
           }
-        })(__scope);
+        })(__jsreview_scope__);
       `;
 
       let script: ivm.Script;

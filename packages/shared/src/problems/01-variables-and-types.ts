@@ -36,6 +36,25 @@ sumTo(10)  // → 55
   return 0;
 }
 `,
+    solution: `function sumTo(n) {
+  let total = 0;
+  for (let i = 1; i <= n; i++) {
+    total += i;
+  }
+  return total;
+}
+`,
+    badSolutions: [
+      {
+        description: "1から始めず 0 を返す (空ループのバグ)",
+        code: `function sumTo(n) {
+  let total = 0;
+  for (let i = 0; i < n; i++) total += i;
+  return total;
+}
+`,
+      },
+    ],
     entryPoints: ["sumTo"],
     tests: [
       { name: "sumTo(3) === 6", weight: 25, code: "sumTo(3) === 6" },
@@ -100,6 +119,30 @@ describeType(() => 1)    // → 'その他'
   return 'その他';
 }
 `,
+    solution: `function describeType(value) {
+  if (value === null) return 'なし';
+  const t = typeof value;
+  if (t === 'number') return '数値';
+  if (t === 'string') return '文字列';
+  if (t === 'boolean') return '真偽値';
+  if (t === 'undefined') return 'なし';
+  return 'その他';
+}
+`,
+    badSolutions: [
+      {
+        description: "typeof null === 'object' の落とし穴を考慮しない",
+        code: `function describeType(value) {
+  const t = typeof value;
+  if (t === 'number') return '数値';
+  if (t === 'string') return '文字列';
+  if (t === 'boolean') return '真偽値';
+  if (t === 'undefined') return 'なし';
+  return 'その他';
+}
+`,
+      },
+    ],
     entryPoints: ["describeType"],
     tests: [
       { name: "数値", weight: 14, code: "describeType(42) === '数値'" },
@@ -168,6 +211,22 @@ toIntOrNull(true)      // → null    (真偽値は対象外)
 - \`==\` / \`!=\` は使わない
 `,
     starterCode: `function toIntOrNull(value) {
+  return null;
+}
+`,
+    solution: `function toIntOrNull(value) {
+  if (typeof value === 'boolean') return null;
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) return null;
+    return Math.trunc(value);
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (trimmed.length === 0) return null;
+    const n = Number(trimmed);
+    if (!Number.isFinite(n)) return null;
+    return Math.trunc(n);
+  }
   return null;
 }
 `,
@@ -259,6 +318,7 @@ greet({ name: '太郎', age: 0 })
   return '';
 }
 `,
+    solution: "function greet(user) {\n  const { name, age } = user;\n  return `こんにちは、${name}さん（${age}歳）！`;\n}\n",
     entryPoints: ["greet"],
     tests: [
       {
