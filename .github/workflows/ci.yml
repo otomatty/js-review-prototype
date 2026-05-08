@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+# 既定の GITHUB_TOKEN 権限を最小化。各ジョブは checkout のみ必要なので read で十分。
+permissions:
+  contents: read
+
 jobs:
   typecheck:
     name: typecheck (3 packages)
