@@ -2,8 +2,9 @@
 @import "tw-animate-css";
 
 /* ダークモードは当面ライト固定だが、`dark:` バリアントの口だけ用意。
-   `<html class="dark">` を付ければ将来切り替え可能。 */
-@custom-variant dark (&:is(.dark *));
+   `<html class="dark">` (要素自体に付くケース) と、その配下要素の両方を
+   拾えるよう `:where(.dark, .dark *)` を使う。 */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ─── デザイントークン ───────────────────────────────────
    shadcn/ui 互換の変数名 (--background / --primary / ...) と、
@@ -204,9 +205,9 @@ code {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--primary);
   color: white;
-  border-color: var(--accent);
+  border-color: var(--primary);
   padding: 8px 18px;
   font-weight: 600;
 }
@@ -445,7 +446,7 @@ code {
   overflow: hidden;
 }
 .score-bar > div {
-  background: var(--accent);
+  background: var(--primary);
   height: 100%;
 }
 
@@ -609,13 +610,13 @@ code {
   background: white;
 }
 .chip:has(.sr-only:focus-visible) {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 .chip.is-active {
   color: white;
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--primary);
+  border-color: var(--primary);
   font-weight: 600;
 }
 
@@ -650,9 +651,9 @@ code {
   background: white;
 }
 .search-input:focus {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: -1px;
-  border-color: var(--accent);
+  border-color: var(--primary);
 }
 
 .btn-link {
@@ -661,7 +662,7 @@ code {
   padding: 4px 6px;
   font: inherit;
   font-size: 12px;
-  color: var(--accent);
+  color: var(--primary);
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -731,7 +732,7 @@ code {
   text-decoration: none;
 }
 .topic-mdn-link:hover {
-  color: var(--accent);
+  color: var(--primary);
   text-decoration: underline;
 }
 
@@ -763,12 +764,12 @@ code {
     box-shadow 120ms ease;
 }
 .assignment-card:hover {
-  border-color: var(--accent);
+  border-color: var(--primary);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px -6px rgba(99, 102, 241, 0.4);
 }
 .assignment-card:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -859,7 +860,7 @@ code {
 .card-cta {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--primary);
   letter-spacing: 0.01em;
 }
 .assignment-card:hover .card-cta {
