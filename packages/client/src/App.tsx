@@ -136,6 +136,7 @@ export function App() {
             assignment={assignment}
             lint={lint}
             ast={ast}
+            bestScore={bestScore}
           />
         </section>
       </div>

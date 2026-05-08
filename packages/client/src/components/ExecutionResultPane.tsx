@@ -11,6 +11,7 @@ import type {
   LintViolation,
 } from "@jsreview/shared/types";
 import type { ExecutionResult } from "../hooks/useGradeRunner.js";
+import { SolutionAccordion } from "./SolutionAccordion.js";
 
 interface Props {
   result: ExecutionResult | null;
@@ -18,9 +19,15 @@ interface Props {
   assignment: Assignment;
   lint: LintViolation[];
   ast: ASTResult;
+  bestScore: number | null;
 }
 
-export function ExecutionResultPane({ result, running, assignment }: Props) {
+export function ExecutionResultPane({
+  result,
+  running,
+  assignment,
+  bestScore,
+}: Props) {
   if (running && !result) {
     return (
       <div className="result-pane">
@@ -36,6 +43,11 @@ export function ExecutionResultPane({ result, running, assignment }: Props) {
         <div className="empty-state">
           ▶ 実行ボタンでテストを実行するとここに結果が表示されます。
         </div>
+        <SolutionAccordion
+          key={assignment.id}
+          solution={assignment.solution}
+          bestScore={bestScore}
+        />
       </div>
     );
   }
@@ -130,6 +142,12 @@ export function ExecutionResultPane({ result, running, assignment }: Props) {
           <span className="value">{score.total} / 100</span>
         </div>
       </div>
+
+      <SolutionAccordion
+        key={assignment.id}
+        solution={assignment.solution}
+        bestScore={Math.max(bestScore ?? 0, score.total)}
+      />
     </div>
   );
 }
