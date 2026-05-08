@@ -52,6 +52,7 @@ new Point(-3, -4).toString()           // → '(-3, -4)'
   }
 }
 `,
+    solution: "class Point {\n  constructor(x, y) {\n    this.x = x;\n    this.y = y;\n  }\n  distanceFromOrigin() {\n    return Math.sqrt(this.x * this.x + this.y * this.y);\n  }\n  toString() {\n    return `(${this.x}, ${this.y})`;\n  }\n}\n",
     entryPoints: ["Point"],
     tests: [
       {
@@ -161,6 +162,28 @@ s.pop()           // → undefined
   isEmpty() { return true; }
 }
 `,
+    solution: `class Stack {
+  constructor() {
+    this._items = [];
+  }
+  push(value) {
+    this._items.push(value);
+    return this._items.length;
+  }
+  pop() {
+    return this._items.pop();
+  }
+  peek() {
+    return this._items[this._items.length - 1];
+  }
+  size() {
+    return this._items.length;
+  }
+  isEmpty() {
+    return this._items.length === 0;
+  }
+}
+`,
     entryPoints: ["Stack"],
     tests: [
       {
@@ -265,6 +288,7 @@ t.label()     // → '[ ] 買い物'
   label() { return ''; }
 }
 `,
+    solution: "class Todo {\n  constructor({ id, title }) {\n    this.id = id;\n    this.title = title;\n    this.done = false;\n  }\n  complete() { this.done = true; }\n  reopen() { this.done = false; }\n  label() {\n    return `${this.done ? '[x]' : '[ ]'} ${this.title}`;\n  }\n}\n",
     entryPoints: ["Todo"],
     tests: [
       {
@@ -369,6 +393,26 @@ new Range(0, 3).toArray()   // → [0, 1, 2]
   length() { return 0; }
   contains(n) { return false; }
   toArray() { return []; }
+}
+`,
+    solution: `class Range {
+  constructor(start, end) {
+    this.start = start;
+    this.end = end;
+  }
+  length() {
+    return Math.max(0, this.end - this.start);
+  }
+  contains(n) {
+    return this.start <= n && n < this.end;
+  }
+  toArray() {
+    const result = [];
+    for (let i = this.start; i < this.end; i++) {
+      result.push(i);
+    }
+    return result;
+  }
 }
 `,
     entryPoints: ["Range"],

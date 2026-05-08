@@ -41,6 +41,10 @@ clamp(7.5, 0, 10)   // → 7.5
   return value;
 }
 `,
+    solution: `function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+`,
     entryPoints: ["clamp"],
     tests: [
       { name: "範囲内", weight: 16, code: "clamp(5, 0, 10) === 5" },
@@ -100,6 +104,10 @@ isPositiveInteger(true)     // → false
 `,
     starterCode: `function isPositiveInteger(value) {
   return false;
+}
+`,
+    solution: `function isPositiveInteger(value) {
+  return Number.isInteger(value) && typeof value === 'number' && value >= 1;
 }
 `,
     entryPoints: ["isPositiveInteger"],
@@ -169,6 +177,11 @@ roundTo(0.1 + 0.2, 1) // → 0.3
 `,
     starterCode: `function roundTo(value, digits) {
   return value;
+}
+`,
+    solution: `function roundTo(value, digits) {
+  const factor = Math.pow(10, digits);
+  return Math.round((value + Number.EPSILON) * factor) / factor;
 }
 `,
     entryPoints: ["roundTo"],
@@ -251,6 +264,13 @@ daysBetween('not-a-date', '2024-01-01')   // → NaN
 `,
     starterCode: `function daysBetween(a, b) {
   return NaN;
+}
+`,
+    solution: `function daysBetween(a, b) {
+  const ta = Date.parse(a + 'T00:00:00Z');
+  const tb = Date.parse(b + 'T00:00:00Z');
+  if (Number.isNaN(ta) || Number.isNaN(tb)) return NaN;
+  return Math.round((tb - ta) / 86400000);
 }
 `,
     entryPoints: ["daysBetween"],

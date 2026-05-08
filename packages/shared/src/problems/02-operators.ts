@@ -38,6 +38,21 @@ signOf(-0)   // → 0
   return 0;
 }
 `,
+    solution: `function signOf(n) {
+  return n > 0 ? 1 : n < 0 ? -1 : 0;
+}
+`,
+    badSolutions: [
+      {
+        description: "if 文を使ってしまい三項演算子の必須要件を満たさない",
+        code: `function signOf(n) {
+  if (n > 0) return 1;
+  if (n < 0) return -1;
+  return 0;
+}
+`,
+      },
+    ],
     entryPoints: ["signOf"],
     tests: [
       { name: "正の数", weight: 25, code: "signOf(7) === 1" },
@@ -99,6 +114,11 @@ resolvePort({ port: '3000' })     // → 8080  (型違い)
 `,
     starterCode: `function resolvePort(config) {
   return 8080;
+}
+`,
+    solution: `function resolvePort(config) {
+  const port = config.port;
+  return (typeof port === 'number' && Number.isInteger(port) && port >= 1 && port <= 65535) ? port : 8080;
 }
 `,
     entryPoints: ["resolvePort"],
@@ -188,6 +208,10 @@ companyName(undefined)                                     // → 'unknown'
 `,
     starterCode: `function companyName(user) {
   return 'unknown';
+}
+`,
+    solution: `function companyName(user) {
+  return user?.profile?.company?.name ?? 'unknown';
 }
 `,
     entryPoints: ["companyName"],
@@ -280,6 +304,7 @@ buildMessage({ user: null, count: undefined })
   return '';
 }
 `,
+    solution: "function buildMessage(input) {\n  const user = (input?.user || '匿名');\n  const count = input?.count;\n  const suffix = count > 0 ? `(${count}件)` : '(通知なし)';\n  return `${user}さん ${suffix}`;\n}\n",
     entryPoints: ["buildMessage"],
     tests: [
       {

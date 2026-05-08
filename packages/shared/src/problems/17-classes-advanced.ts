@@ -76,6 +76,7 @@ class Circle extends Shape {
   area() { return 0; }
 }
 `,
+    solution: "class Shape {\n  constructor(name) {\n    this.name = name;\n  }\n  area() { return 0; }\n  describe() {\n    return `${this.name}: area=${this.area()}`;\n  }\n}\n\nclass Square extends Shape {\n  constructor(side) {\n    super('square');\n    this.side = side;\n  }\n  area() { return this.side * this.side; }\n}\n\nclass Circle extends Shape {\n  constructor(radius) {\n    super('circle');\n    this.radius = radius;\n  }\n  area() { return Math.PI * this.radius * this.radius; }\n}\n",
     entryPoints: ["Shape", "Square", "Circle"],
     tests: [
       {
@@ -187,6 +188,7 @@ try { a.add(usd); } catch (e) { e instanceof Error }   // → true
   static fromUsd(amount) { return new Money(amount, 'USD'); }
 }
 `,
+    solution: "class Money {\n  constructor(amount, currency) {\n    this.amount = amount;\n    this.currency = currency;\n  }\n  add(other) {\n    if (other.currency !== this.currency) {\n      throw new Error('currency mismatch');\n    }\n    return new Money(this.amount + other.amount, this.currency);\n  }\n  format() {\n    return `${this.amount.toLocaleString('en-US')} ${this.currency}`;\n  }\n  static fromJpy(amount) { return new Money(amount, 'JPY'); }\n  static fromUsd(amount) { return new Money(amount, 'USD'); }\n}\n",
     entryPoints: ["Money"],
     tests: [
       {
@@ -292,6 +294,23 @@ try { t.celsius = -300 } catch(e) { e instanceof Error }  // → true
 
   get fahrenheit() { return 0; }
   set fahrenheit(f) {}
+}
+`,
+    solution: `class Temperature {
+  constructor(celsius) {
+    this._celsius = celsius;
+  }
+  get celsius() { return this._celsius; }
+  set celsius(v) {
+    if (v < -273.15) throw new Error('below absolute zero');
+    this._celsius = v;
+  }
+  get fahrenheit() {
+    return this._celsius * 9 / 5 + 32;
+  }
+  set fahrenheit(f) {
+    this.celsius = (f - 32) * 5 / 9;
+  }
 }
 `,
     entryPoints: ["Temperature"],
@@ -410,6 +429,26 @@ try { new LimitedCounter(0); } catch(e) { e instanceof Error }  // → true
   reset() {}
   get count() { return this.#count; }
   get isFull() { return false; }
+}
+`,
+    solution: `class LimitedCounter {
+  #count = 0;
+  #limit;
+
+  constructor(limit) {
+    if (!Number.isInteger(limit) || limit <= 0) {
+      throw new Error('limit must be a positive integer');
+    }
+    this.#limit = limit;
+  }
+  increment() {
+    if (this.#count >= this.#limit) return false;
+    this.#count++;
+    return true;
+  }
+  reset() { this.#count = 0; }
+  get count() { return this.#count; }
+  get isFull() { return this.#count >= this.#limit; }
 }
 `,
     entryPoints: ["LimitedCounter"],

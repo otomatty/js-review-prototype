@@ -33,6 +33,15 @@ maxOf([])                          // → null
   return null;
 }
 `,
+    solution: `function maxOf(numbers) {
+  if (numbers.length === 0) return null;
+  let m = numbers[0];
+  for (const n of numbers) {
+    if (n > m) m = n;
+  }
+  return m;
+}
+`,
     entryPoints: ["maxOf"],
     tests: [
       {
@@ -111,6 +120,18 @@ digitCount(3.14)     // → -1
   return -1;
 }
 `,
+    solution: `function digitCount(n) {
+  if (!Number.isInteger(n) || n < 0) return -1;
+  if (n === 0) return 1;
+  let count = 0;
+  let x = n;
+  while (x > 0) {
+    x = Math.floor(x / 10);
+    count++;
+  }
+  return count;
+}
+`,
     entryPoints: ["digitCount"],
     tests: [
       { name: "0 は 1 桁", weight: 14, code: "digitCount(0) === 1" },
@@ -168,6 +189,13 @@ firstNegativeIndex([0, -0, -1])         // → 2 (0 や -0 は負ではない)
 - \`var\` は使わない
 `,
     starterCode: `function firstNegativeIndex(numbers) {
+  return -1;
+}
+`,
+    solution: `function firstNegativeIndex(numbers) {
+  for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] < 0) return i;
+  }
   return -1;
 }
 `,
@@ -255,6 +283,35 @@ findPairsSummingTo([], 0)
   return [];
 }
 `,
+    solution: `function findPairsSummingTo(numbers, target) {
+  const pairs = [];
+  for (let i = 0; i < numbers.length; i++) {
+    for (let j = i + 1; j < numbers.length; j++) {
+      if (numbers[i] + numbers[j] === target) {
+        pairs.push([i, j]);
+      }
+    }
+  }
+  return pairs;
+}
+`,
+    badSolutions: [
+      {
+        description: "j を i から開始して i===j のペア (自己ペア) を含めてしまう",
+        code: `function findPairsSummingTo(numbers, target) {
+  const pairs = [];
+  for (let i = 0; i < numbers.length; i++) {
+    for (let j = i; j < numbers.length; j++) {
+      if (numbers[i] + numbers[j] === target) {
+        pairs.push([i, j]);
+      }
+    }
+  }
+  return pairs;
+}
+`,
+      },
+    ],
     entryPoints: ["findPairsSummingTo"],
     tests: [
       {

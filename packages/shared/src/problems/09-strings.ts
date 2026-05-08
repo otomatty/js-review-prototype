@@ -41,6 +41,12 @@ normalizeName('A')             // → 'A'
   return '';
 }
 `,
+    solution: `function normalizeName(input) {
+  const trimmed = input.trim();
+  if (trimmed.length === 0) return '';
+  return trimmed[0].toUpperCase() + trimmed.slice(1).toLowerCase();
+}
+`,
     entryPoints: ["normalizeName"],
     tests: [
       { name: "alice → Alice", weight: 17, code: "normalizeName('alice') === 'Alice'" },
@@ -112,6 +118,18 @@ titleCsv('a, , b')
   return '';
 }
 `,
+    solution: `function titleCsv(input) {
+  if (input === '') return '';
+  return input
+    .split(',')
+    .map((s) => {
+      const t = s.trim();
+      if (t.length === 0) return '';
+      return t[0].toUpperCase() + t.slice(1).toLowerCase();
+    })
+    .join(', ');
+}
+`,
     entryPoints: ["titleCsv"],
     tests: [
       {
@@ -181,6 +199,12 @@ isPalindrome('ab')                           // → false
 `,
     starterCode: `function isPalindrome(input) {
   return false;
+}
+`,
+    solution: `function isPalindrome(input) {
+  const cleaned = input.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const reversed = cleaned.split('').reverse().join('');
+  return cleaned === reversed;
 }
 `,
     entryPoints: ["isPalindrome"],
@@ -263,6 +287,7 @@ formatYmd({ year: 2024, month: 2, day: 32 })    // → 'invalid'
   return 'invalid';
 }
 `,
+    solution: "function formatYmd(date) {\n  const { year, month, day } = date;\n  if (year < 0 || year > 9999) return 'invalid';\n  if (month < 1 || month > 12) return 'invalid';\n  if (day < 1 || day > 31) return 'invalid';\n  const y = String(year).padStart(4, '0');\n  const m = String(month).padStart(2, '0');\n  const d = String(day).padStart(2, '0');\n  return `${y}-${m}-${d}`;\n}\n",
     entryPoints: ["formatYmd"],
     tests: [
       {

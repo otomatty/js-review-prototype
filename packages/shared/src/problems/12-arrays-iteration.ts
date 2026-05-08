@@ -33,6 +33,10 @@ sum([0.5, 1.5])     // → 2
   return 0;
 }
 `,
+    solution: `function sum(numbers) {
+  return numbers.reduce((a, b) => a + b, 0);
+}
+`,
     entryPoints: ["sum"],
     tests: [
       { name: "正の整数 [1,2,3] → 6", weight: 25, code: "sum([1,2,3]) === 6" },
@@ -92,6 +96,10 @@ adults([
     starterCode: `function adults(users) {
   // ここに実装してください
   return [];
+}
+`,
+    solution: `function adults(users) {
+  return users.filter((u) => u.age >= 18);
 }
 `,
     entryPoints: ["adults"],
@@ -167,6 +175,10 @@ pluckNames([])
   return [];
 }
 `,
+    solution: `function pluckNames(items) {
+  return items.map((x) => x.name);
+}
+`,
     entryPoints: ["pluckNames"],
     tests: [
       {
@@ -233,6 +245,15 @@ groupBy([], () => 'x')
 `,
     starterCode: `function groupBy(items, keyFn) {
   return {};
+}
+`,
+    solution: `function groupBy(items, keyFn) {
+  return items.reduce((acc, item) => {
+    const k = keyFn(item);
+    if (!acc[k]) acc[k] = [];
+    acc[k].push(item);
+    return acc;
+  }, {});
 }
 `,
     entryPoints: ["groupBy"],
@@ -315,6 +336,14 @@ validatePasswords([])
 `,
     starterCode: `function validatePasswords(passwords) {
   return { allStrong: true, hasWeak: false };
+}
+`,
+    solution: `function validatePasswords(passwords) {
+  const isStrong = (p) => p.length >= 8 && /\\d/.test(p);
+  return {
+    allStrong: passwords.every(isStrong),
+    hasWeak: passwords.some((p) => !isStrong(p)),
+  };
 }
 `,
     entryPoints: ["validatePasswords"],

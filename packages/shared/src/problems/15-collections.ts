@@ -37,6 +37,10 @@ unique([1, '1', 1])              // → [1, '1']  (型が違えば別)
   return [];
 }
 `,
+    solution: `function unique(arr) {
+  return [...new Set(arr)];
+}
+`,
     entryPoints: ["unique"],
     tests: [
       {
@@ -120,6 +124,14 @@ tally([1,1,1]).get(1)  // → 3
   return new Map();
 }
 `,
+    solution: `function tally(arr) {
+  const m = new Map();
+  for (const item of arr) {
+    m.set(item, (m.get(item) || 0) + 1);
+  }
+  return m;
+}
+`,
     entryPoints: ["tally"],
     tests: [
       {
@@ -194,6 +206,19 @@ intersect([1,2], [3,4])            // → []
 `,
     starterCode: `function intersect(a, b) {
   return [];
+}
+`,
+    solution: `function intersect(a, b) {
+  const setB = new Set(b);
+  const seen = new Set();
+  const result = [];
+  for (const x of a) {
+    if (setB.has(x) && !seen.has(x)) {
+      result.push(x);
+      seen.add(x);
+    }
+  }
+  return result;
 }
 `,
     entryPoints: ["intersect"],
