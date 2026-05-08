@@ -6,11 +6,48 @@
  */
 
 // ───────────────────────────────────────────────────────────────────
+// トピック (MDN準拠の章立て)
+// ───────────────────────────────────────────────────────────────────
+
+export type TopicId =
+  | "variables-and-types"
+  | "operators"
+  | "control-flow"
+  | "loops"
+  | "functions-basics"
+  | "functions-arrow-this"
+  | "scope-closure"
+  | "error-handling"
+  | "strings"
+  | "numbers-math-date"
+  | "arrays-basics"
+  | "arrays-iteration"
+  | "destructuring-spread"
+  | "objects-basics"
+  | "collections"
+  | "classes-basics"
+  | "classes-advanced";
+
+export interface Topic {
+  id: TopicId;
+  /** 表示順 (1始まり) */
+  order: number;
+  /** UI表示用ラベル (例: "01. 変数と型") */
+  label: string;
+  /** MDN該当ページ */
+  mdnUrl: string;
+  /** トピックの1行説明 */
+  description?: string;
+}
+
+// ───────────────────────────────────────────────────────────────────
 // 課題定義
 // ───────────────────────────────────────────────────────────────────
 
 export interface Assignment {
   id: string;
+  /** 所属トピック (UIグルーピング用) */
+  topicId: TopicId;
   title: string;
   difficulty: 1 | 2 | 3;
   /** 課題説明 (Markdown) */
@@ -72,13 +109,33 @@ export type ASTPattern =
   | { kind: "loose-eq"; label?: string };
 
 export type ASTNodeType =
+  // 制御構文・ループ
   | "ForStatement"
   | "ForInStatement"
   | "ForOfStatement"
   | "WhileStatement"
   | "DoWhileStatement"
+  | "SwitchStatement"
+  | "TryStatement"
+  | "ThrowStatement"
+  // 宣言
   | "VariableDeclaration"
-  | "FunctionDeclaration";
+  | "FunctionDeclaration"
+  | "ClassDeclaration"
+  | "ClassExpression"
+  // 関数式
+  | "FunctionExpression"
+  | "ArrowFunctionExpression"
+  // 式
+  | "TemplateLiteral"
+  | "ConditionalExpression"
+  | "LogicalExpression"
+  | "NewExpression"
+  // パターン (分割代入・スプレッド・残余)
+  | "SpreadElement"
+  | "RestElement"
+  | "ObjectPattern"
+  | "ArrayPattern";
 
 export interface ScoreWeights {
   test: number;
