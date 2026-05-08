@@ -27,8 +27,13 @@ interface ProgressApi {
   code: string;
   setCode: (code: string) => void;
   bestScore: number | null;
-  /** 採点直後に呼び出す。前回より高ければ更新する。 */
-  recordScore: (score: number) => void;
+  /**
+   * 採点直後に呼び出す。前回より高ければ best score を更新し、
+   * 採点対象だった `submittedCode` を `lastCode` として保存する。
+   * `submittedCode` は呼び出し側で run() 起動時に固定した値を渡すこと
+   * (await 中に課題切替があっても元の課題に紐付くようにするため)。
+   */
+  recordScore: (score: number, submittedCode: string) => void;
   /** storage の entry を消し、starterCode に戻す。 */
   clear: () => void;
 }
@@ -52,12 +57,6 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
     setBestScore(next.bestScore);
   }, [assignmentId, starterCode]);
 
-  // 採点直後など debounce を経由しない経路で最新コードを参照したい場合に使う
-  const codeRef = useRef(code);
-  useEffect(() => {
-    codeRef.current = code;
-  }, [code]);
-
   // code 変更を debounce して localStorage に保存
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -78,19 +77,21 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
   }, []);
 
   const recordScore = useCallback(
-    (score: number) => {
+    (score: number, submittedCode: string) => {
       const existing = loadEntry(assignmentId);
       const prev = existing?.bestScore ?? 0;
       const nextBest = Math.max(prev, score);
-      // debounce 前に Run された場合 existing.lastCode は古い可能性があるため、
-      // スコアと突き合わせるコードは必ずエディタの最新値を採用する。
+      // submittedCode は採点対象として run() に渡された固定値。
+      // await 中に課題が切り替わっても、エディタの「現在値」ではなく
+      // 採点が走った時点のコードを保存する。
       const entry: ProgressEntry = {
         bestScore: nextBest,
-        lastCode: codeRef.current,
+        lastCode: submittedCode,
         lastSubmittedAt: Date.now(),
       };
       saveEntry(assignmentId, entry);
-      setBestScore(nextBest);
+      // 表示中の課題が切り替わっていれば bestScore の state は触らない。
+      if (lastAssignmentRef.current === assignmentId) setBestScore(nextBest);
     },
     [assignmentId],
   );

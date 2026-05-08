@@ -57,8 +57,11 @@ export function App() {
   };
 
   const handleRun = async () => {
-    const res = await run({ code, assignment, lint, ast });
-    recordScore(res.score.total);
+    // await 中に課題が切り替わっても元の課題に紐付ける必要があるため、
+    // 採点対象のコードはローカル変数に固定しておく。
+    const submittedCode = code;
+    const res = await run({ code: submittedCode, assignment, lint, ast });
+    recordScore(res.score.total, submittedCode);
   };
 
   return (
