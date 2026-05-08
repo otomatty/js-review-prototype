@@ -1,15 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { assignments, topics } from "@jsreview/shared/assignments";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  assignments,
+  assignmentsByTopic,
+  topics,
+} from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
 import { Editor } from "./components/Editor.js";
 import { StaticAnalysisPane } from "./components/StaticAnalysisPane.js";
 import { ExecutionResultPane } from "./components/ExecutionResultPane.js";
 import { AssignmentView } from "./components/AssignmentView.js";
+import { AssignmentSidebar } from "./components/AssignmentSidebar.js";
 
 import { useStaticAnalysis } from "./hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "./hooks/useGradeRunner.js";
 import { useProgress } from "./hooks/useProgress.js";
+import { useAllBestScores } from "./hooks/useAllBestScores.js";
 import { initProgressStore } from "./lib/progress-store.js";
 
 initProgressStore();
@@ -33,16 +39,47 @@ export function App() {
   // ─── テスト実行 (実行ボタン押下時) ──────────────────
   const { running, result, run, reset } = useGradeRunner();
 
+  // サイドバー用の全課題ベストスコア
+  const bestScores = useAllBestScores();
+
   // 課題切替時のリセット (結果ペインのみ。コードは useProgress が復元する)
-  const handleSelectAssignment = (id: string) => {
+  // 結果クリアは下の useEffect で `assignmentId` 変更を起点に一元化する
+  // (任意の経路で setAssignmentId が走っても確実にリセットされるよう)。
+  const handleSelectAssignment = useCallback((id: string) => {
     setAssignmentId(id);
-    reset();
-  };
+  }, []);
 
   // 課題切替時、結果表示は無関係になるのでクリア
   useEffect(() => {
     reset();
   }, [assignmentId, reset]);
+
+  // `[` / `]` で前後の課題に移動 (両端は循環)。
+  // CodeMirror など編集可能要素にフォーカス中は通常の文字入力を優先する。
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key !== "[" && e.key !== "]") return;
+      const t = e.target;
+      if (
+        t instanceof HTMLElement &&
+        t.closest(
+          "input, textarea, select, [contenteditable=''], [contenteditable='true'], .cm-editor",
+        )
+      ) {
+        return;
+      }
+      const idx = assignments.findIndex((a) => a.id === assignmentId);
+      if (idx === -1) return;
+      const len = assignments.length;
+      const nextIdx =
+        e.key === "[" ? (idx - 1 + len) % len : (idx + 1) % len;
+      e.preventDefault();
+      handleSelectAssignment(assignments[nextIdx].id);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [assignmentId, handleSelectAssignment]);
 
   const handleReset = () => {
     // 確認モーダルで「保存も消す」かを確認
@@ -74,18 +111,23 @@ export function App() {
         </div>
         <div className="header-controls">
           <select
+            className="assignment-select"
             value={assignmentId}
             onChange={(e) => handleSelectAssignment(e.target.value)}
             aria-label="課題を選択"
           >
             {topics.map((topic) => {
-              const items = assignments.filter((a) => a.topicId === topic.id);
+              const items = assignmentsByTopic(topic.id);
               if (items.length === 0) return null;
               return (
                 <optgroup key={topic.id} label={topic.label}>
                   {items.map((a, i) => (
                     <option key={a.id} value={a.id}>
-                      {`${i + 1}. ${a.title} ★${a.difficulty}`}
+                      {`${i + 1}. ${a.title} ★${a.difficulty}${
+                        bestScores.get(a.id) != null
+                          ? ` — ${bestScores.get(a.id)}点`
+                          : ""
+                      }`}
                     </option>
                   ))}
                 </optgroup>
@@ -105,6 +147,12 @@ export function App() {
       </header>
 
       <div className="body">
+        <AssignmentSidebar
+          topics={topics}
+          activeAssignmentId={assignmentId}
+          bestScores={bestScores}
+          onSelect={handleSelectAssignment}
+        />
         <aside className="left-pane">
           <AssignmentView assignment={assignment} />
           <StaticAnalysisPane lint={lint} ast={ast} assignment={assignment} />
