@@ -97,6 +97,8 @@ function labelOf(p: ASTPattern): string {
       return "var 宣言";
     case "loose-eq":
       return "== / != (緩い等価比較)";
+    case "async-fn":
+      return "async 関数を使う";
   }
 }
 
@@ -152,6 +154,14 @@ function matches(node: Node, pattern: ASTPattern): boolean {
       return (
         node.type === "BinaryExpression" &&
         (node.operator === "==" || node.operator === "!=")
+      );
+
+    case "async-fn":
+      return (
+        (node.type === "FunctionDeclaration" ||
+          node.type === "FunctionExpression" ||
+          node.type === "ArrowFunctionExpression") &&
+        node.async === true
       );
   }
 }

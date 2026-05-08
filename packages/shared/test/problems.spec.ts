@@ -59,8 +59,8 @@ describe("solutions", () => {
   });
 
   for (const a of withSolution) {
-    it(`${a.id}: solution が満点 (100) を取る`, () => {
-      const report = gradeCode(a, a.solution!);
+    it(`${a.id}: solution が満点 (100) を取る`, async () => {
+      const report = await gradeCode(a, a.solution!);
       const detail = JSON.stringify(
         {
           id: a.id,
@@ -85,8 +85,8 @@ describe("badSolutions", () => {
   );
 
   for (const { assignment, bad, idx } of withBad) {
-    it(`${assignment.id} bad[${idx}] (${bad.description}) は減点される`, () => {
-      const report = gradeCode(assignment, bad.code);
+    it(`${assignment.id} bad[${idx}] (${bad.description}) は減点される`, async () => {
+      const report = await gradeCode(assignment, bad.code);
       const max = bad.expectMaxScore ?? 99;
       expect(
         report.score.total,
