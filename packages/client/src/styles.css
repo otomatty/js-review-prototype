@@ -247,11 +247,6 @@ code {
   border-top: 1px solid var(--border);
   background: var(--bg-panel);
 }
-.run-bar .hint {
-  color: var(--text-mute);
-  font-size: 12px;
-}
-
 /* ─── 実行結果ペイン ──────────────────────────────────── */
 .result-pane {
   border-top: 1px solid var(--border);
