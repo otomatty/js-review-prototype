@@ -35,10 +35,37 @@ function entryKey(assignmentId: string): string {
   return `${PREFIX}${assignmentId}`;
 }
 
+// ─── 変更通知 (サイドバー等の一括ビュー向け) ───────────────────
+// `loadAllBestScores` の結果は変化があるまで参照同値で返す
+// (useSyncExternalStore の getSnapshot 用)。
+type Listener = () => void;
+const listeners = new Set<Listener>();
+let cachedScores: Map<string, number> | null = null;
+
+function emitChange(): void {
+  cachedScores = null;
+  for (const l of listeners) l();
+}
+
+export function subscribeProgress(listener: Listener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
 /** 起動時に呼ぶ。バージョン不一致なら旧データを破棄する。 */
 export function initProgressStore(): void {
   const ls = safeStorage();
   if (!ls) return;
+
+  // 別タブでの編集にも追従する (key === null は localStorage.clear())。
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", (e) => {
+      if (e.key === null || e.key.startsWith(PREFIX)) emitChange();
+    });
+  }
+
   const stored = ls.getItem(VERSION_KEY);
   if (stored === String(VERSION)) return;
 
@@ -81,26 +108,68 @@ export function loadEntry(assignmentId: string): ProgressEntry | null {
 export function saveEntry(assignmentId: string, entry: ProgressEntry): void {
   const ls = safeStorage();
   if (!ls) return;
+  // bestScore が変化したかを確認するため、書き込み前の値を保持する
+  // (毎タイプ走る編集中の保存では再描画させないための最適化)。
+  const before = loadEntry(assignmentId);
   const payload: StoredEntry = { v: VERSION, ...entry };
   const serialized = JSON.stringify(payload);
+  let written = false;
   try {
     ls.setItem(entryKey(assignmentId), serialized);
+    written = true;
   } catch (e) {
     if (isQuotaError(e)) {
       pruneOldest(ls, assignmentId);
       try {
         ls.setItem(entryKey(assignmentId), serialized);
+        written = true;
       } catch {
         // 諦める。ユーザの編集を妨げないため例外は飲み込む。
       }
     }
+  }
+  if (written && (before?.bestScore ?? null) !== entry.bestScore) {
+    emitChange();
   }
 }
 
 export function deleteEntry(assignmentId: string): void {
   const ls = safeStorage();
   if (!ls) return;
+  const had = ls.getItem(entryKey(assignmentId)) !== null;
   ls.removeItem(entryKey(assignmentId));
+  if (had) emitChange();
+}
+
+/**
+ * 全課題のベストスコアを `assignmentId -> score` のマップで返す。
+ * `subscribeProgress` で通知される変更があるまで同じ参照を返すため、
+ * `useSyncExternalStore` の getSnapshot として安全に使える。
+ */
+export function getBestScoresSnapshot(): Map<string, number> {
+  if (cachedScores) return cachedScores;
+  const map = new Map<string, number>();
+  const ls = safeStorage();
+  if (!ls) {
+    cachedScores = map;
+    return map;
+  }
+  for (let i = 0; i < ls.length; i++) {
+    const k = ls.key(i);
+    if (!k || !k.startsWith(PREFIX) || k === VERSION_KEY) continue;
+    const raw = ls.getItem(k);
+    if (!raw) continue;
+    try {
+      const parsed = JSON.parse(raw) as Partial<StoredEntry>;
+      if (parsed.v !== VERSION) continue;
+      if (typeof parsed.bestScore !== "number") continue;
+      map.set(k.slice(PREFIX.length), parsed.bestScore);
+    } catch {
+      // 壊れたエントリは無視
+    }
+  }
+  cachedScores = map;
+  return map;
 }
 
 function isQuotaError(e: unknown): boolean {
