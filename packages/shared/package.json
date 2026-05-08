@@ -10,7 +10,8 @@
     "./types": "./src/types.ts",
     "./assignments": "./src/assignments.ts",
     "./grading/ast": "./src/grading/ast.ts",
-    "./grading/score": "./src/grading/score.ts"
+    "./grading/score": "./src/grading/score.ts",
+    "./util/timeout": "./src/util/timeout.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

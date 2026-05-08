@@ -175,6 +175,7 @@ chainDouble(0).then(v => v)   // → 0
       ],
       forbidden: [
         { kind: "var", label: "var は使わない" },
+        { kind: "async-fn", label: "async 関数は使わない" },
         {
           kind: "node",
           nodeType: "AwaitExpression",
@@ -399,6 +400,16 @@ await partitionPromises([])
       forbidden: [
         { kind: "var", label: "var は使わない" },
         { kind: "node", nodeType: "ForStatement", label: "for 文は使わない" },
+        {
+          kind: "node",
+          nodeType: "ForOfStatement",
+          label: "for...of 文は使わない",
+        },
+        {
+          kind: "node",
+          nodeType: "ForInStatement",
+          label: "for...in 文は使わない",
+        },
       ],
     },
     weights: DEFAULT_WEIGHTS,

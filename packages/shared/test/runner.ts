@@ -13,6 +13,7 @@
 import vm from "node:vm";
 
 import type { TestCase, TestResult } from "../src/types.js";
+import { isThenable, withWallTimeout } from "../src/util/timeout.js";
 
 const PER_TEST_TIMEOUT_MS = 1000;
 const PER_TEST_WALL_TIMEOUT_MS = 3000;
@@ -95,30 +96,6 @@ ${exposeStmts}
     weight: test.weight,
     passed: Boolean(result),
   };
-}
-
-function isThenable(v: unknown): v is PromiseLike<unknown> {
-  return (
-    typeof v === "object" &&
-    v !== null &&
-    typeof (v as { then?: unknown }).then === "function"
-  );
-}
-
-function withWallTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("TIMEOUT")), ms);
-    promise.then(
-      (v) => {
-        clearTimeout(timer);
-        resolve(v);
-      },
-      (e) => {
-        clearTimeout(timer);
-        reject(e);
-      },
-    );
-  });
 }
 
 function formatErr(e: unknown): string {

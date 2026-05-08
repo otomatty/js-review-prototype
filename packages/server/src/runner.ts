@@ -16,6 +16,7 @@
  */
 
 import ivm from "isolated-vm";
+import { withWallTimeout } from "@jsreview/shared/util/timeout";
 
 import type { TestCase, TestResult } from "./types.js";
 import { IsolatePool } from "./isolate-pool.js";
@@ -120,20 +121,4 @@ export class TestRunner {
 function formatErr(e: unknown): string {
   if (e instanceof Error) return e.message;
   return String(e);
-}
-
-function withWallTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("TIMEOUT")), ms);
-    promise.then(
-      (v) => {
-        clearTimeout(timer);
-        resolve(v);
-      },
-      (e) => {
-        clearTimeout(timer);
-        reject(e);
-      },
-    );
-  });
 }
