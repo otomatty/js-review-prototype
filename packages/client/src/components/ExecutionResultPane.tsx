@@ -1,8 +1,7 @@
 /**
  * 実行結果ペイン (画面下部)。
  *
- * 「実行」ボタン押下後にのみ表示される。
- * テスト結果 (サーバから返却) と スコア集計 (クライアント計算) を並べる。
+ * Lint / AST (クライアント・随時更新) と、実行後のテスト結果・スコアをまとめて表示する。
  */
 
 import type {
@@ -11,7 +10,7 @@ import type {
   LintViolation,
 } from "@jsreview/shared/types";
 import type { ExecutionResult } from "../hooks/useGradeRunner.js";
-import { SolutionAccordion } from "./SolutionAccordion.js";
+import { StaticAnalysisPane } from "./StaticAnalysisPane.js";
 
 interface Props {
   result: ExecutionResult | null;
@@ -19,44 +18,48 @@ interface Props {
   assignment: Assignment;
   lint: LintViolation[];
   ast: ASTResult;
-  bestScore: number | null;
 }
 
 export function ExecutionResultPane({
   result,
   running,
   assignment,
-  bestScore,
+  lint,
+  ast,
 }: Props) {
-  if (running && !result) {
-    return (
-      <div className="result-pane">
+  return (
+    <div className="result-pane">
+      <StaticAnalysisPane lint={lint} ast={ast} assignment={assignment} />
+
+      {running && !result ? (
         <div className="empty-state">
           サーバ (isolated-vm) にてテスト実行中...
         </div>
-      </div>
-    );
-  }
-  if (!result) {
-    return (
-      <div className="result-pane">
+      ) : null}
+
+      {!running && !result ? (
         <div className="empty-state">
           ▶ 実行ボタンでテストを実行するとここに結果が表示されます。
         </div>
-        <SolutionAccordion
-          key={assignment.id}
-          solution={assignment.solution}
-          bestScore={bestScore}
-        />
-      </div>
-    );
-  }
+      ) : null}
 
+      {result ? <ResultBody result={result} assignment={assignment} /> : null}
+    </div>
+  );
+}
+
+function ResultBody({
+  result,
+  assignment,
+}: {
+  result: ExecutionResult;
+  assignment: Assignment;
+}) {
   const { testResults, serverDurationMs, score, errorMessage } = result;
   const passedCount = testResults.filter((t) => t.passed).length;
 
   return (
-    <div className="result-pane">
+    <>
       {/* ─── テスト結果 ──────────────────────────────────────── */}
       <div className="result-section">
         <div className="result-header">
@@ -71,11 +74,11 @@ export function ExecutionResultPane({
           </span>
         </div>
 
-        {errorMessage && (
+        {errorMessage ? (
           <p className="empty-state" style={{ color: "var(--err)" }}>
             {errorMessage}
           </p>
-        )}
+        ) : null}
 
         <ul className="test-list">
           {testResults.map((t, i) => (
@@ -85,9 +88,9 @@ export function ExecutionResultPane({
               </span>
               <span>{t.name}</span>
               <span className="weight">重み {t.weight}</span>
-              {t.error && (
+              {t.error ? (
                 <span className="err-detail">{t.error}</span>
-              )}
+              ) : null}
             </li>
           ))}
         </ul>
@@ -142,13 +145,7 @@ export function ExecutionResultPane({
           <span className="value">{score.total} / 100</span>
         </div>
       </div>
-
-      <SolutionAccordion
-        key={assignment.id}
-        solution={assignment.solution}
-        bestScore={Math.max(bestScore ?? 0, score.total)}
-      />
-    </div>
+    </>
   );
 }
 
