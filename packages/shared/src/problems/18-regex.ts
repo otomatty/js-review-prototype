@@ -25,6 +25,9 @@ extractPhones('連絡先: 090-1234 または 080-5678 まで')
 extractPhones('TEL 090-1234, FAX 03-5678')
 // → ['090-1234']   (※ '03-5678' は 2-4 形式なので拾わない)
 
+extractPhones('内線1090-1234 は社内のみ')
+// → []             (※ 直前に数字が続くものは拾わない)
+
 extractPhones('電話番号はありません')
 // → []
 
@@ -37,6 +40,7 @@ extractPhones('')
 - 正規表現リテラル (\`/.../g\`) を使う
 - \`String.prototype.match\` を使う
 - マッチがない場合に \`null\` を返さず、必ず配列を返す
+- 単語境界 (\`\\b\`) などを使い、長い数字列の途中を拾わないようにする
 - \`var\` は使わない
 `,
     starterCode: `function extractPhones(text) {
@@ -44,29 +48,34 @@ extractPhones('')
 }
 `,
     solution: `function extractPhones(text) {
-  return text.match(/\\d{3}-\\d{4}/g) ?? [];
+  return text.match(/\\b\\d{3}-\\d{4}\\b/g) ?? [];
 }
 `,
     entryPoints: ["extractPhones"],
     tests: [
       {
         name: "2件抽出",
-        weight: 25,
+        weight: 20,
         code: "JSON.stringify(extractPhones('連絡先: 090-1234 または 080-5678 まで')) === JSON.stringify(['090-1234','080-5678'])",
       },
       {
         name: "桁数違いは無視",
-        weight: 25,
+        weight: 20,
         code: "JSON.stringify(extractPhones('TEL 090-1234, FAX 03-5678')) === JSON.stringify(['090-1234'])",
       },
       {
+        name: "長い数字列の途中は拾わない",
+        weight: 20,
+        code: "JSON.stringify(extractPhones('内線1090-1234 は社内のみ')) === JSON.stringify([])",
+      },
+      {
         name: "該当なしは空配列",
-        weight: 25,
+        weight: 20,
         code: "JSON.stringify(extractPhones('電話番号はありません')) === JSON.stringify([])",
       },
       {
         name: "空文字も空配列",
-        weight: 25,
+        weight: 20,
         code: "JSON.stringify(extractPhones('')) === JSON.stringify([])",
       },
     ],
@@ -108,6 +117,9 @@ parseUrl('https://example.com/foo/bar')
 parseUrl('http://example.com/')
 // → { host: 'example.com', path: '' }
 
+parseUrl('https://example.com')
+// → { host: 'example.com', path: '' }
+
 parseUrl('https://sub.example.co.jp/a/b/c?x=1')
 // → { host: 'sub.example.co.jp', path: 'a/b/c?x=1' }
 
@@ -120,8 +132,9 @@ parseUrl('ftp://example.com/foo')
 
 ### 制約
 
-- 正規表現リテラルとキャプチャグループを使う (\`https?://([^/]+)/(.*)\` のような形)
+- 正規表現リテラルとキャプチャグループを使う (\`https?://([^/]+)(?:/(.*))?\` のような形)
 - \`String.prototype.match\` を使う
+- 末尾スラッシュやパスがない場合 (\`https://example.com\`) も受け付け、\`path\` は \`''\` とする
 - \`var\` は使わない
 `,
     starterCode: `function parseUrl(url) {
@@ -129,36 +142,41 @@ parseUrl('ftp://example.com/foo')
 }
 `,
     solution: `function parseUrl(url) {
-  const m = url.match(/^https?:\\/\\/([^/]+)\\/(.*)$/);
+  const m = url.match(/^https?:\\/\\/([^/]+)(?:\\/(.*))?$/);
   if (!m) return null;
-  return { host: m[1], path: m[2] };
+  return { host: m[1], path: m[2] ?? '' };
 }
 `,
     entryPoints: ["parseUrl"],
     tests: [
       {
         name: "通常",
-        weight: 20,
+        weight: 17,
         code: "JSON.stringify(parseUrl('https://example.com/foo/bar')) === JSON.stringify({host:'example.com',path:'foo/bar'})",
       },
       {
         name: "末尾スラッシュのみ",
-        weight: 20,
+        weight: 17,
         code: "JSON.stringify(parseUrl('http://example.com/')) === JSON.stringify({host:'example.com',path:''})",
       },
       {
+        name: "ホストのみ (パスなし)",
+        weight: 16,
+        code: "JSON.stringify(parseUrl('https://example.com')) === JSON.stringify({host:'example.com',path:''})",
+      },
+      {
         name: "サブドメイン+クエリ",
-        weight: 20,
+        weight: 17,
         code: "JSON.stringify(parseUrl('https://sub.example.co.jp/a/b/c?x=1')) === JSON.stringify({host:'sub.example.co.jp',path:'a/b/c?x=1'})",
       },
       {
         name: "URLでない",
-        weight: 20,
+        weight: 17,
         code: "parseUrl('not a url') === null",
       },
       {
         name: "対応外スキーム",
-        weight: 20,
+        weight: 16,
         code: "parseUrl('ftp://example.com/foo') === null",
       },
     ],
