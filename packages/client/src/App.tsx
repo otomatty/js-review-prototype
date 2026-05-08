@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { assignments } from "@jsreview/shared/assignments";
+import { assignments, topics } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
 import { Editor } from "./components/Editor.js";
@@ -57,12 +57,19 @@ export function App() {
             onChange={(e) => handleSelectAssignment(e.target.value)}
             aria-label="課題を選択"
           >
-            {assignments.map((a) => (
-              <option key={a.id} value={a.id}>
-                {`課題${assignments.indexOf(a) + 1}: ${a.title}`}
-                {` (★${a.difficulty})`}
-              </option>
-            ))}
+            {topics.map((topic) => {
+              const items = assignments.filter((a) => a.topicId === topic.id);
+              if (items.length === 0) return null;
+              return (
+                <optgroup key={topic.id} label={topic.label}>
+                  {items.map((a, i) => (
+                    <option key={a.id} value={a.id}>
+                      {`${i + 1}. ${a.title} ★${a.difficulty}`}
+                    </option>
+                  ))}
+                </optgroup>
+              );
+            })}
           </select>
           <button className="btn" onClick={handleReset}>
             リセット

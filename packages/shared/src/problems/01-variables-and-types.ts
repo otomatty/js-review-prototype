@@ -1,0 +1,298 @@
+import type { Assignment } from "../types.js";
+import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+
+export const variablesAndTypes: Assignment[] = [
+  // ────────────────────────────────────────────────
+  // 1-1: const と let の使い分け
+  // ────────────────────────────────────────────────
+  {
+    id: "let-vs-const",
+    topicId: "variables-and-types",
+    title: "再代入する値だけを let にする",
+    difficulty: 1,
+    description: `## 再代入する値だけを let にする
+
+整数 \`n\` を受け取り、\`1\` から \`n\` までの合計を返す関数 \`sumTo\` を実装してください。
+
+学習ポイント: **再代入する値だけ \`let\`、それ以外は \`const\`**。
+
+### 入出力例
+
+\`\`\`js
+sumTo(3)   // → 6
+sumTo(1)   // → 1
+sumTo(0)   // → 0
+sumTo(10)  // → 55
+\`\`\`
+
+### 制約
+
+- 累計を保持する変数は \`let\` で宣言する
+- それ以外（合計値の上限など）は \`const\` で宣言する
+- \`var\` は使わない
+`,
+    starterCode: `function sumTo(n) {
+  // 1〜n の合計を返す
+  return 0;
+}
+`,
+    entryPoints: ["sumTo"],
+    tests: [
+      { name: "sumTo(3) === 6", weight: 25, code: "sumTo(3) === 6" },
+      { name: "sumTo(1) === 1", weight: 25, code: "sumTo(1) === 1" },
+      { name: "sumTo(0) === 0 (空ループ)", weight: 25, code: "sumTo(0) === 0" },
+      { name: "sumTo(10) === 55", weight: 25, code: "sumTo(10) === 55" },
+    ],
+    eslint: {
+      rules: {
+        ...COMMON_LINT_RULES,
+        "prefer-const": "error",
+      },
+    },
+    ast: {
+      forbidden: [{ kind: "var", label: "var は使わない" }],
+    },
+    weights: DEFAULT_WEIGHTS,
+  },
+
+  // ────────────────────────────────────────────────
+  // 1-2: typeof で型に応じた処理
+  // ────────────────────────────────────────────────
+  {
+    id: "describe-type",
+    topicId: "variables-and-types",
+    title: "typeof で型を判別する",
+    difficulty: 1,
+    description: `## typeof で型を判別する
+
+任意の値を受け取り、以下の文字列を返す関数 \`describeType\` を実装してください。
+
+| 入力 | 戻り値 |
+|---|---|
+| \`number\` | \`"数値"\` |
+| \`string\` | \`"文字列"\` |
+| \`boolean\` | \`"真偽値"\` |
+| \`null\` | \`"なし"\` |
+| \`undefined\` | \`"なし"\` |
+| その他（オブジェクト・配列・関数） | \`"その他"\` |
+
+注意: \`typeof null\` は \`"object"\` を返す JavaScript の落とし穴があります。
+
+### 入出力例
+
+\`\`\`js
+describeType(42)         // → '数値'
+describeType('hi')       // → '文字列'
+describeType(true)       // → '真偽値'
+describeType(null)       // → 'なし'
+describeType(undefined)  // → 'なし'
+describeType([])         // → 'その他'
+describeType({})         // → 'その他'
+describeType(() => 1)    // → 'その他'
+\`\`\`
+
+### 制約
+
+- \`typeof\` を必ず使う
+- \`==\` / \`!=\` は使わない（厳密比較を使う）
+`,
+    starterCode: `function describeType(value) {
+  return 'その他';
+}
+`,
+    entryPoints: ["describeType"],
+    tests: [
+      { name: "数値", weight: 14, code: "describeType(42) === '数値'" },
+      { name: "文字列", weight: 14, code: "describeType('hi') === '文字列'" },
+      { name: "真偽値", weight: 14, code: "describeType(true) === '真偽値'" },
+      { name: "null は 'なし'", weight: 16, code: "describeType(null) === 'なし'" },
+      {
+        name: "undefined は 'なし'",
+        weight: 14,
+        code: "describeType(undefined) === 'なし'",
+      },
+      {
+        name: "配列は 'その他'",
+        weight: 14,
+        code: "describeType([1,2]) === 'その他'",
+      },
+      {
+        name: "関数は 'その他'",
+        weight: 14,
+        code: "describeType(() => 1) === 'その他'",
+      },
+    ],
+    eslint: {
+      rules: { ...COMMON_LINT_RULES },
+    },
+    ast: {
+      forbidden: [
+        { kind: "loose-eq", label: "== / != は使わない" },
+        { kind: "var", label: "var は使わない" },
+      ],
+    },
+    weights: DEFAULT_WEIGHTS,
+  },
+
+  // ────────────────────────────────────────────────
+  // 1-3: 数値文字列のパース
+  // ────────────────────────────────────────────────
+  {
+    id: "parse-int-safe",
+    topicId: "variables-and-types",
+    title: "安全に整数化する",
+    difficulty: 2,
+    description: `## 安全に整数化する
+
+任意の値を受け取り、**整数に変換できれば数値で**、できなければ \`null\` を返す関数 \`toIntOrNull\` を実装してください。
+
+### 入出力例
+
+\`\`\`js
+toIntOrNull('42')      // → 42
+toIntOrNull('  -7  ')  // → -7
+toIntOrNull(3.14)      // → 3       (小数は切り捨て)
+toIntOrNull('3.9')     // → 3
+toIntOrNull('abc')     // → null
+toIntOrNull('')        // → null
+toIntOrNull(null)      // → null
+toIntOrNull(undefined) // → null
+toIntOrNull(NaN)       // → null
+toIntOrNull(true)      // → null    (真偽値は対象外)
+\`\`\`
+
+### 制約
+
+- \`Number.isFinite\` または \`Number.isNaN\` を使ってチェックする
+- \`var\` は使わない
+- \`==\` / \`!=\` は使わない
+`,
+    starterCode: `function toIntOrNull(value) {
+  return null;
+}
+`,
+    entryPoints: ["toIntOrNull"],
+    tests: [
+      { name: "数字文字列", weight: 12, code: "toIntOrNull('42') === 42" },
+      {
+        name: "前後空白を許容",
+        weight: 12,
+        code: "toIntOrNull('  -7  ') === -7",
+      },
+      {
+        name: "小数は切り捨て",
+        weight: 12,
+        code: "toIntOrNull(3.14) === 3",
+      },
+      {
+        name: "小数文字列",
+        weight: 10,
+        code: "toIntOrNull('3.9') === 3",
+      },
+      {
+        name: "非数値文字列は null",
+        weight: 12,
+        code: "toIntOrNull('abc') === null",
+      },
+      {
+        name: "空文字は null",
+        weight: 10,
+        code: "toIntOrNull('') === null",
+      },
+      {
+        name: "null は null",
+        weight: 10,
+        code: "toIntOrNull(null) === null",
+      },
+      {
+        name: "NaN は null",
+        weight: 10,
+        code: "toIntOrNull(NaN) === null",
+      },
+      {
+        name: "真偽値は null (型を厳しく)",
+        weight: 12,
+        code: "toIntOrNull(true) === null",
+      },
+    ],
+    eslint: {
+      rules: { ...COMMON_LINT_RULES },
+    },
+    ast: {
+      forbidden: [
+        { kind: "var", label: "var は使わない" },
+        { kind: "loose-eq", label: "== / != は使わない" },
+      ],
+    },
+    weights: DEFAULT_WEIGHTS,
+  },
+
+  // ────────────────────────────────────────────────
+  // 1-4: テンプレートリテラルでの整形
+  // ────────────────────────────────────────────────
+  {
+    id: "format-greeting",
+    topicId: "variables-and-types",
+    title: "テンプレートリテラルで挨拶を組み立てる",
+    difficulty: 1,
+    description: `## テンプレートリテラルで挨拶を組み立てる
+
+\`{ name, age }\` を受け取り、\`"こんにちは、{name}さん（{age}歳）！"\` という文字列を返す関数 \`greet\` を実装してください。
+
+### 入出力例
+
+\`\`\`js
+greet({ name: 'Alice', age: 30 })
+// → 'こんにちは、Aliceさん（30歳）！'
+
+greet({ name: '太郎', age: 0 })
+// → 'こんにちは、太郎さん（0歳）！'
+\`\`\`
+
+### 制約
+
+- **テンプレートリテラル**（バッククォートで囲む文字列）を使う
+- \`+\` 演算子による文字列連結は禁止（\`label += '...'\` も禁止）
+- \`var\` は使わない
+`,
+    starterCode: `function greet(user) {
+  return '';
+}
+`,
+    entryPoints: ["greet"],
+    tests: [
+      {
+        name: "Alice / 30",
+        weight: 34,
+        code: "greet({name:'Alice', age:30}) === 'こんにちは、Aliceさん（30歳）！'",
+      },
+      {
+        name: "太郎 / 0 (年齢0でも0と表示)",
+        weight: 33,
+        code: "greet({name:'太郎', age:0}) === 'こんにちは、太郎さん（0歳）！'",
+      },
+      {
+        name: "空文字の名前でも結合される",
+        weight: 33,
+        code: "greet({name:'', age:5}) === 'こんにちは、さん（5歳）！'",
+      },
+    ],
+    eslint: {
+      rules: {
+        ...COMMON_LINT_RULES,
+        "prefer-template": "error",
+      },
+    },
+    ast: {
+      required: [
+        {
+          kind: "node",
+          nodeType: "TemplateLiteral",
+          label: "テンプレートリテラルを使う",
+        },
+      ],
+      forbidden: [{ kind: "var", label: "var は使わない" }],
+    },
+    weights: DEFAULT_WEIGHTS,
+  },
+];
