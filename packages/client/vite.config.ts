@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -8,12 +9,16 @@ import { stripDevFields } from "./vite-plugins/strip-dev-fields";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [stripDevFields(), react()],
+  plugins: [stripDevFields(), react(), tailwindcss()],
   define: {
     "process.env": {},
   },
   resolve: {
     alias: [
+      {
+        find: /^@\/(.*)$/,
+        replacement: path.resolve(__dirname, "src/$1"),
+      },
       {
         find: /^@jsreview\/shared$/,
         replacement: path.resolve(__dirname, "../shared/src/index.ts"),

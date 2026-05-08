@@ -1,21 +1,89 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ダークモードは当面ライト固定だが、`dark:` バリアントの口だけ用意。
+   `<html class="dark">` を付ければ将来切り替え可能。 */
+@custom-variant dark (&:is(.dark *));
+
+/* ─── デザイントークン ───────────────────────────────────
+   shadcn/ui 互換の変数名 (--background / --primary / ...) と、
+   既存クラス互換の旧変数 (--bg / --accent / ...) を併存させる。
+   フェーズ3で既存クラス定義を Tailwind ユーティリティに置き換え終えたら
+   旧変数は削除予定。 */
 :root {
+  /* shadcn/ui 互換 */
+  --radius: 0.5rem;
+  --background: #fafafa;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #52525b;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #6366f1;
+
+  /* 既存クラス互換 (フェーズ3で除去) */
   --bg: #fafafa;
   --bg-panel: #ffffff;
   --bg-soft: #f4f4f5;
   --bg-code: #1e1e2e;
-  --border: #e4e4e7;
   --text: #18181b;
   --text-soft: #52525b;
   --text-mute: #a1a1aa;
-  --accent: #6366f1;
   --accent-hover: #4f46e5;
   --ok: #16a34a;
   --warn: #d97706;
   --err: #dc2626;
+
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
-  color: var(--text);
-  background: var(--bg);
+  color: var(--foreground);
+  background: var(--background);
+}
+
+/* Tailwind ユーティリティに公開する。
+   `@theme inline` を使って `--background` 変更 = `bg-background` 連動。 */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* セマンティックトークン (採点UI用) */
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-err: var(--err);
 }
 
 * {

@@ -78,3 +78,12 @@ bun run dev
 | スコア集計 | クライアント | 上記3つを合算するだけ |
 
 サーバが `packages/shared` から import するのは `types.ts` のみ。これにより構造的に「サーバはテスト実行のみが責務」が保証されている。
+
+## スタイリング方針
+
+クライアントは **Tailwind CSS v4 + shadcn/ui** をベースに構築している。
+
+- デザイントークンは `packages/client/src/styles.css` の `:root` (CSS 変数) と `@theme inline` ブロックで定義。色やラディウスを変えるときはここを編集する。
+- 共通 UI コンポーネントは `packages/client/src/components/ui/` 配下にある。これは shadcn/ui の **「コピペで取り込み、自分で編集する」** 方針に沿った置き場で、プロジェクト固有の調整は元コンポーネントに直接手を入れて構わない。
+- 画面側の小さなレイアウト調整は Tailwind ユーティリティクラスで JSX 内に書き、`styles.css` への追記は原則として行わない。
+- Tailwind v4 は CSS-first 設定のため `tailwind.config.{js,ts}` は存在しない。設定はすべて `styles.css` の `@theme` / `@custom-variant` に集約している。
