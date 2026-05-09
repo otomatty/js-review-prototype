@@ -56,6 +56,20 @@ function PracticePageInner({ assignment }: InnerProps) {
   const { lint, ast } = useStaticAnalysis(code, assignment);
   const { running, result, run, reset } = useGradeRunner();
 
+  // 一覧での順序に従う「次の課題」。最終問題なら null。
+  // ダイアログでクリア時に「次の問題へ」リンクを出すために使う。
+  const nextAssignment = useMemo(() => {
+    const idx = assignments.findIndex((a) => a.id === assignment.id);
+    if (idx === -1 || idx >= assignments.length - 1) return null;
+    return assignments[idx + 1];
+  }, [assignment.id]);
+
+  const handleGoToNext = useCallback(() => {
+    if (!nextAssignment) return;
+    setResultDialogOpen(false);
+    navigate(`/problems/${nextAssignment.id}`);
+  }, [navigate, nextAssignment]);
+
   // 課題切替時、結果表示は無関係になるのでクリア
   useEffect(() => {
     reset();
@@ -171,6 +185,8 @@ function PracticePageInner({ assignment }: InnerProps) {
             assignment={assignment}
             lint={lint}
             ast={ast}
+            nextAssignment={nextAssignment}
+            onGoToNext={handleGoToNext}
           />
         </section>
       </div>

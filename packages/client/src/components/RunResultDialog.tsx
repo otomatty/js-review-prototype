@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  ArrowRight,
   ChevronDown,
   Circle,
   CircleAlert,
@@ -56,6 +57,12 @@ interface RunResultDialogProps {
   assignment: Assignment;
   lint: LintViolation[];
   ast: ASTResult;
+  /**
+   * 一覧順での次の課題。最終問題なら null。
+   * クリア時に「次の問題へ」リンクとして表示する。
+   */
+  nextAssignment: Assignment | null;
+  onGoToNext: () => void;
 }
 
 const STEP_DELAY_MS = 380;
@@ -69,6 +76,8 @@ export function RunResultDialog({
   assignment,
   lint,
   ast,
+  nextAssignment,
+  onGoToNext,
 }: RunResultDialogProps) {
   const [phase, setPhase] = useState<Phase>("lint");
   const [revealedTests, setRevealedTests] = useState(0);
@@ -143,7 +152,11 @@ export function RunResultDialog({
         </DialogHeader>
 
         <div className="max-h-[calc(90vh-13rem)] overflow-y-auto px-6 py-5">
-          <ResultBanner phase={phase} result={result} />
+          <ResultBanner
+            phase={phase}
+            result={result}
+            nextAssignment={nextAssignment}
+          />
           <div className="overflow-hidden rounded-lg border bg-card">
             <LintRow lint={displayedLint} status={lintStatus} />
             <AstRow
@@ -171,6 +184,16 @@ export function RunResultDialog({
           >
             {running ? "実行中..." : "閉じる"}
           </Button>
+          {phase === "done" && result?.evaluation.cleared && nextAssignment ? (
+            <Button
+              onClick={onGoToNext}
+              className="gap-2"
+              title={`次の問題: ${nextAssignment.title}`}
+            >
+              次の問題へ
+              <ArrowRight className="size-4 shrink-0" />
+            </Button>
+          ) : null}
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -180,9 +203,11 @@ export function RunResultDialog({
 function ResultBanner({
   phase,
   result,
+  nextAssignment,
 }: {
   phase: Phase;
   result: ExecutionResult | null;
+  nextAssignment: Assignment | null;
 }) {
   if (phase !== "done" || !result) {
     return (
@@ -197,10 +222,12 @@ function ResultBanner({
     return (
       <div className="mb-4 flex items-center gap-3 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
         <CircleCheck className="size-5 shrink-0" />
-        <div>
+        <div className="min-w-0 flex-1">
           <strong className="text-base">クリアしました</strong>
-          <p className="text-xs text-emerald-700">
-            Lint / コード構造 / テスト すべてのチェックを通過しました。
+          <p className="truncate text-xs text-emerald-700">
+            {nextAssignment
+              ? `次は「${nextAssignment.title}」に進めます。`
+              : "これが最後の問題です。お疲れさまでした！"}
           </p>
         </div>
       </div>
