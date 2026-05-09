@@ -35,18 +35,20 @@ interface ThemeApi {
 export function useTheme(): ThemeApi {
   const [theme, setTheme] = useState<Theme>(readInitialTheme);
 
-  // localStorage 書き込みは「明示選択時のみ」に限定したいので、
-  // theme をキーにした副作用エフェクトでは行わず、toggleTheme 内で行う。
-  // OS pref 由来の変更は localStorage に残さず、引き続き OS 追従させる。
+  // 連打時にクロージャ越しの古い `theme` から次状態を計算しないよう関数型更新を使う。
+  // localStorage 書込は「明示選択時のみ」に限定したいので theme を deps にした
+  // 副作用エフェクトでは行わず、ここでまとめて行う (OS pref 由来の変更は永続化しない)。
   const toggleTheme = useCallback(() => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch (_) {
-      // private モード等で書けない場合は黙って諦める
-    }
-  }, [theme]);
+    setTheme((prev) => {
+      const next: Theme = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch (_) {
+        // private モード等で書けない場合は黙って諦める
+      }
+      return next;
+    });
+  }, []);
 
   // theme state を DOM (`<html class="dark">`) に同期
   useEffect(() => {
