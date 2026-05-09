@@ -175,13 +175,15 @@ function PracticePageInner({ assignment }: InnerProps) {
         </aside>
 
         <section className="grid grid-rows-[1fr_auto] overflow-hidden">
-          <div className="flex flex-col overflow-hidden [&>div:first-child]:flex-1 [&>div:first-child]:overflow-auto">
-            <Editor
-              code={code}
-              onChange={setCode}
-              eslintRules={assignment.eslint.rules}
-              entryPoints={assignment.entryPoints}
-            />
+          <div className="flex min-h-0 flex-col overflow-hidden">
+            <div className="flex-1 overflow-auto">
+              <Editor
+                code={code}
+                onChange={setCode}
+                eslintRules={assignment.eslint.rules}
+                entryPoints={assignment.entryPoints}
+              />
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-3 border-t border-border bg-card px-5 py-2.5">
