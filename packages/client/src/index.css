@@ -26,6 +26,36 @@
   --ring: #6366f1;
   --ok: #16a34a;
   --warn: #d97706;
+
+  color-scheme: light;
+}
+
+/* ダークモード用トークン。`<html class="dark">` で有効化。
+   shadcn/ui のダークデフォルト (zinc 系) に準拠。 */
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #818cf8;
+  --primary-foreground: #1e1b4b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #f87171;
+  --destructive-foreground: #450a0a;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #818cf8;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+
+  color-scheme: dark;
 }
 
 @theme inline {

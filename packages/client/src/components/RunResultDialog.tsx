@@ -220,11 +220,11 @@ function ResultBanner({
 
   if (result.evaluation.cleared) {
     return (
-      <div className="mb-4 flex items-center gap-3 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+      <div className="mb-4 flex items-center gap-3 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-200">
         <CircleCheck className="size-5 shrink-0" />
         <div className="min-w-0 flex-1">
           <strong className="text-base">クリアしました</strong>
-          <p className="truncate text-xs text-emerald-700">
+          <p className="truncate text-xs text-emerald-700 dark:text-emerald-300">
             {nextAssignment
               ? `次は「${nextAssignment.title}」に進めます。`
               : "これが最後の問題です。お疲れさまでした！"}

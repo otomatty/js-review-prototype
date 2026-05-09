@@ -21,6 +21,7 @@ import {
 } from "@jsreview/shared/assignments";
 import type { Assignment, Topic } from "@jsreview/shared/types";
 
+import { ThemeToggle } from "../components/ThemeToggle.js";
 import { cn } from "@/lib/utils";
 import { useAllClearedSet } from "../hooks/useAllClearedSet.js";
 
@@ -46,9 +47,9 @@ const DIFFICULTY_FILTERS: { id: DifficultyFilter; label: string }[] = [
 ];
 
 const CHIP_BASE =
-  "inline-flex cursor-pointer select-none items-center rounded-full border border-transparent bg-transparent px-3 py-[5px] text-[12.5px] font-medium text-muted-foreground hover:bg-white hover:text-foreground has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary";
+  "inline-flex cursor-pointer select-none items-center rounded-full border border-transparent bg-transparent px-3 py-[5px] text-[12.5px] font-medium text-muted-foreground hover:bg-white hover:text-foreground dark:hover:bg-secondary has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary";
 const CHIP_ACTIVE =
-  "border-primary bg-primary font-semibold text-white hover:bg-primary hover:text-white";
+  "border-primary bg-primary font-semibold text-white hover:bg-primary hover:text-white dark:text-primary-foreground dark:hover:text-primary-foreground";
 
 export function SelectPage() {
   const clearedSet = useAllClearedSet();
@@ -124,6 +125,9 @@ export function SelectPage() {
               プロトタイプ
             </span>
           </h1>
+        </div>
+        <div className="header-controls">
+          <ThemeToggle />
         </div>
       </header>
 
@@ -214,7 +218,7 @@ export function SelectPage() {
           <div className="ml-auto inline-flex min-w-[220px] flex-1 items-center gap-2 max-md:ml-0 max-md:w-full">
             <input
               type="search"
-              className="flex-1 rounded-lg border border-border bg-white px-3 py-1.5 text-[13px] focus:-outline-offset-1 focus:border-primary focus:outline-2 focus:outline-primary"
+              className="flex-1 rounded-lg border border-border bg-white px-3 py-1.5 text-[13px] focus:-outline-offset-1 focus:border-primary focus:outline-2 focus:outline-primary dark:bg-card"
               placeholder="課題名・トピックを検索..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -223,7 +227,7 @@ export function SelectPage() {
             {hasActiveFilter && (
               <button
                 type="button"
-                className="cursor-pointer border-0 bg-transparent px-1.5 py-1 text-xs text-primary underline underline-offset-2 hover:text-indigo-600"
+                className="cursor-pointer border-0 bg-transparent px-1.5 py-1 text-xs text-primary underline underline-offset-2 hover:text-indigo-600 dark:hover:text-indigo-300"
                 onClick={clearFilters}
               >
                 条件をクリア
@@ -320,7 +324,7 @@ function TopicSection({
                 className={cn(
                   "group flex min-h-[120px] flex-col justify-between gap-3 rounded-[10px] border bg-card px-4 py-3.5 text-foreground no-underline transition-[border-color,transform,box-shadow] duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:-translate-y-px hover:border-primary hover:shadow-[0_4px_12px_-6px_rgba(99,102,241,0.4)]",
                   cleared
-                    ? "border-emerald-200 bg-emerald-50 hover:border-ok"
+                    ? "border-emerald-200 bg-emerald-50 hover:border-ok dark:border-emerald-800 dark:bg-emerald-950"
                     : "border-border",
                 )}
                 aria-label={`${a.title} (難易度 ${a.difficulty}, ${
@@ -348,7 +352,7 @@ function TopicSection({
                     </span>
                   </span>
                   <span
-                    className="text-[11.5px] font-semibold tracking-[0.01em] text-primary group-hover:text-indigo-600"
+                    className="text-[11.5px] font-semibold tracking-[0.01em] text-primary group-hover:text-indigo-600 dark:group-hover:text-indigo-300"
                     aria-hidden
                   >
                     解く →

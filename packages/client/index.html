@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>JS自動コードレビュー (プロトタイプ)</title>
+    <script>
+      // FOUC 防止: React 起動前にテーマ class を確定させる。
+      // localStorage キー名は src/hooks/useTheme.ts の THEME_STORAGE_KEY と同期。
+      // localStorage アクセスが privacy-restricted で throw する環境でも
+      // OS pref フォールバックが効くよう try/catch を分けて評価する。
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch (_) {}
+        if (stored === "dark") {
+          document.documentElement.classList.add("dark");
+          return;
+        }
+        if (stored === "light") return;
+        try {
+          if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
