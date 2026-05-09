@@ -81,9 +81,14 @@
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Tailwind v4 preflight ではボタンの cursor が default に戻るため明示する */
-  button {
+  /* Tailwind v4 preflight ではボタンの cursor が default に戻るため明示する。
+     disabled ボタンは押せない見た目を保つため除外する。 */
+  button:not(:disabled) {
     cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
   }
 
   code {
