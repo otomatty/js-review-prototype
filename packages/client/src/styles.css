@@ -953,13 +953,9 @@ code {
   background: #1e1b4b;
   border-color: #3730a3;
 }
-:where(.dark, .dark *) .assignment-card.status-completed {
+:where(.dark, .dark *) .assignment-card.status-cleared {
   background: #052e16;
   border-color: #166534;
-}
-:where(.dark, .dark *) .assignment-card.status-partial {
-  background: #451a03;
-  border-color: #92400e;
 }
 :where(.dark, .dark *) .test-list .err-detail {
   background: #450a0a;
@@ -973,11 +969,7 @@ code {
   color: #6ee7b7;
   background: #064e3b;
 }
-:where(.dark, .dark *) .card-status-partial {
-  background: #422006;
-  border-color: #92400e;
-}
-:where(.dark, .dark *) .card-status-completed {
+:where(.dark, .dark *) .card-status-cleared {
   color: #052e16;
 }
 :where(.dark, .dark *) .topic-section-progress.is-complete {

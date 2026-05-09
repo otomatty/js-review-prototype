@@ -35,18 +35,23 @@ interface ThemeApi {
 export function useTheme(): ThemeApi {
   const [theme, setTheme] = useState<Theme>(readInitialTheme);
 
+  // localStorage 書き込みは「明示選択時のみ」に限定したいので、
+  // theme をキーにした副作用エフェクトでは行わず、toggleTheme 内で行う。
+  // OS pref 由来の変更は localStorage に残さず、引き続き OS 追従させる。
   const toggleTheme = useCallback(() => {
-    setTheme((current) => {
-      const next: Theme = current === "dark" ? "light" : "dark";
-      applyTheme(next);
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch (_) {
-        // private モード等で書けない場合は黙って諦める
-      }
-      return next;
-    });
-  }, []);
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch (_) {
+      // private モード等で書けない場合は黙って諦める
+    }
+  }, [theme]);
+
+  // theme state を DOM (`<html class="dark">`) に同期
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
 
   // ユーザーが明示選択していない (= localStorage 未設定) 間は OS 設定に追従
   useEffect(() => {
@@ -58,12 +63,15 @@ export function useTheme(): ThemeApi {
         stored = localStorage.getItem(THEME_STORAGE_KEY);
       } catch (_) {}
       if (stored === "light" || stored === "dark") return;
-      const next: Theme = event.matches ? "dark" : "light";
-      applyTheme(next);
-      setTheme(next);
+      setTheme(event.matches ? "dark" : "light");
     };
-    mql.addEventListener("change", handleChange);
-    return () => mql.removeEventListener("change", handleChange);
+    // Safari 13 / iOS 13 では addEventListener が無く addListener しか持たない。
+    if (typeof mql.addEventListener === "function") {
+      mql.addEventListener("change", handleChange);
+      return () => mql.removeEventListener("change", handleChange);
+    }
+    mql.addListener(handleChange);
+    return () => mql.removeListener(handleChange);
   }, []);
 
   return { theme, toggleTheme };
