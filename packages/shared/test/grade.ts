@@ -1,23 +1,23 @@
 /**
- * 採点回帰テスト用の合算ヘルパ。
+ * 評価回帰テスト用の合算ヘルパ。
  *
- * - クライアント向けの `analyzeAst` / `calculateScore` を直接使用 (本番のスコアロジックと同一)
+ * - クライアント向けの `analyzeAst` / `evaluate` を直接使用 (本番の判定ロジックと同一)
  * - テスト実行は test/runner.ts (Node vm) で代替 (本番は isolated-vm)
  * - Lint は test/lint.ts で同じ `eslint-linter-browserify` を使って計測
  *
- * これにより「solution が 100 点を取れるか」「badSolution が 100 点未満になるか」を、
+ * これにより「solution が全チェック通過するか」「badSolution が必ず1つ以上失敗するか」を、
  * 本番が見るのと同じ test+lint+ast の3軸で全問チェックできる。
  */
 
 import { analyzeAst } from "../src/grading/ast.js";
-import { calculateScore } from "../src/grading/score.js";
-import type { Assignment, ScoreResult } from "../src/types.js";
+import { evaluate } from "../src/grading/evaluate.js";
+import type { Assignment, EvaluationResult } from "../src/types.js";
 
 import { lintCode } from "./lint.js";
 import { runTests } from "./runner.js";
 
 export interface GradeReport {
-  score: ScoreResult;
+  evaluation: EvaluationResult;
   failedTests: { name: string; error?: string }[];
   missingRequired: string[];
   forbiddenViolations: string[];
@@ -38,15 +38,10 @@ export async function gradeCode(
   const lintViolations = lintCode(code, assignment.eslint.rules, {
     ignoredUnusedNames: assignment.entryPoints,
   });
-  const score = calculateScore(
-    testResults,
-    lintViolations,
-    astResult,
-    assignment.weights,
-  );
+  const evaluation = evaluate(testResults, lintViolations, astResult);
 
   return {
-    score,
+    evaluation,
     failedTests: testResults
       .filter((r) => !r.passed)
       .map((r) => ({ name: r.name, error: r.error })),

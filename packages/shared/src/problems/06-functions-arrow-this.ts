@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const functionsArrowThis: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -35,10 +35,10 @@ double(0.5)  // → 1
 `,
     entryPoints: ["double"],
     tests: [
-      { name: "3", weight: 25, code: "double(3) === 6" },
-      { name: "0", weight: 25, code: "double(0) === 0" },
-      { name: "負数", weight: 25, code: "double(-4) === -8" },
-      { name: "小数", weight: 25, code: "Math.abs(double(0.5) - 1) < 1e-9" },
+      { name: "3", code: "double(3) === 6" },
+      { name: "0", code: "double(0) === 0" },
+      { name: "負数", code: "double(-4) === -8" },
+      { name: "小数", code: "Math.abs(double(0.5) - 1) < 1e-9" },
     ],
     eslint: {
       rules: {
@@ -63,7 +63,6 @@ double(0.5)  // → 1
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -101,22 +100,18 @@ applyTwice((arr) => [...arr, 0], [1, 2])
     tests: [
       {
         name: "数値 +1 を 2 回",
-        weight: 25,
         code: "applyTwice((n) => n + 1, 5) === 7",
       },
       {
         name: "文字列追記",
-        weight: 25,
         code: "applyTwice((s) => s + '!', 'hi') === 'hi!!'",
       },
       {
         name: "配列",
-        weight: 25,
         code: "JSON.stringify(applyTwice((arr) => [...arr, 0], [1,2])) === JSON.stringify([1,2,0,0])",
       },
       {
         name: "恒等関数",
-        weight: 25,
         code: "applyTwice((v) => v, 42) === 42",
       },
     ],
@@ -138,7 +133,6 @@ applyTwice((arr) => [...arr, 0], [1, 2])
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -182,27 +176,22 @@ pipe((s) => s.trim())('  a  ')
     tests: [
       {
         name: "(3+1)*2 = 8",
-        weight: 20,
         code: "pipe((n)=>n+1, (n)=>n*2)(3) === 8",
       },
       {
         name: "(3*2)+1 = 7",
-        weight: 20,
         code: "pipe((n)=>n*2, (n)=>n+1)(3) === 7",
       },
       {
         name: "3 段",
-        weight: 20,
         code: "pipe((n)=>n+1, (n)=>n*2, (n)=>n+1)(3) === 9",
       },
       {
         name: "空パイプは恒等",
-        weight: 20,
         code: "pipe()(42) === 42",
       },
       {
         name: "文字列処理",
-        weight: 20,
         code: "pipe((s)=>s.trim())('  a  ') === 'a'",
       },
     ],
@@ -229,7 +218,6 @@ pipe((s) => s.trim())('  a  ')
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -272,22 +260,18 @@ greetAlice()    // → 'Hello, Alice!'  (Bob を作っても Alice は壊れな�
     tests: [
       {
         name: "Alice",
-        weight: 25,
         code: "makeGreeter('Alice')() === 'Hello, Alice!'",
       },
       {
         name: "何度呼んでも同じ",
-        weight: 25,
         code: "(() => { const g = makeGreeter('Alice'); return g() === 'Hello, Alice!' && g() === 'Hello, Alice!'; })()",
       },
       {
         name: "別インスタンスは独立",
-        weight: 25,
         code: "(() => { const a = makeGreeter('Alice'); const b = makeGreeter('Bob'); return a() === 'Hello, Alice!' && b() === 'Hello, Bob!'; })()",
       },
       {
         name: "空文字でも組み立てる",
-        weight: 25,
         code: "makeGreeter('')() === 'Hello, !'",
       },
     ],
@@ -314,6 +298,5 @@ greetAlice()    // → 'Hello, Alice!'  (Bob を作っても Alice は壊れな�
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

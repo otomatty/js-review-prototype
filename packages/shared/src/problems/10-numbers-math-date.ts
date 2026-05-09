@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const numbersMathDate: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -47,14 +47,13 @@ clamp(7.5, 0, 10)   // → 7.5
 `,
     entryPoints: ["clamp"],
     tests: [
-      { name: "範囲内", weight: 16, code: "clamp(5, 0, 10) === 5" },
-      { name: "下限以下", weight: 17, code: "clamp(-3, 0, 10) === 0" },
-      { name: "上限以上", weight: 17, code: "clamp(15, 0, 10) === 10" },
-      { name: "下限境界", weight: 16, code: "clamp(0, 0, 10) === 0" },
-      { name: "上限境界", weight: 17, code: "clamp(10, 0, 10) === 10" },
+      { name: "範囲内", code: "clamp(5, 0, 10) === 5" },
+      { name: "下限以下", code: "clamp(-3, 0, 10) === 0" },
+      { name: "上限以上", code: "clamp(15, 0, 10) === 10" },
+      { name: "下限境界", code: "clamp(0, 0, 10) === 0" },
+      { name: "上限境界", code: "clamp(10, 0, 10) === 10" },
       {
         name: "小数",
-        weight: 17,
         code: "Math.abs(clamp(7.5, 0, 10) - 7.5) < 1e-9",
       },
     ],
@@ -66,7 +65,6 @@ clamp(7.5, 0, 10)   // → 7.5
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -112,21 +110,19 @@ isPositiveInteger(true)     // → false
 `,
     entryPoints: ["isPositiveInteger"],
     tests: [
-      { name: "1", weight: 11, code: "isPositiveInteger(1) === true" },
-      { name: "100", weight: 11, code: "isPositiveInteger(100) === true" },
-      { name: "0 は false", weight: 11, code: "isPositiveInteger(0) === false" },
-      { name: "負数", weight: 11, code: "isPositiveInteger(-3) === false" },
-      { name: "小数", weight: 11, code: "isPositiveInteger(3.14) === false" },
-      { name: "文字列", weight: 11, code: "isPositiveInteger('5') === false" },
-      { name: "NaN", weight: 11, code: "isPositiveInteger(NaN) === false" },
+      { name: "1", code: "isPositiveInteger(1) === true" },
+      { name: "100", code: "isPositiveInteger(100) === true" },
+      { name: "0 は false", code: "isPositiveInteger(0) === false" },
+      { name: "負数", code: "isPositiveInteger(-3) === false" },
+      { name: "小数", code: "isPositiveInteger(3.14) === false" },
+      { name: "文字列", code: "isPositiveInteger('5') === false" },
+      { name: "NaN", code: "isPositiveInteger(NaN) === false" },
       {
         name: "Infinity",
-        weight: 11,
         code: "isPositiveInteger(Infinity) === false",
       },
       {
         name: "null / true",
-        weight: 12,
         code: "isPositiveInteger(null) === false && isPositiveInteger(true) === false",
       },
     ],
@@ -140,7 +136,6 @@ isPositiveInteger(true)     // → false
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -186,31 +181,26 @@ roundTo(0.1 + 0.2, 1) // → 0.3
 `,
     entryPoints: ["roundTo"],
     tests: [
-      { name: "1.235 → 1.24", weight: 14, code: "roundTo(1.235, 2) === 1.24" },
+      { name: "1.235 → 1.24", code: "roundTo(1.235, 2) === 1.24" },
       {
         name: "3.14159 → 3.14",
-        weight: 14,
         code: "roundTo(3.14159, 2) === 3.14",
       },
       {
         name: "3.14159 → 3.1416",
-        weight: 14,
         code: "roundTo(3.14159, 4) === 3.1416",
       },
       {
         name: "2.5 → 3",
-        weight: 15,
         code: "roundTo(2.5, 0) === 3",
       },
       {
         name: "-2.5 → -2",
-        weight: 14,
         code: "roundTo(-2.5, 0) === -2",
       },
-      { name: "0桁丸め", weight: 14, code: "roundTo(123.456, 0) === 123" },
+      { name: "0桁丸め", code: "roundTo(123.456, 0) === 123" },
       {
         name: "浮動小数の罠",
-        weight: 15,
         code: "roundTo(0.1 + 0.2, 1) === 0.3",
       },
     ],
@@ -224,7 +214,6 @@ roundTo(0.1 + 0.2, 1) // → 0.3
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -277,32 +266,26 @@ daysBetween('not-a-date', '2024-01-01')   // → NaN
     tests: [
       {
         name: "1日後",
-        weight: 18,
         code: "daysBetween('2024-01-01', '2024-01-02') === 1",
       },
       {
         name: "同日",
-        weight: 18,
         code: "daysBetween('2024-01-01', '2024-01-01') === 0",
       },
       {
         name: "1ヶ月前 (-31)",
-        weight: 18,
         code: "daysBetween('2024-02-01', '2024-01-01') === -31",
       },
       {
         name: "うるう年 365日",
-        weight: 18,
         code: "daysBetween('2024-01-01', '2024-12-31') === 365",
       },
       {
         name: "不正入力は NaN",
-        weight: 14,
         code: "Number.isNaN(daysBetween('not-a-date', '2024-01-01'))",
       },
       {
         name: "戻り値は整数",
-        weight: 14,
         code: "Number.isInteger(daysBetween('2024-03-01', '2024-04-01'))",
       },
     ],
@@ -310,6 +293,5 @@ daysBetween('not-a-date', '2024-01-01')   // → NaN
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

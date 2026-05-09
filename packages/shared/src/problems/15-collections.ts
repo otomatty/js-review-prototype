@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const collections: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -45,27 +45,22 @@ unique([1, '1', 1])              // → [1, '1']  (型が違えば別)
     tests: [
       {
         name: "数値",
-        weight: 20,
         code: "JSON.stringify(unique([1,2,2,3,1])) === JSON.stringify([1,2,3])",
       },
       {
         name: "文字列",
-        weight: 20,
         code: "JSON.stringify(unique(['a','b','a','c'])) === JSON.stringify(['a','b','c'])",
       },
       {
         name: "空配列",
-        weight: 20,
         code: "JSON.stringify(unique([])) === JSON.stringify([])",
       },
       {
         name: "NaN は等価",
-        weight: 20,
         code: "(() => { const r = unique([NaN, NaN]); return r.length === 1 && Number.isNaN(r[0]); })()",
       },
       {
         name: "型違いは別物",
-        weight: 20,
         code: "JSON.stringify(unique([1,'1',1])) === JSON.stringify([1,'1'])",
       },
     ],
@@ -83,7 +78,6 @@ unique([1, '1', 1])              // → [1, '1']  (型が違えば別)
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -136,27 +130,22 @@ tally([1,1,1]).get(1)  // → 3
     tests: [
       {
         name: "Map インスタンス",
-        weight: 20,
         code: "tally(['a']) instanceof Map",
       },
       {
         name: "頻度",
-        weight: 20,
         code: "(() => { const m = tally(['a','b','a','c','a','b']); return m.get('a') === 3 && m.get('b') === 2 && m.get('c') === 1; })()",
       },
       {
         name: "順序保持",
-        weight: 20,
         code: "JSON.stringify([...tally(['a','b','a','c']).keys()]) === JSON.stringify(['a','b','c'])",
       },
       {
         name: "空配列",
-        weight: 20,
         code: "tally([]).size === 0",
       },
       {
         name: "数値要素",
-        weight: 20,
         code: "tally([1,1,1]).get(1) === 3",
       },
     ],
@@ -171,7 +160,6 @@ tally([1,1,1]).get(1)  // → 3
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -225,27 +213,22 @@ intersect([1,2], [3,4])            // → []
     tests: [
       {
         name: "数値",
-        weight: 22,
         code: "JSON.stringify(intersect([1,2,3,4],[2,4,6])) === JSON.stringify([2,4])",
       },
       {
         name: "文字列",
-        weight: 22,
         code: "JSON.stringify(intersect(['a','b','c'],['c','d'])) === JSON.stringify(['c'])",
       },
       {
         name: "重複は除く",
-        weight: 22,
         code: "JSON.stringify(intersect([1,1,2,2],[2,1])) === JSON.stringify([1,2])",
       },
       {
         name: "片方空",
-        weight: 17,
         code: "JSON.stringify(intersect([],[1,2])) === JSON.stringify([])",
       },
       {
         name: "交差なし",
-        weight: 17,
         code: "JSON.stringify(intersect([1,2],[3,4])) === JSON.stringify([])",
       },
     ],
@@ -263,6 +246,5 @@ intersect([1,2], [3,4])            // → []
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

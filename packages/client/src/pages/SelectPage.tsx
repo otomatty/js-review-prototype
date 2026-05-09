@@ -5,8 +5,8 @@
  * トピックごとにセクション分けし、各課題はカード形式のグリッドで表示する。
  *
  * 機能:
- * - 全体の進捗サマリ (完了数 / 平均ベスト)
- * - 状態フィルタ (すべて / 未着手 / 部分点 / 完了)
+ * - 全体の進捗サマリ (クリア済み / 未クリア)
+ * - 状態フィルタ (すべて / 未クリア / クリア済み)
  * - 難易度フィルタ (★1 / ★2 / ★3)
  * - 課題タイトル / トピックラベルでのフリーワード検索
  * - カードクリックで `/problems/:id` へ遷移
@@ -21,24 +21,20 @@ import {
 } from "@jsreview/shared/assignments";
 import type { Assignment, Topic } from "@jsreview/shared/types";
 
-import { useAllBestScores } from "../hooks/useAllBestScores.js";
+import { useAllClearedSet } from "../hooks/useAllClearedSet.js";
 
-type Status = "completed" | "partial" | "untouched";
+type Status = "cleared" | "uncleared";
 type StatusFilter = "all" | Status;
 type DifficultyFilter = "all" | 1 | 2 | 3;
 
-function statusOf(score: number | undefined): Status {
-  if (score == null) return "untouched";
-  if (score >= 100) return "completed";
-  if (score > 0) return "partial";
-  return "untouched";
+function statusOf(cleared: boolean): Status {
+  return cleared ? "cleared" : "uncleared";
 }
 
 const STATUS_FILTERS: { id: StatusFilter; label: string }[] = [
   { id: "all", label: "すべて" },
-  { id: "untouched", label: "未着手" },
-  { id: "partial", label: "部分点" },
-  { id: "completed", label: "完了" },
+  { id: "uncleared", label: "未クリア" },
+  { id: "cleared", label: "クリア済み" },
 ];
 
 const DIFFICULTY_FILTERS: { id: DifficultyFilter; label: string }[] = [
@@ -49,7 +45,7 @@ const DIFFICULTY_FILTERS: { id: DifficultyFilter; label: string }[] = [
 ];
 
 export function SelectPage() {
-  const bestScores = useAllBestScores();
+  const clearedSet = useAllClearedSet();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [difficultyFilter, setDifficultyFilter] =
     useState<DifficultyFilter>("all");
@@ -63,28 +59,16 @@ export function SelectPage() {
 
   // 全課題ぶんのサマリは生 `assignments` から計算 (フィルタの影響を受けない)。
   const summary = useMemo(() => {
-    let completed = 0;
-    let partial = 0;
-    let scoreSum = 0;
-    let scoredCount = 0;
+    let cleared = 0;
     for (const a of assignments) {
-      const score = bestScores.get(a.id);
-      const s = statusOf(score);
-      if (s === "completed") completed++;
-      else if (s === "partial") partial++;
-      if (score != null && score > 0) {
-        scoreSum += score;
-        scoredCount++;
-      }
+      if (clearedSet.has(a.id)) cleared++;
     }
     return {
       total: assignments.length,
-      completed,
-      partial,
-      untouched: assignments.length - completed - partial,
-      avgBest: scoredCount > 0 ? Math.round(scoreSum / scoredCount) : null,
+      cleared,
+      uncleared: assignments.length - cleared,
     };
-  }, [bestScores]);
+  }, [clearedSet]);
 
   // フィルタ判定はカード単位で軽い。トピックセクションは items が空なら畳む。
   const filteredGroups = useMemo(() => {
@@ -98,7 +82,7 @@ export function SelectPage() {
             return false;
           }
           if (statusFilter !== "all") {
-            const s = statusOf(bestScores.get(a.id));
+            const s = statusOf(clearedSet.has(a.id));
             if (s !== statusFilter) return false;
           }
           if (normalizedQuery !== "") {
@@ -110,7 +94,7 @@ export function SelectPage() {
         return { topic, items };
       })
       .filter((g) => g.items.length > 0);
-  }, [bestScores, statusFilter, difficultyFilter, normalizedQuery]);
+  }, [clearedSet, statusFilter, difficultyFilter, normalizedQuery]);
 
   const hasNoResult = filteredGroups.length === 0;
   const hasActiveFilter =
@@ -144,35 +128,16 @@ export function SelectPage() {
           </div>
           <dl className="summary-stats">
             <div>
-              <dt>完了</dt>
+              <dt>クリア済み</dt>
               <dd>
-                <strong>{summary.completed}</strong>
+                <strong>{summary.cleared}</strong>
                 <span className="summary-suffix"> / {summary.total}</span>
               </dd>
             </div>
             <div>
-              <dt>部分点</dt>
+              <dt>未クリア</dt>
               <dd>
-                <strong>{summary.partial}</strong>
-              </dd>
-            </div>
-            <div>
-              <dt>未着手</dt>
-              <dd>
-                <strong>{summary.untouched}</strong>
-              </dd>
-            </div>
-            <div>
-              <dt>平均ベスト</dt>
-              <dd>
-                {summary.avgBest != null ? (
-                  <>
-                    <strong>{summary.avgBest}</strong>
-                    <span className="summary-suffix"> 点</span>
-                  </>
-                ) : (
-                  <span className="summary-empty">—</span>
-                )}
+                <strong>{summary.uncleared}</strong>
               </dd>
             </div>
           </dl>
@@ -246,7 +211,7 @@ export function SelectPage() {
               key={topic.id}
               topic={topic}
               items={items}
-              bestScores={bestScores}
+              clearedSet={clearedSet}
               assignmentNumbers={assignmentNumbers}
             />
           ))
@@ -259,23 +224,23 @@ export function SelectPage() {
 interface TopicSectionProps {
   topic: Topic;
   items: Assignment[];
-  bestScores: Map<string, number>;
+  clearedSet: Set<string>;
   assignmentNumbers: Map<string, number>;
 }
 
 function TopicSection({
   topic,
   items,
-  bestScores,
+  clearedSet,
   assignmentNumbers,
 }: TopicSectionProps) {
   // フィルタ後の items だけで完了数を出すと「3問中2問完了」のような誤解を生む。
-  // ここでは表示中アイテムの完了状況を素直に出す。
-  const completedCount = items.reduce(
-    (n, a) => (statusOf(bestScores.get(a.id)) === "completed" ? n + 1 : n),
+  // ここでは表示中アイテムのクリア状況を素直に出す。
+  const clearedCount = items.reduce(
+    (n, a) => (clearedSet.has(a.id) ? n + 1 : n),
     0,
   );
-  const allDone = completedCount === items.length && items.length > 0;
+  const allDone = clearedCount === items.length && items.length > 0;
 
   return (
     <section className="topic-section">
@@ -290,7 +255,7 @@ function TopicSection({
           <span
             className={`topic-section-progress${allDone ? " is-complete" : ""}`}
           >
-            {completedCount}/{items.length}
+            {clearedCount}/{items.length}
           </span>
           {topic.mdnUrl && (
             <a
@@ -307,8 +272,8 @@ function TopicSection({
 
       <ul className="card-grid">
         {items.map((a) => {
-          const score = bestScores.get(a.id);
-          const status = statusOf(score);
+          const cleared = clearedSet.has(a.id);
+          const status = statusOf(cleared);
           const assignmentNumber = assignmentNumbers.get(a.id);
           return (
             <li key={a.id}>
@@ -316,16 +281,12 @@ function TopicSection({
                 to={`/problems/${a.id}`}
                 className={`assignment-card status-${status}`}
                 aria-label={`${a.title} (難易度 ${a.difficulty}, ${
-                  status === "completed"
-                    ? "完了"
-                    : status === "partial"
-                      ? `${score}点`
-                      : "未着手"
+                  cleared ? "クリア済み" : "未クリア"
                 })`}
               >
                 <div className="card-top">
                   <span className="card-num">#{assignmentNumber}</span>
-                  <CardStatusBadge status={status} score={score} />
+                  <CardStatusBadge status={status} />
                 </div>
                 <div className="card-title">{a.title}</div>
                 <div className="card-bottom">
@@ -352,37 +313,26 @@ function TopicSection({
   );
 }
 
-function CardStatusBadge({
-  status,
-  score,
-}: {
-  status: Status;
-  score: number | undefined;
-}) {
+function CardStatusBadge({ status }: { status: Status }) {
   switch (status) {
-    case "completed":
+    case "cleared":
       return (
         <span
-          className="card-status card-status-completed"
-          aria-label="完了"
+          className="card-status card-status-cleared"
+          aria-label="クリア済み"
         >
-          ✓ 完了
+          ✓ クリア
         </span>
       );
-    case "partial":
+    case "uncleared":
       return (
-        <span
-          className="card-status card-status-partial"
-          aria-label={`部分点 ${score ?? 0}`}
-        >
-          {score ?? 0} 点
+        <span className="card-status card-status-uncleared" aria-label="未クリア">
+          未クリア
         </span>
       );
-    case "untouched":
-      return (
-        <span className="card-status card-status-untouched" aria-label="未着手">
-          未着手
-        </span>
-      );
+    default: {
+      const exhaustive: never = status;
+      return exhaustive;
+    }
   }
 }

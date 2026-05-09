@@ -11,4 +11,4 @@ export {
   assignmentsByTopic,
 } from "./problems/index.js";
 export { analyzeAst } from "./grading/ast.js";
-export { calculateScore } from "./grading/score.js";
+export { evaluate } from "./grading/evaluate.js";

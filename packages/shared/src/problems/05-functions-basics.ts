@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const functionsBasics: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -49,22 +49,18 @@ greet('Alice', undefined) // → 'Hello, Alice'
     tests: [
       {
         name: "省略",
-        weight: 25,
         code: "greet('Alice') === 'Hello, Alice'",
       },
       {
         name: "明示プレフィックス",
-        weight: 25,
         code: "greet('Alice', 'やあ') === 'やあ Alice'",
       },
       {
         name: "空文字プレフィックスは保持",
-        weight: 25,
         code: "greet('Alice', '') === 'Alice'",
       },
       {
         name: "undefined はデフォルト",
-        weight: 25,
         code: "greet('Alice', undefined) === 'Hello, Alice'",
       },
     ],
@@ -75,7 +71,6 @@ greet('Alice', undefined) // → 'Hello, Alice'
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -119,15 +114,14 @@ average(-1, 1)          // → 0
 `,
     entryPoints: ["average"],
     tests: [
-      { name: "3 引数", weight: 20, code: "average(1,2,3) === 2" },
-      { name: "1 引数", weight: 20, code: "average(10) === 10" },
-      { name: "0 引数", weight: 20, code: "average() === 0" },
+      { name: "3 引数", code: "average(1,2,3) === 2" },
+      { name: "1 引数", code: "average(10) === 10" },
+      { name: "0 引数", code: "average() === 0" },
       {
         name: "小数",
-        weight: 20,
         code: "Math.abs(average(1.5, 2.5) - 2) < 1e-9",
       },
-      { name: "符号混在", weight: 20, code: "average(-1, 1) === 0" },
+      { name: "符号混在", code: "average(-1, 1) === 0" },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },
     ast: {
@@ -140,7 +134,6 @@ average(-1, 1)          // → 0
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -201,27 +194,22 @@ incrementCount({ count: 0, name: 'a' }, 2)
     tests: [
       {
         name: "単純加算",
-        weight: 20,
         code: "JSON.stringify(incrementCount({count:0}, 1)) === JSON.stringify({count:1})",
       },
       {
         name: "減算",
-        weight: 20,
         code: "JSON.stringify(incrementCount({count:5}, -3)) === JSON.stringify({count:2})",
       },
       {
         name: "他プロパティを保持",
-        weight: 20,
         code: "JSON.stringify(incrementCount({count:0,name:'a'}, 2)) === JSON.stringify({count:2,name:'a'})",
       },
       {
         name: "元オブジェクトを変更しない",
-        weight: 20,
         code: "(() => { const s = {count:0}; incrementCount(s, 5); return s.count === 0; })()",
       },
       {
         name: "新しい参照を返す",
-        weight: 20,
         code: "(() => { const s = {count:0}; return incrementCount(s, 1) !== s; })()",
       },
     ],
@@ -232,7 +220,6 @@ incrementCount({ count: 0, name: 'a' }, 2)
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -281,18 +268,16 @@ power(2, 1.5)   // → NaN
 `,
     entryPoints: ["power"],
     tests: [
-      { name: "2^10", weight: 16, code: "power(2, 10) === 1024" },
-      { name: "3^0 = 1", weight: 16, code: "power(3, 0) === 1" },
-      { name: "0^0 = 1", weight: 17, code: "power(0, 0) === 1" },
-      { name: "5^1 = 5", weight: 17, code: "power(5, 1) === 5" },
+      { name: "2^10", code: "power(2, 10) === 1024" },
+      { name: "3^0 = 1", code: "power(3, 0) === 1" },
+      { name: "0^0 = 1", code: "power(0, 0) === 1" },
+      { name: "5^1 = 5", code: "power(5, 1) === 5" },
       {
         name: "負の指数は NaN",
-        weight: 17,
         code: "Number.isNaN(power(2, -1))",
       },
       {
         name: "小数の指数は NaN",
-        weight: 17,
         code: "Number.isNaN(power(2, 1.5))",
       },
     ],
@@ -315,6 +300,5 @@ power(2, 1.5)   // → NaN
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

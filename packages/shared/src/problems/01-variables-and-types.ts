@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const variablesAndTypes: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -57,10 +57,10 @@ sumTo(10)  // → 55
     ],
     entryPoints: ["sumTo"],
     tests: [
-      { name: "sumTo(3) === 6", weight: 25, code: "sumTo(3) === 6" },
-      { name: "sumTo(1) === 1", weight: 25, code: "sumTo(1) === 1" },
-      { name: "sumTo(0) === 0 (空ループ)", weight: 25, code: "sumTo(0) === 0" },
-      { name: "sumTo(10) === 55", weight: 25, code: "sumTo(10) === 55" },
+      { name: "sumTo(3) === 6", code: "sumTo(3) === 6" },
+      { name: "sumTo(1) === 1", code: "sumTo(1) === 1" },
+      { name: "sumTo(0) === 0 (空ループ)", code: "sumTo(0) === 0" },
+      { name: "sumTo(10) === 55", code: "sumTo(10) === 55" },
     ],
     eslint: {
       rules: {
@@ -71,7 +71,6 @@ sumTo(10)  // → 55
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -145,23 +144,20 @@ describeType(() => 1)    // → 'その他'
     ],
     entryPoints: ["describeType"],
     tests: [
-      { name: "数値", weight: 14, code: "describeType(42) === '数値'" },
-      { name: "文字列", weight: 14, code: "describeType('hi') === '文字列'" },
-      { name: "真偽値", weight: 14, code: "describeType(true) === '真偽値'" },
-      { name: "null は 'なし'", weight: 16, code: "describeType(null) === 'なし'" },
+      { name: "数値", code: "describeType(42) === '数値'" },
+      { name: "文字列", code: "describeType('hi') === '文字列'" },
+      { name: "真偽値", code: "describeType(true) === '真偽値'" },
+      { name: "null は 'なし'", code: "describeType(null) === 'なし'" },
       {
         name: "undefined は 'なし'",
-        weight: 14,
         code: "describeType(undefined) === 'なし'",
       },
       {
         name: "配列は 'その他'",
-        weight: 14,
         code: "describeType([1,2]) === 'その他'",
       },
       {
         name: "関数は 'その他'",
-        weight: 14,
         code: "describeType(() => 1) === 'その他'",
       },
     ],
@@ -174,7 +170,6 @@ describeType(() => 1)    // → 'その他'
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -232,45 +227,37 @@ toIntOrNull(true)      // → null    (真偽値は対象外)
 `,
     entryPoints: ["toIntOrNull"],
     tests: [
-      { name: "数字文字列", weight: 12, code: "toIntOrNull('42') === 42" },
+      { name: "数字文字列", code: "toIntOrNull('42') === 42" },
       {
         name: "前後空白を許容",
-        weight: 12,
         code: "toIntOrNull('  -7  ') === -7",
       },
       {
         name: "小数は切り捨て",
-        weight: 12,
         code: "toIntOrNull(3.14) === 3",
       },
       {
         name: "小数文字列",
-        weight: 10,
         code: "toIntOrNull('3.9') === 3",
       },
       {
         name: "非数値文字列は null",
-        weight: 12,
         code: "toIntOrNull('abc') === null",
       },
       {
         name: "空文字は null",
-        weight: 10,
         code: "toIntOrNull('') === null",
       },
       {
         name: "null は null",
-        weight: 10,
         code: "toIntOrNull(null) === null",
       },
       {
         name: "NaN は null",
-        weight: 10,
         code: "toIntOrNull(NaN) === null",
       },
       {
         name: "真偽値は null (型を厳しく)",
-        weight: 12,
         code: "toIntOrNull(true) === null",
       },
     ],
@@ -283,7 +270,6 @@ toIntOrNull(true)      // → null    (真偽値は対象外)
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -323,17 +309,14 @@ greet({ name: '太郎', age: 0 })
     tests: [
       {
         name: "Alice / 30",
-        weight: 34,
         code: "greet({name:'Alice', age:30}) === 'こんにちは、Aliceさん（30歳）！'",
       },
       {
         name: "太郎 / 0 (年齢0でも0と表示)",
-        weight: 33,
         code: "greet({name:'太郎', age:0}) === 'こんにちは、太郎さん（0歳）！'",
       },
       {
         name: "空文字の名前でも結合される",
-        weight: 33,
         code: "greet({name:'', age:5}) === 'こんにちは、さん（5歳）！'",
       },
     ],
@@ -353,6 +336,5 @@ greet({ name: '太郎', age: 0 })
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

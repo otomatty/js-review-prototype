@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const loops: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -46,22 +46,18 @@ maxOf([])                          // → null
     tests: [
       {
         name: "通常",
-        weight: 25,
         code: "maxOf([3,1,4,1,5,9,2,6]) === 9",
       },
       {
         name: "全て負",
-        weight: 25,
         code: "maxOf([-1,-5,-3]) === -1",
       },
       {
         name: "1要素",
-        weight: 25,
         code: "maxOf([42]) === 42",
       },
       {
         name: "空配列は null",
-        weight: 25,
         code: "maxOf([]) === null",
       },
     ],
@@ -81,7 +77,6 @@ maxOf([])                          // → null
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -134,13 +129,13 @@ digitCount(3.14)     // → -1
 `,
     entryPoints: ["digitCount"],
     tests: [
-      { name: "0 は 1 桁", weight: 14, code: "digitCount(0) === 1" },
-      { name: "7", weight: 14, code: "digitCount(7) === 1" },
-      { name: "42", weight: 14, code: "digitCount(42) === 2" },
-      { name: "1000", weight: 14, code: "digitCount(1000) === 4" },
-      { name: "123456", weight: 14, code: "digitCount(123456) === 6" },
-      { name: "負の数は -1", weight: 15, code: "digitCount(-5) === -1" },
-      { name: "小数は -1", weight: 15, code: "digitCount(3.14) === -1" },
+      { name: "0 は 1 桁", code: "digitCount(0) === 1" },
+      { name: "7", code: "digitCount(7) === 1" },
+      { name: "42", code: "digitCount(42) === 2" },
+      { name: "1000", code: "digitCount(1000) === 4" },
+      { name: "123456", code: "digitCount(123456) === 6" },
+      { name: "負の数は -1", code: "digitCount(-5) === -1" },
+      { name: "小数は -1", code: "digitCount(3.14) === -1" },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },
     ast: {
@@ -156,7 +151,6 @@ digitCount(3.14)     // → -1
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -203,27 +197,22 @@ firstNegativeIndex([0, -0, -1])         // → 2 (0 や -0 は負ではない)
     tests: [
       {
         name: "途中に負数",
-        weight: 20,
         code: "firstNegativeIndex([1,2,-3,4,-5]) === 2",
       },
       {
         name: "先頭が負数",
-        weight: 20,
         code: "firstNegativeIndex([-1]) === 0",
       },
       {
         name: "見つからない",
-        weight: 20,
         code: "firstNegativeIndex([1,2,3]) === -1",
       },
       {
         name: "空配列",
-        weight: 20,
         code: "firstNegativeIndex([]) === -1",
       },
       {
         name: "0 と -0 は負ではない",
-        weight: 20,
         code: "firstNegativeIndex([0,-0,-1]) === 2",
       },
     ],
@@ -239,7 +228,6 @@ firstNegativeIndex([0, -0, -1])         // → 2 (0 や -0 は負ではない)
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -316,22 +304,18 @@ findPairsSummingTo([], 0)
     tests: [
       {
         name: "通常",
-        weight: 25,
         code: "JSON.stringify(findPairsSummingTo([1,2,3,4], 5)) === JSON.stringify([[0,3],[1,2]])",
       },
       {
         name: "重複要素を持つ",
-        weight: 25,
         code: "JSON.stringify(findPairsSummingTo([1,1,1], 2)) === JSON.stringify([[0,1],[0,2],[1,2]])",
       },
       {
         name: "負数混在",
-        weight: 25,
         code: "JSON.stringify(findPairsSummingTo([5,-1,1,6,0], 6)) === JSON.stringify([[0,2],[3,4]])",
       },
       {
         name: "空配列",
-        weight: 25,
         code: "JSON.stringify(findPairsSummingTo([], 0)) === JSON.stringify([])",
       },
     ],
@@ -350,6 +334,5 @@ findPairsSummingTo([], 0)
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

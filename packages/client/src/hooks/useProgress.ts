@@ -1,9 +1,10 @@
 /**
- * 課題ごとの進捗 (編集中コード + ベストスコア) を localStorage と同期する Hook。
+ * 課題ごとの進捗 (編集中コード + クリア状態) を localStorage と同期する Hook。
  *
  * - 課題が切り替わったら storage から読み込み、なければ `starterCode` を返す
  * - `setCode` を呼ぶと debounce してエントリを書き込む (lastCode のみ)
- * - 採点完了時は `recordScore` を呼ぶことで bestScore を max で更新する
+ * - 評価完了時は `recordResult` を呼ぶことで cleared を OR で更新する
+ *   (一度クリアした課題は、その後の試行で失敗してもクリア状態を保持)
  * - `clear` でエントリを削除し、`starterCode` に戻す
  */
 
@@ -26,14 +27,14 @@ interface Args {
 interface ProgressApi {
   code: string;
   setCode: (code: string) => void;
-  bestScore: number | null;
+  cleared: boolean;
   /**
-   * 採点直後に呼び出す。前回より高ければ best score を更新し、
+   * 評価完了直後に呼び出す。`passed === true` の場合に cleared を立てる。
    * 採点対象だった `submittedCode` を `lastCode` として保存する。
    * `submittedCode` は呼び出し側で run() 起動時に固定した値を渡すこと
    * (await 中に課題切替があっても元の課題に紐付くようにするため)。
    */
-  recordScore: (score: number, submittedCode: string) => void;
+  recordResult: (passed: boolean, submittedCode: string) => void;
   /** storage の entry を消し、starterCode に戻す。 */
   clear: () => void;
 }
@@ -42,8 +43,8 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
   const [code, setCodeState] = useState<string>(
     () => readInitial(assignmentId, starterCode).code,
   );
-  const [bestScore, setBestScore] = useState<number | null>(
-    () => readInitial(assignmentId, starterCode).bestScore,
+  const [cleared, setCleared] = useState<boolean>(
+    () => readInitial(assignmentId, starterCode).cleared,
   );
 
   // 課題切替時、storage から再ロード
@@ -54,7 +55,7 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
     lastAssignmentRef.current = assignmentId;
     const next = readInitial(assignmentId, starterCode);
     setCodeState(next.code);
-    setBestScore(next.bestScore);
+    setCleared(next.cleared);
   }, [assignmentId, starterCode]);
 
   // code 変更を debounce して localStorage に保存
@@ -63,44 +64,40 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
       // starterCode と完全一致なら entry を作らない (新規ノイズを避ける)
       const existing = loadEntry(assignmentId);
       if (!existing && code === starterCode) return;
-      const nextBest = existing?.bestScore ?? bestScore ?? 0;
+      const nextCleared = existing?.cleared ?? cleared;
       saveEntry(
         assignmentId,
         {
-          bestScore: nextBest,
+          cleared: nextCleared,
           lastCode: code,
           lastSubmittedAt: existing?.lastSubmittedAt,
         },
-        // bestScore は通常タイピングでは変わらない。前回値を渡すことで
-        // saveEntry 内の差分判定で `loadEntry` が再走するのを避ける。
-        { previousBestScore: existing?.bestScore ?? null },
+        { previousCleared: existing?.cleared ?? null },
       );
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [code, assignmentId, starterCode, bestScore]);
+  }, [code, assignmentId, starterCode, cleared]);
 
   const setCode = useCallback((next: string) => {
     setCodeState(next);
   }, []);
 
-  const recordScore = useCallback(
-    (score: number, submittedCode: string) => {
+  const recordResult = useCallback(
+    (passed: boolean, submittedCode: string) => {
       const existing = loadEntry(assignmentId);
-      const prev = existing?.bestScore ?? 0;
-      const nextBest = Math.max(prev, score);
-      // submittedCode は採点対象として run() に渡された固定値。
-      // await 中に課題が切り替わっても、エディタの「現在値」ではなく
-      // 採点が走った時点のコードを保存する。
+      const prev = existing?.cleared ?? false;
+      // 一度クリア済みなら、その状態を保持する (失敗で取り消さない)。
+      const nextCleared = prev || passed;
       const entry: ProgressEntry = {
-        bestScore: nextBest,
+        cleared: nextCleared,
         lastCode: submittedCode,
         lastSubmittedAt: Date.now(),
       };
       saveEntry(assignmentId, entry, {
-        previousBestScore: existing?.bestScore ?? null,
+        previousCleared: existing?.cleared ?? null,
       });
-      // 表示中の課題が切り替わっていれば bestScore の state は触らない。
-      if (lastAssignmentRef.current === assignmentId) setBestScore(nextBest);
+      // 表示中の課題が切り替わっていれば cleared の state は触らない。
+      if (lastAssignmentRef.current === assignmentId) setCleared(nextCleared);
     },
     [assignmentId],
   );
@@ -108,20 +105,17 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
   const clear = useCallback(() => {
     deleteEntry(assignmentId);
     setCodeState(starterCode);
-    setBestScore(null);
+    setCleared(false);
   }, [assignmentId, starterCode]);
 
-  return { code, setCode, bestScore, recordScore, clear };
+  return { code, setCode, cleared, recordResult, clear };
 }
 
 function readInitial(
   assignmentId: string,
   starterCode: string,
-): { code: string; bestScore: number | null } {
+): { code: string; cleared: boolean } {
   const entry = loadEntry(assignmentId);
-  if (!entry) return { code: starterCode, bestScore: null };
-  return {
-    code: entry.lastCode,
-    bestScore: entry.bestScore > 0 ? entry.bestScore : null,
-  };
+  if (!entry) return { code: starterCode, cleared: false };
+  return { code: entry.lastCode, cleared: entry.cleared };
 }

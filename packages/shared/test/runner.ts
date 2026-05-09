@@ -1,5 +1,5 @@
 /**
- * 採点回帰テスト専用の軽量 runner。
+ * 評価回帰テスト専用の軽量 runner。
  *
  * サーバ本番の runner (`packages/server/src/runner.ts`) は isolated-vm を使うが、
  * ネイティブビルドが重く、CI では Node の `vm` モジュールで十分。
@@ -52,7 +52,6 @@ ${exposeStmts}
   } catch (e) {
     return {
       name: test.name,
-      weight: test.weight,
       passed: false,
       error: `COMPILE_ERROR: ${formatErr(e)}`,
     };
@@ -67,7 +66,6 @@ ${exposeStmts}
     const error = msg.includes("Script execution timed out") ? "TIMEOUT" : msg;
     return {
       name: test.name,
-      weight: test.weight,
       passed: false,
       error,
     };
@@ -84,7 +82,6 @@ ${exposeStmts}
       const error = msg === "TIMEOUT" ? "TIMEOUT" : msg;
       return {
         name: test.name,
-        weight: test.weight,
         passed: false,
         error,
       };
@@ -93,7 +90,6 @@ ${exposeStmts}
 
   return {
     name: test.name,
-    weight: test.weight,
     passed: Boolean(result),
   };
 }

@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const scopeClosure: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -49,22 +49,18 @@ c()   // → 4   (元の c には影響なし)
     tests: [
       {
         name: "初回は 1",
-        weight: 20,
         code: "makeCounter()() === 1",
       },
       {
         name: "1, 2, 3 と増える",
-        weight: 30,
         code: "(() => { const c = makeCounter(); return c() === 1 && c() === 2 && c() === 3; })()",
       },
       {
         name: "独立したインスタンス",
-        weight: 30,
         code: "(() => { const a = makeCounter(); const b = makeCounter(); a(); a(); return a() === 3 && b() === 1; })()",
       },
       {
         name: "状態のリーク無し (戻り値は数値)",
-        weight: 20,
         code: "(() => { const c = makeCounter(); return typeof c() === 'number'; })()",
       },
     ],
@@ -72,7 +68,6 @@ c()   // → 4   (元の c には影響なし)
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -144,42 +139,34 @@ fast(3)   // → 9    (calls === 2)
     tests: [
       {
         name: "計算結果が正しい",
-        weight: 14,
         code: "(() => { const f = memoize((n) => n * n); return f(3) === 9 && f(4) === 16; })()",
       },
       {
         name: "同じ引数は1回だけ実行",
-        weight: 18,
         code: "(() => { let c = 0; const f = memoize((n) => { c++; return n; }); f(1); f(1); f(1); return c === 1; })()",
       },
       {
         name: "別の引数は別実行",
-        weight: 14,
         code: "(() => { let c = 0; const f = memoize((n) => { c++; return n; }); f(1); f(2); f(3); return c === 3; })()",
       },
       {
         name: "false を返してもキャッシュする",
-        weight: 14,
         code: "(() => { let c = 0; const f = memoize((x) => { c++; return false; }); f(1); f(1); return c === 1 && f(1) === false; })()",
       },
       {
         name: "undefined を返してもキャッシュする",
-        weight: 14,
         code: "(() => { let c = 0; const f = memoize((x) => { c++; return undefined; }); f(1); f(1); return c === 1 && f(1) === undefined; })()",
       },
       {
         name: "null を返してもキャッシュする",
-        weight: 12,
         code: "(() => { let c = 0; const f = memoize((x) => { c++; return null; }); f(1); f(1); return c === 1 && f(1) === null; })()",
       },
       {
         name: "文字列引数",
-        weight: 8,
         code: "memoize((s) => s.toUpperCase())('hi') === 'HI'",
       },
       {
         name: "別インスタンスはキャッシュを共有しない",
-        weight: 6,
         code: "(() => { let c = 0; const make = () => memoize((n) => { c++; return n; }); make()(1); make()(1); return c === 2; })()",
       },
     ],
@@ -187,7 +174,6 @@ fast(3)   // → 9    (calls === 2)
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -258,32 +244,26 @@ v.balance        // 関数 (プロパティとしての残高は存在しない)
     tests: [
       {
         name: "初期残高",
-        weight: 16,
         code: "makeVault(100).balance() === 100",
       },
       {
         name: "deposit",
-        weight: 17,
         code: "(() => { const v = makeVault(100); v.deposit(50); return v.balance() === 150; })()",
       },
       {
         name: "withdraw",
-        weight: 17,
         code: "(() => { const v = makeVault(100); v.withdraw(30); return v.balance() === 70; })()",
       },
       {
         name: "残高不足は無視",
-        weight: 17,
         code: "(() => { const v = makeVault(100); v.withdraw(9999); return v.balance() === 100; })()",
       },
       {
         name: "負数 deposit は無視",
-        weight: 17,
         code: "(() => { const v = makeVault(100); v.deposit(-10); return v.balance() === 100; })()",
       },
       {
         name: "balance は関数 (プロパティ非露出)",
-        weight: 16,
         code: "typeof makeVault(100).balance === 'function'",
       },
     ],
@@ -294,6 +274,5 @@ v.balance        // 関数 (プロパティとしての残高は存在しない)
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

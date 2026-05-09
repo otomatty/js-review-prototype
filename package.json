@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "dev": "bun run --filter @jsreview/server --filter @jsreview/client dev",
     "dev:client": "bun --filter @jsreview/client dev",
     "dev:server": "bun --filter @jsreview/server dev",
     "build:shared": "bun --filter @jsreview/shared build",

@@ -74,7 +74,6 @@ export class TestRunner {
       } catch (e) {
         return {
           name: test.name,
-          weight: test.weight,
           passed: false,
           error: `COMPILE_ERROR: ${formatErr(e)}`,
         };
@@ -101,7 +100,6 @@ export class TestRunner {
             : msg;
         return {
           name: test.name,
-          weight: test.weight,
           passed: false,
           error,
         };
@@ -109,7 +107,6 @@ export class TestRunner {
 
       return {
         name: test.name,
-        weight: test.weight,
         passed: Boolean(result),
       };
     } finally {

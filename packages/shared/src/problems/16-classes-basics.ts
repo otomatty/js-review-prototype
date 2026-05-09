@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const classesBasics: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -57,32 +57,26 @@ new Point(-3, -4).toString()           // → '(-3, -4)'
     tests: [
       {
         name: "プロパティ x, y",
-        weight: 18,
         code: "(() => { const p = new Point(3,4); return p.x === 3 && p.y === 4; })()",
       },
       {
         name: "distanceFromOrigin (3,4)→5",
-        weight: 18,
         code: "new Point(3,4).distanceFromOrigin() === 5",
       },
       {
         name: "distanceFromOrigin (0,0)→0",
-        weight: 16,
         code: "new Point(0,0).distanceFromOrigin() === 0",
       },
       {
         name: "toString (3,4)",
-        weight: 16,
         code: "new Point(3,4).toString() === '(3, 4)'",
       },
       {
         name: "toString (-3,-4)",
-        weight: 16,
         code: "new Point(-3,-4).toString() === '(-3, -4)'",
       },
       {
         name: "instance",
-        weight: 16,
         code: "(new Point(0,0)) instanceof Point",
       },
     ],
@@ -102,7 +96,6 @@ new Point(-3, -4).toString()           // → '(-3, -4)'
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -188,37 +181,30 @@ s.pop()           // → undefined
     tests: [
       {
         name: "初期は空",
-        weight: 12,
         code: "new Stack().isEmpty() === true",
       },
       {
         name: "push 戻り値はサイズ",
-        weight: 14,
         code: "(() => { const s = new Stack(); return s.push(1) === 1 && s.push(2) === 2; })()",
       },
       {
         name: "size",
-        weight: 14,
         code: "(() => { const s = new Stack(); s.push(1); s.push(2); s.push(3); return s.size() === 3; })()",
       },
       {
         name: "peek は取り出さない",
-        weight: 14,
         code: "(() => { const s = new Stack(); s.push(7); return s.peek() === 7 && s.size() === 1; })()",
       },
       {
         name: "pop で LIFO 順",
-        weight: 16,
         code: "(() => { const s = new Stack(); s.push(1); s.push(2); s.push(3); return s.pop() === 3 && s.pop() === 2 && s.pop() === 1; })()",
       },
       {
         name: "空の pop は undefined",
-        weight: 14,
         code: "new Stack().pop() === undefined",
       },
       {
         name: "空の peek は undefined",
-        weight: 16,
         code: "new Stack().peek() === undefined",
       },
     ],
@@ -233,7 +219,6 @@ s.pop()           // → undefined
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -293,32 +278,26 @@ t.label()     // → '[ ] 買い物'
     tests: [
       {
         name: "初期状態",
-        weight: 16,
         code: "(() => { const t = new Todo({id:1,title:'買い物'}); return t.id === 1 && t.title === '買い物' && t.done === false; })()",
       },
       {
         name: "未完了 label",
-        weight: 16,
         code: "new Todo({id:1,title:'買い物'}).label() === '[ ] 買い物'",
       },
       {
         name: "complete",
-        weight: 17,
         code: "(() => { const t = new Todo({id:1,title:'掃除'}); t.complete(); return t.done === true; })()",
       },
       {
         name: "完了 label",
-        weight: 17,
         code: "(() => { const t = new Todo({id:1,title:'掃除'}); t.complete(); return t.label() === '[x] 掃除'; })()",
       },
       {
         name: "reopen",
-        weight: 17,
         code: "(() => { const t = new Todo({id:1,title:'A'}); t.complete(); t.reopen(); return t.done === false && t.label() === '[ ] A'; })()",
       },
       {
         name: "instanceof",
-        weight: 17,
         code: "new Todo({id:1,title:'A'}) instanceof Todo",
       },
     ],
@@ -343,7 +322,6 @@ t.label()     // → '[ ] 買い物'
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -419,32 +397,26 @@ new Range(0, 3).toArray()   // → [0, 1, 2]
     tests: [
       {
         name: "length 4",
-        weight: 16,
         code: "new Range(1,5).length() === 4",
       },
       {
         name: "contains 境界",
-        weight: 16,
         code: "(() => { const r = new Range(1,5); return r.contains(1) === true && r.contains(5) === false && r.contains(0) === false; })()",
       },
       {
         name: "toArray",
-        weight: 17,
         code: "JSON.stringify(new Range(1,5).toArray()) === JSON.stringify([1,2,3,4])",
       },
       {
         name: "0 から始まる",
-        weight: 17,
         code: "JSON.stringify(new Range(0,3).toArray()) === JSON.stringify([0,1,2])",
       },
       {
         name: "同値は空",
-        weight: 17,
         code: "new Range(3,3).length() === 0 && new Range(3,3).toArray().length === 0",
       },
       {
         name: "逆順は空",
-        weight: 17,
         code: "new Range(5,1).length() === 0 && new Range(5,1).toArray().length === 0",
       },
     ],
@@ -459,6 +431,5 @@ new Range(0, 3).toArray()   // → [0, 1, 2]
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

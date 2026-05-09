@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const regex: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -55,27 +55,22 @@ extractPhones('')
     tests: [
       {
         name: "2件抽出",
-        weight: 20,
         code: "JSON.stringify(extractPhones('連絡先: 090-1234 または 080-5678 まで')) === JSON.stringify(['090-1234','080-5678'])",
       },
       {
         name: "桁数違いは無視",
-        weight: 20,
         code: "JSON.stringify(extractPhones('TEL 090-1234, FAX 03-5678')) === JSON.stringify(['090-1234'])",
       },
       {
         name: "長い数字列の途中は拾わない",
-        weight: 20,
         code: "JSON.stringify(extractPhones('内線1090-1234 は社内のみ')) === JSON.stringify([])",
       },
       {
         name: "該当なしは空配列",
-        weight: 20,
         code: "JSON.stringify(extractPhones('電話番号はありません')) === JSON.stringify([])",
       },
       {
         name: "空文字も空配列",
-        weight: 20,
         code: "JSON.stringify(extractPhones('')) === JSON.stringify([])",
       },
     ],
@@ -91,7 +86,6 @@ extractPhones('')
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -151,37 +145,30 @@ parseUrl('ftp://example.com/foo')
     tests: [
       {
         name: "通常",
-        weight: 14,
         code: "JSON.stringify(parseUrl('https://example.com/foo/bar')) === JSON.stringify({host:'example.com',path:'foo/bar'})",
       },
       {
         name: "末尾スラッシュのみ",
-        weight: 14,
         code: "JSON.stringify(parseUrl('http://example.com/')) === JSON.stringify({host:'example.com',path:''})",
       },
       {
         name: "ホストのみ (パスなし)",
-        weight: 14,
         code: "JSON.stringify(parseUrl('https://example.com')) === JSON.stringify({host:'example.com',path:''})",
       },
       {
         name: "サブドメイン+クエリ",
-        weight: 15,
         code: "JSON.stringify(parseUrl('https://sub.example.co.jp/a/b/c?x=1')) === JSON.stringify({host:'sub.example.co.jp',path:'a/b/c?x=1'})",
       },
       {
         name: "URLでない",
-        weight: 14,
         code: "parseUrl('not a url') === null",
       },
       {
         name: "対応外スキーム",
-        weight: 14,
         code: "parseUrl('ftp://example.com/foo') === null",
       },
       {
         name: "ホスト直後のクエリは無効",
-        weight: 15,
         code: "parseUrl('https://example.com?x=1') === null",
       },
     ],
@@ -197,7 +184,6 @@ parseUrl('ftp://example.com/foo')
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -248,22 +234,18 @@ maskEmails('')
     tests: [
       {
         name: "1件置換",
-        weight: 25,
         code: "maskEmails('連絡先は alice@example.com です') === '連絡先は [email] です'",
       },
       {
         name: "2件置換",
-        weight: 25,
         code: "maskEmails('a@x.co と b.c+d@sub.example.co.jp の2件') === '[email] と [email] の2件'",
       },
       {
         name: "メールなし",
-        weight: 25,
         code: "maskEmails('メールはありません') === 'メールはありません'",
       },
       {
         name: "空文字",
-        weight: 25,
         code: "maskEmails('') === ''",
       },
     ],
@@ -282,7 +264,6 @@ maskEmails('')
         { kind: "node", nodeType: "ForStatement", label: "for 文は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -345,32 +326,26 @@ normalizeText('')
     tests: [
       {
         name: "全角英字+前後空白",
-        weight: 17,
         code: "normalizeText('  Ｈｅｌｌｏ Ｗｏｒｌｄ  ') === 'Hello World'",
       },
       {
         name: "全角スペースの連続",
-        weight: 17,
         code: "normalizeText('a\\u3000\\u3000b') === 'a b'",
       },
       {
         name: "タブ・改行を含む空白",
-        weight: 17,
         code: "normalizeText('a   b\\t\\nc') === 'a b c'",
       },
       {
         name: "全角英数の混在",
-        weight: 16,
         code: "normalizeText('Ａ１-Ｂ２') === 'A1-B2'",
       },
       {
         name: "空白のみ",
-        weight: 17,
         code: "normalizeText('   ') === ''",
       },
       {
         name: "空文字",
-        weight: 16,
         code: "normalizeText('') === ''",
       },
     ],
@@ -395,6 +370,5 @@ normalizeText('')
         },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const arraysBasics: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -40,13 +40,12 @@ lastOf([null, 0])   // → 0
 `,
     entryPoints: ["lastOf"],
     tests: [
-      { name: "[1,2,3]", weight: 20, code: "lastOf([1,2,3]) === 3" },
-      { name: "['a']", weight: 20, code: "lastOf(['a']) === 'a'" },
-      { name: "空配列", weight: 20, code: "lastOf([]) === undefined" },
-      { name: "0 を含む", weight: 20, code: "lastOf([null, 0]) === 0" },
+      { name: "[1,2,3]", code: "lastOf([1,2,3]) === 3" },
+      { name: "['a']", code: "lastOf(['a']) === 'a'" },
+      { name: "空配列", code: "lastOf([]) === undefined" },
+      { name: "0 を含む", code: "lastOf([null, 0]) === 0" },
       {
         name: "元配列を破壊しない",
-        weight: 20,
         code: "(() => { const a = [1,2,3]; lastOf(a); return a.length === 3 && a[2] === 3; })()",
       },
     ],
@@ -57,7 +56,6 @@ lastOf([null, 0])   // → 0
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -99,27 +97,22 @@ appendItem([1, 2, 3], null)  // → [1, 2, 3, null]
     tests: [
       {
         name: "数値追加",
-        weight: 20,
         code: "JSON.stringify(appendItem([1,2], 3)) === JSON.stringify([1,2,3])",
       },
       {
         name: "空配列に追加",
-        weight: 20,
         code: "JSON.stringify(appendItem([], 'a')) === JSON.stringify(['a'])",
       },
       {
         name: "null 追加",
-        weight: 20,
         code: "JSON.stringify(appendItem([1,2,3], null)) === JSON.stringify([1,2,3,null])",
       },
       {
         name: "元配列を変更しない",
-        weight: 20,
         code: "(() => { const a = [1,2]; appendItem(a, 3); return a.length === 2; })()",
       },
       {
         name: "新しい参照を返す",
-        weight: 20,
         code: "(() => { const a = [1,2]; return appendItem(a, 3) !== a; })()",
       },
     ],
@@ -130,7 +123,6 @@ appendItem([1, 2, 3], null)  // → [1, 2, 3, null]
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -194,37 +186,30 @@ chunk([1,2,3], 0)
     tests: [
       {
         name: "5つを2分割",
-        weight: 16,
         code: "JSON.stringify(chunk([1,2,3,4,5], 2)) === JSON.stringify([[1,2],[3,4],[5]])",
       },
       {
         name: "ぴったり分割",
-        weight: 16,
         code: "JSON.stringify(chunk([1,2,3,4,5,6], 3)) === JSON.stringify([[1,2,3],[4,5,6]])",
       },
       {
         name: "size 1",
-        weight: 14,
         code: "JSON.stringify(chunk(['a','b','c'], 1)) === JSON.stringify([['a'],['b'],['c']])",
       },
       {
         name: "size > length",
-        weight: 14,
         code: "JSON.stringify(chunk([1,2,3], 5)) === JSON.stringify([[1,2,3]])",
       },
       {
         name: "空配列",
-        weight: 14,
         code: "JSON.stringify(chunk([], 2)) === JSON.stringify([])",
       },
       {
         name: "size 0",
-        weight: 13,
         code: "JSON.stringify(chunk([1,2,3], 0)) === JSON.stringify([])",
       },
       {
         name: "非整数 size は []",
-        weight: 13,
         code: "JSON.stringify(chunk([1,2,3], 2.5)) === JSON.stringify([])",
       },
     ],
@@ -233,7 +218,6 @@ chunk([1,2,3], 0)
       required: [{ kind: "method", name: "slice", label: "slice を使う" }],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -289,32 +273,26 @@ sortAsc([0.1, 0.01, 0.2])    // → [0.01, 0.1, 0.2]
     tests: [
       {
         name: "通常",
-        weight: 18,
         code: "JSON.stringify(sortAsc([3,1,4,1,5])) === JSON.stringify([1,1,3,4,5])",
       },
       {
         name: "10進数バグ回避 [10,2]→[2,10]",
-        weight: 18,
         code: "JSON.stringify(sortAsc([10,2])) === JSON.stringify([2,10])",
       },
       {
         name: "負数混在",
-        weight: 16,
         code: "JSON.stringify(sortAsc([-3,0,2,-1])) === JSON.stringify([-3,-1,0,2])",
       },
       {
         name: "空配列",
-        weight: 16,
         code: "JSON.stringify(sortAsc([])) === JSON.stringify([])",
       },
       {
         name: "小数",
-        weight: 16,
         code: "JSON.stringify(sortAsc([0.1,0.01,0.2])) === JSON.stringify([0.01,0.1,0.2])",
       },
       {
         name: "元配列を変更しない",
-        weight: 16,
         code: "(() => { const a = [3,1,2]; sortAsc(a); return JSON.stringify(a) === JSON.stringify([3,1,2]); })()",
       },
     ],
@@ -325,6 +303,5 @@ sortAsc([0.1, 0.01, 0.2])    // → [0.01, 0.1, 0.2]
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

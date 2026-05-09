@@ -2,7 +2,7 @@
  * 共有型定義。サーバとクライアントの両方で使われる。
  *
  * サーバが import するのはこのファイルのみ。
- * AST解析(grading/ast.ts) と スコア集計(grading/score.ts) はクライアントのみが使用する。
+ * AST解析(grading/ast.ts) と 評価(grading/evaluate.ts) はクライアントのみが使用する。
  */
 
 // ───────────────────────────────────────────────────────────────────
@@ -64,19 +64,18 @@ export interface Assignment {
   eslint: { rules: Record<string, ESLintRuleConfig> };
   /** クライアント側 AST 要件 */
   ast: ASTRequirement;
-  /** スコアの重み (合計100が基本) */
-  weights: ScoreWeights;
   /**
    * 模範解答。
-   * 全テストにパスし、AST `required` を全充足、`forbidden` 違反ゼロで
-   * 100点満点が取れる必要がある (CI の採点回帰テストで検証)。
-   * UI では「解答例を表示」アコーディオンから通常 100 点取得後に閲覧できる。
-   * ただし「常に表示」設定が有効な場合は 100 点未満でも閲覧できる。
+   * 全テストにパスし、AST `required` を全充足、`forbidden` 違反ゼロ、
+   * Lint エラーゼロで「全チェック通過 = クリア」に到達できる必要がある
+   * (CI の回帰テストで検証)。
+   * UI では「解答例を表示」アコーディオンからクリア後に閲覧できる。
+   * ただし「常に表示」設定が有効な場合は未クリアでも閲覧できる。
    */
   solution?: string;
   /**
-   * 採点で 100 点に届かないべき誤実装サンプル (任意)。
-   * `expectMaxScore` を指定するとその値以下で合格扱い (デフォルトは 99)。
+   * 「クリアしてはいけない」ことを担保するための誤実装サンプル (任意)。
+   * 何らかのチェック (テスト / Lint / AST) を必ず1つ以上失敗することを CI で検証する。
    */
   badSolutions?: BadSolution[];
 }
@@ -84,13 +83,10 @@ export interface Assignment {
 export interface BadSolution {
   code: string;
   description: string;
-  /** スコアの上限 (これ以下なら合格扱い)。省略時は 99。 */
-  expectMaxScore?: number;
 }
 
 export interface TestCase {
   name: string;
-  weight: number;
   /**
    * 評価対象のテスト式。 isolated-vm 内で、`code` を読み込んだ後に評価される。
    * 例: 'sum([1,2,3]) === 6'
@@ -167,12 +163,6 @@ export type ASTNodeType =
   | "ObjectPattern"
   | "ArrayPattern";
 
-export interface ScoreWeights {
-  test: number;
-  lint: number;
-  ast: number;
-}
-
 // ───────────────────────────────────────────────────────────────────
 // テスト実行 (サーバが返す)
 // ───────────────────────────────────────────────────────────────────
@@ -190,7 +180,6 @@ export interface RunTestsResponse {
 
 export interface TestResult {
   name: string;
-  weight: number;
   passed: boolean;
   /** タイムアウトの場合は 'TIMEOUT'、コンパイルエラーは 'COMPILE_ERROR' */
   error?: string;
@@ -233,21 +222,19 @@ export interface ASTViolation {
 }
 
 // ───────────────────────────────────────────────────────────────────
-// 集計結果
+// 評価結果 (全チェック通過の二値判定)
 // ───────────────────────────────────────────────────────────────────
 
-export interface ScoreBreakdown {
-  test: number;
-  lint: number;
-  ast: number;
-}
-
-export interface ScoreResult {
-  total: number;
-  breakdown: ScoreBreakdown;
-  details: {
-    test: { passedWeight: number; totalWeight: number; weight: number };
-    lint: { violations: number; weight: number };
-    ast: { requiredOk: boolean; forbiddenViolations: number; weight: number };
+export interface EvaluationResult {
+  /** Lint / AST / テストすべてのチェックを通過しているか */
+  cleared: boolean;
+  /** 各セクションの結果 */
+  checks: {
+    /** Lint: severity===2 (error) が 0 件なら通過 */
+    lintPassed: boolean;
+    /** AST: parseError なし & required 全充足 & forbidden 0 件 */
+    astPassed: boolean;
+    /** Tests: 全テストが passed */
+    testsPassed: boolean;
   };
 }

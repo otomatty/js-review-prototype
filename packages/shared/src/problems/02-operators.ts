@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const operators: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -55,10 +55,10 @@ signOf(-0)   // → 0
     ],
     entryPoints: ["signOf"],
     tests: [
-      { name: "正の数", weight: 25, code: "signOf(7) === 1" },
-      { name: "負の数", weight: 25, code: "signOf(-3) === -1" },
-      { name: "0", weight: 25, code: "signOf(0) === 0" },
-      { name: "-0", weight: 25, code: "signOf(-0) === 0" },
+      { name: "正の数", code: "signOf(7) === 1" },
+      { name: "負の数", code: "signOf(-3) === -1" },
+      { name: "0", code: "signOf(0) === 0" },
+      { name: "-0", code: "signOf(-0) === 0" },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },
     ast: {
@@ -74,7 +74,6 @@ signOf(-0)   // → 0
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -125,42 +124,34 @@ resolvePort({ port: '3000' })     // → 8080  (型違い)
     tests: [
       {
         name: "3000",
-        weight: 12,
         code: "resolvePort({port:3000}) === 3000",
       },
       {
         name: "80",
-        weight: 12,
         code: "resolvePort({port:80}) === 80",
       },
       {
         name: "0 はデフォルト",
-        weight: 14,
         code: "resolvePort({port:0}) === 8080",
       },
       {
         name: "null",
-        weight: 12,
         code: "resolvePort({port:null}) === 8080",
       },
       {
         name: "undefined",
-        weight: 12,
         code: "resolvePort({port:undefined}) === 8080",
       },
       {
         name: "プロパティなし",
-        weight: 12,
         code: "resolvePort({}) === 8080",
       },
       {
         name: "範囲外",
-        weight: 13,
         code: "resolvePort({port:70000}) === 8080",
       },
       {
         name: "型違い (文字列)",
-        weight: 13,
         code: "resolvePort({port:'3000'}) === 8080",
       },
     ],
@@ -171,7 +162,6 @@ resolvePort({ port: '3000' })     // → 8080  (型違い)
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -218,32 +208,26 @@ companyName(undefined)                                     // → 'unknown'
     tests: [
       {
         name: "正常系",
-        weight: 20,
         code: "companyName({profile:{company:{name:'Acme'}}}) === 'Acme'",
       },
       {
         name: "name 欠落",
-        weight: 16,
         code: "companyName({profile:{company:{}}}) === 'unknown'",
       },
       {
         name: "company 欠落",
-        weight: 16,
         code: "companyName({profile:{}}) === 'unknown'",
       },
       {
         name: "profile 欠落",
-        weight: 16,
         code: "companyName({}) === 'unknown'",
       },
       {
         name: "null",
-        weight: 16,
         code: "companyName(null) === 'unknown'",
       },
       {
         name: "undefined",
-        weight: 16,
         code: "companyName(undefined) === 'unknown'",
       },
     ],
@@ -254,7 +238,6 @@ companyName(undefined)                                     // → 'unknown'
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -309,27 +292,22 @@ buildMessage({ user: null, count: undefined })
     tests: [
       {
         name: "Alice / 3",
-        weight: 20,
         code: "buildMessage({user:'Alice', count:3}) === 'Aliceさん (3件)'",
       },
       {
         name: "Bob / 0",
-        weight: 20,
         code: "buildMessage({user:'Bob', count:0}) === 'Bobさん (通知なし)'",
       },
       {
         name: "空名前",
-        weight: 20,
         code: "buildMessage({user:'', count:5}) === '匿名さん (5件)'",
       },
       {
         name: "プロパティなし",
-        weight: 20,
         code: "buildMessage({}) === '匿名さん (通知なし)'",
       },
       {
         name: "null / undefined",
-        weight: 20,
         code: "buildMessage({user:null, count:undefined}) === '匿名さん (通知なし)'",
       },
     ],
@@ -347,6 +325,5 @@ buildMessage({ user: null, count: undefined })
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];
