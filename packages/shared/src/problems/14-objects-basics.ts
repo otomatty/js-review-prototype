@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const objectsBasics: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -54,17 +54,14 @@ makeRecord('name', 'Alice', 'admin')
     tests: [
       {
         name: "id, 1, a",
-        weight: 33,
         code: "JSON.stringify(makeRecord('id', 1, 'a')) === JSON.stringify({id:1, tag:'a', createdAt:'now'})",
       },
       {
         name: "name, Alice, admin",
-        weight: 34,
         code: "JSON.stringify(makeRecord('name', 'Alice', 'admin')) === JSON.stringify({name:'Alice', tag:'admin', createdAt:'now'})",
       },
       {
         name: "数値キー風な文字列",
-        weight: 33,
         code: "JSON.stringify(makeRecord('123', null, '')) === JSON.stringify({'123':null, tag:'', createdAt:'now'})",
       },
     ],
@@ -72,7 +69,6 @@ makeRecord('name', 'Alice', 'admin')
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -116,27 +112,22 @@ countChars('あああ')     // → { 'あ': 3 }
     tests: [
       {
         name: "英字 'aabbc'",
-        weight: 20,
         code: `JSON.stringify(countChars('aabbc')) === JSON.stringify({a:2,b:2,c:1})`,
       },
       {
         name: "空文字 ''",
-        weight: 20,
         code: `JSON.stringify(countChars('')) === JSON.stringify({})`,
       },
       {
         name: "単一文字 'aaaa'",
-        weight: 20,
         code: `JSON.stringify(countChars('aaaa')) === JSON.stringify({a:4})`,
       },
       {
         name: "日本語 'あああ'",
-        weight: 20,
         code: `JSON.stringify(countChars('あああ')) === JSON.stringify({'あ':3})`,
       },
       {
         name: "数字混在 'a1a1'",
-        weight: 20,
         code: `JSON.stringify(countChars('a1a1')) === JSON.stringify({a:2,'1':2})`,
       },
     ],
@@ -144,7 +135,6 @@ countChars('あああ')     // → { 'あ': 3 }
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -194,22 +184,18 @@ mapValues({}, (n) => n)
     tests: [
       {
         name: "数値倍",
-        weight: 25,
         code: "JSON.stringify(mapValues({a:1,b:2,c:3}, (n)=>n*2)) === JSON.stringify({a:2,b:4,c:6})",
       },
       {
         name: "文字列変換",
-        weight: 25,
         code: "JSON.stringify(mapValues({x:'hi'}, (s)=>s.toUpperCase())) === JSON.stringify({x:'HI'})",
       },
       {
         name: "空オブジェクト",
-        weight: 25,
         code: "JSON.stringify(mapValues({}, (n)=>n)) === JSON.stringify({})",
       },
       {
         name: "元オブジェクトを変更しない",
-        weight: 25,
         code: "(() => { const o = {a:1}; mapValues(o, (n)=>n*100); return o.a === 1; })()",
       },
     ],
@@ -229,7 +215,6 @@ mapValues({}, (n) => n)
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -300,27 +285,22 @@ function deepSet(obj, path, value) {
     tests: [
       {
         name: "深さ2",
-        weight: 22,
         code: "JSON.stringify(deepSet({a:{b:1}}, ['a','b'], 99)) === JSON.stringify({a:{b:99}})",
       },
       {
         name: "途中キー欠落で生成",
-        weight: 22,
         code: "JSON.stringify(deepSet({}, ['a','b','c'], 1)) === JSON.stringify({a:{b:{c:1}}})",
       },
       {
         name: "兄弟を保持",
-        weight: 22,
         code: "JSON.stringify(deepSet({a:{b:{c:1},x:9}}, ['a','b','c'], 2)) === JSON.stringify({a:{b:{c:2},x:9}})",
       },
       {
         name: "空 path はコピーを返す (新参照)",
-        weight: 17,
         code: "(() => { const o = {a:1}; const r = deepSet(o, [], 'ignore'); return JSON.stringify(r) === JSON.stringify({a:1}) && r !== o; })()",
       },
       {
         name: "元オブジェクトを変更しない",
-        weight: 17,
         code: "(() => { const o = {a:{b:1}}; deepSet(o, ['a','b'], 99); return o.a.b === 1; })()",
       },
     ],
@@ -328,6 +308,5 @@ function deepSet(obj, path, value) {
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

@@ -9,14 +9,14 @@
  * - 「一覧へ戻る」ボタンで `/` へ
  */
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
 import { Editor } from "../components/Editor.js";
-import { ExecutionResultPane } from "../components/ExecutionResultPane.js";
 import { AssignmentView } from "../components/AssignmentView.js";
+import { RunResultDialog } from "../components/RunResultDialog.js";
 import { ThemeToggle } from "../components/ThemeToggle.js";
 
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
@@ -47,14 +47,29 @@ interface InnerProps {
 
 function PracticePageInner({ assignment }: InnerProps) {
   const navigate = useNavigate();
+  const [resultDialogOpen, setResultDialogOpen] = useState(false);
 
-  const { code, setCode, bestScore, recordScore, clear } = useProgress({
+  const { code, setCode, cleared, recordResult, clear } = useProgress({
     assignmentId: assignment.id,
     starterCode: assignment.starterCode,
   });
 
   const { lint, ast } = useStaticAnalysis(code, assignment);
   const { running, result, run, reset } = useGradeRunner();
+
+  // 一覧での順序に従う「次の課題」。最終問題なら null。
+  // ダイアログでクリア時に「次の問題へ」リンクを出すために使う。
+  const nextAssignment = useMemo(() => {
+    const idx = assignments.findIndex((a) => a.id === assignment.id);
+    if (idx === -1 || idx >= assignments.length - 1) return null;
+    return assignments[idx + 1];
+  }, [assignment.id]);
+
+  const handleGoToNext = useCallback(() => {
+    if (!nextAssignment) return;
+    setResultDialogOpen(false);
+    navigate(`/problems/${nextAssignment.id}`);
+  }, [navigate, nextAssignment]);
 
   // 課題切替時、結果表示は無関係になるのでクリア
   useEffect(() => {
@@ -90,7 +105,7 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   const handleReset = useCallback(() => {
     const wipeStorage = window.confirm(
-      "編集中のコードと保存済みの進捗 (ベストスコア含む) を消去して、初期コードに戻しますか?\n\n" +
+      "編集中のコードと保存済みの進捗 (クリア状態を含む) を消去して、初期コードに戻しますか?\n\n" +
         "[OK] 保存も含めてリセット\n" +
         "[キャンセル] このまま編集を続ける",
     );
@@ -101,16 +116,18 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   const handleRun = useCallback(async () => {
     // await 中に課題が切り替わっても元の課題に紐付ける必要があるため、
-    // 採点対象のコードはローカル変数に固定しておく。
+    // 評価対象のコードはローカル変数に固定しておく。
     const submittedCode = code;
+    reset();
+    setResultDialogOpen(true);
     const res = await run({
       code: submittedCode,
       assignment,
       lint,
       ast,
     });
-    recordScore(res.score.total, submittedCode);
-  }, [code, assignment, lint, ast, run, recordScore]);
+    recordResult(res.evaluation.cleared, submittedCode);
+  }, [code, assignment, lint, ast, reset, run, recordResult]);
 
   return (
     <div className="app">
@@ -125,10 +142,10 @@ function PracticePageInner({ assignment }: InnerProps) {
         </div>
         <div className="header-controls">
           <span
-            className="best-score"
-            title="この課題のベストスコア (localStorage に保存)"
+            className={`clear-status${cleared ? " is-cleared" : ""}`}
+            title="この課題のクリア状態 (localStorage に保存)"
           >
-            {bestScore !== null ? `★ ${bestScore}` : "★ —"}
+            {cleared ? "✓ クリア済み" : "未クリア"}
           </span>
           <button className="btn" onClick={handleReset}>
             リセット
@@ -162,12 +179,16 @@ function PracticePageInner({ assignment }: InnerProps) {
             </button>
           </div>
 
-          <ExecutionResultPane
-            result={result}
+          <RunResultDialog
+            open={resultDialogOpen}
+            onOpenChange={setResultDialogOpen}
             running={running}
+            result={result}
             assignment={assignment}
             lint={lint}
             ast={ast}
+            nextAssignment={nextAssignment}
+            onGoToNext={handleGoToNext}
           />
         </section>
       </div>

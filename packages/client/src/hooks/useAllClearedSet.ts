@@ -1,24 +1,24 @@
 /**
- * 全課題のベストスコアを `assignmentId -> score` のマップで返す Hook。
+ * 全課題のクリア状態を `Set<assignmentId>` で返す Hook。
  *
  * `progress-store` の subscribe を使い、saveEntry / deleteEntry / 別タブの
  * storage イベントに追従して再描画する。スナップショットは変更があるまで
- * 同じ Map インスタンスを返すため `useSyncExternalStore` で安全に使える。
+ * 同じ Set インスタンスを返すため `useSyncExternalStore` で安全に使える。
  */
 
 import { useSyncExternalStore } from "react";
 
 import {
-  getBestScoresSnapshot,
+  getClearedSnapshot,
   subscribeProgress,
 } from "../lib/progress-store.js";
 
-const EMPTY: Map<string, number> = new Map();
+const EMPTY: Set<string> = new Set();
 
-export function useAllBestScores(): Map<string, number> {
+export function useAllClearedSet(): Set<string> {
   return useSyncExternalStore(
     subscribeProgress,
-    getBestScoresSnapshot,
+    getClearedSnapshot,
     () => EMPTY,
   );
 }

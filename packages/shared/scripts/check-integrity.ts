@@ -5,10 +5,9 @@
  * 検査項目:
  *
  *  1. 重複した Assignment ID が存在しないこと
- *  2. 各 Assignment の `tests` の weight 合計が 100 であること
- *  3. 各 Assignment の `starterCode` が `ast.forbidden` を踏んでいないこと
+ *  2. 各 Assignment の `starterCode` が `ast.forbidden` を踏んでいないこと
  *     (`starterCode` がパースエラーにならないことも含む)
- *  4. 全 Assignment の `topicId` が `topics` に存在すること
+ *  3. 全 Assignment の `topicId` が `topics` に存在すること
  *
  * 違反は最後にまとめて出力し、ひとつでもあれば exit code 1 で終了する。
  *
@@ -53,18 +52,7 @@ async function main(): Promise<void> {
     }
   }
 
-  // 2. テスト重み合計
-  for (const a of assignments) {
-    const total = a.tests.reduce((s, t) => s + t.weight, 0);
-    if (total !== 100) {
-      issues.push({
-        assignmentId: a.id,
-        message: `tests weight sum is ${total}, expected 100`,
-      });
-    }
-  }
-
-  // 3. starterCode が ast.forbidden を踏んでいない
+  // 2. starterCode が ast.forbidden を踏んでいない
   for (const a of assignments) {
     const result = analyzeAst(a.starterCode, a.ast);
     if (result.parseError) {
@@ -83,7 +71,7 @@ async function main(): Promise<void> {
     }
   }
 
-  // 4. topicId が topics に存在
+  // 3. topicId が topics に存在
   const knownTopics = new Set(topics.map((t) => t.id));
   for (const a of assignments) {
     if (!knownTopics.has(a.topicId)) {

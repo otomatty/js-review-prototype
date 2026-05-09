@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const asyncTopic: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -60,22 +60,18 @@ asyncDouble(-1).catch(e => e)       // → Error インスタンス
     tests: [
       {
         name: "正値で resolve",
-        weight: 25,
         code: "asyncDouble(5).then(v => v === 10)",
       },
       {
         name: "0 でも resolve",
-        weight: 25,
         code: "asyncDouble(0).then(v => v === 0)",
       },
       {
         name: "負値で reject",
-        weight: 25,
         code: "asyncDouble(-3).then(() => false, e => e instanceof Error)",
       },
       {
         name: "戻り値は Promise",
-        weight: 25,
         code: "(() => { const r = asyncDouble(1); return r && typeof r.then === 'function'; })()",
       },
     ],
@@ -93,7 +89,6 @@ asyncDouble(-1).catch(e => e)       // → Error インスタンス
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -149,22 +144,18 @@ chainDouble(0).then(v => v)   // → 0
     tests: [
       {
         name: "1 → 8",
-        weight: 25,
         code: "chainDouble(1).then(v => v === 8)",
       },
       {
         name: "3 → 24",
-        weight: 25,
         code: "chainDouble(3).then(v => v === 24)",
       },
       {
         name: "0 → 0",
-        weight: 25,
         code: "chainDouble(0).then(v => v === 0)",
       },
       {
         name: "戻り値は Promise",
-        weight: 25,
         code: "(() => { const r = chainDouble(2); return r && typeof r.then === 'function'; })()",
       },
     ],
@@ -183,7 +174,6 @@ chainDouble(0).then(v => v)   // → 0
         },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -247,22 +237,18 @@ await safeFetch(async () => 42, 0)
     tests: [
       {
         name: "resolve 値をそのまま返す",
-        weight: 25,
         code: "safeFetch(() => Promise.resolve('hello'), 'default').then(v => v === 'hello')",
       },
       {
         name: "reject 時は fallback",
-        weight: 25,
         code: "safeFetch(() => Promise.reject(new Error('boom')), 'default').then(v => v === 'default')",
       },
       {
         name: "async 関数を fetchFn に渡す",
-        weight: 25,
         code: "safeFetch(async () => 42, 0).then(v => v === 42)",
       },
       {
         name: "fetchFn が同期 throw でも fallback",
-        weight: 25,
         code: "safeFetch(() => { throw new Error('sync'); }, 'fb').then(v => v === 'fb')",
       },
     ],
@@ -287,7 +273,6 @@ await safeFetch(async () => 42, 0)
         { kind: "method", name: "catch", label: ".catch は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -363,22 +348,18 @@ await partitionPromises([])
     tests: [
       {
         name: "全て resolve",
-        weight: 25,
         code: "partitionPromises([Promise.resolve(1), Promise.resolve(2)]).then(r => JSON.stringify(r.fulfilled) === '[1,2]' && r.rejected.length === 0)",
       },
       {
         name: "成功と失敗の混在",
-        weight: 25,
         code: "partitionPromises([Promise.resolve('ok'), Promise.reject(new Error('boom')), Promise.resolve(42)]).then(r => JSON.stringify(r.fulfilled) === JSON.stringify(['ok', 42]) && r.rejected.length === 1 && r.rejected[0] instanceof Error)",
       },
       {
         name: "全て reject でも例外を投げない",
-        weight: 25,
         code: "partitionPromises([Promise.reject(new Error('a')), Promise.reject(new Error('b'))]).then(r => r.fulfilled.length === 0 && r.rejected.length === 2)",
       },
       {
         name: "空配列",
-        weight: 25,
         code: "partitionPromises([]).then(r => JSON.stringify(r) === JSON.stringify({fulfilled: [], rejected: []}))",
       },
     ],
@@ -412,6 +393,5 @@ await partitionPromises([])
         },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const controlFlow: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -56,32 +56,26 @@ finalPrice({ price: -50,  isMember: true,  isWeekend: true  })  // → -50
     tests: [
       {
         name: "会員 × 週末 → 30%off",
-        weight: 17,
         code: "finalPrice({price:1000,isMember:true,isWeekend:true}) === 700",
       },
       {
         name: "会員のみ → 10%off",
-        weight: 17,
         code: "finalPrice({price:1000,isMember:true,isWeekend:false}) === 900",
       },
       {
         name: "週末のみ → 5%off",
-        weight: 17,
         code: "finalPrice({price:1000,isMember:false,isWeekend:true}) === 950",
       },
       {
         name: "通常価格",
-        weight: 17,
         code: "finalPrice({price:1000,isMember:false,isWeekend:false}) === 1000",
       },
       {
         name: "0 円はそのまま",
-        weight: 16,
         code: "finalPrice({price:0,isMember:true,isWeekend:true}) === 0",
       },
       {
         name: "負の価格はそのまま",
-        weight: 16,
         code: "finalPrice({price:-50,isMember:true,isWeekend:true}) === -50",
       },
     ],
@@ -92,7 +86,6 @@ finalPrice({ price: -50,  isMember: true,  isWeekend: true  })  // → -50
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -155,21 +148,19 @@ weekdayJa('0')  // → '不明'  (型違いも不明)
 `,
     entryPoints: ["weekdayJa"],
     tests: [
-      { name: "0 → 日", weight: 12, code: "weekdayJa(0) === '日'" },
-      { name: "1 → 月", weight: 11, code: "weekdayJa(1) === '月'" },
-      { name: "2 → 火", weight: 11, code: "weekdayJa(2) === '火'" },
-      { name: "3 → 水", weight: 11, code: "weekdayJa(3) === '水'" },
-      { name: "4 → 木", weight: 11, code: "weekdayJa(4) === '木'" },
-      { name: "5 → 金", weight: 11, code: "weekdayJa(5) === '金'" },
-      { name: "6 → 土", weight: 11, code: "weekdayJa(6) === '土'" },
+      { name: "0 → 日", code: "weekdayJa(0) === '日'" },
+      { name: "1 → 月", code: "weekdayJa(1) === '月'" },
+      { name: "2 → 火", code: "weekdayJa(2) === '火'" },
+      { name: "3 → 水", code: "weekdayJa(3) === '水'" },
+      { name: "4 → 木", code: "weekdayJa(4) === '木'" },
+      { name: "5 → 金", code: "weekdayJa(5) === '金'" },
+      { name: "6 → 土", code: "weekdayJa(6) === '土'" },
       {
         name: "範囲外は 不明",
-        weight: 11,
         code: "weekdayJa(7) === '不明' && weekdayJa(-1) === '不明'",
       },
       {
         name: "型違いは 不明",
-        weight: 11,
         code: "weekdayJa('0') === '不明'",
       },
     ],
@@ -187,7 +178,6 @@ weekdayJa('0')  // → '不明'  (型違いも不明)
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -265,28 +255,25 @@ isBlank({a:undefined}) // → false
     ],
     entryPoints: ["isBlank"],
     tests: [
-      { name: "null", weight: 8, code: "isBlank(null) === true" },
-      { name: "undefined", weight: 8, code: "isBlank(undefined) === true" },
-      { name: "空文字", weight: 8, code: "isBlank('') === true" },
-      { name: "空白のみ", weight: 9, code: "isBlank('   ') === true" },
+      { name: "null", code: "isBlank(null) === true" },
+      { name: "undefined", code: "isBlank(undefined) === true" },
+      { name: "空文字", code: "isBlank('') === true" },
+      { name: "空白のみ", code: "isBlank('   ') === true" },
       {
         name: "改行・タブのみ",
-        weight: 9,
         code: "isBlank('\\n\\t') === true",
       },
-      { name: "空配列", weight: 8, code: "isBlank([]) === true" },
-      { name: "空オブジェクト", weight: 9, code: "isBlank({}) === true" },
-      { name: "0 は false", weight: 8, code: "isBlank(0) === false" },
-      { name: "false は false", weight: 8, code: "isBlank(false) === false" },
-      { name: "NaN は false", weight: 8, code: "isBlank(NaN) === false" },
+      { name: "空配列", code: "isBlank([]) === true" },
+      { name: "空オブジェクト", code: "isBlank({}) === true" },
+      { name: "0 は false", code: "isBlank(0) === false" },
+      { name: "false は false", code: "isBlank(false) === false" },
+      { name: "NaN は false", code: "isBlank(NaN) === false" },
       {
         name: "中身ありの配列",
-        weight: 8,
         code: "isBlank([null]) === false",
       },
       {
         name: "キーありのオブジェクト",
-        weight: 9,
         code: "isBlank({a:undefined}) === false",
       },
     ],
@@ -297,7 +284,6 @@ isBlank({a:undefined}) // → false
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -361,42 +347,34 @@ bmiCategory('1.7', 60)  // → '不正'
     tests: [
       {
         name: "低体重",
-        weight: 12,
         code: "bmiCategory(1.7, 50) === '低体重'",
       },
       {
         name: "普通体重",
-        weight: 12,
         code: "bmiCategory(1.7, 65) === '普通体重'",
       },
       {
         name: "肥満1度",
-        weight: 12,
         code: "bmiCategory(1.7, 80) === '肥満(1度)'",
       },
       {
         name: "肥満2度以上",
-        weight: 12,
         code: "bmiCategory(1.7, 90) === '肥満(2度以上)'",
       },
       {
         name: "境界値 18.5",
-        weight: 13,
         code: "bmiCategory(1.0, 18.5) === '普通体重'",
       },
       {
         name: "境界値 25",
-        weight: 13,
         code: "bmiCategory(1.0, 25) === '肥満(1度)'",
       },
       {
         name: "0 以下は不正",
-        weight: 13,
         code: "bmiCategory(0, 60) === '不正' && bmiCategory(1.7, -1) === '不正'",
       },
       {
         name: "型違いは不正",
-        weight: 13,
         code: "bmiCategory('1.7', 60) === '不正'",
       },
     ],
@@ -407,6 +385,5 @@ bmiCategory('1.7', 60)  // → '不正'
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

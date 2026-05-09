@@ -1,5 +1,5 @@
 /**
- * 進捗 (編集中コードとベストスコア) を localStorage に永続化する薄いラッパ。
+ * 進捗 (編集中コードとクリア状態) を localStorage に永続化する薄いラッパ。
  *
  * - キー: `jsreview/progress/{assignmentId}`
  * - 値:   JSON シリアライズされた `ProgressEntry`
@@ -7,12 +7,13 @@
  * - QuotaExceeded 時は `lastSubmittedAt` の古い順に間引いて再試行
  */
 
-const VERSION = 1;
+const VERSION = 2;
 const PREFIX = "jsreview/progress/";
 const VERSION_KEY = "jsreview/progress/__version__";
 
 export interface ProgressEntry {
-  bestScore: number;
+  /** 一度でも全チェックを通過 (クリア) しているか */
+  cleared: boolean;
   lastCode: string;
   lastSubmittedAt?: number;
 }
@@ -35,15 +36,15 @@ function entryKey(assignmentId: string): string {
   return `${PREFIX}${assignmentId}`;
 }
 
-// ─── 変更通知 (サイドバー等の一括ビュー向け) ───────────────────
-// `loadAllBestScores` の結果は変化があるまで参照同値で返す
+// ─── 変更通知 (一覧画面等の一括ビュー向け) ───────────────────
+// `getClearedSnapshot` の結果は変化があるまで参照同値で返す
 // (useSyncExternalStore の getSnapshot 用)。
 type Listener = () => void;
 const listeners = new Set<Listener>();
-let cachedScores: Map<string, number> | null = null;
+let cachedCleared: Set<string> | null = null;
 
 function emitChange(): void {
-  cachedScores = null;
+  cachedCleared = null;
   for (const l of listeners) l();
 }
 
@@ -70,6 +71,7 @@ export function initProgressStore(): void {
   if (stored === String(VERSION)) return;
 
   // バージョン不一致 (または未設定) → 旧データを掃除
+  // v1 → v2 (bestScore: number → cleared: boolean) は互換維持しないことに決定。
   const obsolete: string[] = [];
   for (let i = 0; i < ls.length; i++) {
     const k = ls.key(i);
@@ -92,9 +94,9 @@ export function loadEntry(assignmentId: string): ProgressEntry | null {
     const parsed = JSON.parse(raw) as Partial<StoredEntry>;
     if (parsed.v !== VERSION) return null;
     if (typeof parsed.lastCode !== "string") return null;
-    if (typeof parsed.bestScore !== "number") return null;
+    if (typeof parsed.cleared !== "boolean") return null;
     return {
-      bestScore: parsed.bestScore,
+      cleared: parsed.cleared,
       lastCode: parsed.lastCode,
       lastSubmittedAt: parsed.lastSubmittedAt,
     };
@@ -107,13 +109,12 @@ export function loadEntry(assignmentId: string): ProgressEntry | null {
 
 export interface SaveOptions {
   /**
-   * 書き込み直前のベストスコア。一括ビュー (サイドバー) のキャッシュを
-   * 無効化すべきかの判定に使う。呼び出し側 (useProgress) が state として
-   * 既に保持しているので、ここで `loadEntry` を再実行しないで済むよう
-   * 引数で受け取る (タイピング毎の `setCode` パスでの不要な JSON.parse 回避)。
-   * 未指定なら従来通り常に通知する (安全側)。
+   * 書き込み直前のクリア状態。一括ビューのキャッシュを無効化すべきかの判定に使う。
+   * 呼び出し側が state として既に保持しているので、ここで `loadEntry` を再実行
+   * しないで済むよう引数で受け取る (タイピング毎の `setCode` パスでの不要な
+   * JSON.parse 回避)。未指定なら従来通り常に通知する (安全側)。
    */
-  previousBestScore?: number | null;
+  previousCleared?: boolean | null;
 }
 
 export function saveEntry(
@@ -144,16 +145,16 @@ export function saveEntry(
   }
   if (!written) return;
   // 容量逼迫で他課題のエントリが削除された可能性があるパスでは、
-  // bestScore に変化がなくても一括ビューのキャッシュを無効化する必要がある
-  // (削除済み課題のスコアを表示し続けるのを防ぐ)。
+  // cleared に変化がなくても一括ビューのキャッシュを無効化する必要がある
+  // (削除済み課題のクリア状態を表示し続けるのを防ぐ)。
   if (prunedOthers) {
     emitChange();
     return;
   }
-  // 通常パス: 自課題の bestScore が変わった場合のみ通知する。
-  // `previousBestScore` 未指定なら安全側で通知。
-  const prev = opts.previousBestScore;
-  if (prev === undefined || prev !== entry.bestScore) {
+  // 通常パス: 自課題の cleared が変わった場合のみ通知する。
+  // `previousCleared` 未指定なら安全側で通知。
+  const prev = opts.previousCleared;
+  if (prev === undefined || prev !== entry.cleared) {
     emitChange();
   }
 }
@@ -167,17 +168,17 @@ export function deleteEntry(assignmentId: string): void {
 }
 
 /**
- * 全課題のベストスコアを `assignmentId -> score` のマップで返す。
+ * クリア済みの assignmentId 集合を返す。
  * `subscribeProgress` で通知される変更があるまで同じ参照を返すため、
  * `useSyncExternalStore` の getSnapshot として安全に使える。
  */
-export function getBestScoresSnapshot(): Map<string, number> {
-  if (cachedScores) return cachedScores;
-  const map = new Map<string, number>();
+export function getClearedSnapshot(): Set<string> {
+  if (cachedCleared) return cachedCleared;
+  const set = new Set<string>();
   const ls = safeStorage();
   if (!ls) {
-    cachedScores = map;
-    return map;
+    cachedCleared = set;
+    return set;
   }
   for (let i = 0; i < ls.length; i++) {
     const k = ls.key(i);
@@ -187,14 +188,15 @@ export function getBestScoresSnapshot(): Map<string, number> {
     try {
       const parsed = JSON.parse(raw) as Partial<StoredEntry>;
       if (parsed.v !== VERSION) continue;
-      if (typeof parsed.bestScore !== "number") continue;
-      map.set(k.slice(PREFIX.length), parsed.bestScore);
+      if (parsed.cleared === true) {
+        set.add(k.slice(PREFIX.length));
+      }
     } catch {
       // 壊れたエントリは無視
     }
   }
-  cachedScores = map;
-  return map;
+  cachedCleared = set;
+  return set;
 }
 
 function isQuotaError(e: unknown): boolean {

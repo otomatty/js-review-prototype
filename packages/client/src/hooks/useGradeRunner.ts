@@ -1,15 +1,15 @@
 /**
  * 「実行」ボタン押下時にサーバへテスト実行を依頼し、
- * 返ってきた結果と手元の Lint/AST 結果を合算するための Hook。
+ * 返ってきた結果と手元の Lint/AST 結果を合算してクリア判定を返す Hook。
  */
 
 import { useCallback, useState } from "react";
-import { calculateScore } from "@jsreview/shared/grading/score";
+import { evaluate } from "@jsreview/shared/grading/evaluate";
 import type {
   ASTResult,
   Assignment,
+  EvaluationResult,
   LintViolation,
-  ScoreResult,
   TestResult,
 } from "@jsreview/shared/types";
 
@@ -19,7 +19,7 @@ export interface ExecutionResult {
   testResults: TestResult[];
   serverDurationMs: number;
   totalDurationMs: number;
-  score: ScoreResult;
+  evaluation: EvaluationResult;
   /** 実行時のスナップショット (画面の lint 状態と独立に表示するため) */
   lintAtRun: LintViolation[];
   astAtRun: ASTResult;
@@ -51,18 +51,13 @@ export function useGradeRunner() {
           entryPoints: args.assignment.entryPoints,
         });
 
-        const score = calculateScore(
-          data.results,
-          args.lint,
-          args.ast,
-          args.assignment.weights,
-        );
+        const evaluation = evaluate(data.results, args.lint, args.ast);
 
         const finalResult: ExecutionResult = {
           testResults: data.results,
           serverDurationMs: data.durationMs,
           totalDurationMs: Math.round(performance.now() - startedAt),
-          score,
+          evaluation,
           lintAtRun: args.lint,
           astAtRun: args.ast,
         };
@@ -70,24 +65,18 @@ export function useGradeRunner() {
         return finalResult;
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
-        // テストはすべて失敗として表示。スコアは Lint/AST のみで計算。
+        // テストはすべて失敗として表示。クリア判定は Lint/AST/テストの3軸でそのまま計算。
         const failedResults: TestResult[] = args.assignment.tests.map((t) => ({
           name: t.name,
-          weight: t.weight,
           passed: false,
           error: `SERVER_ERROR: ${msg}`,
         }));
-        const score = calculateScore(
-          failedResults,
-          args.lint,
-          args.ast,
-          args.assignment.weights,
-        );
+        const evaluation = evaluate(failedResults, args.lint, args.ast);
         const finalResult: ExecutionResult = {
           testResults: failedResults,
           serverDurationMs: 0,
           totalDurationMs: Math.round(performance.now() - startedAt),
-          score,
+          evaluation,
           lintAtRun: args.lint,
           astAtRun: args.ast,
           errorMessage: msg,

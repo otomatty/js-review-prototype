@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const errorHandling: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -52,21 +52,18 @@ safeDivide(-10, 4)   // → -2.5
     ],
     entryPoints: ["safeDivide"],
     tests: [
-      { name: "10/2", weight: 18, code: "safeDivide(10, 2) === 5" },
-      { name: "0/5", weight: 18, code: "safeDivide(0, 5) === 0" },
+      { name: "10/2", code: "safeDivide(10, 2) === 5" },
+      { name: "0/5", code: "safeDivide(0, 5) === 0" },
       {
         name: "-10/4",
-        weight: 18,
         code: "Math.abs(safeDivide(-10, 4) - (-2.5)) < 1e-9",
       },
       {
         name: "0除算で throw",
-        weight: 23,
         code: "(() => { try { safeDivide(7, 0); return false; } catch(e) { return e instanceof Error; } })()",
       },
       {
         name: "throw されたものが Error インスタンス",
-        weight: 23,
         code: "(() => { try { safeDivide(1, 0); return false; } catch(e) { return e instanceof Error && typeof e.message === 'string'; } })()",
       },
     ],
@@ -89,7 +86,6 @@ safeDivide(-10, 4)   // → -2.5
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -148,27 +144,22 @@ tryParseJson('null')
     tests: [
       {
         name: "object",
-        weight: 20,
         code: "JSON.stringify(tryParseJson('{\"a\":1}')) === JSON.stringify({ok:true,value:{a:1}})",
       },
       {
         name: "array",
-        weight: 20,
         code: "JSON.stringify(tryParseJson('[1,2,3]')) === JSON.stringify({ok:true,value:[1,2,3]})",
       },
       {
         name: "invalid",
-        weight: 20,
         code: "(() => { const r = tryParseJson('not-json'); return r.ok === false && typeof r.error === 'string' && r.error.length > 0; })()",
       },
       {
         name: "empty string",
-        weight: 20,
         code: "(() => { const r = tryParseJson(''); return r.ok === false && typeof r.error === 'string'; })()",
       },
       {
         name: "null literal",
-        weight: 20,
         code: "JSON.stringify(tryParseJson('null')) === JSON.stringify({ok:true,value:null})",
       },
     ],
@@ -183,7 +174,6 @@ tryParseJson('null')
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -242,27 +232,23 @@ function assertAge(value) {
     solution: "class ValidationError extends Error {\n  constructor(message) {\n    super(message);\n    this.name = 'ValidationError';\n  }\n}\n\nfunction assertAge(value) {\n  if (!Number.isInteger(value) || value < 0 || value > 150) {\n    throw new ValidationError(`invalid age: ${value}`);\n  }\n  return value;\n}\n",
     entryPoints: ["assertAge", "ValidationError"],
     tests: [
-      { name: "0", weight: 12, code: "assertAge(0) === 0" },
-      { name: "30", weight: 12, code: "assertAge(30) === 30" },
-      { name: "150", weight: 12, code: "assertAge(150) === 150" },
+      { name: "0", code: "assertAge(0) === 0" },
+      { name: "30", code: "assertAge(30) === 30" },
+      { name: "150", code: "assertAge(150) === 150" },
       {
         name: "負数で throw",
-        weight: 16,
         code: "(() => { try { assertAge(-1); return false; } catch(e) { return e instanceof ValidationError; } })()",
       },
       {
         name: "150超で throw",
-        weight: 16,
         code: "(() => { try { assertAge(151); return false; } catch(e) { return e instanceof ValidationError; } })()",
       },
       {
         name: "小数で throw",
-        weight: 16,
         code: "(() => { try { assertAge(3.14); return false; } catch(e) { return e instanceof ValidationError; } })()",
       },
       {
         name: "Error 継承 & name",
-        weight: 16,
         code: "(() => { try { assertAge('a'); return false; } catch(e) { return e instanceof Error && e.name === 'ValidationError'; } })()",
       },
     ],
@@ -285,6 +271,5 @@ function assertAge(value) {
         { kind: "loose-eq", label: "== / != は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

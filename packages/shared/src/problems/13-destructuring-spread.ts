@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const destructuringSpread: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -44,17 +44,14 @@ userSummary({ name: '太郎', age: 0, role: 'kid' })
     tests: [
       {
         name: "通常",
-        weight: 33,
         code: "userSummary({name:'Alice', age:30, role:'admin'}) === 'Alice(admin) - 30歳'",
       },
       {
         name: "role 省略は guest",
-        weight: 34,
         code: "userSummary({name:'Bob', age:18}) === 'Bob(guest) - 18歳'",
       },
       {
         name: "0歳",
-        weight: 33,
         code: "userSummary({name:'太郎', age:0, role:'kid'}) === '太郎(kid) - 0歳'",
       },
     ],
@@ -74,7 +71,6 @@ userSummary({ name: '太郎', age: 0, role: 'kid' })
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -120,27 +116,22 @@ swap([])             // → []
     tests: [
       {
         name: "4要素",
-        weight: 25,
         code: "JSON.stringify(swap([1,2,3,4])) === JSON.stringify([2,1,3,4])",
       },
       {
         name: "2要素",
-        weight: 25,
         code: "JSON.stringify(swap(['a','b'])) === JSON.stringify(['b','a'])",
       },
       {
         name: "1要素",
-        weight: 17,
         code: "JSON.stringify(swap([42])) === JSON.stringify([42])",
       },
       {
         name: "空配列",
-        weight: 16,
         code: "JSON.stringify(swap([])) === JSON.stringify([])",
       },
       {
         name: "元配列を変更しない",
-        weight: 17,
         code: "(() => { const a = [1,2,3]; swap(a); return JSON.stringify(a) === JSON.stringify([1,2,3]); })()",
       },
     ],
@@ -155,7 +146,6 @@ swap([])             // → []
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -206,27 +196,22 @@ omit({}, 'a')
     tests: [
       {
         name: "中央のキーを除く",
-        weight: 22,
         code: "JSON.stringify(omit({a:1,b:2,c:3}, 'b')) === JSON.stringify({a:1,c:3})",
       },
       {
         name: "唯一のキーを除く",
-        weight: 22,
         code: "JSON.stringify(omit({a:1}, 'a')) === JSON.stringify({})",
       },
       {
         name: "存在しないキー",
-        weight: 22,
         code: "JSON.stringify(omit({a:1,b:2}, 'z')) === JSON.stringify({a:1,b:2})",
       },
       {
         name: "空オブジェクト",
-        weight: 17,
         code: "JSON.stringify(omit({}, 'a')) === JSON.stringify({})",
       },
       {
         name: "元オブジェクトを変更しない",
-        weight: 17,
         code: "(() => { const o = {a:1,b:2}; omit(o, 'a'); return JSON.stringify(o) === JSON.stringify({a:1,b:2}); })()",
       },
     ],
@@ -234,7 +219,6 @@ omit({}, 'a')
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -290,27 +274,22 @@ withDefaults({ port: 8080 }, { port: null })
     tests: [
       {
         name: "上書き",
-        weight: 22,
         code: "JSON.stringify(withDefaults({port:8080, host:'localhost'}, {port:3000})) === JSON.stringify({port:3000, host:'localhost'})",
       },
       {
         name: "上書きなし",
-        weight: 22,
         code: "JSON.stringify(withDefaults({port:8080, host:'localhost'}, {})) === JSON.stringify({port:8080, host:'localhost'})",
       },
       {
         name: "undefined はデフォルトを保持",
-        weight: 22,
         code: "JSON.stringify(withDefaults({port:8080}, {port:undefined})) === JSON.stringify({port:8080})",
       },
       {
         name: "null は上書き",
-        weight: 17,
         code: "JSON.stringify(withDefaults({port:8080}, {port:null})) === JSON.stringify({port:null})",
       },
       {
         name: "元オブジェクトを変更しない",
-        weight: 17,
         code: "(() => { const d = {a:1}; const o = {a:2}; withDefaults(d,o); return d.a === 1 && o.a === 2; })()",
       },
     ],
@@ -318,6 +297,5 @@ withDefaults({ port: 8080 }, { port: null })
     ast: {
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

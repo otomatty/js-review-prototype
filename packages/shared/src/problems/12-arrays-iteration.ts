@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const arraysIteration: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -39,16 +39,14 @@ sum([0.5, 1.5])     // → 2
 `,
     entryPoints: ["sum"],
     tests: [
-      { name: "正の整数 [1,2,3] → 6", weight: 25, code: "sum([1,2,3]) === 6" },
-      { name: "空配列 [] → 0", weight: 25, code: "sum([]) === 0" },
+      { name: "正の整数 [1,2,3] → 6", code: "sum([1,2,3]) === 6" },
+      { name: "空配列 [] → 0", code: "sum([]) === 0" },
       {
         name: "負の数を含む [-1,-2,3] → 0",
-        weight: 25,
         code: "sum([-1,-2,3]) === 0",
       },
       {
         name: "小数 [0.5,1.5] → 2",
-        weight: 25,
         code: "Math.abs(sum([0.5,1.5]) - 2) < 1e-9",
       },
     ],
@@ -62,7 +60,6 @@ sum([0.5, 1.5])     // → 2
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -106,22 +103,18 @@ adults([
     tests: [
       {
         name: "全員大人",
-        weight: 25,
         code: `JSON.stringify(adults([{name:'A',age:20},{name:'B',age:30}])) === JSON.stringify([{name:'A',age:20},{name:'B',age:30}])`,
       },
       {
         name: "全員子ども",
-        weight: 25,
         code: `JSON.stringify(adults([{name:'A',age:5},{name:'B',age:17}])) === JSON.stringify([])`,
       },
       {
         name: "境界値 18 を含む",
-        weight: 25,
         code: `JSON.stringify(adults([{name:'A',age:17},{name:'B',age:18}])) === JSON.stringify([{name:'B',age:18}])`,
       },
       {
         name: "空配列",
-        weight: 25,
         code: `JSON.stringify(adults([])) === JSON.stringify([])`,
       },
     ],
@@ -137,7 +130,6 @@ adults([
         { kind: "node", nodeType: "ForStatement", label: "for 文は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -183,17 +175,14 @@ pluckNames([])
     tests: [
       {
         name: "3要素",
-        weight: 33,
         code: "JSON.stringify(pluckNames([{name:'A'},{name:'B'},{name:'C'}])) === JSON.stringify(['A','B','C'])",
       },
       {
         name: "他プロパティを無視",
-        weight: 33,
         code: "JSON.stringify(pluckNames([{name:'X', age:1}])) === JSON.stringify(['X'])",
       },
       {
         name: "空配列",
-        weight: 34,
         code: "JSON.stringify(pluckNames([])) === JSON.stringify([])",
       },
     ],
@@ -205,7 +194,6 @@ pluckNames([])
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -260,22 +248,18 @@ groupBy([], () => 'x')
     tests: [
       {
         name: "type で分類",
-        weight: 30,
         code: "JSON.stringify(groupBy([{type:'a',v:1},{type:'b',v:2},{type:'a',v:3}], (x)=>x.type)) === JSON.stringify({a:[{type:'a',v:1},{type:'a',v:3}], b:[{type:'b',v:2}]})",
       },
       {
         name: "even/odd",
-        weight: 30,
         code: "JSON.stringify(groupBy([1,2,3,4], (n)=>n%2===0?'even':'odd')) === JSON.stringify({odd:[1,3], even:[2,4]})",
       },
       {
         name: "空配列",
-        weight: 20,
         code: "JSON.stringify(groupBy([], ()=>'x')) === JSON.stringify({})",
       },
       {
         name: "全て同一キー",
-        weight: 20,
         code: "JSON.stringify(groupBy([1,2,3], ()=>'k')) === JSON.stringify({k:[1,2,3]})",
       },
     ],
@@ -287,7 +271,6 @@ groupBy([], () => 'x')
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -350,22 +333,18 @@ validatePasswords([])
     tests: [
       {
         name: "全強",
-        weight: 25,
         code: "JSON.stringify(validatePasswords(['abc12345','xyz98765'])) === JSON.stringify({allStrong:true,hasWeak:false})",
       },
       {
         name: "弱混在",
-        weight: 25,
         code: "JSON.stringify(validatePasswords(['abc12345','short'])) === JSON.stringify({allStrong:false,hasWeak:true})",
       },
       {
         name: "全て7文字 (弱)",
-        weight: 25,
         code: "JSON.stringify(validatePasswords(['abc1234','xyz9876'])) === JSON.stringify({allStrong:false,hasWeak:true})",
       },
       {
         name: "空配列",
-        weight: 25,
         code: "JSON.stringify(validatePasswords([])) === JSON.stringify({allStrong:true,hasWeak:false})",
       },
     ],
@@ -380,6 +359,5 @@ validatePasswords([])
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];

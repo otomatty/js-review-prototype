@@ -10,7 +10,7 @@
     "./types": "./src/types.ts",
     "./assignments": "./src/assignments.ts",
     "./grading/ast": "./src/grading/ast.ts",
-    "./grading/score": "./src/grading/score.ts",
+    "./grading/evaluate": "./src/grading/evaluate.ts",
     "./util/timeout": "./src/util/timeout.ts"
   },
   "scripts": {

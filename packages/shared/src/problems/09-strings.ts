@@ -1,5 +1,5 @@
 import type { Assignment } from "../types.js";
-import { COMMON_LINT_RULES, DEFAULT_WEIGHTS } from "./_common.js";
+import { COMMON_LINT_RULES } from "./_common.js";
 
 export const strings: Assignment[] = [
   // ────────────────────────────────────────────────
@@ -49,20 +49,18 @@ normalizeName('A')             // → 'A'
 `,
     entryPoints: ["normalizeName"],
     tests: [
-      { name: "alice → Alice", weight: 17, code: "normalizeName('alice') === 'Alice'" },
+      { name: "alice → Alice", code: "normalizeName('alice') === 'Alice'" },
       {
         name: "前後トリム",
-        weight: 17,
         code: "normalizeName('  BOB  ') === 'Bob'",
       },
       {
         name: "混在ケース",
-        weight: 16,
         code: "normalizeName('cArOl') === 'Carol'",
       },
-      { name: "空文字", weight: 17, code: "normalizeName('') === ''" },
-      { name: "空白のみ", weight: 17, code: "normalizeName('   ') === ''" },
-      { name: "1文字", weight: 16, code: "normalizeName('A') === 'A'" },
+      { name: "空文字", code: "normalizeName('') === ''" },
+      { name: "空白のみ", code: "normalizeName('   ') === ''" },
+      { name: "1文字", code: "normalizeName('A') === 'A'" },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },
     ast: {
@@ -71,7 +69,6 @@ normalizeName('A')             // → 'A'
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -134,19 +131,16 @@ titleCsv('a, , b')
     tests: [
       {
         name: "通常",
-        weight: 25,
         code: "titleCsv('apple,banana, CHERRY ') === 'Apple, Banana, Cherry'",
       },
       {
         name: "空白多め",
-        weight: 25,
         code: "titleCsv('  alice  ,  BOB  ') === 'Alice, Bob'",
       },
-      { name: "空文字", weight: 17, code: "titleCsv('') === ''" },
-      { name: "1要素", weight: 17, code: "titleCsv('one') === 'One'" },
+      { name: "空文字", code: "titleCsv('') === ''" },
+      { name: "1要素", code: "titleCsv('one') === 'One'" },
       {
         name: "空要素を含む",
-        weight: 16,
         code: "titleCsv('a, , b') === 'A, , B'",
       },
     ],
@@ -162,7 +156,6 @@ titleCsv('a, , b')
         { kind: "var", label: "var は使わない" },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -211,27 +204,23 @@ isPalindrome('ab')                           // → false
     tests: [
       {
         name: "racecar",
-        weight: 14,
         code: "isPalindrome('racecar') === true",
       },
       {
         name: "句読点無視",
-        weight: 14,
         code: "isPalindrome('A man a plan a canal Panama') === true",
       },
       {
         name: "hello は false",
-        weight: 14,
         code: "isPalindrome('hello') === false",
       },
       {
         name: "No lemon, no melon",
-        weight: 14,
         code: "isPalindrome('No lemon, no melon') === true",
       },
-      { name: "空文字", weight: 14, code: "isPalindrome('') === true" },
-      { name: "1文字", weight: 14, code: "isPalindrome('a') === true" },
-      { name: "ab は false", weight: 16, code: "isPalindrome('ab') === false" },
+      { name: "空文字", code: "isPalindrome('') === true" },
+      { name: "1文字", code: "isPalindrome('a') === true" },
+      { name: "ab は false", code: "isPalindrome('ab') === false" },
     ],
     eslint: { rules: { ...COMMON_LINT_RULES } },
     ast: {
@@ -245,7 +234,6 @@ isPalindrome('ab')                           // → false
         },
       ],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 
   // ────────────────────────────────────────────────
@@ -292,32 +280,26 @@ formatYmd({ year: 2024, month: 2, day: 32 })    // → 'invalid'
     tests: [
       {
         name: "通常",
-        weight: 16,
         code: "formatYmd({year:2024,month:1,day:5}) === '2024-01-05'",
       },
       {
         name: "境界",
-        weight: 16,
         code: "formatYmd({year:2024,month:12,day:31}) === '2024-12-31'",
       },
       {
         name: "1桁年",
-        weight: 17,
         code: "formatYmd({year:9,month:9,day:9}) === '0009-09-09'",
       },
       {
         name: "負の年",
-        weight: 17,
         code: "formatYmd({year:-1,month:1,day:1}) === 'invalid'",
       },
       {
         name: "範囲外月",
-        weight: 17,
         code: "formatYmd({year:2024,month:13,day:1}) === 'invalid'",
       },
       {
         name: "範囲外日",
-        weight: 17,
         code: "formatYmd({year:2024,month:2,day:32}) === 'invalid'",
       },
     ],
@@ -333,6 +315,5 @@ formatYmd({ year: 2024, month: 2, day: 32 })    // → 'invalid'
       ],
       forbidden: [{ kind: "var", label: "var は使わない" }],
     },
-    weights: DEFAULT_WEIGHTS,
   },
 ];
