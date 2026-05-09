@@ -10,7 +10,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
@@ -19,6 +19,8 @@ import { Editor } from "../components/Editor.js";
 import { AssignmentView } from "../components/AssignmentView.js";
 import { RunResultDialog } from "../components/RunResultDialog.js";
 import { ThemeToggle } from "../components/ThemeToggle.js";
+import { AppHeader } from "../components/AppHeader.js";
+import { Button } from "../components/ui/button.js";
 
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "../hooks/useGradeRunner.js";
@@ -132,52 +134,40 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
-      <header className="flex items-center justify-between border-b border-border bg-card px-5 py-3">
-        <div className="flex min-w-0 items-center gap-3.5">
-          <Link
-            to="/"
-            className="inline-flex items-center rounded-md border border-border bg-muted px-2.5 py-1 text-[12.5px] font-semibold text-muted-foreground no-underline hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:border-indigo-800 dark:hover:bg-indigo-950 dark:hover:text-indigo-200"
-            aria-label="問題一覧へ戻る"
-          >
-            ← 問題一覧
-          </Link>
-          <h1 className="text-base font-semibold">
-            JS自動コードレビュー{" "}
-            <span className="ml-2 inline-block rounded-[10px] bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-              プロトタイプ
+      <AppHeader
+        backLink={{ to: "/", label: "← 問題一覧", ariaLabel: "問題一覧へ戻る" }}
+        right={
+          <>
+            <span
+              className={cn(
+                "relative inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-sans text-[12px] font-semibold",
+                cleared
+                  ? "border-success/25 bg-success-bg text-success before:size-1.5 before:rounded-full before:bg-success before:content-[''] dark:border-success/40 dark:bg-success/10"
+                  : "border-border bg-card text-muted-foreground",
+              )}
+              title="この課題のクリア状態 (localStorage に保存)"
+            >
+              {cleared ? "クリア済み" : "未クリア"}
             </span>
-          </h1>
-        </div>
-        <div className="flex items-center gap-3">
-          <span
-            className={cn(
-              "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold",
-              cleared
-                ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
-                : "border-border bg-muted text-muted-foreground",
-            )}
-            title="この課題のクリア状態 (localStorage に保存)"
-          >
-            {cleared ? "✓ クリア済み" : "未クリア"}
-          </span>
-          <button
-            type="button"
-            className="rounded-md border border-border bg-white px-3.5 py-1.5 text-foreground hover:bg-muted dark:bg-secondary"
-            onClick={handleReset}
-          >
-            リセット
-          </button>
-          <ThemeToggle />
-        </div>
-      </header>
+            <button
+              type="button"
+              className="rounded-md border border-border bg-card px-3.5 py-1.5 font-sans text-[13px] font-medium text-foreground transition-colors hover:border-ink-300 hover:bg-card dark:hover:border-ink-600"
+              onClick={handleReset}
+            >
+              リセット
+            </button>
+            <ThemeToggle />
+          </>
+        }
+      />
 
-      <div className="grid grid-cols-[420px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
+      <div className="grid grid-cols-[440px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
         <aside className="flex min-h-0 flex-col overflow-hidden border-r border-border bg-card max-md:max-h-[40vh] max-md:border-b max-md:border-r-0">
           <AssignmentView assignment={assignment} />
         </aside>
 
-        <section className="grid grid-rows-[1fr_auto] overflow-hidden">
-          <div className="flex min-h-0 flex-col overflow-hidden">
+        <section className="grid grid-rows-[1fr_auto] overflow-hidden bg-background">
+          <div className="flex min-h-0 flex-col overflow-hidden bg-background">
             <div className="flex-1 overflow-auto">
               <Editor
                 code={code}
@@ -188,15 +178,23 @@ function PracticePageInner({ assignment }: InnerProps) {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 border-t border-border bg-card px-5 py-2.5">
-            <button
-              type="button"
-              className="rounded-md border border-primary bg-primary px-[18px] py-2 font-semibold text-primary-foreground hover:bg-indigo-600 disabled:cursor-not-allowed disabled:border-zinc-400 disabled:bg-zinc-400 dark:hover:bg-indigo-300 dark:disabled:border-zinc-600 dark:disabled:bg-zinc-600"
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-6 py-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-[3px] font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                Client · ESLint + AST
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-[3px] font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                Server · isolated-vm
+              </span>
+            </div>
+            <Button
+              variant="acial"
+              size="lg"
               onClick={handleRun}
               disabled={running}
             >
-              {running ? "実行中..." : "▶ 実行"}
-            </button>
+              {running ? "実行中..." : "▶ 採点を実行"}
+            </Button>
           </div>
 
           <RunResultDialog

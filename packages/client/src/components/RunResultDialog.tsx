@@ -145,7 +145,9 @@ export function RunResultDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent aria-describedby="run-result-dialog-description">
         <DialogHeader>
-          <DialogTitle>実行結果</DialogTitle>
+          <DialogTitle className="font-jp text-[22px] font-bold tracking-[-0.01em]">
+            実行結果
+          </DialogTitle>
           <DialogDescription id="run-result-dialog-description">
             Lint・コード構造・テストの 3 つのチェックを順番に評価します。すべて通過するとクリアです。成功した項目は折りたたまれます。
           </DialogDescription>
@@ -220,11 +222,17 @@ function ResultBanner({
 
   if (result.evaluation.cleared) {
     return (
-      <div className="mb-4 flex items-center gap-3 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-200">
+      <div className="relative mb-4 flex items-center gap-3 overflow-hidden rounded-xl border border-success/30 bg-success-bg px-4 py-3 text-sm text-success dark:border-success/40 dark:bg-success/10 dark:text-emerald-200">
+        <span
+          className="pointer-events-none absolute inset-x-0 top-0 h-[2px] gradient-bg"
+          aria-hidden
+        />
         <CircleCheck className="size-5 shrink-0" />
         <div className="min-w-0 flex-1">
-          <strong className="text-base">クリアしました</strong>
-          <p className="truncate text-xs text-emerald-700 dark:text-emerald-300">
+          <strong className="font-jp text-base font-bold gradient-text">
+            クリアしました
+          </strong>
+          <p className="truncate text-xs text-success/80 dark:text-emerald-300">
             {nextAssignment
               ? `次は「${nextAssignment.title}」に進めます。`
               : "これが最後の問題です。お疲れさまでした！"}
@@ -235,10 +243,10 @@ function ResultBanner({
   }
 
   return (
-    <div className="mb-4 flex items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+    <div className="mb-4 flex items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
       <CircleX className="size-5 shrink-0" />
       <div>
-        <strong className="text-base">未クリア</strong>
+        <strong className="font-jp text-base font-bold">未クリア</strong>
         <p className="text-xs text-destructive/80">
           失敗しているチェックを確認して修正しましょう。
         </p>
@@ -291,8 +299,11 @@ function LintRow({
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={
-                      violation.severity === 2 ? "text-destructive" : "text-warn"
+                      violation.severity === 2
+                        ? "text-destructive"
+                        : "text-warn"
                     }
+                    aria-hidden
                   >
                     {violation.severity === 2 ? "✗" : "!"}
                   </span>
@@ -392,8 +403,9 @@ function AstRow({
                       <div className="flex items-center gap-2">
                         <span
                           className={
-                            check.found ? "text-ok" : "text-destructive"
+                            check.found ? "text-success" : "text-destructive"
                           }
+                          aria-hidden
                         >
                           {check.found ? "✓" : "✗"}
                         </span>
@@ -535,7 +547,8 @@ function TestsRow({
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span
-                  className={test.passed ? "text-ok" : "text-destructive"}
+                  className={test.passed ? "text-success" : "text-destructive"}
+                  aria-hidden
                 >
                   {test.passed ? "✓" : "✗"}
                 </span>
@@ -586,13 +599,17 @@ function CheckRow({
         <button
           type="button"
           className={cn(
-            "flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/40",
+            "flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-ink-100/50 dark:hover:bg-ink-700/50",
             status === "pending" && "text-muted-foreground",
           )}
         >
           <StatusIcon status={status} />
-          <span className="flex-1 truncate text-sm font-semibold">{title}</span>
-          <span className="text-xs text-muted-foreground">{meta}</span>
+          <span className="flex-1 truncate font-jp text-sm font-semibold">
+            {title}
+          </span>
+          <span className="font-sans text-xs text-muted-foreground">
+            {meta}
+          </span>
           <ChevronDown
             className={cn(
               "size-4 text-muted-foreground transition-transform",
@@ -613,9 +630,9 @@ function StatusIcon({ status }: { status: SectionStatus }) {
     case "pending":
       return <Circle className="size-5 shrink-0 text-muted-foreground" />;
     case "evaluating":
-      return <Loader2 className="size-5 shrink-0 animate-spin text-primary" />;
+      return <Loader2 className="size-5 shrink-0 animate-spin text-blue-500" />;
     case "success":
-      return <CircleCheck className="size-5 shrink-0 text-emerald-600" />;
+      return <CircleCheck className="size-5 shrink-0 text-success" />;
     case "failure":
       return <CircleX className="size-5 shrink-0 text-destructive" />;
     case "error":

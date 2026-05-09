@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64">
+  <defs>
+    <linearGradient id="acial" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox" gradientTransform="rotate(0)">
+      <stop offset="0" stop-color="#0432FF"></stop>
+      <stop offset="1" stop-color="#FF2600"></stop>
+    </linearGradient>
+  </defs>
+  <text x="0" y="46" font-family="Inter, &#39;Noto Sans JP&#39;, system-ui, sans-serif" font-weight="900" font-size="44" letter-spacing="-1.5" fill="#0F0F1E">
+    <tspan fill="url(#acial)">A</tspan><tspan>cial</tspan> <tspan>Design</tspan>
+  </text>
+</svg>

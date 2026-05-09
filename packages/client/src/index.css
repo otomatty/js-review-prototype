@@ -3,57 +3,136 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Acial Design — Noto Sans JP variable font (local). */
+@font-face {
+  font-family: "Noto Sans JP";
+  src: url("/fonts/NotoSansJP-VariableFont_wght.ttf") format("truetype-variations"),
+       url("/fonts/NotoSansJP-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Latin sibling + mono via Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap");
+
 :root {
   --radius: 0.5rem;
-  --background: #fafafa;
-  --foreground: #18181b;
-  --card: #ffffff;
-  --card-foreground: #18181b;
-  --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --primary: #6366f1;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #6366f1;
-  --ok: #16a34a;
-  --warn: #d97706;
+  --radius-pill: 999px;
+
+  /* ── Acial brand: gradient ─────────────────────── */
+  --acial-blue: #0432ff;
+  --acial-red: #ff2600;
+  --gradient-acial: linear-gradient(135deg, #0432ff 0%, #ff2600 100%);
+  --gradient-acial-hover: linear-gradient(145deg, #0432ff 0%, #ff2600 100%);
+  --gradient-acial-soft: linear-gradient(
+    135deg,
+    rgba(4, 50, 255, 0.1) 0%,
+    rgba(255, 38, 0, 0.1) 100%
+  );
+
+  /* ── Brand color steps ─────────────────────────── */
+  --blue-50: #eef1ff;
+  --blue-100: #d7deff;
+  --blue-300: #6e7fff;
+  --blue-500: #0432ff;
+  --blue-700: #0024c7;
+  --blue-900: #001280;
+
+  --red-50: #ffeee9;
+  --red-100: #ffd3c7;
+  --red-300: #ff7a5c;
+  --red-500: #ff2600;
+  --red-700: #c71b00;
+  --red-900: #800f00;
+
+  /* ── Neutrals (warm, slightly off-white) ────────── */
+  --ink-900: #0f0f1e;
+  --ink-800: #1f1f2e;
+  --ink-700: #34344a;
+  --ink-600: #545468;
+  --ink-500: #7a7a8c;
+  --ink-400: #a0a0ae;
+  --ink-300: #c8c7cf;
+  --ink-200: #e6e5df;
+  --ink-100: #f2f1ec;
+  --ink-50: #fafaf7;
+  --white: #ffffff;
+
+  /* ── Semantic ─────────────────────────────────── */
+  --success: #138a4f;
+  --success-bg: #e5f6ec;
+  --warning: #b8740a;
+  --warning-bg: #fff3dc;
+  --danger: #c71b00;
+  --danger-bg: #ffeee9;
+  --info: #0024c7;
+  --info-bg: #eef1ff;
+
+  /* ── Elevation ───────────────────────────────── */
+  --shadow-1: 0 1px 2px rgba(15, 15, 30, 0.04),
+    0 0 0 1px rgba(15, 15, 30, 0.03);
+  --shadow-2: 0 4px 16px rgba(15, 15, 30, 0.06),
+    0 1px 2px rgba(15, 15, 30, 0.04);
+  --shadow-3: 0 12px 40px rgba(15, 15, 30, 0.08),
+    0 2px 6px rgba(15, 15, 30, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(4, 50, 255, 0.25);
+
+  /* ── shadcn-compat semantic aliases ───────────── */
+  --background: var(--ink-50);
+  --foreground: var(--ink-900);
+  --card: var(--white);
+  --card-foreground: var(--ink-900);
+  --popover: var(--white);
+  --popover-foreground: var(--ink-900);
+  --primary: var(--ink-900);
+  --primary-foreground: var(--white);
+  --secondary: var(--ink-100);
+  --secondary-foreground: var(--ink-900);
+  --muted: var(--ink-100);
+  --muted-foreground: var(--ink-600);
+  --accent: var(--ink-100);
+  --accent-foreground: var(--ink-900);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--white);
+  --border: var(--ink-200);
+  --input: var(--ink-200);
+  --ring: var(--blue-500);
+  --ok: var(--success);
+  --warn: var(--warning);
 
   color-scheme: light;
 }
 
 /* ダークモード用トークン。`<html class="dark">` で有効化。
-   shadcn/ui のダークデフォルト (zinc 系) に準拠。 */
+   Acial パレットを反転再マッピング。グラデーションは共通。 */
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #18181b;
-  --card-foreground: #fafafa;
-  --popover: #18181b;
-  --popover-foreground: #fafafa;
-  --primary: #818cf8;
-  --primary-foreground: #1e1b4b;
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #fafafa;
-  --destructive: #f87171;
-  --destructive-foreground: #450a0a;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #818cf8;
+  --background: var(--ink-900);
+  --foreground: var(--ink-50);
+  --card: var(--ink-800);
+  --card-foreground: var(--ink-50);
+  --popover: var(--ink-800);
+  --popover-foreground: var(--ink-50);
+  --primary: var(--ink-50);
+  --primary-foreground: var(--ink-900);
+  --secondary: var(--ink-700);
+  --secondary-foreground: var(--ink-50);
+  --muted: var(--ink-700);
+  --muted-foreground: var(--ink-300);
+  --accent: var(--ink-700);
+  --accent-foreground: var(--ink-50);
+  --destructive: #ff7a5c;
+  --destructive-foreground: var(--ink-900);
+  --border: var(--ink-700);
+  --input: var(--ink-700);
+  --ring: var(--blue-300);
   --ok: #4ade80;
   --warn: #fbbf24;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-3: 0 12px 40px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-focus: 0 0 0 3px rgba(110, 127, 255, 0.4);
 
   color-scheme: dark;
 }
@@ -86,11 +165,39 @@
   --color-ok: var(--ok);
   --color-warn: var(--warn);
 
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
-  --font-mono:
-    ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas,
+  /* Acial brand colors exposed as Tailwind utilities */
+  --color-blue-50: var(--blue-50);
+  --color-blue-100: var(--blue-100);
+  --color-blue-300: var(--blue-300);
+  --color-blue-500: var(--blue-500);
+  --color-blue-700: var(--blue-700);
+  --color-blue-900: var(--blue-900);
+  --color-red-50: var(--red-50);
+  --color-red-100: var(--red-100);
+  --color-red-300: var(--red-300);
+  --color-red-500: var(--red-500);
+  --color-red-700: var(--red-700);
+  --color-red-900: var(--red-900);
+  --color-ink-50: var(--ink-50);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
+  --color-ink-900: var(--ink-900);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+
+  --font-sans: "Inter", "Noto Sans JP", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", system-ui, sans-serif;
+  --font-jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas,
     monospace;
 }
 
@@ -108,7 +215,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-jp;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   /* Tailwind v4 preflight ではボタンの cursor が default に戻るため明示する。
@@ -124,4 +233,127 @@
   code {
     @apply rounded-sm bg-muted px-1 py-px font-mono text-[0.875em];
   }
+}
+
+/* ─── Acial brand utilities ───────────────────── */
+@layer utilities {
+  .gradient-text {
+    background: var(--gradient-acial);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gradient-bg {
+    background: var(--gradient-acial);
+    color: var(--white);
+  }
+
+  .gradient-bar {
+    height: 3px;
+    background: var(--gradient-acial);
+    border-radius: 999px;
+  }
+
+  /* ヒーロー上部の控えめなブランドハロー (radial-gradient × 2) */
+  .hero-halo {
+    position: relative;
+    isolation: isolate;
+  }
+  .hero-halo::before {
+    content: "";
+    position: absolute;
+    inset: -32px 0 auto 0;
+    height: 360px;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        60% 60% at 12% 0%,
+        rgba(4, 50, 255, 0.07) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        50% 50% at 92% 0%,
+        rgba(255, 38, 0, 0.05) 0%,
+        transparent 60%
+      );
+    z-index: -1;
+  }
+  .dark .hero-halo::before {
+    background:
+      radial-gradient(
+        60% 60% at 12% 0%,
+        rgba(4, 50, 255, 0.18) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        50% 50% at 92% 0%,
+        rgba(255, 38, 0, 0.12) 0%,
+        transparent 60%
+      );
+  }
+
+  /* ヘッダー底辺のグラデーション髪線 (header の ::after ではなく独立要素として) */
+  .gradient-hairline {
+    height: 1px;
+    background: var(--gradient-acial);
+    opacity: 0.35;
+  }
+
+  .brand-divider {
+    display: inline-block;
+    width: 1px;
+    height: 18px;
+    background: var(--ink-200);
+    flex-shrink: 0;
+  }
+  .dark .brand-divider {
+    background: var(--ink-700);
+  }
+
+  /* グラデーション CTA */
+  .btn-acial {
+    background: var(--gradient-acial);
+    color: var(--white);
+    box-shadow:
+      0 1px 2px rgba(15, 15, 30, 0.06),
+      0 6px 16px -8px rgba(255, 38, 0, 0.45);
+    transition:
+      transform 80ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-acial:hover {
+    background: var(--gradient-acial-hover);
+    box-shadow:
+      0 1px 2px rgba(15, 15, 30, 0.06),
+      0 10px 22px -8px rgba(255, 38, 0, 0.55);
+  }
+  .btn-acial:active {
+    transform: scale(0.98);
+  }
+  .btn-acial:disabled {
+    background: var(--ink-300);
+    color: var(--white);
+    box-shadow: none;
+  }
+  .dark .btn-acial:disabled {
+    background: var(--ink-700);
+    color: var(--ink-400);
+  }
+
+  /* uppercase tracked eyebrow / overline */
+  .text-overline {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

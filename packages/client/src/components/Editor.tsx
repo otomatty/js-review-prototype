@@ -9,6 +9,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
 
 import type { ESLintRuleConfig } from "@jsreview/shared/types";
+import { useTheme } from "../hooks/useTheme.js";
 import { lintCode } from "../lib/eslint-runner.js";
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function Editor({ code, onChange, eslintRules, entryPoints }: Props) {
+  const { theme } = useTheme();
   const eslintExtension = useMemo(
     () =>
       linter((view) => {
@@ -64,7 +66,7 @@ export function Editor({ code, onChange, eslintRules, entryPoints }: Props) {
         autocompletion: true,
       }}
       extensions={[javascript(), eslintExtension, lintGutter()]}
-      theme="light"
+      theme={theme}
     />
   );
 }

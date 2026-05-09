@@ -46,6 +46,7 @@ export function useTheme(): ThemeApi {
       } catch (_) {
         // private モード等で書けない場合は黙って諦める
       }
+      applyTheme(next);
       return next;
     });
   }, []);
@@ -54,6 +55,18 @@ export function useTheme(): ThemeApi {
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  // Magic UI のトグルなど、DOM class を直接更新する実装にも追従する。
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => setTheme(readInitialTheme()));
+
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // ユーザーが明示選択していない (= localStorage 未設定) 間は OS 設定に追従
   useEffect(() => {
