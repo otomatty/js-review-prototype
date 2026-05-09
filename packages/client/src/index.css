@@ -73,10 +73,20 @@
   body,
   #root {
     height: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   body {
-    margin: 0;
     @apply bg-background text-foreground font-sans;
+  }
+
+  /* Tailwind v4 preflight ではボタンの cursor が default に戻るため明示する */
+  button {
+    cursor: pointer;
+  }
+
+  code {
+    @apply rounded-sm bg-muted px-1 py-px font-mono text-[0.875em];
   }
 }

@@ -137,7 +137,7 @@ export function SelectPage() {
               MDN の章立てに沿った全 {summary.total} 問。カードを選んで演習を始めてください。
             </p>
           </div>
-          <dl className="m-0 grid grid-cols-[repeat(4,minmax(96px,auto))] tabular-nums max-md:w-full max-md:grid-cols-2 [&>div]:border-l [&>div]:border-border [&>div]:px-[18px] [&>div]:py-1 [&>div]:text-left [&>div:first-child]:border-l-0 [&>div:first-child]:pl-0 max-md:[&>div]:px-3">
+          <dl className="m-0 grid grid-cols-[repeat(4,minmax(96px,auto))] tabular-nums max-md:w-full max-md:grid-cols-2 [&>div]:border-l [&>div]:border-border [&>div]:px-[18px] [&>div]:py-1 [&>div]:text-left [&>div:first-child]:border-l-0 [&>div:first-child]:pl-0 max-md:[&>div]:px-3 max-md:[&>div:nth-child(2n+1)]:border-l-0 max-md:[&>div:nth-child(2n+1)]:pl-0">
             <div>
               <dt className="m-0 mb-0.5 text-[11px] uppercase tracking-[0.05em] text-zinc-400">
                 クリア済み
