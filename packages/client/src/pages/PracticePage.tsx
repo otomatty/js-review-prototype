@@ -14,6 +14,7 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 
+import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
 import { AssignmentView } from "../components/AssignmentView.js";
 import { RunResultDialog } from "../components/RunResultDialog.js";
@@ -115,36 +116,52 @@ function PracticePageInner({ assignment }: InnerProps) {
   }, [code, assignment, lint, ast, reset, run, recordResult]);
 
   return (
-    <div className="app">
-      <header className="header">
-        <div className="header-title">
-          <Link to="/" className="back-link" aria-label="問題一覧へ戻る">
+    <div className="grid h-screen grid-rows-[auto_1fr]">
+      <header className="flex items-center justify-between border-b border-border bg-card px-5 py-3">
+        <div className="flex min-w-0 items-center gap-3.5">
+          <Link
+            to="/"
+            className="inline-flex items-center rounded-md border border-border bg-muted px-2.5 py-1 text-[12.5px] font-semibold text-muted-foreground no-underline hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600"
+            aria-label="問題一覧へ戻る"
+          >
             ← 問題一覧
           </Link>
-          <h1>
-            JS自動コードレビュー <span className="header-tag">プロトタイプ</span>
+          <h1 className="text-base font-semibold">
+            JS自動コードレビュー{" "}
+            <span className="ml-2 inline-block rounded-[10px] bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+              プロトタイプ
+            </span>
           </h1>
         </div>
-        <div className="header-controls">
+        <div className="flex items-center gap-3">
           <span
-            className={`clear-status${cleared ? " is-cleared" : ""}`}
+            className={cn(
+              "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold",
+              cleared
+                ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                : "border-border bg-muted text-muted-foreground",
+            )}
             title="この課題のクリア状態 (localStorage に保存)"
           >
             {cleared ? "✓ クリア済み" : "未クリア"}
           </span>
-          <button className="btn" onClick={handleReset}>
+          <button
+            type="button"
+            className="rounded-md border border-border bg-white px-3.5 py-1.5 text-foreground hover:bg-muted"
+            onClick={handleReset}
+          >
             リセット
           </button>
         </div>
       </header>
 
-      <div className="body-practice">
-        <aside className="left-pane">
+      <div className="grid grid-cols-[420px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
+        <aside className="flex min-h-0 flex-col overflow-hidden border-r border-border bg-card max-md:max-h-[40vh] max-md:border-b max-md:border-r-0">
           <AssignmentView assignment={assignment} />
         </aside>
 
-        <section className="right-pane">
-          <div className="editor-wrap">
+        <section className="grid grid-rows-[1fr_auto] overflow-hidden">
+          <div className="flex flex-col overflow-hidden [&>div:first-child]:flex-1 [&>div:first-child]:overflow-auto">
             <Editor
               code={code}
               onChange={setCode}
@@ -153,9 +170,10 @@ function PracticePageInner({ assignment }: InnerProps) {
             />
           </div>
 
-          <div className="run-bar">
+          <div className="flex items-center justify-end gap-3 border-t border-border bg-card px-5 py-2.5">
             <button
-              className="btn-primary"
+              type="button"
+              className="rounded-md border border-primary bg-primary px-[18px] py-2 font-semibold text-primary-foreground hover:bg-indigo-600 disabled:cursor-not-allowed disabled:border-zinc-400 disabled:bg-zinc-400"
               onClick={handleRun}
               disabled={running}
             >

@@ -264,7 +264,7 @@ function LintRow({
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={
-                      violation.severity === 2 ? "icon-err" : "icon-warn"
+                      violation.severity === 2 ? "text-destructive" : "text-warn"
                     }
                   >
                     {violation.severity === 2 ? "✗" : "!"}
@@ -363,7 +363,11 @@ function AstRow({
                       className="rounded-lg border bg-background p-3"
                     >
                       <div className="flex items-center gap-2">
-                        <span className={check.found ? "icon-ok" : "icon-err"}>
+                        <span
+                          className={
+                            check.found ? "text-ok" : "text-destructive"
+                          }
+                        >
                           {check.found ? "✓" : "✗"}
                         </span>
                         <strong className="text-sm">{message.title}</strong>
@@ -390,7 +394,7 @@ function AstRow({
               <h4 className="text-sm font-semibold">避けること</h4>
               {ast.forbidden.length === 0 ? (
                 <div className="rounded-lg border bg-background p-3 text-sm text-muted-foreground">
-                  <span className="icon-ok">✓</span>{" "}
+                  <span className="text-ok">✓</span>{" "}
                   避けたい書き方は見つかりませんでした。
                 </div>
               ) : (
@@ -406,7 +410,7 @@ function AstRow({
                         className="rounded-lg border border-destructive/30 bg-destructive/5 p-3"
                       >
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="icon-err">✗</span>
+                          <span className="text-destructive">✗</span>
                           <strong className="text-sm">{message.title}</strong>
                           <Badge variant="secondary">
                             {violation.line}行目
@@ -503,7 +507,9 @@ function TestsRow({
               className="rounded-lg border bg-background p-3"
             >
               <div className="flex flex-wrap items-center gap-2">
-                <span className={test.passed ? "icon-ok" : "icon-err"}>
+                <span
+                  className={test.passed ? "text-ok" : "text-destructive"}
+                >
                   {test.passed ? "✓" : "✗"}
                 </span>
                 <strong className="text-sm">{test.name}</strong>
