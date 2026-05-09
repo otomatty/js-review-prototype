@@ -21,6 +21,7 @@ import {
 } from "@jsreview/shared/assignments";
 import type { Assignment, Topic } from "@jsreview/shared/types";
 
+import { ThemeToggle } from "../components/ThemeToggle.js";
 import { useAllBestScores } from "../hooks/useAllBestScores.js";
 
 type Status = "completed" | "partial" | "untouched";
@@ -131,6 +132,9 @@ export function SelectPage() {
           <h1>
             JS自動コードレビュー <span className="header-tag">プロトタイプ</span>
           </h1>
+        </div>
+        <div className="header-controls">
+          <ThemeToggle />
         </div>
       </header>
 

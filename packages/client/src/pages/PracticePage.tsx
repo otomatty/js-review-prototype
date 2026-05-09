@@ -17,6 +17,7 @@ import type { Assignment } from "@jsreview/shared/types";
 import { Editor } from "../components/Editor.js";
 import { ExecutionResultPane } from "../components/ExecutionResultPane.js";
 import { AssignmentView } from "../components/AssignmentView.js";
+import { ThemeToggle } from "../components/ThemeToggle.js";
 
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "../hooks/useGradeRunner.js";
@@ -132,6 +133,7 @@ function PracticePageInner({ assignment }: InnerProps) {
           <button className="btn" onClick={handleReset}>
             リセット
           </button>
+          <ThemeToggle />
         </div>
       </header>
 

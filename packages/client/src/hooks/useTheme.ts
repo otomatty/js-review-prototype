@@ -1,0 +1,70 @@
+/**
+ * テーマ (ライト / ダーク) の状態管理 Hook。
+ *
+ * - 真の値: `<html>` 要素の `dark` クラス
+ * - ユーザー選好: localStorage の `theme` キー (`"light"` | `"dark"` | 未設定)
+ * - 未設定時は OS の `prefers-color-scheme` に追従する。明示選択後は固定。
+ *
+ * 初期 class 付与は `index.html` のインラインスクリプトで先行実行される。
+ * このフックは React マウント時点の class 状態を初期値として取り込む。
+ */
+
+import { useCallback, useEffect, useState } from "react";
+
+export type Theme = "light" | "dark";
+
+// `index.html` のインラインスクリプト内のキー名と一致させること。
+export const THEME_STORAGE_KEY = "theme";
+
+function readInitialTheme(): Theme {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.classList.contains("dark") ? "dark" : "light";
+}
+
+function applyTheme(theme: Theme): void {
+  const root = document.documentElement;
+  if (theme === "dark") root.classList.add("dark");
+  else root.classList.remove("dark");
+}
+
+interface ThemeApi {
+  theme: Theme;
+  toggleTheme: () => void;
+}
+
+export function useTheme(): ThemeApi {
+  const [theme, setTheme] = useState<Theme>(readInitialTheme);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((current) => {
+      const next: Theme = current === "dark" ? "light" : "dark";
+      applyTheme(next);
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch (_) {
+        // private モード等で書けない場合は黙って諦める
+      }
+      return next;
+    });
+  }, []);
+
+  // ユーザーが明示選択していない (= localStorage 未設定) 間は OS 設定に追従
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (event: MediaQueryListEvent) => {
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(THEME_STORAGE_KEY);
+      } catch (_) {}
+      if (stored === "light" || stored === "dark") return;
+      const next: Theme = event.matches ? "dark" : "light";
+      applyTheme(next);
+      setTheme(next);
+    };
+    mql.addEventListener("change", handleChange);
+    return () => mql.removeEventListener("change", handleChange);
+  }, []);
+
+  return { theme, toggleTheme };
+}

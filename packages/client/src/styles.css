@@ -54,6 +54,41 @@
     "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
   color: var(--foreground);
   background: var(--background);
+  color-scheme: light;
+}
+
+/* ダークモード用トークン。`<html class="dark">` で有効化。
+   shadcn/ui のダークデフォルト (zinc 系) に準拠。
+   レガシー別変数 (--bg / --bg-panel / --text 等) は `var(...)` で参照型のため
+   ここでは固定値だけを上書きする。 */
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #818cf8;
+  --primary-foreground: #1e1b4b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #f87171;
+  --destructive-foreground: #450a0a;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #818cf8;
+
+  --bg-code: #0b0b14;
+  --text-mute: #71717a;
+  --accent-hover: #a5b4fc;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+
+  color-scheme: dark;
 }
 
 /* Tailwind ユーティリティに公開する。
@@ -911,4 +946,60 @@ code {
     width: 100%;
     margin-left: 0;
   }
+}
+
+/* ─── ダークモード上書き ─────────────────────────────────
+   トークンで自動追従できないハードコード色をここで個別調整。
+   セレクタは `:where(.dark, .dark *)` で `@custom-variant dark` (L7) と整合。 */
+:where(.dark, .dark *) .btn {
+  background: var(--secondary);
+}
+:where(.dark, .dark *) .btn:hover {
+  background: #3f3f46;
+}
+:where(.dark, .dark *) .btn-primary {
+  color: var(--primary-foreground);
+}
+:where(.dark, .dark *) .search-input {
+  background: var(--card);
+}
+:where(.dark, .dark *) .chip:hover {
+  background: var(--secondary);
+}
+:where(.dark, .dark *) .chip.is-active {
+  color: var(--primary-foreground);
+}
+:where(.dark, .dark *) .back-link:hover {
+  background: #1e1b4b;
+  border-color: #3730a3;
+}
+:where(.dark, .dark *) .assignment-card.status-completed {
+  background: #052e16;
+  border-color: #166534;
+}
+:where(.dark, .dark *) .assignment-card.status-partial {
+  background: #451a03;
+  border-color: #92400e;
+}
+:where(.dark, .dark *) .test-list .err-detail {
+  background: #450a0a;
+  color: #fca5a5;
+}
+:where(.dark, .dark *) .architecture-tag.client {
+  color: #93c5fd;
+  background: #1e3a8a;
+}
+:where(.dark, .dark *) .architecture-tag.server {
+  color: #6ee7b7;
+  background: #064e3b;
+}
+:where(.dark, .dark *) .card-status-partial {
+  background: #422006;
+  border-color: #92400e;
+}
+:where(.dark, .dark *) .card-status-completed {
+  color: #052e16;
+}
+:where(.dark, .dark *) .topic-section-progress.is-complete {
+  color: #052e16;
 }
