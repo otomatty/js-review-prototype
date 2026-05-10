@@ -10,6 +10,7 @@ export {
   findAssignment,
   findChapter,
   assignmentsByChapter,
+  assignmentsByStage,
 } from "./problems/index.js";
 export { stages } from "./curriculum/stages.js";
 export { analyzeAst } from "./grading/ast.js";
