@@ -41,8 +41,8 @@ export const s1Ch01LetVsConst: Assignment = {
 // 4. taxRate と total をそれぞれ console.log で出力
 
 `,
-    L3: `____ taxRate = 0.1;
-____ total = 100;
+    L3: `const taxRate = ____;
+let total = ____;
 total = ____;
 console.log(taxRate);
 console.log(total);

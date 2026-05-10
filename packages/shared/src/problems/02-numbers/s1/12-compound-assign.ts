@@ -38,7 +38,7 @@ export const s1Ch02CompoundAssign: Assignment = {
 
 `,
     L3: `let total = ____;
-total ____ 50;
+total += ____;
 console.log(total);
 `,
   },
