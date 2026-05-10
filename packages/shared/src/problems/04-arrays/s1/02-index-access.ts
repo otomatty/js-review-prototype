@@ -1,0 +1,67 @@
+import type { Assignment } from "../../../types.js";
+
+export const s1Ch04IndexAccess: Assignment = {
+  id: "S1-Ch04-02-index-access",
+  stage: "S1",
+  chapterId: "Ch04",
+  sequence: 2,
+  title: "配列の要素を添字で取り出す",
+  newConcept: "配列[インデックス] で要素を取り出す。 0 から数える",
+  estimatedMinutes: 5,
+  difficulty: 1,
+  testKind: "stdout",
+  description: `## やること
+
+\`const fruits = ["りんご", "みかん", "ぶどう"];\` のような配列を作り、 **2 番目の要素** (= \`"みかん"\`) を出力してください。
+
+## 期待する出力
+
+\`\`\`
+みかん
+\`\`\`
+
+## ポイント
+
+- 配列の **最初の要素は 0 番目** です。 2 番目は \`fruits[1]\`。
+`,
+  scaffolds: {
+    L0: "",
+    L1: `// fruits の 1 番目 (= "みかん") を出力
+`,
+    L2: `// 1. const fruits = ["りんご", "みかん", "ぶどう"];
+// 2. console.log(fruits[1]);   ← 0,1,2 で 1 が "みかん"
+
+`,
+    L3: `const fruits = [____, ____, ____];
+console.log(fruits[____]);
+`,
+  },
+  tests: [
+    {
+      name: "stdout が みかん になる",
+      expectedStdout: "みかん",
+    },
+  ],
+  hints: [
+    "添字は 0 から始まります。 `fruits[0]` が `\"りんご\"`、 `fruits[1]` が `\"みかん\"`。",
+    "`console.log(fruits[1]);` で `\"みかん\"` が出ます。",
+    "解答例:\n```js\nconst fruits = [\"りんご\", \"みかん\", \"ぶどう\"];\nconsole.log(fruits[1]);\n```",
+  ],
+  staticAnalysis: {
+    ast: {
+      required: [
+        {
+          kind: "const-declaration",
+          name: "fruits",
+          label: "const fruits を宣言する",
+        },
+      ],
+    },
+  },
+  solution: `const fruits = ["りんご", "みかん", "ぶどう"];
+console.log(fruits[1]);
+`,
+  mdnSections: [
+    { heading: "配列要素へのアクセス" },
+  ],
+};
