@@ -7,6 +7,7 @@ import {
   CircleCheck,
   CircleX,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 import type {
   ASTResult,
@@ -22,10 +23,7 @@ import {
   describeForbiddenAstPattern,
   describeRequiredAstCheck,
 } from "../lib/ast-messages";
-import {
-  describeLintViolation,
-  lintSeverityLabel,
-} from "../lib/lint-messages";
+import { describeLintViolation, lintSeverityLabel } from "../lib/lint-messages";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import {
@@ -43,12 +41,7 @@ import {
 } from "./ui/dialog";
 
 type Phase = "lint" | "ast" | "tests" | "done";
-type SectionStatus =
-  | "pending"
-  | "evaluating"
-  | "success"
-  | "failure"
-  | "error";
+type SectionStatus = "pending" | "evaluating" | "success" | "failure" | "error";
 
 interface RunResultDialogProps {
   open: boolean;
@@ -90,25 +83,33 @@ export function RunResultDialog({
   const visibleTests = testResults.slice(0, revealedTests);
 
   useEffect(() => {
-    if (!open) {return;}
+    if (!open) {
+      return;
+    }
     setPhase("lint");
     setRevealedTests(0);
   }, [open]);
 
   useEffect(() => {
-    if (!open || phase !== "lint") {return;}
+    if (!open || phase !== "lint") {
+      return;
+    }
     const timer = window.setTimeout(() => setPhase("ast"), STEP_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [open, phase]);
 
   useEffect(() => {
-    if (!open || phase !== "ast") {return;}
+    if (!open || phase !== "ast") {
+      return;
+    }
     const timer = window.setTimeout(() => setPhase("tests"), STEP_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [open, phase]);
 
   useEffect(() => {
-    if (!open || phase !== "tests" || !result) {return;}
+    if (!open || phase !== "tests" || !result) {
+      return;
+    }
     if (revealedTests >= result.testResults.length) {
       const timer = window.setTimeout(() => setPhase("done"), STEP_DELAY_MS);
       return () => window.clearTimeout(timer);
@@ -128,17 +129,31 @@ export function RunResultDialog({
         : "failure";
 
   const astStatus: SectionStatus = (() => {
-    if (phase === "lint") {return "pending";}
-    if (phase === "ast") {return "evaluating";}
-    if (displayedAst.parseError) {return "error";}
+    if (phase === "lint") {
+      return "pending";
+    }
+    if (phase === "ast") {
+      return "evaluating";
+    }
+    if (displayedAst.parseError) {
+      return "error";
+    }
     return result?.evaluation.checks.astPassed ? "success" : "failure";
   })();
 
   const testsStatus: SectionStatus = (() => {
-    if (phase === "lint" || phase === "ast") {return "pending";}
-    if (phase === "tests") {return "evaluating";}
-    if (result?.errorMessage) {return "error";}
-    if (!result) {return "evaluating";}
+    if (phase === "lint" || phase === "ast") {
+      return "pending";
+    }
+    if (phase === "tests") {
+      return "evaluating";
+    }
+    if (result?.errorMessage) {
+      return "error";
+    }
+    if (!result) {
+      return "evaluating";
+    }
     return result.evaluation.checks.testsPassed ? "success" : "failure";
   })();
 
@@ -150,7 +165,8 @@ export function RunResultDialog({
             実行結果
           </DialogTitle>
           <DialogDescription id="run-result-dialog-description">
-            Lint・コード構造・テストの 3 つのチェックを順番に評価します。すべて通過するとクリアです。成功した項目は折りたたまれます。
+            Lint・コード構造・テストの 3
+            つのチェックを順番に評価します。すべて通過するとクリアです。
           </DialogDescription>
         </DialogHeader>
 
@@ -222,22 +238,44 @@ function ResultBanner({
   }
 
   if (result.evaluation.cleared) {
+    // ブランドのアーシャル・グラデーション (#0432FF → #FF2600) のみで構成。
+    // 外枠 = グラデの薄い縁、内側 = カード地にソフトなグラデハロー、上に
+    // 一回限りのシマーが走り、左のサークルアイコンがポップインで現れる。
     return (
-      <div className="relative mb-4 flex items-center gap-3 overflow-hidden rounded-xl border border-success/30 bg-success-bg px-4 py-3 text-sm text-success dark:border-success/40 dark:bg-success/10 dark:text-emerald-200">
-        <span
-          className="pointer-events-none absolute inset-x-0 top-0 h-[2px] gradient-bg"
-          aria-hidden
-        />
-        <CircleCheck className="size-5 shrink-0" />
-        <div className="min-w-0 flex-1">
-          <strong className="font-jp text-base font-bold gradient-text">
-            クリアしました
-          </strong>
-          <p className="truncate text-xs text-success/80 dark:text-emerald-300">
-            {nextAssignment
-              ? `次は「${nextAssignment.title}」に進めます。`
-              : "これが最後の問題です。お疲れさまでした！"}
-          </p>
+      <div
+        className="relative mb-4 overflow-hidden rounded-xl p-[1.5px] shadow-[0_10px_30px_-12px_rgba(4,50,255,0.40),0_10px_28px_-14px_rgba(255,38,0,0.38)]"
+        style={{ background: "var(--gradient-acial)" }}
+      >
+        <div className="relative overflow-hidden rounded-[10.5px] bg-card px-5 py-4">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-60"
+            style={{ background: "var(--gradient-acial-soft)" }}
+          />
+          <span aria-hidden className="celebrate-shimmer" />
+
+          <div className="relative flex items-center gap-4">
+            <div
+              className="celebrate-pop relative flex size-12 shrink-0 items-center justify-center rounded-full gradient-bg shadow-[0_6px_18px_-6px_rgba(255,38,0,0.55)]"
+              aria-hidden
+            >
+              <Sparkles className="size-6" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="font-sans text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                Cleared
+              </div>
+              <strong className="font-jp text-xl font-bold leading-tight tracking-[-0.01em] text-foreground">
+                クリアしました
+              </strong>
+              <p className="mt-1 truncate text-xs text-muted-foreground">
+                {nextAssignment
+                  ? `次は「${nextAssignment.title}」に進めます。`
+                  : "これが最後の問題です。お疲れさまでした！"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -267,19 +305,20 @@ function LintRow({
   const warnCount = lint.length - errorCount;
 
   const meta = (() => {
-    if (status === "pending") {return "待機中";}
-    if (status === "evaluating") {return "評価中...";}
-    if (lint.length === 0) {return "指摘なし";}
+    if (status === "pending") {
+      return "待機中";
+    }
+    if (status === "evaluating") {
+      return "評価中...";
+    }
+    if (lint.length === 0) {
+      return "指摘なし";
+    }
     return `エラー ${errorCount} ・ ヒント ${warnCount}`;
   })();
 
   return (
-    <CheckRow
-      title="Lint チェック"
-      status={status}
-      meta={meta}
-      isLast={false}
-    >
+    <CheckRow title="Lint チェック" status={status} meta={meta} isLast={false}>
       {status === "evaluating" ? (
         <p className="text-sm text-muted-foreground">
           ESLint で書き方の指摘を確認しています...
@@ -352,9 +391,15 @@ function AstRow({
   const requiredPassed = ast.required.filter((check) => check.found).length;
 
   const meta = (() => {
-    if (status === "pending") {return "待機中";}
-    if (status === "evaluating") {return "評価中...";}
-    if (ast.parseError) {return "構文エラー";}
+    if (status === "pending") {
+      return "待機中";
+    }
+    if (status === "evaluating") {
+      return "評価中...";
+    }
+    if (ast.parseError) {
+      return "構文エラー";
+    }
     return `必須 ${requiredPassed}/${ast.required.length} ・ 違反 ${ast.forbidden.length}`;
   })();
 
@@ -500,22 +545,23 @@ function TestsRow({
   const passedCount = visibleTests.filter((test) => test.passed).length;
 
   const meta = (() => {
-    if (status === "pending") {return "待機中";}
+    if (status === "pending") {
+      return "待機中";
+    }
     if (status === "evaluating") {
-      if (!result) {return "サーバで実行中...";}
+      if (!result) {
+        return "サーバで実行中...";
+      }
       return `${revealedTests}/${totalTests}件 表示中`;
     }
-    if (status === "error") {return "実行に失敗";}
+    if (status === "error") {
+      return "実行に失敗";
+    }
     return `${passedCount}/${totalTests}件 PASS`;
   })();
 
   return (
-    <CheckRow
-      title="テスト実行"
-      status={status}
-      meta={meta}
-      isLast={isLast}
-    >
+    <CheckRow title="テスト実行" status={status} meta={meta} isLast={isLast}>
       {status === "pending" ? (
         <p className="text-sm text-muted-foreground">
           コード構造の確認が終わってからテストを実行します。
@@ -546,9 +592,7 @@ function TestsRow({
             // stdout 採点失敗かつエラーが無い場合は「期待値 vs 実際」を上下 2 段で表示する。
             // (TIMEOUT / COMPILE_ERROR / 例外時は従来どおり error メッセージを優先表示)
             const showStdoutDiff =
-              !test.passed &&
-              !test.error &&
-              test.expectedStdout !== undefined;
+              !test.passed && !test.error && test.expectedStdout !== undefined;
             return (
               <li
                 key={`${test.name}-${index}`}

@@ -3,14 +3,13 @@
  *
  * URL: `/stages/:stage`
  *
- * 当該ステージに属する全章の課題を、 章セクション形式 (旧 SelectPage と同じ
- * レイアウト) で一覧表示する。 フィルタ・検索の UI は旧 SelectPage から引き
- * 継ぐ。
+ * 当該ステージに属する全章の課題を、章セクション形式 (旧 SelectPage と同じ
+ * レイアウト) で一覧表示する。
  *
  * ステージが未解禁ならカードは出さず、 「解禁条件」 を案内する。
  */
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
   assignments,
@@ -27,36 +26,10 @@ import { useStageUnlocks } from "../hooks/useStageUnlocks.js";
 import { STAGE_ORDER } from "../lib/stage-unlock-store.js";
 import { cn } from "@/lib/utils";
 
-type Status = "cleared" | "uncleared";
-type StatusFilter = "all" | Status;
-type DifficultyFilter = "all" | 1 | 2 | 3;
-
-const STATUS_FILTERS: { id: StatusFilter; label: string }[] = [
-  { id: "all", label: "すべて" },
-  { id: "uncleared", label: "未クリア" },
-  { id: "cleared", label: "クリア済み" },
-];
-
-const DIFFICULTY_FILTERS: { id: DifficultyFilter; label: string }[] = [
-  { id: "all", label: "難易度すべて" },
-  { id: 1, label: "★" },
-  { id: 2, label: "★★" },
-  { id: 3, label: "★★★" },
-];
-
-const CHIP_BASE =
-  "inline-flex cursor-pointer select-none items-center rounded-full border border-transparent bg-transparent px-3.5 py-[6px] text-[12.5px] font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring";
-const CHIP_ACTIVE =
-  "border-foreground bg-foreground text-background hover:bg-foreground hover:text-background dark:hover:bg-foreground dark:hover:text-background";
-
 const STAGE_SET = new Set<Stage>(STAGE_ORDER);
 
 function isStageParam(value: string | undefined): value is Stage {
   return value !== undefined && STAGE_SET.has(value as Stage);
-}
-
-function statusOf(cleared: boolean): Status {
-  return cleared ? "cleared" : "uncleared";
 }
 
 export function StagePage() {
@@ -73,11 +46,6 @@ function StagePageContent({ stage }: { stage: Stage }) {
   const unlocked = useStageUnlocks();
   const stageInfo = stageInfos.find((s) => s.id === stage);
 
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [difficultyFilter, setDifficultyFilter] =
-    useState<DifficultyFilter>("all");
-  const [query, setQuery] = useState<string>("");
-
   const stageAssignments = useMemo(
     () => assignments.filter((a) => a.stage === stage),
     [stage],
@@ -93,6 +61,15 @@ function StagePageContent({ stage }: { stage: Stage }) {
       m.set(a.id, next);
     }
     return m;
+  }, [stageAssignments]);
+
+  const chapterGroups = useMemo(() => {
+    return chapters
+      .map((chapter) => ({
+        chapter,
+        items: stageAssignments.filter((a) => a.chapterId === chapter.id),
+      }))
+      .filter((g) => g.items.length > 0);
   }, [stageAssignments]);
 
   const totalInStage = stageAssignments.length;
@@ -114,51 +91,6 @@ function StagePageContent({ stage }: { stage: Stage }) {
     capstones.length > 0 && capstoneCleared === capstones.length;
 
   const isUnlocked = unlocked.includes(stage);
-
-  const normalizedQuery = query.trim().toLowerCase();
-  const filteredGroups = useMemo(() => {
-    return chapters
-      .map((chapter) => {
-        const items = stageAssignments.filter((a) => {
-          if (a.chapterId !== chapter.id) {return false;}
-          if (
-            difficultyFilter !== "all" &&
-            a.difficulty !== difficultyFilter
-          ) {
-            return false;
-          }
-          if (statusFilter !== "all") {
-            const s = statusOf(clearedSet.has(a.id));
-            if (s !== statusFilter) {return false;}
-          }
-          if (normalizedQuery !== "") {
-            const haystack = `${a.title} ${chapter.label}`.toLowerCase();
-            if (!haystack.includes(normalizedQuery)) {return false;}
-          }
-          return true;
-        });
-        return { chapter, items };
-      })
-      .filter((g) => g.items.length > 0);
-  }, [
-    stageAssignments,
-    statusFilter,
-    difficultyFilter,
-    normalizedQuery,
-    clearedSet,
-  ]);
-
-  const hasNoResult = filteredGroups.length === 0;
-  const hasActiveFilter =
-    statusFilter !== "all" ||
-    difficultyFilter !== "all" ||
-    normalizedQuery !== "";
-
-  function clearFilters() {
-    setStatusFilter("all");
-    setDifficultyFilter("all");
-    setQuery("");
-  }
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
@@ -211,7 +143,7 @@ function StagePageContent({ stage }: { stage: Stage }) {
             </StatCell>
             <StatCell label="Chapters">
               <strong className="font-sans text-[26px] font-extrabold leading-none tracking-[-0.02em] text-foreground">
-                {filteredGroups.length}
+                {chapterGroups.length}
               </strong>
             </StatCell>
           </dl>
@@ -231,88 +163,15 @@ function StagePageContent({ stage }: { stage: Stage }) {
               </p>
             )}
 
-            <section
-              className="mb-9 flex flex-wrap items-center gap-x-4 gap-y-3"
-              aria-label="絞り込み"
-            >
-              <fieldset className="m-0 inline-flex min-w-0 flex-wrap gap-1 rounded-full border border-border bg-card p-1 shadow-[var(--shadow-1)]">
-                <legend className="sr-only">状態で絞り込み</legend>
-                {STATUS_FILTERS.map((f) => (
-                  <label
-                    key={f.id}
-                    className={cn(
-                      CHIP_BASE,
-                      statusFilter === f.id && CHIP_ACTIVE,
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name="status-filter"
-                      className="sr-only"
-                      checked={statusFilter === f.id}
-                      onChange={() => setStatusFilter(f.id)}
-                    />
-                    {f.label}
-                  </label>
-                ))}
-              </fieldset>
-              <fieldset className="m-0 inline-flex min-w-0 flex-wrap gap-1 rounded-full border border-border bg-card p-1 shadow-[var(--shadow-1)]">
-                <legend className="sr-only">難易度で絞り込み</legend>
-                {DIFFICULTY_FILTERS.map((f) => (
-                  <label
-                    key={String(f.id)}
-                    className={cn(
-                      CHIP_BASE,
-                      difficultyFilter === f.id && CHIP_ACTIVE,
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name="difficulty-filter"
-                      className="sr-only"
-                      checked={difficultyFilter === f.id}
-                      onChange={() => setDifficultyFilter(f.id)}
-                    />
-                    {f.label}
-                  </label>
-                ))}
-              </fieldset>
-              <div className="ml-auto inline-flex min-w-[240px] flex-1 items-center gap-2 max-md:ml-0 max-md:w-full">
-                <input
-                  type="search"
-                  className="flex-1 rounded-full border border-border bg-card px-3.5 py-[9px] font-jp text-[13px] text-foreground transition-colors placeholder:text-ink-400 focus:border-blue-500 focus:shadow-[var(--shadow-focus)] focus:outline-none"
-                  placeholder="課題名・章名を検索..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  aria-label="課題を検索"
-                />
-                {hasActiveFilter && (
-                  <button
-                    type="button"
-                    className="cursor-pointer border-0 bg-transparent px-1.5 py-1 font-sans text-xs font-semibold text-blue-700 underline underline-offset-[3px] hover:text-blue-500 dark:text-blue-300 dark:hover:text-blue-100"
-                    onClick={clearFilters}
-                  >
-                    条件をクリア
-                  </button>
-                )}
-              </div>
-            </section>
-
-            {hasNoResult ? (
-              <p className="px-5 py-8 text-center text-[13px] italic text-ink-400">
-                条件に合う課題がありません。フィルタを変更してください。
-              </p>
-            ) : (
-              filteredGroups.map(({ chapter, items }) => (
-                <ChapterSection
-                  key={chapter.id}
-                  chapter={chapter}
-                  items={items}
-                  clearedSet={clearedSet}
-                  assignmentNumbers={assignmentNumbers}
-                />
-              ))
-            )}
+            {chapterGroups.map(({ chapter, items }) => (
+              <ChapterSection
+                key={chapter.id}
+                chapter={chapter}
+                items={items}
+                clearedSet={clearedSet}
+                assignmentNumbers={assignmentNumbers}
+              />
+            ))}
           </>
         )}
       </main>
@@ -385,6 +244,7 @@ function ChapterSection({
               href={chapter.defaultMdnPage}
               target="_blank"
               rel="noopener noreferrer"
+              title={chapter.mdnPageTitle}
               className="inline-flex items-center gap-1 font-sans text-[12px] font-medium text-muted-foreground no-underline hover:text-blue-700 hover:underline dark:hover:text-blue-300"
             >
               MDN ↗

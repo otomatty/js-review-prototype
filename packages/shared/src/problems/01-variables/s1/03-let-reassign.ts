@@ -75,8 +75,5 @@ console.log(count);
       description: "const で宣言してから再代入しようとしている",
     },
   ],
-  mdnSections: [
-    { heading: "let" },
-    { heading: "let と const の違い" },
-  ],
+  mdnSections: [{ heading: "let" }, { heading: "const" }],
 };

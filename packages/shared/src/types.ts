@@ -50,6 +50,11 @@ export interface Chapter {
   label: string;
   description: string;
   defaultMdnPage: string;
+  /**
+   * `defaultMdnPage` に対応する MDN のページタイトル（ブラウザタイトルから「 | MDN」等を除いたもの）。
+   * MDN へのリンク文言として使う。
+   */
+  mdnPageTitle: string;
 }
 
 /**
@@ -71,10 +76,15 @@ export interface MdnSection {
   anchor?: string;
   /**
    * 参照先ページの URL 上書き。
-   * 省略時は所属トピックの `mdnUrl` を使う。
-   * 同じトピック (= 同じ MDN ページ) 内のセクションのみを参照する通常ケースでは省略する。
+   * 省略時は所属章の `defaultMdnPage` を使う。
+   * 同じ MDN ページ内のセクションのみを参照する通常ケースでは省略する。
    */
   pageUrl?: string;
+  /**
+   * `pageUrl` で別ページを指すとき、そのページの MDN タイトル（章の `mdnPageTitle` と同じ規約）。
+   * **`pageUrl` を指定したときは必須**（UI で「<pageTitle> §<heading>」として表示する）。
+   */
+  pageTitle?: string;
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -129,10 +139,12 @@ export interface Assignment {
    */
   badSolutions?: BadSolution[];
   /**
-   * この課題が学習対象とする MDN ガイドのセクション (見出し)。
-   * UI では課題説明の上部に「参考: §<見出し>」のリンクとして並べて表示する。
-   * トピックの `mdnUrl` ページ内のセクションを参照するのが基本だが、
-   * `pageUrl` で別ページを指定することもできる。
+   * この課題が学習対象とする MDN のセクション（見出し）への参照。
+   * UI では課題説明の上部に「参考」としてリンクを並べて表示する。
+   *
+   * **方針:** 新規・改稿課題では必ず 1 件以上を指定する（章の代表ページだけでなく、
+   * その課題に直接関連するページ・セクションを明示する）。
+   * `pageUrl` で別ページへ飛ばす場合は `pageTitle` も必ず付ける。
    */
   mdnSections?: MdnSection[];
 }

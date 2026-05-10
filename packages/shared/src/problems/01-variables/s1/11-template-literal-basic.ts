@@ -76,6 +76,11 @@ console.log(message);
     },
   ],
   mdnSections: [
-    { heading: "テンプレートリテラル" },
+    {
+      heading: "テンプレートリテラル",
+      pageUrl:
+        "https://developer.mozilla.org/ja/docs/Web/JavaScript/Guide/Text_formatting",
+      pageTitle: "数値と文字列",
+    },
   ],
 };

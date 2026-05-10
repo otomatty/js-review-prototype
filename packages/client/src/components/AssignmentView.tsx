@@ -23,17 +23,35 @@ function difficultyStars(d: Difficulty): string {
 }
 
 /**
+ * `chapter.defaultMdnPage` に `#宣言` のようなフラグメントが付いていても、
+ * セクション用 URL を組み立てるときはベースパスだけを使う。
+ */
+function stripUrlFragment(url: string): string {
+  const i = url.indexOf("#");
+  return i === -1 ? url : url.slice(0, i);
+}
+
+/**
  * MdnSection から実際にジャンプする URL を組み立てる。
  *
- * - `pageUrl` が指定されていればそれを使い、なければトピックの mdnUrl
+ * - `pageUrl` が指定されていればそれを使い、なければ章の `defaultMdnPage`（フラグメントは除去）
  * - フラグメントは `anchor ?? heading` (JA MDN は日本語見出しがそのまま anchor になる)
  *
  * 戻り値の URL に含まれる日本語はブラウザが自動的に percent-encode する。
  */
-function buildMdnSectionUrl(section: MdnSection, topicUrl: string): string {
-  const base = section.pageUrl ?? topicUrl;
+function buildMdnSectionUrl(section: MdnSection, chapterDefaultPage: string): string {
+  const baseRaw = section.pageUrl ?? chapterDefaultPage;
+  const base = stripUrlFragment(baseRaw);
   const anchor = section.anchor ?? section.heading;
   return `${base}#${anchor}`;
+}
+
+/** UI に出すリンク文言（別ページ参照時は pageTitle を前置）。 */
+function mdnSectionLinkLabel(section: MdnSection): string {
+  if (section.pageUrl && section.pageTitle) {
+    return `${section.pageTitle} §${section.heading}`;
+  }
+  return `§${section.heading}`;
 }
 
 const rehypeHighlightOptions = {
@@ -77,16 +95,22 @@ export function AssignmentView({ assignment }: Props) {
     <div className={MARKDOWN_BODY}>
       {chapter && (
         <div className="mb-5 border-b border-ink-100 pb-3.5 dark:border-ink-700">
-          <div className="font-sans text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <div className="font-sans text-[11px] leading-[1.55] text-muted-foreground">
+            <span className="font-bold text-foreground">{chapter.label}</span>
+            {chapter.description ? ` — ${chapter.description}` : null}
+          </div>
+          <div className="mt-1 font-sans text-[11px] leading-[1.55]">
+            <span className="font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              MDN ·{" "}
+            </span>
             <a
               href={chapter.defaultMdnPage}
               target="_blank"
               rel="noreferrer"
-              className="border-b border-ink-300 pb-px text-ink-700 no-underline hover:border-blue-500 hover:text-blue-700 dark:border-ink-600 dark:text-ink-200 dark:hover:border-blue-300 dark:hover:text-blue-300"
+              className="border-b border-ink-300 pb-px font-medium text-ink-700 no-underline hover:border-blue-500 hover:text-blue-700 dark:border-ink-600 dark:text-ink-200 dark:hover:border-blue-300 dark:hover:text-blue-300"
             >
-              {chapter.label}
+              {chapter.mdnPageTitle}
             </a>
-            {chapter.description ? ` — ${chapter.description}` : null}
           </div>
           <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-sans text-[11.5px] leading-[1.55] text-muted-foreground">
             <span
@@ -121,7 +145,7 @@ export function AssignmentView({ assignment }: Props) {
                       rel="noreferrer"
                       className="text-ink-600 no-underline underline-offset-[3px] hover:text-blue-700 hover:underline dark:text-ink-300 dark:hover:text-blue-300"
                     >
-                      §{section.heading}
+                      {mdnSectionLinkLabel(section)}
                     </a>
                   </Fragment>
                 );
@@ -133,7 +157,7 @@ export function AssignmentView({ assignment }: Props) {
                 rel="noreferrer"
                 className="text-ink-600 no-underline underline-offset-[3px] hover:text-blue-700 hover:underline dark:text-ink-300 dark:hover:text-blue-300"
               >
-                【{chapter.label}】
+                【{chapter.mdnPageTitle}】
               </a>
             )}
           </div>
