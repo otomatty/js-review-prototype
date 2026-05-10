@@ -27,22 +27,12 @@ export const s1Ch12ArrayOffByOne: Assignment = {
 - 配列の最初は **0 番目**。 つまり 「3 番目」 を取り出したいときは \`fruits[2]\` です。
 - これは Off-by-One (1 ずれ) と呼ばれる定番のバグです。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// 3 番目を取りたい。 添字を 2 に直す
-const fruits = ["りんご", "みかん", "ぶどう"];
-console.log(fruits[3]);
-`,
-    L2: `// バグ: fruits[3] は配列の範囲外で undefined になる
+  starterCode: `// バグ: fruits[3] は配列の範囲外で undefined になる
 // 3 番目 ("ぶどう") を取り出すには添字を 2 にする
 
 const fruits = ["りんご", "みかん", "ぶどう"];
 console.log(fruits[3]);
 `,
-    L3: `const fruits = ["りんご", "みかん", "ぶどう"];
-console.log(fruits[____]);
-`,
-  },
   tests: [
     {
       name: "stdout が ぶどう になる",

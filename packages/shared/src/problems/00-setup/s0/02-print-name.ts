@@ -27,15 +27,9 @@ Taro
 - 1 問目の \`Hello, World!\` を出したコードを思い出してみましょう。
 - \`console.log\` に渡す文字列を変えるだけです。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// console.log で Taro と出力してください\n",
-    L2: `// console.log で「Taro」を出力してください
+  starterCode: `// console.log で「Taro」を出力してください
 // 1 問目と同じ書き方で、文字列だけ差し替えれば OK です
 `,
-    L3: `console.log("____");
-`,
-  },
   tests: [
     {
       name: "stdout が Taro になる",

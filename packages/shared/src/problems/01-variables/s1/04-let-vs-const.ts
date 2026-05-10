@@ -31,23 +31,12 @@ export const s1Ch01LetVsConst: Assignment = {
 - 値を変えない変数 → \`const\`
 - 値を変える変数 → \`let\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// taxRate は変えない、 total は変える。 適切なキーワードを選ぶ
-`,
-    L2: `// 1. taxRate を 0.1 で宣言 (再代入しないので const)
+  starterCode: `// 1. taxRate を 0.1 で宣言 (再代入しないので const)
 // 2. total を 100 で宣言 (後で再代入するので let)
 // 3. total = 200 に書き換える
 // 4. taxRate と total をそれぞれ console.log で出力
 
 `,
-    L3: `const taxRate = ____;
-let total = ____;
-total = ____;
-console.log(taxRate);
-console.log(total);
-`,
-  },
   tests: [
     {
       name: "stdout が 0.1 と 200 の 2 行になる",

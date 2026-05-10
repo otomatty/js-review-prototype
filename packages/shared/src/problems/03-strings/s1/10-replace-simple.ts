@@ -22,16 +22,9 @@ export const s1Ch03ReplaceSimple: Assignment = {
 I like dogs
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "I like cats".replace("cats", "dogs") を出力
-`,
-    L2: `// console.log で "I like cats".replace("cats", "dogs") を呼ぶ
+  starterCode: `// console.log で "I like cats".replace("cats", "dogs") を呼ぶ
 
 `,
-    L3: `console.log("I like cats".replace(____, ____));
-`,
-  },
   tests: [
     {
       name: "stdout が I like dogs になる",

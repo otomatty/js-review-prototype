@@ -26,18 +26,10 @@ Hello
 - そのあと \`console.log(message)\` と書くと、 箱の中身 (= \`"Hello"\`) が出力されます。
 - 文字列を **直接** \`console.log\` に渡すのではなく、 一度変数に入れてから渡すのが今回のポイントです。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// const で変数 message を作って "Hello" を入れ、 console.log で出力してください
-`,
-    L2: `// 1. const で message という変数を作り、"Hello" を入れる
+  starterCode: `// 1. const で message という変数を作り、"Hello" を入れる
 // 2. console.log で message を出力する
 
 `,
-    L3: `const message = ____;
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が Hello になる",

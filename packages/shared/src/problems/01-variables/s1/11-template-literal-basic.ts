@@ -31,18 +31,12 @@ export const s1Ch01TemplateLiteralBasic: Assignment = {
   difficulty: 1,
   testKind: "stdout",
   description,
-  scaffolds: {
-    L0: "",
-    L1: `// name を使って "こんにちは、 花子さん!" を作る (テンプレートリテラルを使う)
-`,
-    L2: `// 1. const name = "花子";
+  starterCode: `// 1. const name = "花子";
 // 2. テンプレートリテラルで「こんにちは、 \${name}さん!」を作って message に入れる
 //    (\\\`...\\\` のようにバッククォートで囲む)
 // 3. console.log(message);
 
 `,
-    L3: "const name = ____;\nconst message = `こんにちは、 ${____}さん!`;\nconsole.log(message);\n",
-  },
   tests: [
     {
       name: "stdout が テンプレートで組み立てた文になる",

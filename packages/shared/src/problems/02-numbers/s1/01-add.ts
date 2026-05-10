@@ -22,15 +22,9 @@ export const s1Ch02Add: Assignment = {
 201
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// 125 + 76 の結果を出力してください (式そのものを書く)\n",
-    L2: `// console.log の中に 125 + 76 の式をそのまま書く
+  starterCode: `// console.log の中に 125 + 76 の式をそのまま書く
 
 `,
-    L3: `console.log(____ + ____);
-`,
-  },
   tests: [
     {
       name: "stdout が 201 になる",

@@ -40,17 +40,12 @@ BMI: 22
 - 計算結果はそのままだと小数になるので、 \`Math.round(...)\` で整数に丸めます。
 - テンプレートリテラルで \`\` \`BMI: \${bmi}\` \`\` のように埋め込みます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// heightM / weightKg を const で作り、 BMI を計算してテンプレートで出力\n",
-    L2: `// 1. const heightM = 1.70;
+  starterCode: `// 1. const heightM = 1.70;
 // 2. const weightKg = 65;
 // 3. const bmi = Math.round(weightKg / (heightM ** 2));
 // 4. テンプレートリテラルで「BMI: \${bmi}」を組み立てて出力
 
 `,
-    L3: "const heightM = ____;\nconst weightKg = ____;\nconst bmi = Math.round(____ / (____ ** 2));\nconsole.log(`BMI: ${____}`);\n",
-  },
   tests: [
     {
       name: "stdout が BMI: 22 になる",

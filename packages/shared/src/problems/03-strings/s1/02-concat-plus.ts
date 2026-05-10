@@ -22,16 +22,9 @@ export const s1Ch03ConcatPlus: Assignment = {
 Hello, World
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "Hello, " + "World" を出力
-`,
-    L2: `// console.log の中で 2 つの文字列を + でつなぐ
+  starterCode: `// console.log の中で 2 つの文字列を + でつなぐ
 
 `,
-    L3: `console.log(____ + ____);
-`,
-  },
   tests: [
     {
       name: "stdout が Hello, World になる",

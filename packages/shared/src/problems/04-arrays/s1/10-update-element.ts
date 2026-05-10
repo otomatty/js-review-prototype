@@ -25,20 +25,11 @@ export const s1Ch04UpdateElement: Assignment = {
 - \`letters[1] = "X";\` のように添字に代入することで、 その位置の値を上書きできます。
 - const で宣言した配列の **中身は書き換え可能** です (再代入と中身の変更は別物)。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// letters[1] を "X" に書き換えてから出力
-`,
-    L2: `// 1. const letters = ["A", "B", "C"];
+  starterCode: `// 1. const letters = ["A", "B", "C"];
 // 2. letters[1] = "X";
 // 3. console.log(letters);
 
 `,
-    L3: `const letters = [____, ____, ____];
-letters[____] = ____;
-console.log(letters);
-`,
-  },
   tests: [
     {
       name: "stdout が [\"A\",\"X\",\"C\"] になる",

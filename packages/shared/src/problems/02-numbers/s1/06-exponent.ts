@@ -22,15 +22,9 @@ export const s1Ch02Exponent: Assignment = {
 256
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// 2 の 8 乗を ** 演算子で計算して出力\n",
-    L2: `// console.log の中に 2 ** 8 の式を書く
+  starterCode: `// console.log の中に 2 ** 8 の式を書く
 
 `,
-    L3: `console.log(____ ** ____);
-`,
-  },
   tests: [
     {
       name: "stdout が 256 になる",

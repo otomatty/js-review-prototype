@@ -22,18 +22,10 @@ export const s1Ch01ConstNumber: Assignment = {
 1980
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// const で price に 1980 を入れて、 console.log で出力してください
-`,
-    L2: `// 1. const price = 1980; のように数値を変数に入れる
+  starterCode: `// 1. const price = 1980; のように数値を変数に入れる
 // 2. console.log(price) で出力する
 
 `,
-    L3: `const price = ____;
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が 1980 になる",

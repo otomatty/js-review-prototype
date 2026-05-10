@@ -26,18 +26,10 @@ Taro
   - 例: \`userName\` / \`firstName\` / \`isAdmin\`
 - スネークケース (\`user_name\`) や全部小文字 (\`username\`) は JavaScript では一般的ではありません。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// const で userName に "Taro" を入れて出力する (camelCase に注意)
-`,
-    L2: `// const で userName という変数を宣言し、 "Taro" を入れる
+  starterCode: `// const で userName という変数を宣言し、 "Taro" を入れる
 // userName の N が大文字になっているか確認
 
 `,
-    L3: `const ____ = "Taro";
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が Taro になる",

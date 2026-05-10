@@ -21,19 +21,14 @@ import {
 } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
-import type { Assignment, ScaffoldLevel } from "@jsreview/shared/types";
-import {
-  DEFAULT_SCAFFOLD_LEVEL,
-  getScaffoldCode,
-  getStaticAnalysisSettings,
-} from "@jsreview/shared/assignment-helpers";
+import type { Assignment } from "@jsreview/shared/types";
+import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
 
 import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
 import { AssignmentView } from "../components/AssignmentView.js";
 import { OutputPane } from "../components/OutputPane.js";
 import { RunResultDialog } from "../components/RunResultDialog.js";
-import { ScaffoldChips } from "../components/ScaffoldChips.js";
 import { ThemeToggle } from "../components/ThemeToggle.js";
 import { AppHeader } from "../components/AppHeader.js";
 import { Button } from "../components/ui/button.js";
@@ -81,9 +76,6 @@ function PracticePageInner({ assignment }: InnerProps) {
   }, [assignment.id]);
 
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
-  const [scaffoldLevel, setScaffoldLevel] = useState<ScaffoldLevel>(
-    DEFAULT_SCAFFOLD_LEVEL,
-  );
   const [freeRun, setFreeRun] = useState<{
     stdout?: string;
     error?: string;
@@ -92,7 +84,7 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   const { code, setCode, cleared, recordResult, clear } = useProgress({
     assignmentId: assignment.id,
-    starterCode: getScaffoldCode(assignment),
+    starterCode: assignment.starterCode,
   });
 
   const staticAnalysis = useMemo(
@@ -121,7 +113,6 @@ function PracticePageInner({ assignment }: InnerProps) {
     reset();
     setFreeRun(null);
     setFreeRunPending(false);
-    setScaffoldLevel(DEFAULT_SCAFFOLD_LEVEL);
   }, [assignment.id, reset]);
 
   // `[` / `]` で前後の課題に移動 (両端は循環)。
@@ -203,14 +194,6 @@ function PracticePageInner({ assignment }: InnerProps) {
     }
   }, [code, assignment.id]);
 
-  const handleScaffoldSelect = useCallback(
-    (level: ScaffoldLevel) => {
-      setCode(getScaffoldCode(assignment, level));
-      setScaffoldLevel(level);
-    },
-    [assignment, setCode],
-  );
-
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
       <AppHeader
@@ -245,13 +228,7 @@ function PracticePageInner({ assignment }: InnerProps) {
           <AssignmentView assignment={assignment} />
         </aside>
 
-        <section className="grid grid-rows-[auto_1fr_auto_auto] overflow-hidden bg-background">
-          <ScaffoldChips
-            assignment={assignment}
-            currentCode={code}
-            activeLevel={scaffoldLevel}
-            onSelect={handleScaffoldSelect}
-          />
+        <section className="grid grid-rows-[1fr_auto_auto] overflow-hidden bg-background">
           <div className="flex min-h-0 flex-col overflow-hidden bg-background">
             <div className="flex-1 overflow-auto">
               <Editor

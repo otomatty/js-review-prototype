@@ -5,8 +5,8 @@
  * 検査項目:
  *
  *  1. 重複した Assignment ID が存在しないこと
- *  2. 各 Assignment の L2 scaffold が `staticAnalysis.ast.forbidden` を踏んでいないこと
- *     (scaffold がパースエラーにならないことも含む)
+ *  2. 各 Assignment の `starterCode` が `staticAnalysis.ast.forbidden` を踏んでいないこと
+ *     (starterCode がパースエラーにならないことも含む)
  *  3. 全 Assignment の `chapterId` が `chapters` に存在すること
  *
  * 違反は最後にまとめて出力し、ひとつでもあれば exit code 1 で終了する。
@@ -17,10 +17,7 @@
  */
 
 import { analyzeAst } from "../src/grading/ast.js";
-import {
-  getScaffoldCode,
-  getStaticAnalysisSettings,
-} from "../src/assignment-helpers.js";
+import { getStaticAnalysisSettings } from "../src/assignment-helpers.js";
 import type { Assignment, Chapter } from "../src/types.js";
 
 interface IntegrityIssue {
@@ -57,16 +54,13 @@ async function main(): Promise<void> {
     }
   }
 
-  // 2. scaffold が ast.forbidden を踏んでいない
+  // 2. starterCode が ast.forbidden を踏んでいない
   for (const a of assignments) {
-    const result = analyzeAst(
-      getScaffoldCode(a),
-      getStaticAnalysisSettings(a).ast,
-    );
+    const result = analyzeAst(a.starterCode, getStaticAnalysisSettings(a).ast);
     if (result.parseError) {
       issues.push({
         assignmentId: a.id,
-        message: `scaffold parse error: ${result.parseError}`,
+        message: `starterCode parse error: ${result.parseError}`,
       });
       continue;
     }
@@ -74,7 +68,7 @@ async function main(): Promise<void> {
       const labels = result.forbidden.map((v) => v.label).join(", ");
       issues.push({
         assignmentId: a.id,
-        message: `scaffold violates forbidden patterns: ${labels}`,
+        message: `starterCode violates forbidden patterns: ${labels}`,
       });
     }
   }

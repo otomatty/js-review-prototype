@@ -22,16 +22,9 @@ export const s1Ch03ToUpperCase: Assignment = {
 HELLO
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "hello".toUpperCase() を出力
-`,
-    L2: `// console.log で "hello".toUpperCase() を呼ぶ
+  starterCode: `// console.log で "hello".toUpperCase() を呼ぶ
 
 `,
-    L3: `console.log(____.toUpperCase());
-`,
-  },
   tests: [
     {
       name: "stdout が HELLO になる",

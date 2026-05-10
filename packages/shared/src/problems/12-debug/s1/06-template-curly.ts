@@ -27,17 +27,12 @@ Hello, Taro
 - テンプレートで変数を埋め込むには \`\$\` だけでは足りず、 **\`\${変数名}\`** の形にする必要があります。
 - \`\${ }\` の波カッコを忘れると、 ただの文字として出力されてしまいます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// $name を ${name} に直す\nconst name = \"Taro\";\nconsole.log(`Hello, $name`);\n",
-    L2: `// バグ: $name は変数として展開されず、 そのまま "$name" と出てしまう
+  starterCode: `// バグ: $name は変数として展開されず、 そのまま "$name" と出てしまう
 // \${name} の形に修正する
 
 const name = "Taro";
 console.log(\`Hello, $name\`);
 `,
-    L3: "const name = \"Taro\";\nconsole.log(`Hello, ${____}`);\n",
-  },
   tests: [
     {
       name: "stdout が Hello, Taro になる",

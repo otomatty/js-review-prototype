@@ -26,18 +26,10 @@ red
 - 最初の要素は **0 番目** で、 \`colors[0]\` で取り出せます。
 - 配列の詳しい使い方は Ch04 で扱います。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// const で 3 色の配列を作り、 最初の要素 (0 番目) を出力する
-`,
-    L2: `// 1. const colors = ["red", "green", "blue"];
+  starterCode: `// 1. const colors = ["red", "green", "blue"];
 // 2. console.log(colors[0]);   ← 0 番目を取り出す
 
 `,
-    L3: `const colors = [____, ____, ____];
-console.log(colors[____]);
-`,
-  },
   tests: [
     {
       name: "stdout が red になる",

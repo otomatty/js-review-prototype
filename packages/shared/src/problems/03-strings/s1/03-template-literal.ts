@@ -24,15 +24,10 @@ export const s1Ch03TemplateLiteral: Assignment = {
 
 - バッククォートで囲んだ文字列の中で \`\${変数}\` と書くと、 変数の値が埋め込まれます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// バッククォートで「\\${name}さん、 こんにちは!」を作って出力\n",
-    L2: `// 1. const name = "花子";
+  starterCode: `// 1. const name = "花子";
 // 2. テンプレートリテラル \`\${name}さん、 こんにちは!\` を出力
 
 `,
-    L3: "const name = ____;\nconsole.log(`${____}さん、 こんにちは!`);\n",
-  },
   tests: [
     {
       name: "stdout が 花子さん、 こんにちは! になる",

@@ -22,17 +22,10 @@ export const s1Ch03SliceRange: Assignment = {
 Java
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "JavaScript".slice(0, 4) を出力
-`,
-    L2: `// console.log で "JavaScript".slice(0, 4) を呼ぶ
+  starterCode: `// console.log で "JavaScript".slice(0, 4) を呼ぶ
 // 終了位置 4 は含まれない (0,1,2,3 番目)
 
 `,
-    L3: `console.log("JavaScript".slice(____, ____));
-`,
-  },
   tests: [
     {
       name: "stdout が Java になる",

@@ -93,10 +93,6 @@ export interface MdnSection {
 
 export type Difficulty = 1 | 2 | 3;
 
-export type ScaffoldLevel = "L0" | "L1" | "L2" | "L3";
-
-export type ScaffoldMap = Record<ScaffoldLevel, string>;
-
 export type LintPreset = "S1" | "S2" | "S3" | "S4" | "S5";
 
 export interface Assignment {
@@ -112,8 +108,8 @@ export interface Assignment {
   testKind: TestKind;
   /** 課題説明 (Markdown) */
   description: string;
-  /** L0-L3 のスタータコード。UI は既定で L2 を使う。 */
-  scaffolds: ScaffoldMap;
+  /** エディタ初期表示のスタータコード。 */
+  starterCode: string;
   /** function 採点でコードから取り出す関数名・クラス名。 */
   entryPoints?: string[];
   /** テストケース */

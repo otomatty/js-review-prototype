@@ -25,18 +25,10 @@ export const s1Ch01ConstString: Assignment = {
 - \`const\` で作った変数の中身は **後から書き換えられません**。 一度入れた値をそのまま使うときに使います。
 - 変数名は \`greeting\` (英単語) を使います。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// const で greeting に "おはよう" を入れて、 console.log で出力してください
-`,
-    L2: `// 1. const greeting = "おはよう"; のように変数を宣言する
+  starterCode: `// 1. const greeting = "おはよう"; のように変数を宣言する
 // 2. console.log(greeting) で出力する
 
 `,
-    L3: `const greeting = ____;
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が おはよう になる",

@@ -27,17 +27,10 @@ World
 - インデックスは 0 から始まります。 \`"Hello, World"\` の 0 番目は \`H\`、 7 番目は \`W\`。
 - \`"Hello, World".slice(7)\` は \`"World"\` を返します。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "Hello, World".slice(7) を出力
-`,
-    L2: `// console.log で "Hello, World".slice(7) を呼ぶ
+  starterCode: `// console.log で "Hello, World".slice(7) を呼ぶ
 // 7 番目以降が取り出される
 
 `,
-    L3: `console.log("Hello, World".slice(____));
-`,
-  },
   tests: [
     {
       name: "stdout が World になる",

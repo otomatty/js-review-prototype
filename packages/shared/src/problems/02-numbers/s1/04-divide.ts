@@ -22,15 +22,9 @@ export const s1Ch02Divide: Assignment = {
 21
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// 84 / 4 の結果を出力 (÷ ではなく /)\n",
-    L2: `// console.log の中に 84 / 4 の式を書く
+  starterCode: `// console.log の中に 84 / 4 の式を書く
 
 `,
-    L3: `console.log(____ / ____);
-`,
-  },
   tests: [
     {
       name: "stdout が 21 になる",

@@ -22,19 +22,11 @@ export const s1Ch04NestedAccess: Assignment = {
 4
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// matrix の右下 (= 4) を取り出して出力
-`,
-    L2: `// 1. const matrix = [[1, 2], [3, 4]];
+  starterCode: `// 1. const matrix = [[1, 2], [3, 4]];
 // 2. matrix[1] は [3, 4]、 そこから [1] で 4 を取る
 // 3. console.log(matrix[1][1]);
 
 `,
-    L3: `const matrix = [[____, ____], [____, ____]];
-console.log(matrix[____][____]);
-`,
-  },
   tests: [
     {
       name: "stdout が 4 になる",

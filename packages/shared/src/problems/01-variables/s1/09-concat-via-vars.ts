@@ -30,22 +30,12 @@ export const s1Ch01ConcatViaVars: Assignment = {
 - 文字列同士は \`+\` でつなげられます。 これを **連結** と言います。
 - \`"a" + "b"\` は \`"ab"\` になります。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// hello + name を greeting に入れて出力する
-`,
-    L2: `// 1. const hello = "こんにちは、 ";
+  starterCode: `// 1. const hello = "こんにちは、 ";
 // 2. const name = "太郎さん";
 // 3. const greeting = hello + name;
 // 4. console.log(greeting);
 
 `,
-    L3: `const hello = ____;
-const name = ____;
-const greeting = ____;
-console.log(greeting);
-`,
-  },
   tests: [
     {
       name: "stdout が連結された挨拶文になる",
