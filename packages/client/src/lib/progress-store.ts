@@ -5,7 +5,7 @@
  * - 値:   JSON シリアライズされた `ProgressEntry`
  * - スキーマ変更に備えてバージョンキーを別途保持し、不一致なら全削除
  * - QuotaExceeded 時は `lastSubmittedAt` の古い順に間引いて再試行
- * - Phase 1 以前の旧スキーマ (= `jsreview/` プレフィックスを持たないキー)
+ * - 旧スキーマ (= 本アプリ専用プレフィックスを持つ非 `jsreview/progress/` キー)
  *   が残っていれば削除し、 `sessionStorage` にリセット通知フラグを立てる
  */
 
@@ -15,17 +15,13 @@ const VERSION_KEY = "jsreview/progress/__version__";
 const RESET_NOTICE_FLAG = "jsreview/reset-notice-pending";
 
 /**
- * Phase 1 以前 (= `jsreview/` プレフィックス導入前) に使われていた可能性のある
- * localStorage キー。 ここに該当するキーが残っていれば旧データとみなして削除する。
- * 推測候補のため、 実環境で使われていなかったキーを含んでいても害はない。
+ * 本アプリの過去スキーマで使われた可能性のある localStorage キー。
+ *
+ * `localStorage` は origin を共有するため、 generic な名前 (`progress` 等) を
+ * 削除候補に含めると同一 origin で動く別アプリのデータを意図せず破壊しうる。
+ * 本アプリ固有の名前空間 (`jsreview-` / `jsreview_`) を持つことが確実なものだけに絞る。
  */
-const LEGACY_KEY_CANDIDATES = [
-  "progress",
-  "progress-v1",
-  "progress-v2",
-  "bestScores",
-  "jsreview-progress",
-];
+const LEGACY_KEY_CANDIDATES = ["jsreview-progress"];
 
 export interface ProgressEntry {
   /** 一度でも全チェックを通過 (クリア) しているか */
