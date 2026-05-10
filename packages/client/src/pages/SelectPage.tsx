@@ -256,9 +256,7 @@ function TimelineItem({
       ? cn("bg-gradient-to-br", theme.glow, "to-transparent", theme.border)
       : state === "inProgress"
         ? cn("bg-gradient-to-br", theme.glow, "to-transparent", theme.border)
-        : isUnlocked
-          ? cn("bg-gradient-to-br", theme.glow, "to-transparent", "border-border")
-          : "border-border";
+        : cn("bg-gradient-to-br", theme.glow, "to-transparent", "border-border");
 
   const cardInteractiveClasses = isUnlocked
     ? "hover:-translate-y-1 hover:shadow-[var(--shadow-2)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] cursor-pointer no-underline text-foreground"
@@ -450,13 +448,7 @@ function TimelineNode({
     state === "completed"
       ? cn("bg-success text-white border-success")
       : state === "inProgress"
-        ? cn(
-            "bg-card border-2",
-            theme.node.replace("text-", "text-").replace(
-              "border-",
-              "border-",
-            ),
-          )
+        ? cn("bg-card border-2", theme.node)
         : state === "ready"
           ? cn("bg-card", theme.node)
           : state === "empty"

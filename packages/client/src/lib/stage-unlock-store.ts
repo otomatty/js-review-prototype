@@ -117,9 +117,10 @@ const capstonesByStage: ReadonlyMap<Stage, readonly string[]> = (() => {
  * cleared 集合と現在解禁集合から、 解禁されるべき集合を計算する。
  *
  * - 既に解禁済みの S は降格しない。
- * - 解禁済みステージ Sn について、 capstone が 1 個以上あり全て cleared なら
- *   S(n+1) を解禁する。 capstone が 0 個のステージは「次を解禁しない」 (= 通過
- *   不能) が、 INITIAL_UNLOCKED で初期解禁されているステージは別途確保される。
+ * - 解禁済みステージ Sn について、 capstone が **全て cleared** なら S(n+1) を解禁する。
+ *   capstone が 0 個のステージは `every` が空集合に対して vacuously true を返すため、
+ *   ゲート無し (= 自動的に次へ進める) として扱う。 これによりカリキュラム上
+ *   「導入のみで capstone を持たないステージ」 を将来追加しても進行不能にならない。
  */
 function recomputeUnlocks(
   cleared: ReadonlySet<string>,
@@ -131,7 +132,6 @@ function recomputeUnlocks(
     const s = STAGE_ORDER[i];
     if (!next.has(s)) {continue;}
     const caps = capstonesByStage.get(s) ?? [];
-    if (caps.length === 0) {continue;}
     if (caps.every((id) => cleared.has(id))) {
       next.add(STAGE_ORDER[i + 1]);
     }
