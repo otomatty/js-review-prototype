@@ -30,7 +30,7 @@ export function withWallTimeout<T>(
       },
       (e) => {
         clearTimeout(timer);
-        reject(e);
+        reject(e instanceof Error ? e : new Error(String(e)));
       },
     );
   });

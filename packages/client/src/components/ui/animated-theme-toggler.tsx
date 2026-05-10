@@ -153,7 +153,7 @@ export const AnimatedThemeToggler = ({
 
   const toggleTheme = useCallback(() => {
     const button = buttonRef.current
-    if (!button) return
+    if (!button) {return}
 
     const viewportWidth = window.visualViewport?.width ?? window.innerWidth
     const viewportHeight = window.visualViewport?.height ?? window.innerHeight
@@ -205,13 +205,13 @@ export const AnimatedThemeToggler = ({
       flushSync(applyTheme)
     })
     if (typeof transition?.finished?.finally === "function") {
-      transition.finished.finally(cleanup)
+      void transition.finished.finally(cleanup)
     } else {
       cleanup()
     }
 
     const ready = transition?.ready
-    if (ready && typeof ready.then === "function") {
+    if (typeof ready?.then === "function") {
       const clipPath = getThemeTransitionClipPaths(
         shape,
         x,
@@ -220,7 +220,7 @@ export const AnimatedThemeToggler = ({
         viewportWidth,
         viewportHeight
       )
-      ready.then(() => {
+      void ready.then(() => {
         document.documentElement.animate(
           {
             clipPath,

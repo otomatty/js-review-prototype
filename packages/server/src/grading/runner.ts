@@ -9,7 +9,7 @@ import ivm from "isolated-vm";
 import { withWallTimeout } from "@jsreview/shared/util/timeout";
 
 import type { TestCase, TestKind, TestResult } from "../types.js";
-import { IsolatePool } from "../isolate-pool.js";
+import type { IsolatePool } from "../isolate-pool.js";
 
 const PER_TEST_TIMEOUT_MS = 1000;
 /** Promise チェーンを許容する全体タイムアウト。 */
@@ -32,7 +32,63 @@ export class TestRunner {
     tests: TestCase[],
     options: RunOptions,
   ): Promise<TestResult[]> {
+    if (options.testKind === "stdout") {
+      return this.runStdoutTestBatch(code, tests);
+    }
     return Promise.all(tests.map((test) => this.runOne(code, test, options)));
+  }
+
+  /** stdout 採点は環境が同一なので 1 回だけ実行し、各ケースは出力の比較のみ行う。 */
+  private async runStdoutTestBatch(
+    code: string,
+    tests: TestCase[],
+  ): Promise<TestResult[]> {
+    let captured: { stdout: string; error?: string } | null = null;
+    const results: TestResult[] = [];
+    for (const test of tests) {
+      if (test.expectedStdout === undefined) {
+        results.push({
+          name: test.name,
+          passed: false,
+          error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
+        });
+        continue;
+      }
+      if (captured === null) {
+        captured = await this.executeAndCaptureStdout(code);
+      }
+      results.push(this.buildStdoutTestResult(test, captured));
+    }
+    return results;
+  }
+
+  private buildStdoutTestResult(
+    test: TestCase,
+    captured: { stdout: string; error?: string },
+  ): TestResult {
+    if (test.expectedStdout === undefined) {
+      return {
+        name: test.name,
+        passed: false,
+        error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
+      };
+    }
+    const expected = normalizeStdout(test.expectedStdout);
+    if (captured.error !== undefined) {
+      return {
+        name: test.name,
+        passed: false,
+        stdout: captured.stdout,
+        expectedStdout: expected,
+        error: captured.error,
+      };
+    }
+    return {
+      name: test.name,
+      passed: captured.stdout === expected,
+      stdout: captured.stdout,
+      expectedStdout: expected,
+    };
   }
 
   private async runOne(
@@ -52,6 +108,20 @@ export class TestRunner {
     }
   }
 
+  /**
+   * 自由実行モード。テストを評価せず、stdout (と発生時のエラー) のみを返す。
+   * 「実行」ボタンから呼ばれる。
+   */
+  async runFreeRun(code: string): Promise<TestResult> {
+    const captured = await this.executeAndCaptureStdout(code);
+    return {
+      name: "freerun",
+      passed: captured.error === undefined,
+      stdout: captured.stdout,
+      ...(captured.error !== undefined ? { error: captured.error } : {}),
+    };
+  }
+
   private async runStdoutTest(
     code: string,
     test: TestCase,
@@ -63,8 +133,17 @@ export class TestRunner {
         error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
       };
     }
-    const expectedStdout = test.expectedStdout;
+    const captured = await this.executeAndCaptureStdout(code);
+    return this.buildStdoutTestResult(test, captured);
+  }
 
+  /**
+   * isolated-vm 内でコードを実行し console.log を捕捉する共通処理。
+   * 採点 (`runStdoutTest`) と自由実行 (`runFreeRun`) の両方から呼ばれる。
+   */
+  private async executeAndCaptureStdout(
+    code: string,
+  ): Promise<{ stdout: string; error?: string }> {
     const isolate = await this.pool.acquire();
     const stdout: string[] = [];
     try {
@@ -78,12 +157,12 @@ export class TestRunner {
 
       let script: ivm.Script;
       try {
-        script = await isolate.compileScript(`${consoleHookSource()}\n${code}`);
+        // async IIFE で包み、学習者が Promise を返す / await するコードでも promise:true がきちんと待てるようにする。
+        // 旧手掛かりの末尾 `;undefined;` は完了値を潰し、マイクロタスクが追いつかないケースがあった (PR レビュー指摘)。
+        script = await isolate.compileScript(wrapStdoutLearnerCode(code));
       } catch (e) {
         return {
-          name: test.name,
-          passed: false,
-          expectedStdout,
+          stdout: normalizeStdout(stdout.join("\n")),
           error: `COMPILE_ERROR: ${formatErr(e)}`,
         };
       }
@@ -99,10 +178,7 @@ export class TestRunner {
       } catch (e) {
         const msg = formatErr(e);
         return {
-          name: test.name,
-          passed: false,
           stdout: normalizeStdout(stdout.join("\n")),
-          expectedStdout: normalizeStdout(expectedStdout),
           error:
             msg.includes("Script execution timed out") || msg === "TIMEOUT"
               ? "TIMEOUT"
@@ -110,14 +186,7 @@ export class TestRunner {
         };
       }
 
-      const actual = normalizeStdout(stdout.join("\n"));
-      const expected = normalizeStdout(expectedStdout);
-      return {
-        name: test.name,
-        passed: actual === expected,
-        stdout: actual,
-        expectedStdout: expected,
-      };
+      return { stdout: normalizeStdout(stdout.join("\n")) };
     } finally {
       this.pool.release(isolate);
     }
@@ -204,6 +273,17 @@ export class TestRunner {
   }
 }
 
+/**
+ * 学習者コードを非同期コンテキストで包む。
+ *
+ * - script.run(..., { promise: true }) はスクリプトの完了値が Promise のとき解決まで待つ。
+ * - 末尾に literal を強制すると (旧 `;undefined;`)、学習者が返した Promise が握り潰されてしまう。
+ * - async IIFE に入れるとコメントのみ・空行でも確実に Promise を返し、かつ top-level await 相当も書ける。
+ */
+function wrapStdoutLearnerCode(userCode: string): string {
+  return `${consoleHookSource()}\n;(async () => {\n${userCode}\n})();\n`;
+}
+
 function consoleHookSource(): string {
   return `
     function __jsreview_format_console_arg__(value) {
@@ -235,6 +315,6 @@ function normalizeStdout(output: string): string {
 }
 
 function formatErr(e: unknown): string {
-  if (e instanceof Error) return e.message;
+  if (e instanceof Error) {return e.message;}
   return String(e);
 }

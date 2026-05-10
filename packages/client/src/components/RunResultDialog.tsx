@@ -90,25 +90,25 @@ export function RunResultDialog({
   const visibleTests = testResults.slice(0, revealedTests);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {return;}
     setPhase("lint");
     setRevealedTests(0);
   }, [open]);
 
   useEffect(() => {
-    if (!open || phase !== "lint") return;
+    if (!open || phase !== "lint") {return;}
     const timer = window.setTimeout(() => setPhase("ast"), STEP_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [open, phase]);
 
   useEffect(() => {
-    if (!open || phase !== "ast") return;
+    if (!open || phase !== "ast") {return;}
     const timer = window.setTimeout(() => setPhase("tests"), STEP_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [open, phase]);
 
   useEffect(() => {
-    if (!open || phase !== "tests" || !result) return;
+    if (!open || phase !== "tests" || !result) {return;}
     if (revealedTests >= result.testResults.length) {
       const timer = window.setTimeout(() => setPhase("done"), STEP_DELAY_MS);
       return () => window.clearTimeout(timer);
@@ -128,17 +128,17 @@ export function RunResultDialog({
         : "failure";
 
   const astStatus: SectionStatus = (() => {
-    if (phase === "lint") return "pending";
-    if (phase === "ast") return "evaluating";
-    if (displayedAst.parseError) return "error";
+    if (phase === "lint") {return "pending";}
+    if (phase === "ast") {return "evaluating";}
+    if (displayedAst.parseError) {return "error";}
     return result?.evaluation.checks.astPassed ? "success" : "failure";
   })();
 
   const testsStatus: SectionStatus = (() => {
-    if (phase === "lint" || phase === "ast") return "pending";
-    if (phase === "tests") return "evaluating";
-    if (result?.errorMessage) return "error";
-    if (!result) return "evaluating";
+    if (phase === "lint" || phase === "ast") {return "pending";}
+    if (phase === "tests") {return "evaluating";}
+    if (result?.errorMessage) {return "error";}
+    if (!result) {return "evaluating";}
     return result.evaluation.checks.testsPassed ? "success" : "failure";
   })();
 
@@ -267,9 +267,9 @@ function LintRow({
   const warnCount = lint.length - errorCount;
 
   const meta = (() => {
-    if (status === "pending") return "待機中";
-    if (status === "evaluating") return "評価中...";
-    if (lint.length === 0) return "指摘なし";
+    if (status === "pending") {return "待機中";}
+    if (status === "evaluating") {return "評価中...";}
+    if (lint.length === 0) {return "指摘なし";}
     return `エラー ${errorCount} ・ ヒント ${warnCount}`;
   })();
 
@@ -352,9 +352,9 @@ function AstRow({
   const requiredPassed = ast.required.filter((check) => check.found).length;
 
   const meta = (() => {
-    if (status === "pending") return "待機中";
-    if (status === "evaluating") return "評価中...";
-    if (ast.parseError) return "構文エラー";
+    if (status === "pending") {return "待機中";}
+    if (status === "evaluating") {return "評価中...";}
+    if (ast.parseError) {return "構文エラー";}
     return `必須 ${requiredPassed}/${ast.required.length} ・ 違反 ${ast.forbidden.length}`;
   })();
 
@@ -500,12 +500,12 @@ function TestsRow({
   const passedCount = visibleTests.filter((test) => test.passed).length;
 
   const meta = (() => {
-    if (status === "pending") return "待機中";
+    if (status === "pending") {return "待機中";}
     if (status === "evaluating") {
-      if (!result) return "サーバで実行中...";
+      if (!result) {return "サーバで実行中...";}
       return `${revealedTests}/${totalTests}件 表示中`;
     }
-    if (status === "error") return "実行に失敗";
+    if (status === "error") {return "実行に失敗";}
     return `${passedCount}/${totalTests}件 PASS`;
   })();
 
@@ -542,30 +542,62 @@ function TestsRow({
 
       {visibleTests.length > 0 ? (
         <ul className="mt-3 space-y-2">
-          {visibleTests.map((test, index) => (
-            <li
-              key={`${test.name}-${index}`}
-              className="rounded-lg border bg-background p-3"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <span
-                  className={test.passed ? "text-success" : "text-destructive"}
-                  aria-hidden
-                >
-                  {test.passed ? "✓" : "✗"}
-                </span>
-                <strong className="text-sm">{test.name}</strong>
-                <Badge variant={test.passed ? "default" : "destructive"}>
-                  {test.passed ? "PASS" : "FAIL"}
-                </Badge>
-              </div>
-              {test.error ? (
-                <p className="mt-2 rounded bg-destructive/10 px-2 py-1 font-mono text-xs text-destructive">
-                  {test.error}
-                </p>
-              ) : null}
-            </li>
-          ))}
+          {visibleTests.map((test, index) => {
+            // stdout 採点失敗かつエラーが無い場合は「期待値 vs 実際」を上下 2 段で表示する。
+            // (TIMEOUT / COMPILE_ERROR / 例外時は従来どおり error メッセージを優先表示)
+            const showStdoutDiff =
+              !test.passed &&
+              !test.error &&
+              test.expectedStdout !== undefined;
+            return (
+              <li
+                key={`${test.name}-${index}`}
+                className="rounded-lg border bg-background p-3"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={
+                      test.passed ? "text-success" : "text-destructive"
+                    }
+                    aria-hidden
+                  >
+                    {test.passed ? "✓" : "✗"}
+                  </span>
+                  <strong className="text-sm">{test.name}</strong>
+                  <Badge variant={test.passed ? "default" : "destructive"}>
+                    {test.passed ? "PASS" : "FAIL"}
+                  </Badge>
+                </div>
+                {test.error ? (
+                  <p className="mt-2 rounded bg-destructive/10 px-2 py-1 font-mono text-xs text-destructive">
+                    {test.error}
+                  </p>
+                ) : null}
+                {showStdoutDiff ? (
+                  <div className="mt-2 grid gap-2">
+                    <div>
+                      <div className="mb-1 font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                        期待される出力
+                      </div>
+                      <pre className="m-0 max-h-32 overflow-auto whitespace-pre-wrap break-words rounded bg-success-bg px-2 py-1.5 font-mono text-xs text-success dark:bg-success/10">
+                        {test.expectedStdout || "(空)"}
+                      </pre>
+                    </div>
+                    <div>
+                      <div className="mb-1 font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                        実際の出力
+                      </div>
+                      <pre className="m-0 max-h-32 overflow-auto whitespace-pre-wrap break-words rounded bg-destructive/10 px-2 py-1.5 font-mono text-xs text-destructive">
+                        {test.stdout && test.stdout.length > 0
+                          ? test.stdout
+                          : "(出力なし)"}
+                      </pre>
+                    </div>
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
         </ul>
       ) : null}
     </CheckRow>

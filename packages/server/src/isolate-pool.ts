@@ -29,7 +29,7 @@ export class IsolatePool {
 
   async acquire(): Promise<ivm.Isolate> {
     const iso = this.available.pop();
-    if (iso) return iso;
+    if (iso) {return iso;}
 
     // プール枯渇時はキューに並ぶ
     return new Promise<ivm.Isolate>((resolve) => {

@@ -30,7 +30,9 @@ app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:5173"],
+    // dev では Vite が空いている次のポートに自動採番するため、localhost の Vite ポート範囲を許可する。
+    origin: (origin) =>
+      /^http:\/\/localhost:51\d{2}$/.test(origin) ? origin : null,
     allowMethods: ["POST", "GET", "OPTIONS"],
     allowHeaders: ["Content-Type"],
   }),
@@ -43,7 +45,7 @@ app.get("/healthz", (c) =>
 app.post("/run-tests", async (c) => {
   let body: RunTestsRequest;
   try {
-    body = (await c.req.json()) as RunTestsRequest;
+    body = (await c.req.json());
   } catch {
     return c.json({ error: "Invalid JSON body" }, 400);
   }
@@ -52,21 +54,33 @@ app.post("/run-tests", async (c) => {
   if (typeof body.code !== "string") {
     return c.json({ error: "Missing 'code' (string)" }, 400);
   }
-  if (!Array.isArray(body.tests)) {
-    return c.json({ error: "Missing 'tests' (array)" }, 400);
+  if (body.mode !== undefined && body.mode !== "test" && body.mode !== "freerun") {
+    return c.json({ error: "'mode' must be 'test' | 'freerun' when provided" }, 400);
   }
-  if (body.testKind !== "stdout" && body.testKind !== "function") {
-    return c.json({ error: "Missing 'testKind' ('stdout' | 'function')" }, 400);
+  const isFreeRun = body.mode === "freerun";
+
+  if (!isFreeRun) {
+    if (!Array.isArray(body.tests)) {
+      return c.json({ error: "Missing 'tests' (array)" }, 400);
+    }
+    if (body.testKind !== "stdout" && body.testKind !== "function") {
+      return c.json(
+        { error: "Missing 'testKind' ('stdout' | 'function')" },
+        400,
+      );
+    }
   }
   if (body.entryPoints !== undefined && !Array.isArray(body.entryPoints)) {
     return c.json({ error: "'entryPoints' must be an array when provided" }, 400);
   }
 
   const start = Date.now();
-  const results = await runner.runAll(body.code, body.tests, {
-    testKind: body.testKind,
-    entryPoints: body.entryPoints,
-  });
+  const results = isFreeRun
+    ? [await runner.runFreeRun(body.code)]
+    : await runner.runAll(body.code, body.tests, {
+        testKind: body.testKind,
+        entryPoints: body.entryPoints,
+      });
   const durationMs = Date.now() - start;
 
   const response: RunTestsResponse = { durationMs, results };
@@ -74,18 +88,18 @@ app.post("/run-tests", async (c) => {
 });
 
 const server = serve({ fetch: app.fetch, port: PORT }, (info) => {
-  // eslint-disable-next-line no-console
+   
   console.log(
     `[server] Test runner listening on http://localhost:${info.port}`,
   );
-  // eslint-disable-next-line no-console
+   
   console.log(
     `[server] isolate pool: size=${POOL_SIZE}, memoryLimit=${MEMORY_LIMIT_MB}MB`,
   );
 });
 
 const shutdown = (signal: string) => {
-  // eslint-disable-next-line no-console
+   
   console.log(`[server] received ${signal}, shutting down...`);
   pool.shutdown();
   server.close(() => process.exit(0));

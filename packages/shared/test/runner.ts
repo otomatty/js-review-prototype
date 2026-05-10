@@ -117,11 +117,11 @@ ${exposeStmts}
   };
 }
 
-async function runStdoutTest(
+function runStdoutTest(
   code: string,
   name: string,
   expectedStdout: string,
-): Promise<TestResult> {
+): TestResult {
   const stdout: string[] = [];
   const context = vm.createContext({
     console: {
@@ -167,16 +167,34 @@ async function runStdoutTest(
 }
 
 function formatConsoleArg(value: unknown): string {
-  if (value === undefined) return "undefined";
-  if (value === null) return "null";
+  if (value === undefined) {
+    return "undefined";
+  }
+  if (value === null) {
+    return "null";
+  }
   if (typeof value === "object") {
     try {
-      return JSON.stringify(value);
+      return JSON.stringify(value) ?? Object.prototype.toString.call(value);
     } catch {
-      return String(value);
+      return Object.prototype.toString.call(value);
     }
   }
-  return String(value);
+  if (typeof value === "function") {
+    return `[function ${value.name || "anonymous"}]`;
+  }
+  if (typeof value === "string") {
+    return value;
+  }
+  if (
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    typeof value === "bigint" ||
+    typeof value === "symbol"
+  ) {
+    return String(value);
+  }
+  return "undefined";
 }
 
 function normalizeStdout(output: string): string {
@@ -184,6 +202,15 @@ function normalizeStdout(output: string): string {
 }
 
 function formatErr(e: unknown): string {
-  if (e instanceof Error) return e.message;
+  if (e instanceof Error) {
+    return e.message;
+  }
+  if (typeof e === "object" && e !== null) {
+    try {
+      return JSON.stringify(e) ?? Object.prototype.toString.call(e);
+    } catch {
+      return Object.prototype.toString.call(e);
+    }
+  }
   return String(e);
 }

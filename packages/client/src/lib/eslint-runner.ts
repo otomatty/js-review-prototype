@@ -26,6 +26,39 @@ interface LintCodeOptions {
 
 const linter = new Linter();
 
+const GLOBALS: Record<string, "readonly"> = {
+  Array: "readonly",
+  BigInt: "readonly",
+  Boolean: "readonly",
+  Date: "readonly",
+  Error: "readonly",
+  Infinity: "readonly",
+  Intl: "readonly",
+  JSON: "readonly",
+  Map: "readonly",
+  Math: "readonly",
+  NaN: "readonly",
+  Number: "readonly",
+  Object: "readonly",
+  Promise: "readonly",
+  RangeError: "readonly",
+  RegExp: "readonly",
+  Set: "readonly",
+  String: "readonly",
+  Symbol: "readonly",
+  TypeError: "readonly",
+  WeakMap: "readonly",
+  WeakSet: "readonly",
+  console: "readonly",
+  decodeURI: "readonly",
+  encodeURI: "readonly",
+  isFinite: "readonly",
+  isNaN: "readonly",
+  parseFloat: "readonly",
+  parseInt: "readonly",
+  undefined: "readonly",
+};
+
 /** ESLint メッセージの日本語訳 (主要ルールのみ) */
 const JA_MESSAGES: Record<string, (msg: string) => string> = {
   eqeqeq: () => "== ではなく === を使いましょう",
@@ -51,27 +84,17 @@ export function lintCode(
       languageOptions: {
         ecmaVersion: 2022,
         sourceType: "script",
-        globals: {
-          // テストに必要な最低限のグローバル
-          Math: "readonly",
-          JSON: "readonly",
-          console: "readonly",
-          Object: "readonly",
-          Array: "readonly",
-          Number: "readonly",
-          String: "readonly",
-          Boolean: "readonly",
-        },
+        globals: GLOBALS,
       },
-      rules: configuredRules,
-    }) as RawMessage[];
+      rules: configuredRules as never,
+    });
   } catch {
     return [];
   }
 
   return messages
     .filter((m) => {
-      if (m.ruleId !== "no-unused-vars") return true;
+      if (m.ruleId !== "no-unused-vars") {return true;}
       const unusedName = m.message.match(/'([^']+)'/)?.[1];
       return !unusedName || !ignoredUnusedNames.has(unusedName);
     })

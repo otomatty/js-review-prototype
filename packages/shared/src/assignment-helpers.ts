@@ -4,6 +4,10 @@ import type {
   ESLintRuleConfig,
   ScaffoldLevel,
 } from "./types.js";
+import {
+  getDefaultLintPreset,
+  LINT_PRESET_RULES,
+} from "./lint-presets.js";
 
 export const DEFAULT_SCAFFOLD_LEVEL: ScaffoldLevel = "L2";
 
@@ -27,8 +31,13 @@ export function getScaffoldCode(
 export function getStaticAnalysisSettings(
   assignment: Assignment,
 ): StaticAnalysisSettings {
+  const lintPreset = assignment.lintPreset ?? getDefaultLintPreset(assignment.stage);
+
   return {
-    eslintRules: assignment.staticAnalysis?.eslint?.rules ?? {},
+    eslintRules: {
+      ...LINT_PRESET_RULES[lintPreset],
+      ...(assignment.staticAnalysis?.eslint?.rules ?? {}),
+    },
     ast: assignment.staticAnalysis?.ast ?? {},
     ignoredUnusedNames: assignment.entryPoints ?? [],
   };

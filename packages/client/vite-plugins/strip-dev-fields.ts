@@ -14,14 +14,21 @@ import type { Plugin } from "vite";
 
 import { parse } from "@babel/parser";
 import _traverse from "@babel/traverse";
+import type { ObjectMethod, ObjectProperty } from "@babel/types";
 
 // `@babel/traverse` の ESM/CJS 相互運用問題に合わせる
 // (grading/ast.ts と同じパターン)
-const traverse =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ((_traverse as any).default ?? _traverse) as typeof _traverse;
+const traverseModule = _traverse as typeof _traverse & {
+  default?: typeof _traverse;
+};
+const traverse = traverseModule.default ?? _traverse;
 
 const STRIPPED_FIELDS = new Set(["solution", "badSolutions"]);
+
+/** Vite の transform が付けるクエリ (?v= / ?import 等) と Windows パスを除いた上でマッチ用に正規化する。 */
+function normalizeModuleIdForMatch(id: string): string {
+  return id.split(/[?#]/)[0].replace(/\\/g, "/");
+}
 
 export function stripDevFields(): Plugin {
   return {
@@ -30,7 +37,8 @@ export function stripDevFields(): Plugin {
     transform(code, id) {
       // 対象は `packages/shared/src/problems/<NN>-*.ts` のみ。
       // `_common.ts` や `index.ts` には対象フィールドが無いのでスキップしてコストを下げる。
-      if (!/\/shared\/src\/problems\/\d+-[^/]+\.ts$/.test(id)) return null;
+      const pathId = normalizeModuleIdForMatch(id);
+      if (!/\/shared\/src\/problems\/\d+-[^/]+\.ts$/.test(pathId)) {return null;}
 
       let ast: ReturnType<typeof parse>;
       try {
@@ -44,43 +52,47 @@ export function stripDevFields(): Plugin {
         // ビルドを止める
         const message = error instanceof Error ? error.message : String(error);
         throw new Error(
-          `[jsreview:strip-dev-fields] Failed to parse ${id}: ${message}`,
+          `[jsreview:strip-dev-fields] Failed to parse ${pathId}: ${message}`,
         );
       }
 
       const removals: [number, number][] = [];
 
-      traverse(ast as never, {
-        "ObjectProperty|ObjectMethod"(path) {
-          // path.node は ObjectProperty | ObjectMethod。両者とも `key` を持つ。
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const node = path.node as any;
-          const key = node.key;
-          // shorthand `{ solution }` のような書き方も含めて、
-          // `Identifier` (`solution: ...`) と `StringLiteral` (`"solution": ...`) を両方拾う。
-          const name =
-            key?.type === "Identifier"
-              ? key.name
-              : key?.type === "StringLiteral"
-                ? key.value
-                : null;
+      function collectRemoval(node: ObjectProperty | ObjectMethod): void {
+        const { key } = node;
+        // shorthand `{ solution }` のような書き方も含めて、
+        // `Identifier` (`solution: ...`) と `StringLiteral` (`"solution": ...`) を両方拾う。
+        const name =
+          key?.type === "Identifier"
+            ? key.name
+            : key?.type === "StringLiteral"
+              ? key.value
+              : null;
 
-          if (
-            typeof name === "string" &&
-            STRIPPED_FIELDS.has(name) &&
-            node.start != null &&
-            node.end != null
-          ) {
-            // 後続のカンマも巻き込む (`solution: '..',\n` の最後の `,`)
-            let end = node.end as number;
-            const trailing = code.slice(end).match(/^\s*,/);
-            if (trailing) end += trailing[0].length;
-            removals.push([node.start as number, end]);
-          }
+        if (
+          typeof name === "string" &&
+          STRIPPED_FIELDS.has(name) &&
+          typeof node.start === "number" &&
+          typeof node.end === "number"
+        ) {
+          // 後続のカンマも巻き込む (`solution: '..',\n` の最後の `,`)
+          let end = node.end;
+          const trailing = code.slice(end).match(/^\s*,/);
+          if (trailing) {end += trailing[0].length;}
+          removals.push([node.start, end]);
+        }
+      }
+
+      traverse(ast as never, {
+        ObjectProperty(path) {
+          collectRemoval(path.node);
+        },
+        ObjectMethod(path) {
+          collectRemoval(path.node);
         },
       });
 
-      if (removals.length === 0) return null;
+      if (removals.length === 0) {return null;}
 
       // 後ろから前に向かって削除していけばインデックスがズレない
       removals.sort((a, b) => b[0] - a[0]);

@@ -21,6 +21,7 @@ import {
   getScaffoldCode,
   getStaticAnalysisSettings,
 } from "../src/assignment-helpers.js";
+import type { Assignment, Chapter } from "../src/types.js";
 
 interface IntegrityIssue {
   assignmentId?: string;
@@ -30,8 +31,8 @@ interface IntegrityIssue {
 async function main(): Promise<void> {
   const issues: IntegrityIssue[] = [];
 
-  let assignments: Awaited<typeof import("../src/problems/index.js")>["assignments"];
-  let chapters: Awaited<typeof import("../src/problems/index.js")>["chapters"];
+  let assignments: Assignment[];
+  let chapters: Chapter[];
   try {
     const mod = await import("../src/problems/index.js");
     assignments = mod.assignments;

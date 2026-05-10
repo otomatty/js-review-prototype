@@ -25,9 +25,10 @@ import type {
 
 // `@babel/traverse` は default export が `{default: fn}` でラップされる場合がある
 // (ESM/CJSの相互運用問題)。両方対応するために fallback する。
-const traverse =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ((_traverse as any).default ?? _traverse) as typeof _traverse;
+const traverseModule = _traverse as typeof _traverse & {
+  default?: typeof _traverse;
+};
+const traverse = traverseModule.default ?? _traverse;
 
 interface Found {
   /** マッチしたNode (最初のもの) の行番号 */
@@ -90,7 +91,7 @@ export function analyzeAst(code: string, requirement: ASTRequirement): ASTResult
 }
 
 function labelOf(p: ASTPattern): string {
-  if (p.label) return p.label;
+  if (p.label) {return p.label;}
   switch (p.kind) {
     case "method":
       return `${p.name} を使う`;
@@ -117,7 +118,7 @@ function findFirst(ast: Node, pattern: ASTPattern): Found | null {
 
   traverse(ast as never, {
     enter(path) {
-      if (result) return;
+      if (result) {return;}
 
       const node = path.node;
       if (matches(node, pattern)) {
@@ -134,7 +135,7 @@ function matches(node: Node, pattern: ASTPattern): boolean {
   switch (pattern.kind) {
     case "method": {
       // `x.NAME(...)` または `x?.NAME(...)`
-      if (node.type !== "CallExpression") return false;
+      if (node.type !== "CallExpression") {return false;}
       const callee = node.callee;
       if (
         (callee.type === "MemberExpression" ||
@@ -183,7 +184,7 @@ function matchesConsoleLog(
   node: Node,
   expectedArgument?: ASTConsoleLogArgument,
 ): boolean {
-  if (node.type !== "CallExpression") return false;
+  if (node.type !== "CallExpression") {return false;}
   const callee = node.callee;
   if (
     callee.type !== "MemberExpression" &&
@@ -197,7 +198,7 @@ function matchesConsoleLog(
   if (callee.property.type !== "Identifier" || callee.property.name !== "log") {
     return false;
   }
-  if (!expectedArgument) return true;
+  if (!expectedArgument) {return true;}
   return matchesConsoleLogArgument(node.arguments[0], expectedArgument);
 }
 
@@ -205,7 +206,7 @@ function matchesConsoleLogArgument(
   argument: Node | undefined,
   expected: ASTConsoleLogArgument,
 ): boolean {
-  if (!argument) return false;
+  if (!argument) {return false;}
   switch (expected.kind) {
     case "number":
       return argument.type === "NumericLiteral" && argument.value === expected.value;
@@ -229,7 +230,7 @@ function matchesConstDeclaration(node: Node, name?: string): boolean {
   if (node.type !== "VariableDeclaration" || node.kind !== "const") {
     return false;
   }
-  if (!name) return true;
+  if (!name) {return true;}
   return node.declarations.some(
     (declaration) =>
       declaration.id.type === "Identifier" && declaration.id.name === name,
