@@ -12,4 +12,5 @@ export {
   findAssignment,
   findChapter,
   assignmentsByChapter,
+  assignmentsByStage,
 } from "./problems/index.js";
