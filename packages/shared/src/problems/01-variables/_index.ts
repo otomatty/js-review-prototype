@@ -12,6 +12,16 @@ import { s1Ch01ConcatViaVars } from "./s1/09-concat-via-vars.js";
 import { s1Ch01CopyValue } from "./s1/10-copy-value.js";
 import { s1Ch01TemplateLiteralBasic } from "./s1/11-template-literal-basic.js";
 import { s1Ch01ConstArray } from "./s1/12-const-array.js";
+import { s2Ch01BlockScopeLet } from "./s2/01-block-scope-let.js";
+import { s2Ch01TypeofNumber } from "./s2/02-typeof-number.js";
+import { s2Ch01TypeofString } from "./s2/03-typeof-string.js";
+import { s2Ch01TypeofBoolean } from "./s2/04-typeof-boolean.js";
+import { s2Ch01TypeofUndefined } from "./s2/05-typeof-undefined.js";
+import { s2Ch01ShadowingBlock } from "./s2/06-shadowing-block.js";
+import { s2Ch01LetUpdateMulti } from "./s2/07-let-update-multi.js";
+import { s2Ch01TypeofArray } from "./s2/08-typeof-array.js";
+import { s2Ch01TempSwap } from "./s2/09-temp-swap.js";
+import { s2Ch01TypeofNull } from "./s2/10-typeof-null.js";
 
 export const ch01Variables: Assignment[] = [
   s1Ch01ConstString,
@@ -26,4 +36,14 @@ export const ch01Variables: Assignment[] = [
   s1Ch01CopyValue,
   s1Ch01TemplateLiteralBasic,
   s1Ch01ConstArray,
+  s2Ch01BlockScopeLet,
+  s2Ch01TypeofNumber,
+  s2Ch01TypeofString,
+  s2Ch01TypeofBoolean,
+  s2Ch01TypeofUndefined,
+  s2Ch01ShadowingBlock,
+  s2Ch01LetUpdateMulti,
+  s2Ch01TypeofArray,
+  s2Ch01TempSwap,
+  s2Ch01TypeofNull,
 ];

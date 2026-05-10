@@ -233,6 +233,10 @@ export type ASTNodeType =
   | "SwitchStatement"
   | "TryStatement"
   | "ThrowStatement"
+  | "IfStatement"
+  | "BreakStatement"
+  | "ContinueStatement"
+  | "ReturnStatement"
   // 宣言
   | "VariableDeclaration"
   | "FunctionDeclaration"

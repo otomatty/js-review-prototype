@@ -13,6 +13,18 @@ import { s1Ch03ReplaceSimple } from "./s1/10-replace-simple.js";
 import { s1Ch03MultilineTemplate } from "./s1/11-multiline-template.js";
 import { s1Ch03NumberInTemplate } from "./s1/12-number-in-template.js";
 import { s1Ch03SelfIntroCapstone } from "./s1/13-self-intro-capstone.js";
+import { s2Ch03SplitComma } from "./s2/01-split-comma.js";
+import { s2Ch03SplitJoin } from "./s2/02-split-join.js";
+import { s2Ch03ReplaceBasic } from "./s2/03-replace-basic.js";
+import { s2Ch03ReplaceAll } from "./s2/04-replaceAll.js";
+import { s2Ch03Includes } from "./s2/05-includes.js";
+import { s2Ch03StartsWith } from "./s2/06-startsWith.js";
+import { s2Ch03EndsWith } from "./s2/07-endsWith.js";
+import { s2Ch03Trim } from "./s2/08-trim.js";
+import { s2Ch03IndexOfString } from "./s2/09-indexOf-string.js";
+import { s2Ch03PadStart } from "./s2/10-padStart.js";
+import { s2Ch03Repeat } from "./s2/11-repeat.js";
+import { s2Ch03CharAt } from "./s2/12-charAt.js";
 
 export const ch03Strings: Assignment[] = [
   s1Ch03StringLiteral,
@@ -28,4 +40,16 @@ export const ch03Strings: Assignment[] = [
   s1Ch03MultilineTemplate,
   s1Ch03NumberInTemplate,
   s1Ch03SelfIntroCapstone,
+  s2Ch03SplitComma,
+  s2Ch03SplitJoin,
+  s2Ch03ReplaceBasic,
+  s2Ch03ReplaceAll,
+  s2Ch03Includes,
+  s2Ch03StartsWith,
+  s2Ch03EndsWith,
+  s2Ch03Trim,
+  s2Ch03IndexOfString,
+  s2Ch03PadStart,
+  s2Ch03Repeat,
+  s2Ch03CharAt,
 ];
