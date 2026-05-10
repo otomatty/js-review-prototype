@@ -51,7 +51,30 @@ console.log("____");
     "`console.log(\"Hello\");` を書いた次の行に、もう 1 つ `console.log(\"World\");` を書いてみましょう。",
     "解答例:\n```js\nconsole.log(\"Hello\");\nconsole.log(\"World\");\n```",
   ],
+  staticAnalysis: {
+    ast: {
+      required: [
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "Hello" },
+          label: "Hello を console.log で出力する",
+        },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "World" },
+          label: "World を console.log で出力する",
+        },
+      ],
+    },
+  },
   solution: `console.log("Hello");
 console.log("World");
 `,
+  badSolutions: [
+    {
+      code: `console.log("Hello\\nWorld");
+`,
+      description: "1 回の console.log で改行入り文字列を出力している",
+    },
+  ],
 };

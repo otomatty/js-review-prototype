@@ -47,6 +47,24 @@ export const s0Ch00PrintNumber: Assignment = {
     "数字は `\"` で囲まなくても書けます。文字列との違いに注目してみてください。",
     "`console.log(42);` と書きます。",
   ],
+  staticAnalysis: {
+    ast: {
+      required: [
+        {
+          kind: "console-log",
+          argument: { kind: "number", value: 42 },
+          label: "数値リテラル 42 を console.log に渡す",
+        },
+      ],
+    },
+  },
   solution: `console.log(42);
 `,
+  badSolutions: [
+    {
+      code: `console.log("42");
+`,
+      description: "文字列の 42 を出力している",
+    },
+  ],
 };

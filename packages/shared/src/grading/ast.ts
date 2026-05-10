@@ -4,6 +4,8 @@
  * 対応するパターン:
  * - method: `x.NAME(...)` 形式のメソッド呼び出し
  * - node: 特定の構文 (ForStatement, WhileStatement, など)
+ * - console-log: `console.log(...)` 呼び出しとその第1引数
+ * - const-declaration: `const NAME = ...` 宣言
  * - var: var宣言
  * - loose-eq: == または !=
  */
@@ -13,6 +15,7 @@ import _traverse from "@babel/traverse";
 import type { Node } from "@babel/types";
 
 import type {
+  ASTConsoleLogArgument,
   ASTPattern,
   ASTRequirement,
   ASTResult,
@@ -93,6 +96,10 @@ function labelOf(p: ASTPattern): string {
       return `${p.name} を使う`;
     case "node":
       return p.nodeType;
+    case "console-log":
+      return "console.log を使う";
+    case "const-declaration":
+      return p.name ? `const ${p.name} を宣言する` : "const 宣言";
     case "var":
       return "var 宣言";
     case "loose-eq":
@@ -147,6 +154,12 @@ function matches(node: Node, pattern: ASTPattern): boolean {
       }
       return node.type === pattern.nodeType;
 
+    case "console-log":
+      return matchesConsoleLog(node, pattern.argument);
+
+    case "const-declaration":
+      return matchesConstDeclaration(node, pattern.name);
+
     case "var":
       return node.type === "VariableDeclaration" && node.kind === "var";
 
@@ -164,4 +177,61 @@ function matches(node: Node, pattern: ASTPattern): boolean {
         node.async === true
       );
   }
+}
+
+function matchesConsoleLog(
+  node: Node,
+  expectedArgument?: ASTConsoleLogArgument,
+): boolean {
+  if (node.type !== "CallExpression") return false;
+  const callee = node.callee;
+  if (
+    callee.type !== "MemberExpression" &&
+    callee.type !== "OptionalMemberExpression"
+  ) {
+    return false;
+  }
+  if (callee.object.type !== "Identifier" || callee.object.name !== "console") {
+    return false;
+  }
+  if (callee.property.type !== "Identifier" || callee.property.name !== "log") {
+    return false;
+  }
+  if (!expectedArgument) return true;
+  return matchesConsoleLogArgument(node.arguments[0], expectedArgument);
+}
+
+function matchesConsoleLogArgument(
+  argument: Node | undefined,
+  expected: ASTConsoleLogArgument,
+): boolean {
+  if (!argument) return false;
+  switch (expected.kind) {
+    case "number":
+      return argument.type === "NumericLiteral" && argument.value === expected.value;
+    case "string":
+      return argument.type === "StringLiteral" && argument.value === expected.value;
+    case "identifier":
+      return argument.type === "Identifier" && argument.name === expected.name;
+    case "binary":
+      return (
+        argument.type === "BinaryExpression" &&
+        (expected.operator === undefined || argument.operator === expected.operator)
+      );
+    default: {
+      const exhaustive: never = expected;
+      return exhaustive;
+    }
+  }
+}
+
+function matchesConstDeclaration(node: Node, name?: string): boolean {
+  if (node.type !== "VariableDeclaration" || node.kind !== "const") {
+    return false;
+  }
+  if (!name) return true;
+  return node.declarations.some(
+    (declaration) =>
+      declaration.id.type === "Identifier" && declaration.id.name === name,
+  );
 }

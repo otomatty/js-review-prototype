@@ -194,6 +194,8 @@ export interface ASTRequirement {
  *
  * - `kind: "method"` … 任意のメソッド呼び出し `x.NAME(...)` (例: `arr.reduce(...)`)
  * - `kind: "node"`   … 特定のNode種別 (`ForStatement`, `WhileStatement`, etc.)
+ * - `kind: "console-log"` … `console.log(...)` 呼び出し
+ * - `kind: "const-declaration"` … `const NAME = ...` 宣言
  * - `kind: "var"`    … `var` 宣言
  * - `kind: "loose-eq"` … `==` または `!=`
  * - `kind: "async-fn"` … `async` 関数 (宣言・式・アロー)
@@ -201,9 +203,17 @@ export interface ASTRequirement {
 export type ASTPattern =
   | { kind: "method"; name: string; label?: string }
   | { kind: "node"; nodeType: ASTNodeType; label?: string }
+  | { kind: "console-log"; argument?: ASTConsoleLogArgument; label?: string }
+  | { kind: "const-declaration"; name?: string; label?: string }
   | { kind: "var"; label?: string }
   | { kind: "loose-eq"; label?: string }
   | { kind: "async-fn"; label?: string };
+
+export type ASTConsoleLogArgument =
+  | { kind: "number"; value: number }
+  | { kind: "string"; value: string }
+  | { kind: "identifier"; name: string }
+  | { kind: "binary"; operator?: string };
 
 export type ASTNodeType =
   // 制御構文・ループ

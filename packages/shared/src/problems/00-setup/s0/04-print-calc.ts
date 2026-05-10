@@ -47,6 +47,24 @@ export const s0Ch00PrintCalc: Assignment = {
     "`+` は数字を足し算する演算子です。`5 + 10` のように書けます。",
     "`console.log(5 + 10);` と書きます。実行時に JavaScript が `15` を計算してくれます。",
   ],
+  staticAnalysis: {
+    ast: {
+      required: [
+        {
+          kind: "console-log",
+          argument: { kind: "binary", operator: "+" },
+          label: "+ 演算子を使った計算式を console.log に渡す",
+        },
+      ],
+    },
+  },
   solution: `console.log(5 + 10);
 `,
+  badSolutions: [
+    {
+      code: `console.log(15);
+`,
+      description: "計算済みの答えを直接出力している",
+    },
+  ],
 };

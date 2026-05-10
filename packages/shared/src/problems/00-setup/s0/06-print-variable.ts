@@ -53,9 +53,14 @@ console.log(____);
     ast: {
       required: [
         {
-          kind: "node",
-          nodeType: "VariableDeclaration",
-          label: "変数宣言 (const) を使う",
+          kind: "const-declaration",
+          name: "message",
+          label: "const message を宣言する",
+        },
+        {
+          kind: "console-log",
+          argument: { kind: "identifier", name: "message" },
+          label: "message 変数を console.log に渡す",
         },
       ],
     },
@@ -63,4 +68,18 @@ console.log(____);
   solution: `const message = "Hello";
 console.log(message);
 `,
+  badSolutions: [
+    {
+      code: `let message = "Hello";
+console.log(message);
+`,
+      description: "let で message を宣言している",
+    },
+    {
+      code: `const message = "Hello";
+console.log("Hello");
+`,
+      description: "宣言した message ではなく文字列を直接出力している",
+    },
+  ],
 };
