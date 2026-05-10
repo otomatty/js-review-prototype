@@ -157,12 +157,9 @@ export class TestRunner {
 
       let script: ivm.Script;
       try {
-        // 末尾に `;undefined` を追加し、 評価結果が常に literal undefined になるようにする。
-        // promise:true でスクリプトの完了値を待つ際、 user コードが何も返さない (コメントのみ等) と
-        // isolated-vm が "A non-transferable value was passed" を投げるための回避策。
-        script = await isolate.compileScript(
-          `${consoleHookSource()}\n${code}\n;undefined;`,
-        );
+        // async IIFE で包み、学習者が Promise を返す / await するコードでも promise:true がきちんと待てるようにする。
+        // 旧手掛かりの末尾 `;undefined;` は完了値を潰し、マイクロタスクが追いつかないケースがあった (PR レビュー指摘)。
+        script = await isolate.compileScript(wrapStdoutLearnerCode(code));
       } catch (e) {
         return {
           stdout: normalizeStdout(stdout.join("\n")),
@@ -274,6 +271,17 @@ export class TestRunner {
       this.pool.release(isolate);
     }
   }
+}
+
+/**
+ * 学習者コードを非同期コンテキストで包む。
+ *
+ * - script.run(..., { promise: true }) はスクリプトの完了値が Promise のとき解決まで待つ。
+ * - 末尾に literal を強制すると (旧 `;undefined;`)、学習者が返した Promise が握り潰されてしまう。
+ * - async IIFE に入れるとコメントのみ・空行でも確実に Promise を返し、かつ top-level await 相当も書ける。
+ */
+function wrapStdoutLearnerCode(userCode: string): string {
+  return `${consoleHookSource()}\n;(async () => {\n${userCode}\n})();\n`;
 }
 
 function consoleHookSource(): string {
