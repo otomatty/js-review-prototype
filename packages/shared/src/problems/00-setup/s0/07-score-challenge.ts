@@ -79,6 +79,11 @@ console.log(____);
           label: "const total を宣言する",
         },
         {
+          kind: "node",
+          nodeType: "BinaryExpression",
+          label: "+ で計算してから total に入れる",
+        },
+        {
           kind: "console-log",
           argument: { kind: "identifier", name: "subject" },
           label: "subject を console.log に渡す",
@@ -107,6 +112,14 @@ console.log(95);
       code: `console.log("JavaScript\\n95");
 `,
       description: "console.log を 2 回呼ばず 1 回で 2 行出力している",
+    },
+    {
+      code: `const subject = "JavaScript";
+const total = 95;
+console.log(subject);
+console.log(total);
+`,
+      description: "total を計算式 (80 + 15) ではなく結果の 95 で初期化している",
     },
   ],
 };

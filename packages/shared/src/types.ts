@@ -240,6 +240,7 @@ export type ASTNodeType =
   | "TemplateLiteral"
   | "ConditionalExpression"
   | "LogicalExpression"
+  | "BinaryExpression"
   | "NewExpression"
   | "RegExpLiteral"
   | "AwaitExpression"

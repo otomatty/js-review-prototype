@@ -410,7 +410,6 @@ function TimelineItem({
           <Link
             to={`/stages/${info.id}`}
             className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
-            aria-label={`${info.label} ${stat.cleared}/${stat.total} クリア`}
           >
             {cardContent}
           </Link>
@@ -418,9 +417,15 @@ function TimelineItem({
           <div
             className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
             aria-disabled
-            title="前のステージのチャレンジ問題を全てクリアすると解禁されます"
+            aria-describedby={`stage-lock-reason-${info.id}`}
           >
             {cardContent}
+            <p
+              id={`stage-lock-reason-${info.id}`}
+              className="m-0 -mt-1 text-[11.5px] leading-[1.55] text-muted-foreground"
+            >
+              前のステージのチャレンジ問題を全てクリアすると解禁されます。
+            </p>
           </div>
         )}
       </div>

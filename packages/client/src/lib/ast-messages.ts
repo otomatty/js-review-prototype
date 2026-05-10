@@ -148,6 +148,10 @@ function hintForNode(nodeType: ASTNodeType, mode: "required" | "forbidden"): str
       return required
         ? "`&&` や `||` を使って条件を組み合わせてみましょう。"
         : "`&&` / `||` に頼りすぎず、条件を分けて書いてみましょう。";
+    case "BinaryExpression":
+      return required
+        ? "`+` や `-` などの二項演算子で計算式を組み立ててみましょう。"
+        : "今回は計算式ではなく、計算済みの値や別の方法で書いてみましょう。";
     case "NewExpression":
       return required
         ? "`new` を使ってインスタンスを作ってみましょう。"

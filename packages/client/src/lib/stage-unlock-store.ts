@@ -239,4 +239,5 @@ export function __resetStageUnlockStoreForTesting(): void {
   cachedStages = [];
   cachedSet = new Set();
   recentUnlocks.length = 0;
+  listeners.clear();
 }
