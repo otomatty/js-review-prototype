@@ -27,15 +27,9 @@ export const s0Ch00PrintCalc: Assignment = {
 - 期待値は \`15\` です。
 - 答えだけ書くのではなく、 **\`+\` を使って計算式を書く** のが今回のポイントです。 計算式は JavaScript が実行時に \`15\` に変換してくれます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// 5 + 10 の計算結果を console.log で出力してください\n",
-    L2: `// console.log で「5 + 10 の計算結果」を出力してください
+  starterCode: `// console.log で「5 + 10 の計算結果」を出力してください
 // 答え (15) を直接書くのではなく、+ を使って計算式を書くのがポイント
 `,
-    L3: `console.log(____ + ____);
-`,
-  },
   tests: [
     {
       name: "stdout が 15 になる",

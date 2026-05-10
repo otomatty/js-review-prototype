@@ -22,16 +22,9 @@ export const s1Ch03ToLowerCase: Assignment = {
 world
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "WORLD".toLowerCase() を出力
-`,
-    L2: `// console.log で "WORLD".toLowerCase() を呼ぶ
+  starterCode: `// console.log で "WORLD".toLowerCase() を呼ぶ
 
 `,
-    L3: `console.log(____.toLowerCase());
-`,
-  },
   tests: [
     {
       name: "stdout が world になる",

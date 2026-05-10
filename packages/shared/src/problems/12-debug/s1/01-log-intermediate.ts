@@ -27,26 +27,13 @@ export const s1Ch12LogIntermediate: Assignment = {
 
 - バグを探すときは「期待した値と違う場所はどこか」 を切り分ける必要があります。 \`console.log\` を要所要所に入れると、 中間値が見えて切り分けに役立ちます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// 計算結果の前に console.log(x); を追加する
-const x = 12;
-const y = 8;
-console.log(x + y);
-`,
-    L2: `// console.log(x + y); の前に、 x の値を出す行を追加する
+  starterCode: `// console.log(x + y); の前に、 x の値を出す行を追加する
 // 最終的に 12 と 20 の 2 行を出力する
 
 const x = 12;
 const y = 8;
 console.log(x + y);
 `,
-    L3: `const x = 12;
-const y = 8;
-console.log(____);
-console.log(x + y);
-`,
-  },
   tests: [
     {
       name: "stdout が 12 と 20 の 2 行になる",

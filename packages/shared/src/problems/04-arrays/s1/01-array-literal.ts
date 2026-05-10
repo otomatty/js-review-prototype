@@ -26,18 +26,10 @@ export const s1Ch04ArrayLiteral: Assignment = {
 
 - console.log に配列を渡すと、 そのまま \`[10,20,30]\` のように表示されます (環境によって少し見え方が違う場合があります)。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// numbers = [10, 20, 30] を作って出力
-`,
-    L2: `// 1. const numbers = [10, 20, 30];
+  starterCode: `// 1. const numbers = [10, 20, 30];
 // 2. console.log(numbers);
 
 `,
-    L3: `const numbers = [____, ____, ____];
-console.log(numbers);
-`,
-  },
   tests: [
     {
       name: "stdout が [10,20,30] になる",

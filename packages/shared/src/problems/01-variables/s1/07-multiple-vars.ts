@@ -26,24 +26,12 @@ export const s1Ch01MultipleVars: Assignment = {
 25
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// firstName / lastName / age を const で作り、 順に出力
-`,
-    L2: `// 1. const firstName = "花子"
+  starterCode: `// 1. const firstName = "花子"
 // 2. const lastName = "山田"
 // 3. const age = 25
 // 4. それぞれを順に console.log で出力
 
 `,
-    L3: `const firstName = ____;
-const lastName = ____;
-const age = ____;
-console.log(firstName);
-console.log(lastName);
-console.log(age);
-`,
-  },
   tests: [
     {
       name: "stdout が 花子 / 山田 / 25 の 3 行になる",

@@ -33,16 +33,11 @@ S1 ではループをまだ使わないので、 \`prices[0] + prices[1] + price
 - 合計は \`prices[0] + prices[1] + prices[2]\` を const \`total\` に入れます。
 - 出力はテンプレートリテラルで \`\` \`合計: \${total} 円\` \`\` の形にします。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// prices の 3 要素を添字で足し合わせて total に入れ、 テンプレートで合計を出力\n",
-    L2: `// 1. const prices = [100, 250, 380];
+  starterCode: `// 1. const prices = [100, 250, 380];
 // 2. const total = prices[0] + prices[1] + prices[2];
 // 3. テンプレートリテラルで \`合計: \${total} 円\` を出力
 
 `,
-    L3: "const prices = [____, ____, ____];\nconst total = prices[____] + prices[____] + prices[____];\nconsole.log(`合計: ${____} 円`);\n",
-  },
   tests: [
     {
       name: "stdout が 合計: 730 円 になる",

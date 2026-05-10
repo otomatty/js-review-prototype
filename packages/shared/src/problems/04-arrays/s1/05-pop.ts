@@ -20,20 +20,11 @@ export const s1Ch04Pop: Assignment = {
 ["x","y"]
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// items = ["x", "y", "z"] から末尾を pop してから出力
-`,
-    L2: `// 1. const items = ["x", "y", "z"];
+  starterCode: `// 1. const items = ["x", "y", "z"];
 // 2. items.pop();
 // 3. console.log(items);
 
 `,
-    L3: `const items = [____, ____, ____];
-items.pop();
-console.log(items);
-`,
-  },
   tests: [
     {
       name: "stdout が [\"x\",\"y\"] になる",

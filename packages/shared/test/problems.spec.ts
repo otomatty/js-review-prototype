@@ -4,7 +4,7 @@
  * 問題定義 (`@jsreview/shared` の Assignment) が以下を満たすかを CI で検証する:
  *
  *  1. ID に重複がない
- *  2. 既定スカフォールド (L2) が AST forbidden パターンを違反していない
+ *  2. `starterCode` が AST forbidden パターンを違反していない
  *  3. `solution` が定義されているなら、それは「全チェック通過 (cleared)」になる
  *  4. `badSolutions[*].code` が定義されているなら、何らかのチェックを失敗する (cleared にならない)
  *
@@ -13,10 +13,7 @@
 import { describe, expect, it } from "bun:test";
 
 import { analyzeAst } from "../src/grading/ast.js";
-import {
-  getScaffoldCode,
-  getStaticAnalysisSettings,
-} from "../src/assignment-helpers.js";
+import { getStaticAnalysisSettings } from "../src/assignment-helpers.js";
 import { assignments } from "../src/problems/index.js";
 
 import { gradeCode } from "./grade.js";
@@ -30,17 +27,17 @@ describe("problems metadata", () => {
     }
   });
 
-  it("既定スカフォールド (L2) は AST forbidden パターンを踏んでいない", () => {
+  it("starterCode は AST forbidden パターンを踏んでいない", () => {
     for (const a of assignments) {
       const settings = getStaticAnalysisSettings(a);
-      const result = analyzeAst(getScaffoldCode(a), settings.ast);
+      const result = analyzeAst(a.starterCode, settings.ast);
       expect(
         result.parseError,
-        `assignment "${a.id}" L2 scaffold parse error: ${result.parseError ?? ""}`,
+        `assignment "${a.id}" starterCode parse error: ${result.parseError ?? ""}`,
       ).toBeUndefined();
       expect(
         result.forbidden.map((v) => v.label),
-        `assignment "${a.id}" L2 scaffold forbidden`,
+        `assignment "${a.id}" starterCode forbidden`,
       ).toEqual([]);
     }
   });

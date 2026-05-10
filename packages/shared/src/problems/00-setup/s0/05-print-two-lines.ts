@@ -28,18 +28,10 @@ World
 - \`console.log\` を 1 回だけ書くのでは、 1 行しか出ません。
 - 命令を 2 つ並べたいときは、 1 行ずつ書いて末尾に \`;\` を付けます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// console.log を 2 回呼んで Hello / World を順に出力してください
-`,
-    L2: `// 1 行目に Hello、2 行目に World を出力してください
+  starterCode: `// 1 行目に Hello、2 行目に World を出力してください
 // console.log を 2 回書くのがポイント
 
 `,
-    L3: `console.log("____");
-console.log("____");
-`,
-  },
   tests: [
     {
       name: "1 行目に Hello、2 行目に World が出る",

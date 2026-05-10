@@ -27,15 +27,9 @@ export const s0Ch00PrintNumber: Assignment = {
 - 文字列と数値は別の種類の値です。
 - \`console.log(42)\` と \`console.log("42")\` はどちらも画面には \`42\` と出ますが、ここでは **数値として** 渡せていれば OK です。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// console.log で 42 と出力してください (数字はクォート不要)\n",
-    L2: `// console.log で数字の 42 を出力してください
+  starterCode: `// console.log で数字の 42 を出力してください
 // 文字列とは違って、数字は "" で囲まなくても渡せます
 `,
-    L3: `console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が 42 になる",

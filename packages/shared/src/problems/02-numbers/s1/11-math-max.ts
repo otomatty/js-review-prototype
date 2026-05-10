@@ -22,15 +22,9 @@ export const s1Ch02MathMax: Assignment = {
 45
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// Math.max(12, 45, 23) を出力\n",
-    L2: `// console.log の中で Math.max(12, 45, 23) を呼ぶ
+  starterCode: `// console.log の中で Math.max(12, 45, 23) を呼ぶ
 
 `,
-    L3: `console.log(Math.max(____, ____, ____));
-`,
-  },
   tests: [
     {
       name: "stdout が 45 になる",

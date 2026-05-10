@@ -20,15 +20,9 @@ export const s1Ch02Subtract: Assignment = {
 63
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// 100 - 37 の結果を出力\n",
-    L2: `// console.log の中に 100 - 37 の式を書く
+  starterCode: `// console.log の中に 100 - 37 の式を書く
 
 `,
-    L3: `console.log(____ - ____);
-`,
-  },
   tests: [
     {
       name: "stdout が 63 になる",

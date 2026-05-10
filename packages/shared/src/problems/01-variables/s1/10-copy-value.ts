@@ -29,20 +29,11 @@ export const s1Ch01CopyValue: Assignment = {
 - \`=\` の右側には別の変数を書けます。
 - \`const copy = original;\` と書くと、 \`original\` の中身が \`copy\` にコピーされます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// original の中身を copy にコピーして出力する
-`,
-    L2: `// 1. const original = "宝物";
+  starterCode: `// 1. const original = "宝物";
 // 2. const copy = original;   ← 中身がコピーされる
 // 3. console.log(copy);
 
 `,
-    L3: `const original = ____;
-const copy = ____;
-console.log(copy);
-`,
-  },
   tests: [
     {
       name: "stdout が 宝物 になる",

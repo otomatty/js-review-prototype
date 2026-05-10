@@ -27,15 +27,9 @@ Hello, World!
 - 関数呼び出しは \`関数名(引数)\` の形で書きます
 - 文字列の中身は **大文字・小文字・記号もそのまま** 一致させる必要があります
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// console.log を使って Hello, World! と出力してください\n",
-    L2: `// console.log で「Hello, World!」を出力してください
+  starterCode: `// console.log で「Hello, World!」を出力してください
 // 例: console.log("…");
 `,
-    L3: `console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が Hello, World! になる",

@@ -25,22 +25,12 @@ Taro
 - 宣言していない変数を使うと \`ReferenceError: usre is not defined\` のようなエラーが出ます。
 - まず宣言した名前と参照名が **完全に一致** しているかを確認するのがデバッグの第一歩。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// usre は宣言されていない。 正しい変数名 user に直す
-const user = "Taro";
-console.log(usre);
-`,
-    L2: `// バグ: console.log(usre) は宣言していない変数を参照して ReferenceError
+  starterCode: `// バグ: console.log(usre) は宣言していない変数を参照して ReferenceError
 // 正しい綴り user に直す
 
 const user = "Taro";
 console.log(usre);
 `,
-    L3: `const user = "Taro";
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が Taro になる",

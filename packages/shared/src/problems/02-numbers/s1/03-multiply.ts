@@ -22,15 +22,9 @@ export const s1Ch02Multiply: Assignment = {
 96
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// 12 * 8 の結果を出力 (× ではなく *)\n",
-    L2: `// console.log の中に 12 * 8 の式を書く
+  starterCode: `// console.log の中に 12 * 8 の式を書く
 
 `,
-    L3: `console.log(____ * ____);
-`,
-  },
   tests: [
     {
       name: "stdout が 96 になる",

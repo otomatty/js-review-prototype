@@ -27,15 +27,10 @@ export const s1Ch04ArrayOfStrings: Assignment = {
 - 配列の最後の要素は **要素数 - 1** 番目です。 \`meals.length\` が 3 なら、 最後は \`meals[2]\` (= 3 - 1)。
 - \`meals[meals.length - 1]\` は配列の長さに依存せず常に最後を取れる書き方です。
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// meals の最初と最後をテンプレートリテラルで組み立てて出力\n",
-    L2: `// 1. const meals = ["朝", "昼", "晩"];
+  starterCode: `// 1. const meals = ["朝", "昼", "晩"];
 // 2. テンプレートリテラルで \`最初: \${meals[0]}、 最後: \${meals[meals.length - 1]}\` を出力
 
 `,
-    L3: "const meals = [____, ____, ____];\nconsole.log(`最初: ${meals[____]}、 最後: ${meals[meals.length - ____]}`);\n",
-  },
   tests: [
     {
       name: "stdout が 最初: 朝、 最後: 晩 になる",

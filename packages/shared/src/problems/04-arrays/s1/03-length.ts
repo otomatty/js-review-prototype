@@ -22,18 +22,10 @@ export const s1Ch04Length: Assignment = {
 4
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// colors の要素数を出力
-`,
-    L2: `// 1. const colors = ["red", "green", "blue", "yellow"];
+  starterCode: `// 1. const colors = ["red", "green", "blue", "yellow"];
 // 2. console.log(colors.length);
 
 `,
-    L3: `const colors = [____, ____, ____, ____];
-console.log(colors.length);
-`,
-  },
   tests: [
     {
       name: "stdout が 4 になる",

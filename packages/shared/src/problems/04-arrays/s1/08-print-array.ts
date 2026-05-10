@@ -25,18 +25,10 @@ export const s1Ch04PrintArray: Assignment = {
 - 添字や length と違って、 配列そのものを渡すと **要素全体** が表示されます。
 - ループはまだ習っていませんが、 ループを使わなくても配列の中身を一度に見ることができます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// fruits = ["apple", "banana"] をそのまま console.log で出力
-`,
-    L2: `// 1. const fruits = ["apple", "banana"];
+  starterCode: `// 1. const fruits = ["apple", "banana"];
 // 2. console.log(fruits);
 
 `,
-    L3: `const fruits = [____, ____];
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が [\"apple\",\"banana\"] になる",

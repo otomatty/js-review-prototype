@@ -22,15 +22,9 @@ export const s1Ch02MathAbs: Assignment = {
 7
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// Math.abs(-7) を出力\n",
-    L2: `// console.log の中で Math.abs(-7) を呼ぶ
+  starterCode: `// console.log の中で Math.abs(-7) を呼ぶ
 
 `,
-    L3: `console.log(Math.abs(____));
-`,
-  },
   tests: [
     {
       name: "stdout が 7 になる",

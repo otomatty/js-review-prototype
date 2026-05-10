@@ -25,25 +25,13 @@ export const s1Ch12StringVsNumber: Assignment = {
 - JavaScript では \`"3" + 4\` は \`"34"\` (文字列連結)、 \`3 + 4\` は \`7\` (加算) になります。
 - 文字列を数値に変えるには \`Number(値)\` を使います。 例: \`Number("3")\` は \`3\`。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "3" を Number() で数値に変えてから足す
-const a = "3";
-const b = 4;
-console.log(a + b);
-`,
-    L2: `// バグ: "3" は文字列なので "3" + 4 は "34" になってしまう
+  starterCode: `// バグ: "3" は文字列なので "3" + 4 は "34" になってしまう
 // Number(a) で数値に変えてから足し算するように修正
 
 const a = "3";
 const b = 4;
 console.log(a + b);
 `,
-    L3: `const a = "3";
-const b = 4;
-console.log(____(a) + b);
-`,
-  },
   tests: [
     {
       name: "stdout が 7 になる",

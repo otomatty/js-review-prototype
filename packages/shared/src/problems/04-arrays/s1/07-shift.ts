@@ -24,20 +24,11 @@ export const s1Ch04Shift: Assignment = {
 
 - \`shift()\` は **先頭** の要素を取り除きます。 pop の逆 (末尾ではなく先頭)。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// nums = [10, 20, 30] の先頭を shift してから出力
-`,
-    L2: `// 1. const nums = [10, 20, 30];
+  starterCode: `// 1. const nums = [10, 20, 30];
 // 2. nums.shift();
 // 3. console.log(nums);
 
 `,
-    L3: `const nums = [____, ____, ____];
-nums.shift();
-console.log(nums);
-`,
-  },
   tests: [
     {
       name: "stdout が [20,30] になる",

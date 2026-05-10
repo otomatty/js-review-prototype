@@ -26,22 +26,12 @@ export const s1Ch01LetReassign: Assignment = {
 - \`let\` で作った変数は **後から値を入れ直せます** (= 再代入)。
 - 入れ直すときは \`let\` を **2 回目には書きません**。 \`count = 1;\` のように変数名と値だけを書きます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// let で count を 0 で作り、 出力 → 1 を再代入 → もう一度出力
-`,
-    L2: `// 1. let count = 0; で初期値を入れる
+  starterCode: `// 1. let count = 0; で初期値を入れる
 // 2. console.log(count) で 0 を出す
 // 3. count = 1; で値を入れ直す (let は書かない)
 // 4. もう一度 console.log(count) で 1 を出す
 
 `,
-    L3: `let count = ____;
-console.log(count);
-count = ____;
-console.log(count);
-`,
-  },
   tests: [
     {
       name: "stdout が 0 と 1 の 2 行になる",

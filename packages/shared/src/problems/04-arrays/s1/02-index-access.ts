@@ -24,18 +24,10 @@ export const s1Ch04IndexAccess: Assignment = {
 
 - 配列の **最初の要素は 0 番目** です。 2 番目は \`fruits[1]\`。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// fruits の 1 番目 (= "みかん") を出力
-`,
-    L2: `// 1. const fruits = ["りんご", "みかん", "ぶどう"];
+  starterCode: `// 1. const fruits = ["りんご", "みかん", "ぶどう"];
 // 2. console.log(fruits[1]);   ← 0,1,2 で 1 が "みかん"
 
 `,
-    L3: `const fruits = [____, ____, ____];
-console.log(fruits[____]);
-`,
-  },
   tests: [
     {
       name: "stdout が みかん になる",

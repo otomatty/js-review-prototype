@@ -92,7 +92,7 @@ XX-chapter/
 | `estimatedMinutes` / `difficulty` | 目安。 |
 | `testKind` | `stdout`（`console.log` 捕捉）か `function`（式評価）か。ステージの [`../curriculum/stages.ts`](../curriculum/stages.ts) と整合させる。 |
 | `description` | Markdown。**よく使う見出し**: `## やること` / `## 期待する出力` / `## ポイント`。 |
-| `scaffolds` | L0〜L3。UI は既定で **L2**。段階的ヒントに使う。 |
+| `starterCode` | エディタの初期表示コード。 |
 | `tests` | `stdout` なら `expectedStdout`（末尾改行は比較時に無視）、`function` なら評価する `code` 式。 |
 | `entryPoints` | `function` 採点で抽出する名前。 |
 | `solution` | 模範解答。CI の回帰で「全チェック通過」に使う。 |

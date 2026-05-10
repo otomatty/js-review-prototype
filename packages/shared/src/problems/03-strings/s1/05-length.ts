@@ -22,17 +22,10 @@ export const s1Ch03Length: Assignment = {
 10
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "JavaScript".length を出力
-`,
-    L2: `// console.log で "JavaScript".length を出力する
+  starterCode: `// console.log で "JavaScript".length を出力する
 // .length にカッコは付かない
 
 `,
-    L3: `console.log(____.length);
-`,
-  },
   tests: [
     {
       name: "stdout が 10 になる",

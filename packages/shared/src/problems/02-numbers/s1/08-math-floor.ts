@@ -22,15 +22,9 @@ export const s1Ch02MathFloor: Assignment = {
 3
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// Math.floor(3.7) を出力\n",
-    L2: `// console.log の中で Math.floor(3.7) を呼ぶ
+  starterCode: `// console.log の中で Math.floor(3.7) を呼ぶ
 
 `,
-    L3: `console.log(Math.floor(____));
-`,
-  },
   tests: [
     {
       name: "stdout が 3 になる",

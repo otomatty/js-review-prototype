@@ -26,16 +26,9 @@ line2
 - \`\\n\` は **改行を表す特別な文字列** (エスケープシーケンス) です。
 - \`console.log\` を 2 回呼ばなくても、 \`\\n\` を間に挟めば 2 行になります。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// "line1\\nline2" を 1 回の console.log で出力
-`,
-    L2: `// console.log の中で "line1\\nline2" と書く
+  starterCode: `// console.log の中で "line1\\nline2" と書く
 
 `,
-    L3: `console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が line1 と line2 の 2 行になる",

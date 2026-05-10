@@ -29,22 +29,12 @@ export const s1Ch01StoreCalcResult: Assignment = {
 - \`=\` の右側には数値だけでなく **計算式** も書けます。
 - \`const sum = a + b;\` のように書くと、 計算結果 \`20\` が \`sum\` に入ります。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// a + b の結果を sum に入れて出力する
-`,
-    L2: `// 1. const a = 12;
+  starterCode: `// 1. const a = 12;
 // 2. const b = 8;
 // 3. const sum = a + b;
 // 4. console.log(sum);
 
 `,
-    L3: `const a = ____;
-const b = ____;
-const sum = ____;
-console.log(sum);
-`,
-  },
   tests: [
     {
       name: "stdout が 20 になる",

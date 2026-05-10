@@ -22,15 +22,10 @@ export const s1Ch03NumberInTemplate: Assignment = {
 あなたは 25 歳です
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// age を 25 にして「あなたは 25 歳です」を出力\n",
-    L2: `// 1. const age = 25;
+  starterCode: `// 1. const age = 25;
 // 2. テンプレートリテラル \`あなたは \${age} 歳です\` を出力
 
 `,
-    L3: "const age = ____;\nconsole.log(`あなたは ${____} 歳です`);\n",
-  },
   tests: [
     {
       name: "stdout が あなたは 25 歳です になる",

@@ -20,17 +20,10 @@ export const s1Ch03StringLiteral: Assignment = {
 こんにちは
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// 文字列を console.log で出力
-`,
-    L2: `// console.log("こんにちは"); と書く
+  starterCode: `// console.log("こんにちは"); と書く
 // "" または '' で囲むのを忘れない
 
 `,
-    L3: `console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が こんにちは になる",

@@ -39,21 +39,11 @@ JavaScript
 - \`const total = 80 + 15;\` のように、 計算結果も変数に入れられます。
 - \`console.log\` を 2 回呼ぶと、 2 行に分かれて出力されます。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// subject と total を const で作り、 2 行に分けて出力してください
-`,
-    L2: `// 1. const subject = "JavaScript";
+  starterCode: `// 1. const subject = "JavaScript";
 // 2. const total = 80 + 15;
 // 3. console.log で subject と total を順に出す
 
 `,
-    L3: `const subject = ____;
-const total = ____;
-console.log(____);
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が JavaScript と 95 の 2 行になる",

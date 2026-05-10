@@ -22,15 +22,9 @@ export const s1Ch02MathRound: Assignment = {
 3
 \`\`\`
 `,
-  scaffolds: {
-    L0: "",
-    L1: "// Math.round(2.6) を出力\n",
-    L2: `// console.log の中で Math.round(2.6) を呼ぶ
+  starterCode: `// console.log の中で Math.round(2.6) を呼ぶ
 
 `,
-    L3: `console.log(Math.round(____));
-`,
-  },
   tests: [
     {
       name: "stdout が 3 になる",

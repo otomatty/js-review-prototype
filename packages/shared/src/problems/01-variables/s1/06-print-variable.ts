@@ -26,19 +26,10 @@ Hello, JavaScript!
 - 一度変数に入れた値は、 何度でも使い回せます。
 - 同じ文字列を 2 回書く必要はなく、 \`console.log(message)\` を 2 回呼ぶだけで OK。
 `,
-  scaffolds: {
-    L0: "",
-    L1: `// message に "Hello, JavaScript!" を入れて、 2 回出力する
-`,
-    L2: `// 1. const message = "Hello, JavaScript!"; で変数を宣言
+  starterCode: `// 1. const message = "Hello, JavaScript!"; で変数を宣言
 // 2. console.log(message) を 2 回呼ぶ
 
 `,
-    L3: `const message = ____;
-console.log(____);
-console.log(____);
-`,
-  },
   tests: [
     {
       name: "stdout が同じ行を 2 回出力する",
