@@ -9,24 +9,54 @@
 // トピック (MDN準拠の章立て)
 // ───────────────────────────────────────────────────────────────────
 
+/**
+ * トピック (= 章) の識別子。
+ *
+ * 文字列値 (kebab-case) は安定 ID で、 UI 表示順 / 学習推奨順とは独立。
+ * 並び順 (`Topic.order`) や表示ラベル (`Topic.label`) は `problems/index.ts`
+ * の `topics` 配列で定義する。
+ *
+ * 章番号と章名の対応 (2026 年再構築後の初心者推奨順):
+ * - 00 はじめての関数             → first-function
+ * - 01 変数と型                   → variables-and-types
+ * - 02 演算子と比較               → operators
+ * - 03 条件分岐                   → control-flow
+ * - 04 繰り返し                   → loops
+ * - 05 配列の基礎                 → arrays-basics
+ * - 06 文字列操作                 → strings
+ * - 07 関数の基礎                 → functions-basics
+ * - 08 アロー関数と this          → functions-arrow-this
+ * - 09 スコープとクロージャ       → scope-closure
+ * - 10 配列のイテレーション       → arrays-iteration
+ * - 11 数値・Math・Date           → numbers-math-date
+ * - 12 オブジェクトの基礎         → objects-basics
+ * - 13 分割代入とスプレッド       → destructuring-spread
+ * - 14 Map / Set                  → collections
+ * - 15 クラスの基礎               → classes-basics
+ * - 16 クラスの応用               → classes-advanced
+ * - 17 エラー処理                 → error-handling
+ * - 18 正規表現                   → regex
+ * - 19 非同期処理                 → async
+ */
 export type TopicId =
+  | "first-function"
   | "variables-and-types"
   | "operators"
   | "control-flow"
   | "loops"
+  | "arrays-basics"
+  | "strings"
   | "functions-basics"
   | "functions-arrow-this"
   | "scope-closure"
-  | "error-handling"
-  | "strings"
-  | "numbers-math-date"
-  | "arrays-basics"
   | "arrays-iteration"
-  | "destructuring-spread"
+  | "numbers-math-date"
   | "objects-basics"
+  | "destructuring-spread"
   | "collections"
   | "classes-basics"
   | "classes-advanced"
+  | "error-handling"
   | "regex"
   | "async";
 
@@ -40,6 +70,31 @@ export interface Topic {
   mdnUrl: string;
   /** トピックの1行説明 */
   description?: string;
+}
+
+/**
+ * MDN ガイドの特定セクション (見出し) への参照。
+ *
+ * 課題が学習対象とする MDN ページ内のサブセクションを指し示すために使う。
+ * UI ではトピックの MDN ページリンクの下に「参考」として並べて表示される。
+ */
+export interface MdnSection {
+  /** UI に表示する見出しラベル。例: "変数のスコープ" */
+  heading: string;
+  /**
+   * URL のフラグメント部分 (`#` の後ろ)。
+   * 省略時は `heading` をそのまま使う。
+   * JA MDN は anchor に日本語見出しをそのまま使うため通常は省略可能。
+   * 例: heading="数値と '+' 演算子" のように記号を含む場合のみ
+   * `anchor: "数値と_演算子"` を明示する。
+   */
+  anchor?: string;
+  /**
+   * 参照先ページの URL 上書き。
+   * 省略時は所属トピックの `mdnUrl` を使う。
+   * 同じトピック (= 同じ MDN ページ) 内のセクションのみを参照する通常ケースでは省略する。
+   */
+  pageUrl?: string;
 }
 
 // ───────────────────────────────────────────────────────────────────
@@ -78,6 +133,13 @@ export interface Assignment {
    * 何らかのチェック (テスト / Lint / AST) を必ず1つ以上失敗することを CI で検証する。
    */
   badSolutions?: BadSolution[];
+  /**
+   * この課題が学習対象とする MDN ガイドのセクション (見出し)。
+   * UI では課題説明の上部に「参考: §<見出し>」のリンクとして並べて表示する。
+   * トピックの `mdnUrl` ページ内のセクションを参照するのが基本だが、
+   * `pageUrl` で別ページを指定することもできる。
+   */
+  mdnSections?: MdnSection[];
 }
 
 export interface BadSolution {
