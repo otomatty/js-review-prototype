@@ -35,6 +35,12 @@ function hintForRequiredPattern(pattern: ASTPattern): string {
       return `配列や値に対して \`.${pattern.name}(...)` + "` を呼び出す形を探してみましょう。";
     case "node":
       return hintForNode(pattern.nodeType, "required");
+    case "console-log":
+      return "`console.log(...)` の丸かっこの中に、課題で指定された値や式を入れてみましょう。";
+    case "const-declaration":
+      return pattern.name
+        ? `\`const ${pattern.name} = ...\` の形で値を名前付きで保持してみましょう。`
+        : "`const` で値を名前付きで保持してみましょう。";
     case "var":
       return "`var` 宣言が必要な課題です。変数宣言の書き方を確認してみましょう。";
     case "loose-eq":
@@ -54,6 +60,10 @@ function hintForForbiddenPattern(pattern: ASTPattern): string {
       return `今回は \`.${pattern.name}(...)` + "` 以外の方法で書いてみましょう。";
     case "node":
       return hintForNode(pattern.nodeType, "forbidden");
+    case "console-log":
+      return "`console.log(...)` の呼び出し方を、課題で指定された形に合わせてみましょう。";
+    case "const-declaration":
+      return "`const` 宣言ではなく、課題で指定された別の書き方を使いましょう。";
     case "var":
       return "`var` ではなく、再代入しないなら `const`、再代入するなら `let` を使いましょう。";
     case "loose-eq":
