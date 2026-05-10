@@ -32,7 +32,63 @@ export class TestRunner {
     tests: TestCase[],
     options: RunOptions,
   ): Promise<TestResult[]> {
+    if (options.testKind === "stdout") {
+      return this.runStdoutTestBatch(code, tests);
+    }
     return Promise.all(tests.map((test) => this.runOne(code, test, options)));
+  }
+
+  /** stdout 採点は環境が同一なので 1 回だけ実行し、各ケースは出力の比較のみ行う。 */
+  private async runStdoutTestBatch(
+    code: string,
+    tests: TestCase[],
+  ): Promise<TestResult[]> {
+    let captured: { stdout: string; error?: string } | null = null;
+    const results: TestResult[] = [];
+    for (const test of tests) {
+      if (test.expectedStdout === undefined) {
+        results.push({
+          name: test.name,
+          passed: false,
+          error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
+        });
+        continue;
+      }
+      if (captured === null) {
+        captured = await this.executeAndCaptureStdout(code);
+      }
+      results.push(this.buildStdoutTestResult(test, captured));
+    }
+    return results;
+  }
+
+  private buildStdoutTestResult(
+    test: TestCase,
+    captured: { stdout: string; error?: string },
+  ): TestResult {
+    if (test.expectedStdout === undefined) {
+      return {
+        name: test.name,
+        passed: false,
+        error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
+      };
+    }
+    const expected = normalizeStdout(test.expectedStdout);
+    if (captured.error !== undefined) {
+      return {
+        name: test.name,
+        passed: false,
+        stdout: captured.stdout,
+        expectedStdout: expected,
+        error: captured.error,
+      };
+    }
+    return {
+      name: test.name,
+      passed: captured.stdout === expected,
+      stdout: captured.stdout,
+      expectedStdout: expected,
+    };
   }
 
   private async runOne(
@@ -77,27 +133,8 @@ export class TestRunner {
         error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
       };
     }
-    const expectedStdout = test.expectedStdout;
-
     const captured = await this.executeAndCaptureStdout(code);
-    const expected = normalizeStdout(expectedStdout);
-
-    if (captured.error !== undefined) {
-      return {
-        name: test.name,
-        passed: false,
-        stdout: captured.stdout,
-        expectedStdout: expected,
-        error: captured.error,
-      };
-    }
-
-    return {
-      name: test.name,
-      passed: captured.stdout === expected,
-      stdout: captured.stdout,
-      expectedStdout: expected,
-    };
+    return this.buildStdoutTestResult(test, captured);
   }
 
   /**

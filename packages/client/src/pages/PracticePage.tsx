@@ -9,7 +9,14 @@
  * - 「一覧へ戻る」ボタンで `/` へ
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment, ScaffoldLevel } from "@jsreview/shared/types";
@@ -58,6 +65,12 @@ interface InnerProps {
 
 function PracticePageInner({ assignment }: InnerProps) {
   const navigate = useNavigate();
+  /** await 後も「いま画面にいる課題」を判定するため、最新 ID を常に指す。 */
+  const activeAssignmentIdRef = useRef(assignment.id);
+  useLayoutEffect(() => {
+    activeAssignmentIdRef.current = assignment.id;
+  }, [assignment.id]);
+
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
   const [scaffoldLevel, setScaffoldLevel] = useState<ScaffoldLevel>(
     DEFAULT_SCAFFOLD_LEVEL,
@@ -163,19 +176,19 @@ function PracticePageInner({ assignment }: InnerProps) {
     setFreeRun({ stdout: undefined, error: undefined });
     try {
       const res = await runFreeRun(submittedCode);
-      // 実行中に課題が切り替わったら結果を捨てる
-      if (assignment.id !== targetAssignmentId) {return;}
+      // 実行中に課題が切り替わったら結果を捨てる (古い useCallback の assignment は stale)
+      if (activeAssignmentIdRef.current !== targetAssignmentId) {return;}
       setFreeRun({
         stdout: res.stdout ?? "",
         error: res.error,
       });
     } catch (e) {
-      if (assignment.id !== targetAssignmentId) {return;}
+      if (activeAssignmentIdRef.current !== targetAssignmentId) {return;}
       setFreeRun({
         error: e instanceof Error ? e.message : String(e),
       });
     } finally {
-      if (assignment.id === targetAssignmentId) {
+      if (activeAssignmentIdRef.current === targetAssignmentId) {
         setFreeRunPending(false);
       }
     }

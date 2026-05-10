@@ -25,6 +25,11 @@ const traverse = traverseModule.default ?? _traverse;
 
 const STRIPPED_FIELDS = new Set(["solution", "badSolutions"]);
 
+/** Vite の transform が付けるクエリ (?v= / ?import 等) と Windows パスを除いた上でマッチ用に正規化する。 */
+function normalizeModuleIdForMatch(id: string): string {
+  return id.split(/[?#]/)[0].replace(/\\/g, "/");
+}
+
 export function stripDevFields(): Plugin {
   return {
     name: "jsreview:strip-dev-fields",
@@ -32,7 +37,8 @@ export function stripDevFields(): Plugin {
     transform(code, id) {
       // 対象は `packages/shared/src/problems/<NN>-*.ts` のみ。
       // `_common.ts` や `index.ts` には対象フィールドが無いのでスキップしてコストを下げる。
-      if (!/\/shared\/src\/problems\/\d+-[^/]+\.ts$/.test(id)) {return null;}
+      const pathId = normalizeModuleIdForMatch(id);
+      if (!/\/shared\/src\/problems\/\d+-[^/]+\.ts$/.test(pathId)) {return null;}
 
       let ast: ReturnType<typeof parse>;
       try {
@@ -46,7 +52,7 @@ export function stripDevFields(): Plugin {
         // ビルドを止める
         const message = error instanceof Error ? error.message : String(error);
         throw new Error(
-          `[jsreview:strip-dev-fields] Failed to parse ${id}: ${message}`,
+          `[jsreview:strip-dev-fields] Failed to parse ${pathId}: ${message}`,
         );
       }
 

@@ -89,7 +89,7 @@ export function getDefaultLintPreset(stage: Stage): LintPreset {
       return "S5";
     default: {
       const exhaustive: never = stage;
-      return exhaustive;
+      throw new Error(`Unknown stage: ${String(exhaustive)}`);
     }
   }
 }

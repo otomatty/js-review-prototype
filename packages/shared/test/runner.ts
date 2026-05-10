@@ -206,7 +206,11 @@ function formatErr(e: unknown): string {
     return e.message;
   }
   if (typeof e === "object" && e !== null) {
-    return JSON.stringify(e) ?? Object.prototype.toString.call(e);
+    try {
+      return JSON.stringify(e) ?? Object.prototype.toString.call(e);
+    } catch {
+      return Object.prototype.toString.call(e);
+    }
   }
   return String(e);
 }
