@@ -1,13 +1,13 @@
 /**
  * ステージ選択画面 (URL `/`)。
  *
- * S0 から S5 までの 6 ステージを縦タイムラインで表示する。 各ステージは
- * 「ノード (◯ 印) + 説明カード」 のペアとなり、 ノード間を接続線でつないで
- * スパイラル方式の進行順序を視覚化する。
+ * S0 から S5 までを互い違い (zigzag) に並べたタイムライン。
+ * 中央のスパインで全ステージをつなぎ、 各カードはステージごとのテーマカラーで
+ * 装飾し、 状態に応じた CTA (「始める →」「続きから →」「🔒 解禁条件」 等)
+ * を表示する。 モバイルは左寄せ 1 列に折り畳む。
  *
- * - 解禁済みカードのクリックで `/stages/:stage` へ遷移
- * - 各ステージの解禁状態 / 進捗 / 卒業課題達成数をカード上に出す
- * - 卒業課題クリアによる解禁判定は `App` ルート直下の `StageUnlockDialog` が担当
+ * 卒業課題クリアで自動解禁が発火する判定は `App` ルート直下の
+ * `StageUnlockDialog` が担当しているため、 ここではカードの状態表示のみを担う。
  */
 
 import { Check, Lock } from "lucide-react";
@@ -39,6 +39,56 @@ function classifyStage(unlocked: boolean, stat: StageStat): CardState {
   if (stat.cleared > 0) {return "inProgress";}
   return "ready";
 }
+
+interface StageTheme {
+  /** カードのグラデ前景色 (Tailwind 色クラス用) */
+  glow: string;
+  /** カード border のアクセント */
+  border: string;
+  /** ノードのアクセント */
+  node: string;
+  /** ノードリングの色 (RGB 値 — `rgb(... / 0.18)` 用) */
+  haloRgb: string;
+}
+
+const STAGE_THEMES: Record<Stage, StageTheme> = {
+  S0: {
+    glow: "from-emerald-500/15",
+    border: "border-emerald-500/40",
+    node: "border-emerald-500 text-emerald-700 dark:text-emerald-300",
+    haloRgb: "16,185,129",
+  },
+  S1: {
+    glow: "from-sky-500/15",
+    border: "border-sky-500/40",
+    node: "border-sky-500 text-sky-700 dark:text-sky-300",
+    haloRgb: "14,165,233",
+  },
+  S2: {
+    glow: "from-violet-500/15",
+    border: "border-violet-500/40",
+    node: "border-violet-500 text-violet-700 dark:text-violet-300",
+    haloRgb: "139,92,246",
+  },
+  S3: {
+    glow: "from-amber-500/15",
+    border: "border-amber-500/40",
+    node: "border-amber-500 text-amber-700 dark:text-amber-300",
+    haloRgb: "245,158,11",
+  },
+  S4: {
+    glow: "from-rose-500/15",
+    border: "border-rose-500/40",
+    node: "border-rose-500 text-rose-700 dark:text-rose-300",
+    haloRgb: "244,63,94",
+  },
+  S5: {
+    glow: "from-fuchsia-500/15",
+    border: "border-fuchsia-500/40",
+    node: "border-fuchsia-500 text-fuchsia-700 dark:text-fuchsia-300",
+    haloRgb: "217,70,239",
+  },
+};
 
 export function SelectPage() {
   const clearedSet = useAllClearedSet();
@@ -99,8 +149,8 @@ export function SelectPage() {
     <div className="grid h-screen grid-rows-[auto_1fr]">
       <AppHeader right={<ThemeToggle />} />
 
-      <main className="hero-halo overflow-y-auto bg-background px-[clamp(24px,5vw,56px)] pt-10 pb-20">
-        <section className="mb-7 flex flex-wrap items-end justify-between gap-x-12 gap-y-6 pb-6">
+      <main className="hero-halo overflow-y-auto bg-background px-[clamp(24px,5vw,56px)] pt-10 pb-24">
+        <section className="mb-10 flex flex-wrap items-end justify-between gap-x-12 gap-y-6 pb-6">
           <div className="min-w-0">
             <span className="mb-2.5 inline-flex items-center text-overline text-muted-foreground">
               <span
@@ -116,7 +166,7 @@ export function SelectPage() {
             </h2>
             <p className="m-0 max-w-[52ch] text-[14px] leading-[1.7] text-muted-foreground">
               S0 から S5 までを順に登っていくスパイラル方式。
-              卒業課題 (3 問) を全 pass で次ステージが解禁されます。
+              卒業課題 (3 問) を全 pass で次のステージが解禁されます。
             </p>
           </div>
           <dl className="m-0 grid grid-cols-3 gap-0 rounded-xl border border-border bg-card p-1 tabular-nums shadow-[var(--shadow-1)] max-md:w-full">
@@ -147,7 +197,7 @@ export function SelectPage() {
         </section>
 
         <ol
-          className="relative m-0 list-none p-0"
+          className="relative mx-auto m-0 max-w-[960px] list-none p-0"
           aria-label="ステージタイムライン"
         >
           {stageItems.map((item, i) => {
@@ -191,23 +241,27 @@ function TimelineItem({
   prevCompleted,
   isLast,
 }: TimelineItemProps) {
+  const isLeft = index % 2 === 0;
+  const theme = STAGE_THEMES[info.id];
   const progressPct = stat.total > 0 ? (stat.cleared / stat.total) * 100 : 0;
   const capstoneDone =
     stat.capstones > 0 && stat.capstonesCleared === stat.capstones;
 
   const cardBase =
-    "group relative flex flex-col gap-3 overflow-hidden rounded-xl border bg-card px-5 py-4 shadow-[var(--shadow-1)] transition-[border-color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
+    "group relative flex w-full max-w-[420px] flex-col gap-3.5 overflow-hidden rounded-2xl border bg-card px-5 py-4 shadow-[var(--shadow-1)] transition-[border-color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
   const cardStateClasses = !isUnlocked
-    ? "border-border/60 opacity-75"
+    ? "border-border/60 opacity-80"
     : state === "completed"
-      ? "border-success/60 bg-gradient-to-b from-emerald-50 to-card to-60% dark:from-emerald-950/40 dark:to-card"
+      ? cn("bg-gradient-to-br", theme.glow, "to-transparent", theme.border)
       : state === "inProgress"
-        ? "border-blue-300/60 dark:border-blue-700/60"
-        : "border-border";
+        ? cn("bg-gradient-to-br", theme.glow, "to-transparent", theme.border)
+        : isUnlocked
+          ? cn("bg-gradient-to-br", theme.glow, "to-transparent", "border-border")
+          : "border-border";
 
   const cardInteractiveClasses = isUnlocked
-    ? "hover:-translate-y-0.5 hover:border-foreground/40 hover:shadow-[var(--shadow-2)] focus-visible:outline-none focus-visible:border-blue-500 focus-visible:shadow-[var(--shadow-focus)] cursor-pointer no-underline text-foreground"
+    ? "hover:-translate-y-1 hover:shadow-[var(--shadow-2)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] cursor-pointer no-underline text-foreground"
     : "cursor-not-allowed text-muted-foreground";
 
   const cardContent = (
@@ -223,18 +277,24 @@ function TimelineItem({
         )}
         aria-hidden
       />
+
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="font-jp text-[18px] font-extrabold leading-tight tracking-[-0.01em] text-foreground">
+        <div className="min-w-0 flex-1">
+          <div className="font-jp text-[12px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            {info.shortLabel}
+          </div>
+          <div className="mt-0.5 font-jp text-[20px] font-extrabold leading-tight tracking-[-0.01em] text-foreground">
             {info.label.replace(`${info.id} `, "")}
           </div>
-          <div className="mt-0.5 font-jp text-[12px] text-muted-foreground">
-            {info.shortLabel}
-            <span className="mx-2 text-ink-300 dark:text-ink-600">·</span>
-            <span className="tabular-nums">
-              想定 {info.estimatedMinutesRange[0]}–
-              {info.estimatedMinutesRange[1]} 分 / 問
-            </span>
+          <div className="mt-1 font-sans text-[11.5px] tabular-nums text-muted-foreground">
+            想定 {info.estimatedMinutesRange[0]}–
+            {info.estimatedMinutesRange[1]} 分 / 問
+            {stat.total > 0 && (
+              <>
+                <span className="mx-1.5 text-ink-300 dark:text-ink-600">·</span>
+                全 {stat.total} 問
+              </>
+            )}
           </div>
         </div>
         <StageStateBadge state={state} />
@@ -244,7 +304,7 @@ function TimelineItem({
         {info.description}
       </p>
 
-      {state !== "empty" && (
+      {state !== "empty" && state !== "locked" && (
         <div>
           <div className="mb-1.5 flex items-baseline justify-between gap-2">
             <span className="font-jp text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
@@ -279,17 +339,29 @@ function TimelineItem({
           )}
         </div>
       )}
+
+      <CtaRow state={state} />
     </>
   );
 
   return (
-    <li className="relative pl-[68px] pb-8 last:pb-0 max-md:pl-14">
+    <li
+      className={cn(
+        "relative pb-12 last:pb-0",
+        // mobile: 単一カラム + 左にノード
+        "max-md:pl-16",
+        // desktop: 3 列グリッド (左カード | 中央ノード | 右カード)
+        "md:grid md:grid-cols-[1fr_auto_1fr] md:items-start md:gap-x-0",
+      )}
+    >
       {/* connector line: 上半分 (前ステージから) */}
       {index > 0 && (
         <span
           aria-hidden
           className={cn(
-            "absolute left-[23px] top-0 h-[28px] w-[2px] max-md:left-[19px]",
+            "absolute top-0 h-[36px] w-[3px] rounded-full",
+            "max-md:left-[22px]",
+            "md:left-1/2 md:-translate-x-1/2",
             prevCompleted ? "bg-success" : "bg-border",
           )}
         />
@@ -299,33 +371,61 @@ function TimelineItem({
         <span
           aria-hidden
           className={cn(
-            "absolute left-[23px] top-[28px] bottom-0 w-[2px] max-md:left-[19px]",
+            "absolute bottom-0 top-[36px] w-[3px] rounded-full",
+            "max-md:left-[22px]",
+            "md:left-1/2 md:-translate-x-1/2",
             state === "completed" ? "bg-success" : "bg-border",
           )}
         />
       )}
 
-      {/* node (timeline 上の ◯) */}
-      <TimelineNode info={info} state={state} />
+      {/* horizontal stem (desktop only) — 中央ノードからカード方向への横棒 */}
+      <span
+        aria-hidden
+        className={cn(
+          "absolute top-[28px] hidden h-[3px] w-[18px] rounded-full bg-border md:block",
+          isLeft ? "right-1/2 mr-[24px]" : "left-1/2 ml-[24px]",
+          state === "completed"
+            ? "bg-success"
+            : isUnlocked
+              ? "bg-foreground/30"
+              : "bg-border",
+        )}
+      />
+
+      {/* node */}
+      <TimelineNode info={info} state={state} theme={theme} />
 
       {/* card */}
-      {isUnlocked ? (
-        <Link
-          to={`/stages/${info.id}`}
-          className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
-          aria-label={`${info.label} ${stat.cleared}/${stat.total} クリア`}
-        >
-          {cardContent}
-        </Link>
-      ) : (
-        <div
-          className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
-          aria-disabled
-          title="前のステージの卒業課題 (3 問) を全てクリアすると解禁されます"
-        >
-          {cardContent}
-        </div>
-      )}
+      <div
+        className={cn(
+          "min-w-0",
+          // mobile: full width
+          "max-md:col-span-1",
+          // desktop: 左カラム or 右カラム
+          isLeft
+            ? "md:col-start-1 md:flex md:justify-end md:pr-8"
+            : "md:col-start-3 md:flex md:justify-start md:pl-8",
+        )}
+      >
+        {isUnlocked ? (
+          <Link
+            to={`/stages/${info.id}`}
+            className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
+            aria-label={`${info.label} ${stat.cleared}/${stat.total} クリア`}
+          >
+            {cardContent}
+          </Link>
+        ) : (
+          <div
+            className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
+            aria-disabled
+            title="前のステージの卒業課題 (3 問) を全てクリアすると解禁されます"
+          >
+            {cardContent}
+          </div>
+        )}
+      </div>
     </li>
   );
 }
@@ -333,26 +433,49 @@ function TimelineItem({
 function TimelineNode({
   info,
   state,
+  theme,
 }: {
   info: StageInfo;
   state: CardState;
+  theme: StageTheme;
 }) {
   const baseClasses =
-    "absolute left-0 top-[6px] flex h-[48px] w-[48px] items-center justify-center rounded-full border-2 font-jp text-[12.5px] font-extrabold tracking-tight transition-colors max-md:h-[40px] max-md:w-[40px] max-md:text-[11px]";
+    "absolute top-[6px] z-10 flex h-[56px] w-[56px] items-center justify-center rounded-full border-2 font-jp text-[14px] font-extrabold tracking-tight transition-colors max-md:h-[44px] max-md:w-[44px] max-md:text-[12px]";
+  const positionClasses = cn(
+    "max-md:left-0",
+    "md:left-1/2 md:-translate-x-1/2",
+  );
 
   const stateClasses =
     state === "completed"
-      ? "border-success bg-success text-white shadow-[0_0_0_4px_rgba(34,197,94,0.18)]"
+      ? cn("bg-success text-white border-success")
       : state === "inProgress"
-        ? "border-blue-500 bg-background text-blue-700 shadow-[0_0_0_4px_rgba(59,130,246,0.18)] dark:text-blue-200"
+        ? cn(
+            "bg-card border-2",
+            theme.node.replace("text-", "text-").replace(
+              "border-",
+              "border-",
+            ),
+          )
         : state === "ready"
-          ? "border-foreground bg-background text-foreground shadow-[0_0_0_4px_rgba(0,0,0,0.04)] dark:shadow-[0_0_0_4px_rgba(255,255,255,0.05)]"
+          ? cn("bg-card", theme.node)
           : state === "empty"
             ? "border-border bg-background text-muted-foreground"
             : "border-border bg-muted text-muted-foreground";
 
+  const haloStyle =
+    state === "completed"
+      ? { boxShadow: "0 0 0 4px rgba(34,197,94,0.18)" }
+      : state === "inProgress" || state === "ready"
+        ? { boxShadow: `0 0 0 4px rgba(${theme.haloRgb},0.18)` }
+        : undefined;
+
   return (
-    <div className={cn(baseClasses, stateClasses)} aria-hidden>
+    <div
+      className={cn(baseClasses, positionClasses, stateClasses)}
+      style={haloStyle}
+      aria-hidden
+    >
       {state === "completed" ? (
         <Check className="size-5" />
       ) : state === "locked" ? (
@@ -361,6 +484,59 @@ function TimelineNode({
         <span>{info.id}</span>
       )}
     </div>
+  );
+}
+
+function CtaRow({ state }: { state: CardState }) {
+  let label: string;
+  let icon: string | null;
+  let cls: string;
+  switch (state) {
+    case "locked":
+      label = "解禁条件を確認";
+      icon = "🔒";
+      cls =
+        "border-border bg-muted/40 text-muted-foreground cursor-not-allowed";
+      break;
+    case "completed":
+      label = "全クリア";
+      icon = "✓";
+      cls = "border-success/60 bg-success/10 text-success-foreground";
+      break;
+    case "inProgress":
+      label = "続きから";
+      icon = "→";
+      cls =
+        "border-blue-300 bg-blue-50 text-blue-700 group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:text-white dark:border-blue-700/60 dark:bg-blue-950/40 dark:text-blue-200";
+      break;
+    case "empty":
+      label = "Coming Soon";
+      icon = null;
+      cls =
+        "border-border bg-muted/40 text-muted-foreground cursor-not-allowed";
+      break;
+    case "ready":
+      label = "始める";
+      icon = "→";
+      cls =
+        "border-foreground bg-foreground text-background group-hover:bg-foreground/90";
+      break;
+    default: {
+      const _exhaustive: never = state;
+      return _exhaustive;
+    }
+  }
+  return (
+    <span
+      className={cn(
+        "mt-1 inline-flex items-center justify-center gap-1.5 self-start rounded-full border px-3.5 py-1.5 font-jp text-[12px] font-bold tracking-tight transition-colors",
+        cls,
+      )}
+      aria-hidden
+    >
+      {label}
+      {icon !== null && <span aria-hidden>{icon}</span>}
+    </span>
   );
 }
 
