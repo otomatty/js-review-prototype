@@ -14,6 +14,7 @@ import type {
   LintViolation,
   TestResult,
 } from "@jsreview/shared/types";
+import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
 
 import { cn } from "@/lib/utils";
 import type { ExecutionResult } from "../hooks/useGradeRunner";
@@ -345,7 +346,8 @@ function AstRow({
   assignment: Assignment;
   status: SectionStatus;
 }) {
-  const hasForbiddenRules = (assignment.ast.forbidden?.length ?? 0) > 0;
+  const settings = getStaticAnalysisSettings(assignment);
+  const hasForbiddenRules = (settings.ast.forbidden?.length ?? 0) > 0;
   const hasAnyAstRule = ast.required.length > 0 || hasForbiddenRules;
   const requiredPassed = ast.required.filter((check) => check.found).length;
 

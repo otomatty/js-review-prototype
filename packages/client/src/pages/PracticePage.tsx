@@ -13,6 +13,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
+import {
+  getScaffoldCode,
+  getStaticAnalysisSettings,
+} from "@jsreview/shared/assignment-helpers";
 
 import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
@@ -54,9 +58,13 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   const { code, setCode, cleared, recordResult, clear } = useProgress({
     assignmentId: assignment.id,
-    starterCode: assignment.starterCode,
+    starterCode: getScaffoldCode(assignment),
   });
 
+  const staticAnalysis = useMemo(
+    () => getStaticAnalysisSettings(assignment),
+    [assignment],
+  );
   const { lint, ast } = useStaticAnalysis(code, assignment);
   const { running, result, run, reset } = useGradeRunner();
 
@@ -172,8 +180,8 @@ function PracticePageInner({ assignment }: InnerProps) {
               <Editor
                 code={code}
                 onChange={setCode}
-                eslintRules={assignment.eslint.rules}
-                entryPoints={assignment.entryPoints}
+                eslintRules={staticAnalysis.eslintRules}
+                entryPoints={staticAnalysis.ignoredUnusedNames}
               />
             </div>
           </div>

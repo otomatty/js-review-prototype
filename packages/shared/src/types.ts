@@ -6,70 +6,50 @@
  */
 
 // ───────────────────────────────────────────────────────────────────
-// トピック (MDN準拠の章立て)
+// カリキュラム軸 (Stage x Chapter)
 // ───────────────────────────────────────────────────────────────────
 
-/**
- * トピック (= 章) の識別子。
- *
- * 文字列値 (kebab-case) は安定 ID で、 UI 表示順 / 学習推奨順とは独立。
- * 並び順 (`Topic.order`) や表示ラベル (`Topic.label`) は `problems/index.ts`
- * の `topics` 配列で定義する。
- *
- * 章番号と章名の対応 (2026 年再構築後の初心者推奨順):
- * - 00 はじめての関数             → first-function
- * - 01 変数と型                   → variables-and-types
- * - 02 演算子と比較               → operators
- * - 03 条件分岐                   → control-flow
- * - 04 繰り返し                   → loops
- * - 05 配列の基礎                 → arrays-basics
- * - 06 文字列操作                 → strings
- * - 07 関数の基礎                 → functions-basics
- * - 08 アロー関数と this          → functions-arrow-this
- * - 09 スコープとクロージャ       → scope-closure
- * - 10 配列のイテレーション       → arrays-iteration
- * - 11 数値・Math・Date           → numbers-math-date
- * - 12 オブジェクトの基礎         → objects-basics
- * - 13 分割代入とスプレッド       → destructuring-spread
- * - 14 Map / Set                  → collections
- * - 15 クラスの基礎               → classes-basics
- * - 16 クラスの応用               → classes-advanced
- * - 17 エラー処理                 → error-handling
- * - 18 正規表現                   → regex
- * - 19 非同期処理                 → async
- */
-export type TopicId =
-  | "first-function"
-  | "variables-and-types"
-  | "operators"
-  | "control-flow"
-  | "loops"
-  | "arrays-basics"
-  | "strings"
-  | "functions-basics"
-  | "functions-arrow-this"
-  | "scope-closure"
-  | "arrays-iteration"
-  | "numbers-math-date"
-  | "objects-basics"
-  | "destructuring-spread"
-  | "collections"
-  | "classes-basics"
-  | "classes-advanced"
-  | "error-handling"
-  | "regex"
-  | "async";
+export type Stage = "S0" | "S1" | "S2" | "S3" | "S4" | "S5";
 
-export interface Topic {
-  id: TopicId;
-  /** 表示順 (1始まり) */
-  order: number;
-  /** UI表示用ラベル (例: "01. 変数と型") */
+export type TestKind = "stdout" | "function";
+
+export type ChapterId =
+  | "Ch00"
+  | "Ch01"
+  | "Ch02"
+  | "Ch03"
+  | "Ch04"
+  | "Ch05"
+  | "Ch06"
+  | "Ch07"
+  | "Ch08"
+  | "Ch09"
+  | "Ch10"
+  | "Ch11"
+  | "Ch12"
+  | "Ch13"
+  | "Ch14"
+  | "Ch15"
+  | "Ch16";
+
+export interface StageInfo {
+  id: Stage;
   label: string;
-  /** MDN該当ページ */
-  mdnUrl: string;
-  /** トピックの1行説明 */
-  description?: string;
+  shortLabel: string;
+  description: string;
+  defaultTestKind: TestKind;
+  estimatedMinutesRange: readonly [number, number];
+  targetProblemCount: readonly [number, number];
+}
+
+export interface Chapter {
+  id: ChapterId;
+  /** 表示順。Ch00 は 0、Ch01 以降は章番号に揃える。 */
+  order: number;
+  /** UI表示用ラベル (例: "Ch01. 変数") */
+  label: string;
+  description: string;
+  defaultMdnPage: string;
 }
 
 /**
@@ -101,24 +81,39 @@ export interface MdnSection {
 // 課題定義
 // ───────────────────────────────────────────────────────────────────
 
+export type Difficulty = 1 | 2 | 3;
+
+export type ScaffoldLevel = "L0" | "L1" | "L2" | "L3";
+
+export type ScaffoldMap = Record<ScaffoldLevel, string>;
+
+export type LintPreset = "S1" | "S2" | "S3" | "S4" | "S5";
+
 export interface Assignment {
   id: string;
-  /** 所属トピック (UIグルーピング用) */
-  topicId: TopicId;
+  stage: Stage;
+  chapterId: ChapterId;
+  /** 章内・ステージ内での表示順。 */
+  sequence: number;
   title: string;
-  difficulty: 1 | 2 | 3;
+  newConcept: string;
+  estimatedMinutes: number;
+  difficulty: Difficulty;
+  testKind: TestKind;
   /** 課題説明 (Markdown) */
   description: string;
-  /** ユーザーが編集を始めるときの初期コード */
-  starterCode: string;
-  /** コードから取り出す関数名 (isolated-vm に公開する対象) */
-  entryPoints: string[];
+  /** L0-L3 のスタータコード。UI は既定で L2 を使う。 */
+  scaffolds: ScaffoldMap;
+  /** function 採点でコードから取り出す関数名・クラス名。 */
+  entryPoints?: string[];
   /** テストケース */
   tests: TestCase[];
-  /** クライアント側 ESLint ルール */
-  eslint: { rules: Record<string, ESLintRuleConfig> };
-  /** クライアント側 AST 要件 */
-  ast: ASTRequirement;
+  /** クライアント側静的解析の枠。プリセットの中身は各 content phase で詰める。 */
+  lintPreset?: LintPreset;
+  staticAnalysis?: StaticAnalysisConfig;
+  hints?: string[];
+  commonMistakes?: CommonMistake[];
+  isCapstone?: boolean;
   /**
    * 模範解答。
    * 全テストにパスし、AST `required` を全充足、`forbidden` 違反ゼロ、
@@ -142,12 +137,31 @@ export interface Assignment {
   mdnSections?: MdnSection[];
 }
 
+export interface StaticAnalysisConfig {
+  eslint?: { rules: Record<string, ESLintRuleConfig> };
+  ast?: ASTRequirement;
+}
+
 export interface BadSolution {
   code: string;
   description: string;
 }
 
-export interface TestCase {
+export interface CommonMistake {
+  pattern: string;
+  message: string;
+}
+
+export type TestCase = StdoutTestCase | FunctionTestCase;
+
+export interface StdoutTestCase {
+  name: string;
+  /** console.log で捕捉した標準出力。末尾改行は比較時に無視される。 */
+  expectedStdout: string;
+  code?: never;
+}
+
+export interface FunctionTestCase {
   name: string;
   /**
    * 評価対象のテスト式。 isolated-vm 内で、`code` を読み込んだ後に評価される。
@@ -156,6 +170,7 @@ export interface TestCase {
    * 真値であれば PASS、それ以外は FAIL。例外は `error` として返る。
    */
   code: string;
+  expectedStdout?: never;
 }
 
 export type ESLintRuleConfig =
@@ -231,8 +246,9 @@ export type ASTNodeType =
 
 export interface RunTestsRequest {
   code: string;
+  testKind: TestKind;
   tests: TestCase[];
-  entryPoints: string[];
+  entryPoints?: string[];
 }
 
 export interface RunTestsResponse {
@@ -243,6 +259,8 @@ export interface RunTestsResponse {
 export interface TestResult {
   name: string;
   passed: boolean;
+  stdout?: string;
+  expectedStdout?: string;
   /** タイムアウトの場合は 'TIMEOUT'、コンパイルエラーは 'COMPILE_ERROR' */
   error?: string;
 }
@@ -263,7 +281,7 @@ export interface LintViolation {
 }
 
 export interface ASTResult {
-  /** 必須パターンが見つかったかどうか (順序は Assignment.ast.required と同じ) */
+  /** 必須パターンが見つかったかどうか (順序は Assignment.staticAnalysis.ast.required と同じ) */
   required: ASTCheckResult[];
   /** 禁止パターンの違反 (見つかったもののみ) */
   forbidden: ASTViolation[];

@@ -15,9 +15,11 @@ import type {
   EvaluationResult,
   LintViolation,
   TestResult,
+  TestKind,
 } from "../types.js";
 
 export function evaluate(
+  testKind: TestKind,
   testResults: TestResult[],
   lintViolations: LintViolation[],
   astResult: ASTResult,
@@ -29,8 +31,17 @@ export function evaluate(
     astResult.required.every((r) => r.found) &&
     astResult.forbidden.length === 0;
 
-  const testsPassed =
-    testResults.length > 0 && testResults.every((t) => t.passed);
+  const testsPassed = (() => {
+    switch (testKind) {
+      case "stdout":
+      case "function":
+        return testResults.length > 0 && testResults.every((t) => t.passed);
+      default: {
+        const exhaustive: never = testKind;
+        return exhaustive;
+      }
+    }
+  })();
 
   return {
     cleared: lintPassed && astPassed && testsPassed,

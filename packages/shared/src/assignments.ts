@@ -1,15 +1,15 @@
 /**
  * 後方互換のための再エクスポート shim。
  *
- * 課題定義の本体は `./problems/` 配下にトピック単位で分割されている。
+ * 課題定義の本体は `./problems/` 配下に章単位で分割される。
  * クライアントは従来通り `@jsreview/shared/assignments` から
- * `assignments` / `topics` / `findAssignment` などを取得できる。
+ * `assignments` / `chapters` / `findAssignment` などを取得できる。
  */
 
 export {
   assignments,
-  topics,
+  chapters,
   findAssignment,
-  findTopic,
-  assignmentsByTopic,
+  findChapter,
+  assignmentsByChapter,
 } from "./problems/index.js";

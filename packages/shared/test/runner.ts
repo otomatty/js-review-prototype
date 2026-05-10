@@ -12,7 +12,7 @@
 
 import vm from "node:vm";
 
-import type { TestCase, TestResult } from "../src/types.js";
+import type { TestCase, TestKind, TestResult } from "../src/types.js";
 import { isThenable, withWallTimeout } from "../src/util/timeout.js";
 
 const PER_TEST_TIMEOUT_MS = 1000;
@@ -21,16 +21,39 @@ const PER_TEST_WALL_TIMEOUT_MS = 3000;
 export async function runTests(
   code: string,
   tests: TestCase[],
+  testKind: TestKind,
   entryPoints: string[],
 ): Promise<TestResult[]> {
-  return Promise.all(tests.map((test) => runOne(code, test, entryPoints)));
+  return Promise.all(
+    tests.map((test) => runOne(code, test, testKind, entryPoints)),
+  );
 }
 
 async function runOne(
   code: string,
   test: TestCase,
+  testKind: TestKind,
   entryPoints: string[],
 ): Promise<TestResult> {
+  if (testKind === "stdout") {
+    if (!("expectedStdout" in test)) {
+      return {
+        name: test.name,
+        passed: false,
+        error: "INVALID_TEST_CASE: stdout tests require expectedStdout",
+      };
+    }
+    return runStdoutTest(code, test.name, test.expectedStdout);
+  }
+
+  if (!("code" in test)) {
+    return {
+      name: test.name,
+      passed: false,
+      error: "INVALID_TEST_CASE: function tests require code",
+    };
+  }
+
   const exposeStmts = entryPoints
     .map((n) => `try { __jsreview_scope__.${n} = ${n}; } catch (_e) {}`)
     .join("\n");
@@ -92,6 +115,72 @@ ${exposeStmts}
     name: test.name,
     passed: Boolean(result),
   };
+}
+
+async function runStdoutTest(
+  code: string,
+  name: string,
+  expectedStdout: string,
+): Promise<TestResult> {
+  const stdout: string[] = [];
+  const context = vm.createContext({
+    console: {
+      log: (...args: unknown[]) => {
+        stdout.push(args.map(formatConsoleArg).join(" "));
+      },
+    },
+  });
+
+  let script: vm.Script;
+  try {
+    script = new vm.Script(code);
+  } catch (e) {
+    return {
+      name,
+      passed: false,
+      expectedStdout,
+      error: `COMPILE_ERROR: ${formatErr(e)}`,
+    };
+  }
+
+  try {
+    script.runInContext(context, { timeout: PER_TEST_TIMEOUT_MS });
+  } catch (e) {
+    const msg = formatErr(e);
+    return {
+      name,
+      passed: false,
+      stdout: normalizeStdout(stdout.join("\n")),
+      expectedStdout: normalizeStdout(expectedStdout),
+      error: msg.includes("Script execution timed out") ? "TIMEOUT" : msg,
+    };
+  }
+
+  const actual = normalizeStdout(stdout.join("\n"));
+  const expected = normalizeStdout(expectedStdout);
+  return {
+    name,
+    passed: actual === expected,
+    stdout: actual,
+    expectedStdout: expected,
+  };
+}
+
+function formatConsoleArg(value: unknown): string {
+  if (value === undefined) return "undefined";
+  if (value === null) return "null";
+  if (typeof value === "object") {
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
+}
+
+function normalizeStdout(output: string): string {
+  return output.replace(/\r\n/g, "\n").replace(/\n+$/g, "");
 }
 
 function formatErr(e: unknown): string {

@@ -9,5 +9,6 @@ export type {
   RunTestsRequest,
   RunTestsResponse,
   TestCase,
+  TestKind,
   TestResult,
 } from "@jsreview/shared/types";

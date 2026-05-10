@@ -2,13 +2,13 @@
  * 問題選択画面 (一覧)。
  *
  * URL `/` に対応するランディング兼一覧。
- * トピックごとにセクション分けし、各課題はカード形式のグリッドで表示する。
+ * 章ごとにセクション分けし、各課題はカード形式のグリッドで表示する。
  *
  * 機能:
- * - 全体の進捗サマリ (クリア済み / 未クリア / トピック数)
+ * - 全体の進捗サマリ (クリア済み / 未クリア / 章数)
  * - 状態フィルタ (すべて / 未クリア / クリア済み)
  * - 難易度フィルタ (★1 / ★2 / ★3)
- * - 課題タイトル / トピックラベルでのフリーワード検索
+ * - 課題タイトル / 章ラベルでのフリーワード検索
  * - カードクリックで `/problems/:id` へ遷移
  */
 
@@ -16,10 +16,10 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   assignments,
-  assignmentsByTopic,
-  topics,
+  assignmentsByChapter,
+  chapters,
 } from "@jsreview/shared/assignments";
-import type { Assignment, Topic } from "@jsreview/shared/types";
+import type { Assignment, Chapter } from "@jsreview/shared/types";
 
 import { ThemeToggle } from "../components/ThemeToggle.js";
 import { AppHeader } from "../components/AppHeader.js";
@@ -75,15 +75,15 @@ export function SelectPage() {
       total: assignments.length,
       cleared,
       uncleared: assignments.length - cleared,
-      topics: topics.length,
+      chapters: chapters.length,
     };
   }, [clearedSet]);
 
   // フィルタ判定はカード単位で軽い。トピックセクションは items が空なら畳む。
   const filteredGroups = useMemo(() => {
-    return topics
-      .map((topic) => {
-        const items = assignmentsByTopic(topic.id).filter((a) => {
+    return chapters
+      .map((chapter) => {
+        const items = assignmentsByChapter(chapter.id).filter((a) => {
           if (
             difficultyFilter !== "all" &&
             a.difficulty !== difficultyFilter
@@ -95,12 +95,12 @@ export function SelectPage() {
             if (s !== statusFilter) return false;
           }
           if (normalizedQuery !== "") {
-            const haystack = `${a.title} ${topic.label}`.toLowerCase();
+            const haystack = `${a.title} ${chapter.label}`.toLowerCase();
             if (!haystack.includes(normalizedQuery)) return false;
           }
           return true;
         });
-        return { topic, items };
+        return { chapter, items };
       })
       .filter((g) => g.items.length > 0);
   }, [clearedSet, statusFilter, difficultyFilter, normalizedQuery]);
@@ -156,9 +156,9 @@ export function SelectPage() {
                 {summary.uncleared}
               </strong>
             </StatCell>
-            <StatCell label="Topics">
+            <StatCell label="Chapters">
               <strong className="font-sans text-[28px] font-extrabold leading-none tracking-[-0.02em] text-foreground">
-                {summary.topics}
+                {summary.chapters}
               </strong>
             </StatCell>
           </dl>
@@ -236,10 +236,10 @@ export function SelectPage() {
             条件に合う課題がありません。フィルタを変更してください。
           </p>
         ) : (
-          filteredGroups.map(({ topic, items }) => (
-            <TopicSection
-              key={topic.id}
-              topic={topic}
+          filteredGroups.map(({ chapter, items }) => (
+            <ChapterSection
+              key={chapter.id}
+              chapter={chapter}
               items={items}
               clearedSet={clearedSet}
               assignmentNumbers={assignmentNumbers}
@@ -270,19 +270,19 @@ function StatCell({
   );
 }
 
-interface TopicSectionProps {
-  topic: Topic;
+interface ChapterSectionProps {
+  chapter: Chapter;
   items: Assignment[];
   clearedSet: Set<string>;
   assignmentNumbers: Map<string, number>;
 }
 
-function TopicSection({
-  topic,
+function ChapterSection({
+  chapter,
   items,
   clearedSet,
   assignmentNumbers,
-}: TopicSectionProps) {
+}: ChapterSectionProps) {
   // フィルタ後の items だけで完了数を出すと「3問中2問完了」のような誤解を生む。
   // ここでは表示中アイテムのクリア状況を素直に出す。
   const clearedCount = items.reduce(
@@ -296,11 +296,11 @@ function TopicSection({
       <header className="relative mb-4 flex items-baseline justify-between gap-4 border-b border-border pb-3.5 after:absolute after:bottom-[-1px] after:left-0 after:h-[2px] after:w-9 after:rounded after:bg-gradient-to-br after:from-blue-500 after:to-red-500 after:content-['']">
         <div className="min-w-0">
           <h3 className="m-0 font-jp text-[18px] font-bold leading-[1.3] tracking-[-0.01em] text-foreground">
-            {topic.label}
+            {chapter.label}
           </h3>
-          {topic.description && (
+          {chapter.description && (
             <p className="mt-1 text-[12.5px] leading-[1.55] text-muted-foreground">
-              {topic.description}
+              {chapter.description}
             </p>
           )}
         </div>
@@ -315,9 +315,9 @@ function TopicSection({
           >
             {clearedCount}/{items.length}
           </span>
-          {topic.mdnUrl && (
+          {chapter.defaultMdnPage && (
             <a
-              href={topic.mdnUrl}
+              href={chapter.defaultMdnPage}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 font-sans text-[12px] font-medium text-muted-foreground no-underline hover:text-blue-700 hover:underline dark:hover:text-blue-300"

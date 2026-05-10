@@ -47,11 +47,17 @@ export function useGradeRunner() {
       try {
         const data = await runTests({
           code: args.code,
+          testKind: args.assignment.testKind,
           tests: args.assignment.tests,
           entryPoints: args.assignment.entryPoints,
         });
 
-        const evaluation = evaluate(data.results, args.lint, args.ast);
+        const evaluation = evaluate(
+          args.assignment.testKind,
+          data.results,
+          args.lint,
+          args.ast,
+        );
 
         const finalResult: ExecutionResult = {
           testResults: data.results,
@@ -71,7 +77,12 @@ export function useGradeRunner() {
           passed: false,
           error: `SERVER_ERROR: ${msg}`,
         }));
-        const evaluation = evaluate(failedResults, args.lint, args.ast);
+        const evaluation = evaluate(
+          args.assignment.testKind,
+          failedResults,
+          args.lint,
+          args.ast,
+        );
         const finalResult: ExecutionResult = {
           testResults: failedResults,
           serverDurationMs: 0,

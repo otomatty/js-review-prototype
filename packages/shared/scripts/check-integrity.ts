@@ -5,9 +5,9 @@
  * 検査項目:
  *
  *  1. 重複した Assignment ID が存在しないこと
- *  2. 各 Assignment の `starterCode` が `ast.forbidden` を踏んでいないこと
- *     (`starterCode` がパースエラーにならないことも含む)
- *  3. 全 Assignment の `topicId` が `topics` に存在すること
+ *  2. 各 Assignment の L2 scaffold が `staticAnalysis.ast.forbidden` を踏んでいないこと
+ *     (scaffold がパースエラーにならないことも含む)
+ *  3. 全 Assignment の `chapterId` が `chapters` に存在すること
  *
  * 違反は最後にまとめて出力し、ひとつでもあれば exit code 1 で終了する。
  *
@@ -17,6 +17,10 @@
  */
 
 import { analyzeAst } from "../src/grading/ast.js";
+import {
+  getScaffoldCode,
+  getStaticAnalysisSettings,
+} from "../src/assignment-helpers.js";
 
 interface IntegrityIssue {
   assignmentId?: string;
@@ -27,11 +31,11 @@ async function main(): Promise<void> {
   const issues: IntegrityIssue[] = [];
 
   let assignments: Awaited<typeof import("../src/problems/index.js")>["assignments"];
-  let topics: Awaited<typeof import("../src/problems/index.js")>["topics"];
+  let chapters: Awaited<typeof import("../src/problems/index.js")>["chapters"];
   try {
     const mod = await import("../src/problems/index.js");
     assignments = mod.assignments;
-    topics = mod.topics;
+    chapters = mod.chapters;
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error(`[check-integrity] failed to load problems module: ${msg}`);
@@ -52,13 +56,16 @@ async function main(): Promise<void> {
     }
   }
 
-  // 2. starterCode が ast.forbidden を踏んでいない
+  // 2. scaffold が ast.forbidden を踏んでいない
   for (const a of assignments) {
-    const result = analyzeAst(a.starterCode, a.ast);
+    const result = analyzeAst(
+      getScaffoldCode(a),
+      getStaticAnalysisSettings(a).ast,
+    );
     if (result.parseError) {
       issues.push({
         assignmentId: a.id,
-        message: `starterCode parse error: ${result.parseError}`,
+        message: `scaffold parse error: ${result.parseError}`,
       });
       continue;
     }
@@ -66,25 +73,25 @@ async function main(): Promise<void> {
       const labels = result.forbidden.map((v) => v.label).join(", ");
       issues.push({
         assignmentId: a.id,
-        message: `starterCode violates forbidden patterns: ${labels}`,
+        message: `scaffold violates forbidden patterns: ${labels}`,
       });
     }
   }
 
-  // 3. topicId が topics に存在
-  const knownTopics = new Set(topics.map((t) => t.id));
+  // 3. chapterId が chapters に存在
+  const knownChapters = new Set(chapters.map((chapter) => chapter.id));
   for (const a of assignments) {
-    if (!knownTopics.has(a.topicId)) {
+    if (!knownChapters.has(a.chapterId)) {
       issues.push({
         assignmentId: a.id,
-        message: `unknown topicId: ${a.topicId}`,
+        message: `unknown chapterId: ${a.chapterId}`,
       });
     }
   }
 
   if (issues.length === 0) {
     console.log(
-      `[check-integrity] OK: ${assignments.length} assignments across ${topics.length} topics`,
+      `[check-integrity] OK: ${assignments.length} assignments across ${chapters.length} chapters`,
     );
     return;
   }

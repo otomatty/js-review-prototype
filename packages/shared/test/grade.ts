@@ -12,6 +12,7 @@
 import { analyzeAst } from "../src/grading/ast.js";
 import { evaluate } from "../src/grading/evaluate.js";
 import type { Assignment, EvaluationResult } from "../src/types.js";
+import { getStaticAnalysisSettings } from "../src/assignment-helpers.js";
 
 import { lintCode } from "./lint.js";
 import { runTests } from "./runner.js";
@@ -29,16 +30,23 @@ export async function gradeCode(
   assignment: Assignment,
   code: string,
 ): Promise<GradeReport> {
+  const settings = getStaticAnalysisSettings(assignment);
   const testResults = await runTests(
     code,
     assignment.tests,
-    assignment.entryPoints,
+    assignment.testKind,
+    assignment.entryPoints ?? [],
   );
-  const astResult = analyzeAst(code, assignment.ast);
-  const lintViolations = lintCode(code, assignment.eslint.rules, {
-    ignoredUnusedNames: assignment.entryPoints,
+  const astResult = analyzeAst(code, settings.ast);
+  const lintViolations = lintCode(code, settings.eslintRules, {
+    ignoredUnusedNames: settings.ignoredUnusedNames,
   });
-  const evaluation = evaluate(testResults, lintViolations, astResult);
+  const evaluation = evaluate(
+    assignment.testKind,
+    testResults,
+    lintViolations,
+    astResult,
+  );
 
   return {
     evaluation,

@@ -12,6 +12,7 @@ import type {
   LintViolation,
 } from "@jsreview/shared/types";
 import { analyzeAst } from "@jsreview/shared/grading/ast";
+import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
 
 import { lintCode } from "../lib/eslint-runner.js";
 
@@ -23,14 +24,15 @@ export function useStaticAnalysis(code: string, assignment: Assignment) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      const settings = getStaticAnalysisSettings(assignment);
       // Lint (ブラウザ内ESLint)
-      const lintResult = lintCode(code, assignment.eslint.rules, {
-        ignoredUnusedNames: assignment.entryPoints,
+      const lintResult = lintCode(code, settings.eslintRules, {
+        ignoredUnusedNames: settings.ignoredUnusedNames,
       });
       setLint(lintResult);
 
       // AST (Babel)
-      const astResult = analyzeAst(code, assignment.ast);
+      const astResult = analyzeAst(code, settings.ast);
       setAst(astResult);
     }, DEBOUNCE_MS);
 

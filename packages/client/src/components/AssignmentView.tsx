@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import type { Assignment, MdnSection } from "@jsreview/shared/types";
-import { findTopic } from "@jsreview/shared/assignments";
+import { findChapter } from "@jsreview/shared/assignments";
 import javascript from "highlight.js/lib/languages/javascript";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
@@ -62,22 +62,22 @@ const MARKDOWN_BODY = cn(
  * GFM テーブルとコードブロックのシンタックスハイライトに対応する。
  */
 export function AssignmentView({ assignment }: Props) {
-  const topic = findTopic(assignment.topicId);
+  const chapter = findChapter(assignment.chapterId);
   const sections = assignment.mdnSections ?? [];
   return (
     <div className={MARKDOWN_BODY}>
-      {topic && (
+      {chapter && (
         <div className="mb-5 border-b border-ink-100 pb-3.5 dark:border-ink-700">
           <div className="font-sans text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             <a
-              href={topic.mdnUrl}
+              href={chapter.defaultMdnPage}
               target="_blank"
               rel="noreferrer"
               className="border-b border-ink-300 pb-px text-ink-700 no-underline hover:border-blue-500 hover:text-blue-700 dark:border-ink-600 dark:text-ink-200 dark:hover:border-blue-300 dark:hover:text-blue-300"
             >
-              {topic.label}
+              {chapter.label}
             </a>
-            {topic.description ? ` — ${topic.description}` : null}
+            {chapter.description ? ` — ${chapter.description}` : null}
           </div>
           {sections.length > 0 && (
             <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-sans text-[11.5px] leading-[1.55] text-muted-foreground">
@@ -88,7 +88,10 @@ export function AssignmentView({ assignment }: Props) {
                 参考
               </span>
               {sections.map((section, i) => {
-                const url = buildMdnSectionUrl(section, topic.mdnUrl);
+                const url = buildMdnSectionUrl(
+                  section,
+                  chapter.defaultMdnPage,
+                );
                 return (
                   <Fragment key={`${section.heading}-${i}`}>
                     {i > 0 && (

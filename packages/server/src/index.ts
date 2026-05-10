@@ -15,7 +15,7 @@ import { logger } from "hono/logger";
 
 import type { RunTestsRequest, RunTestsResponse } from "./types.js";
 import { IsolatePool } from "./isolate-pool.js";
-import { TestRunner } from "./runner.js";
+import { TestRunner } from "./grading/runner.js";
 
 const PORT = Number(process.env.PORT ?? 3001);
 const POOL_SIZE = Number(process.env.ISOLATE_POOL_SIZE ?? 4);
@@ -55,12 +55,18 @@ app.post("/run-tests", async (c) => {
   if (!Array.isArray(body.tests)) {
     return c.json({ error: "Missing 'tests' (array)" }, 400);
   }
-  if (!Array.isArray(body.entryPoints)) {
-    return c.json({ error: "Missing 'entryPoints' (array)" }, 400);
+  if (body.testKind !== "stdout" && body.testKind !== "function") {
+    return c.json({ error: "Missing 'testKind' ('stdout' | 'function')" }, 400);
+  }
+  if (body.entryPoints !== undefined && !Array.isArray(body.entryPoints)) {
+    return c.json({ error: "'entryPoints' must be an array when provided" }, 400);
   }
 
   const start = Date.now();
-  const results = await runner.runAll(body.code, body.tests, body.entryPoints);
+  const results = await runner.runAll(body.code, body.tests, {
+    testKind: body.testKind,
+    entryPoints: body.entryPoints,
+  });
   const durationMs = Date.now() - start;
 
   const response: RunTestsResponse = { durationMs, results };

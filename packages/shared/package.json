@@ -9,6 +9,9 @@
     ".": "./src/index.ts",
     "./types": "./src/types.ts",
     "./assignments": "./src/assignments.ts",
+    "./assignment-helpers": "./src/assignment-helpers.ts",
+    "./curriculum/chapters": "./src/curriculum/chapters.ts",
+    "./curriculum/stages": "./src/curriculum/stages.ts",
     "./grading/ast": "./src/grading/ast.ts",
     "./grading/evaluate": "./src/grading/evaluate.ts",
     "./util/timeout": "./src/util/timeout.ts"

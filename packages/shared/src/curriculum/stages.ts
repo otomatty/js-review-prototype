@@ -1,0 +1,58 @@
+import type { StageInfo } from "../types.js";
+
+export const stages: StageInfo[] = [
+  {
+    id: "S0",
+    label: "S0 セットアップ",
+    shortLabel: "はじめての一行",
+    description: "エディタを開き、console.log と実行結果を見る最初の段階。",
+    defaultTestKind: "stdout",
+    estimatedMinutesRange: [3, 5],
+    targetProblemCount: [6, 6],
+  },
+  {
+    id: "S1",
+    label: "S1 文法体験",
+    shortLabel: "Progate 前半",
+    description: "1 問 1 構文に絞り、変数・数値・文字列・配列を体験する。",
+    defaultTestKind: "stdout",
+    estimatedMinutesRange: [5, 10],
+    targetProblemCount: [60, 80],
+  },
+  {
+    id: "S2",
+    label: "S2 文法定着",
+    shortLabel: "Progate 後半",
+    description: "既習構文を組み合わせ、条件分岐・ループ・関数へ広げる。",
+    defaultTestKind: "stdout",
+    estimatedMinutesRange: [10, 15],
+    targetProblemCount: [80, 100],
+  },
+  {
+    id: "S3",
+    label: "S3 ロジック入門",
+    shortLabel: "paiza C",
+    description: "関数採点へ移行し、単純な処理パターンを自力で組み立てる。",
+    defaultTestKind: "function",
+    estimatedMinutesRange: [15, 25],
+    targetProblemCount: [60, 80],
+  },
+  {
+    id: "S4",
+    label: "S4 アルゴリズム",
+    shortLabel: "paiza B/A",
+    description: "計算量やデータ構造を意識して、複数手順の処理を解く。",
+    defaultTestKind: "function",
+    estimatedMinutesRange: [25, 45],
+    targetProblemCount: [40, 60],
+  },
+  {
+    id: "S5",
+    label: "S5 設計演習",
+    shortLabel: "統合課題",
+    description: "複数の概念を統合し、少し大きな仕様を分割して実装する。",
+    defaultTestKind: "function",
+    estimatedMinutesRange: [45, 90],
+    targetProblemCount: [20, 40],
+  },
+];
