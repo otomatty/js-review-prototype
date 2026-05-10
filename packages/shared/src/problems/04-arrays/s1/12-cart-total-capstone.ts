@@ -5,7 +5,7 @@ export const s1Ch04CartTotalCapstone: Assignment = {
   stage: "S1",
   chapterId: "Ch04",
   sequence: 12,
-  title: "[卒業課題] 商品リストの合計額を出す",
+  title: "[チャレンジ] 商品リストの合計額を出す",
   newConcept: "S1 で習った変数 / 配列 / 数値演算 / テンプレートリテラルを統合する",
   estimatedMinutes: 10,
   difficulty: 2,
@@ -13,7 +13,7 @@ export const s1Ch04CartTotalCapstone: Assignment = {
   isCapstone: true,
   description: `## やること
 
-3 つの商品の価格を配列で持ち、 添字で取り出して **合計額** を計算する **卒業課題** です。
+3 つの商品の価格を配列で持ち、 添字で取り出して **合計額** を計算する **チャレンジ問題** です。
 
 - 配列名: \`prices\`
 - 中身: \`[100, 250, 380]\`

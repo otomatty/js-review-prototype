@@ -5,11 +5,23 @@
  * - 値:   JSON シリアライズされた `ProgressEntry`
  * - スキーマ変更に備えてバージョンキーを別途保持し、不一致なら全削除
  * - QuotaExceeded 時は `lastSubmittedAt` の古い順に間引いて再試行
+ * - 旧スキーマ (= 本アプリ専用プレフィックスを持つ非 `jsreview/progress/` キー)
+ *   が残っていれば削除し、 `sessionStorage` にリセット通知フラグを立てる
  */
 
 const VERSION = 2;
 const PREFIX = "jsreview/progress/";
 const VERSION_KEY = "jsreview/progress/__version__";
+const RESET_NOTICE_FLAG = "jsreview/reset-notice-pending";
+
+/**
+ * 本アプリの過去スキーマで使われた可能性のある localStorage キー。
+ *
+ * `localStorage` は origin を共有するため、 generic な名前 (`progress` 等) を
+ * 削除候補に含めると同一 origin で動く別アプリのデータを意図せず破壊しうる。
+ * 本アプリ固有の名前空間 (`jsreview-` / `jsreview_`) を持つことが確実なものだけに絞る。
+ */
+const LEGACY_KEY_CANDIDATES = ["jsreview-progress"];
 
 export interface ProgressEntry {
   /** 一度でも全チェックを通過 (クリア) しているか */
@@ -67,6 +79,13 @@ export function initProgressStore(): void {
     });
   }
 
+  // Phase 1 以前の非プレフィックス旧キーが残っていれば掃除し、
+  // 一度だけ通知すべきフラグを sessionStorage に立てる。
+  const removedLegacy = removeLegacyKeys(ls);
+  if (removedLegacy) {
+    markResetNoticePending();
+  }
+
   const stored = ls.getItem(VERSION_KEY);
   if (stored === String(VERSION)) {return;}
 
@@ -77,11 +96,52 @@ export function initProgressStore(): void {
     const k = ls.key(i);
     if (k && k.startsWith(PREFIX) && k !== VERSION_KEY) {obsolete.push(k);}
   }
-  for (const k of obsolete) {ls.removeItem(k);}
+  if (obsolete.length > 0) {
+    for (const k of obsolete) {ls.removeItem(k);}
+    markResetNoticePending();
+  }
   try {
     ls.setItem(VERSION_KEY, String(VERSION));
   } catch {
     // ignore
+  }
+}
+
+function removeLegacyKeys(ls: Storage): boolean {
+  let removed = false;
+  for (const key of LEGACY_KEY_CANDIDATES) {
+    if (ls.getItem(key) !== null) {
+      try {
+        ls.removeItem(key);
+        removed = true;
+      } catch {
+        // ignore
+      }
+    }
+  }
+  return removed;
+}
+
+function markResetNoticePending(): void {
+  try {
+    if (typeof window === "undefined") {return;}
+    window.sessionStorage.setItem(RESET_NOTICE_FLAG, "1");
+  } catch {
+    // ignore (private mode etc.)
+  }
+}
+
+/** 起動時に旧データの掃除が走った場合に true を返し、 同時にフラグを消す。 */
+export function consumeResetNotice(): boolean {
+  try {
+    if (typeof window === "undefined") {return false;}
+    const ss = window.sessionStorage;
+    const flag = ss.getItem(RESET_NOTICE_FLAG);
+    if (flag === null) {return false;}
+    ss.removeItem(RESET_NOTICE_FLAG);
+    return true;
+  } catch {
+    return false;
   }
 }
 

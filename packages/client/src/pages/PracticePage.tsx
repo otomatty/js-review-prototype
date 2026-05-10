@@ -5,6 +5,8 @@
  * 一覧画面 (`/`) と機能を切り分けるため、サイドバー・課題セレクトは持たない。
  *
  * - URL の `assignmentId` が無効なら一覧へリダイレクト
+ * - 課題の所属ステージが未解禁ならステージ詳細画面へリダイレクト
+ *   (URL 直アクセスでロック中の課題を開けないようにする)
  * - `[` / `]` で前後課題に移動 (`navigate()` で URL ごと切替)
  * - 「一覧へ戻る」ボタンで `/` へ
  */
@@ -39,6 +41,7 @@ import { Button } from "../components/ui/button.js";
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "../hooks/useGradeRunner.js";
 import { useProgress } from "../hooks/useProgress.js";
+import { useStageUnlocks } from "../hooks/useStageUnlocks.js";
 import { runFreeRun } from "../lib/api.js";
 
 /**
@@ -52,9 +55,15 @@ export function PracticePage() {
     () => findAssignment(assignmentId),
     [assignmentId],
   );
+  const unlockedStages = useStageUnlocks();
 
   if (!assignment) {
     return <Navigate to="/" replace />;
+  }
+  // ロック中ステージの問題は URL 直アクセスでも開けない。
+  // ステージ詳細画面 (LockedNotice 付き) へ誘導する。
+  if (!unlockedStages.includes(assignment.stage)) {
+    return <Navigate to={`/stages/${assignment.stage}`} replace />;
   }
   return <PracticePageInner assignment={assignment} />;
 }
