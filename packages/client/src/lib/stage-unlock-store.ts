@@ -185,11 +185,12 @@ function arraysEqual(a: readonly Stage[], b: readonly Stage[]): boolean {
  * App ルートで一度だけ呼ぶ。
  */
 let started = false;
+let progressUnsub: (() => void) | null = null;
 export function startStageUnlockSync(): void {
   if (started) {return;}
   started = true;
   ensureInitialized();
-  subscribeProgress(() => {
+  progressUnsub = subscribeProgress(() => {
     const before = cachedSet;
     const cleared = getClearedSnapshot();
     const next = recomputeUnlocks(cleared, cachedStages);
@@ -236,6 +237,10 @@ export function consumeRecentUnlock(): Stage | undefined {
 export function __resetStageUnlockStoreForTesting(): void {
   initialized = false;
   started = false;
+  if (progressUnsub) {
+    progressUnsub();
+    progressUnsub = null;
+  }
   cachedStages = [];
   cachedSet = new Set();
   recentUnlocks.length = 0;
