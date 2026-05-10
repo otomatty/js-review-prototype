@@ -5,7 +5,7 @@ export const s1Ch02BmiCapstone: Assignment = {
   stage: "S1",
   chapterId: "Ch02",
   sequence: 13,
-  title: "[卒業課題] BMI を計算する",
+  title: "[チャレンジ] BMI を計算する",
   newConcept: "S1 で習った変数 / 数値演算 / Math / テンプレートリテラルを統合する",
   estimatedMinutes: 10,
   difficulty: 2,
@@ -13,7 +13,7 @@ export const s1Ch02BmiCapstone: Assignment = {
   isCapstone: true,
   description: `## やること
 
-身長と体重から BMI を計算して、 整数 (= 四捨五入後) で出力する **卒業課題** です。
+身長と体重から BMI を計算して、 整数 (= 四捨五入後) で出力する **チャレンジ問題** です。
 
 次の値を const で持たせてください。
 

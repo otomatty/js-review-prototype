@@ -5,7 +5,7 @@ export const s1Ch03SelfIntroCapstone: Assignment = {
   stage: "S1",
   chapterId: "Ch03",
   sequence: 13,
-  title: "[卒業課題] 自己紹介文を組み立てる",
+  title: "[チャレンジ] 自己紹介文を組み立てる",
   newConcept: "S1 で習った変数 / 文字列 / テンプレートリテラルを統合する",
   estimatedMinutes: 10,
   difficulty: 2,
@@ -13,7 +13,7 @@ export const s1Ch03SelfIntroCapstone: Assignment = {
   isCapstone: true,
   description: `## やること
 
-3 つの変数 \`name\` / \`age\` / \`hobby\` を const で持ち、 テンプレートリテラルで自己紹介文を 2 行で組み立てて出力する **卒業課題** です。
+3 つの変数 \`name\` / \`age\` / \`hobby\` を const で持ち、 テンプレートリテラルで自己紹介文を 2 行で組み立てて出力する **チャレンジ問題** です。
 
 - \`name\`: \`"花子"\`
 - \`age\`: \`30\`

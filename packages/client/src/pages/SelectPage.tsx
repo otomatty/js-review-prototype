@@ -6,7 +6,7 @@
  * 装飾し、 状態に応じた CTA (「始める →」「続きから →」「🔒 解禁条件」 等)
  * を表示する。 モバイルは左寄せ 1 列に折り畳む。
  *
- * 卒業課題クリアで自動解禁が発火する判定は `App` ルート直下の
+ * チャレンジ問題クリアで自動解禁が発火する判定は `App` ルート直下の
  * `StageUnlockDialog` が担当しているため、 ここではカードの状態表示のみを担う。
  */
 
@@ -166,7 +166,7 @@ export function SelectPage() {
             </h2>
             <p className="m-0 max-w-[52ch] text-[14px] leading-[1.7] text-muted-foreground">
               S0 から S5 までを順に登っていくスパイラル方式。
-              卒業課題 (3 問) を全 pass で次のステージが解禁されます。
+              各ステージのチャレンジ問題をクリアすると次のステージが解禁されます。
             </p>
           </div>
           <dl className="m-0 grid grid-cols-3 gap-0 rounded-xl border border-border bg-card p-1 tabular-nums shadow-[var(--shadow-1)] max-md:w-full">
@@ -332,7 +332,7 @@ function TimelineItem({
             <div className="mt-2.5 inline-flex items-center gap-1.5 font-sans text-[11px] font-semibold tabular-nums text-amber-700 dark:text-amber-300">
               <span aria-hidden>🎓</span>
               <span>
-                卒業課題 {stat.capstonesCleared}/{stat.capstones}
+                チャレンジ問題 {stat.capstonesCleared}/{stat.capstones}
                 {capstoneDone && " ✓"}
               </span>
             </div>
@@ -420,7 +420,7 @@ function TimelineItem({
           <div
             className={cn(cardBase, cardStateClasses, cardInteractiveClasses)}
             aria-disabled
-            title="前のステージの卒業課題 (3 問) を全てクリアすると解禁されます"
+            title="前のステージのチャレンジ問題を全てクリアすると解禁されます"
           >
             {cardContent}
           </div>

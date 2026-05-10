@@ -226,8 +226,8 @@ function StagePageContent({ stage }: { stage: Stage }) {
             {capstones.length > 0 && (
               <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-300/60 bg-amber-50/80 px-3.5 py-1.5 font-jp text-[12px] font-semibold text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300">
                 {allCapstoneDone
-                  ? "🎉 卒業課題はすべてクリア済みです"
-                  : `卒業課題 ${capstones.length} 問を全 pass で次ステージが解禁されます (${capstoneCleared}/${capstones.length})`}
+                  ? "🎉 チャレンジ問題はすべてクリア済みです"
+                  : `チャレンジ問題 ${capstones.length} 問を全 pass で次ステージが解禁されます (${capstoneCleared}/${capstones.length})`}
               </p>
             )}
 
@@ -410,7 +410,7 @@ function LockedNotice({ stage }: { stage: Stage }) {
         🔒 {stage} はまだ解禁されていません
       </div>
       <p className="m-0 mx-auto max-w-[44ch] text-[13px] leading-[1.7] text-muted-foreground">
-        前のステージの卒業課題 (3 問) を全てクリアすると解禁されます。
+        前のステージのチャレンジ問題を全てクリアすると解禁されます。
       </p>
       <div className="mt-5">
         <Link

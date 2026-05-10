@@ -1,5 +1,5 @@
 /**
- * 卒業課題クリアによってステージが解禁された瞬間に表示する dialog。
+ * チャレンジ問題クリアによってステージが解禁された瞬間に表示する dialog。
  *
  * `useStageUnlocks` の更新を購読し、 直近で解禁されたステージが queue に積まれて
  * いれば 1 件取り出して表示する。 ユーザが閉じると次の queue を取り出す。
@@ -60,7 +60,7 @@ export function StageUnlockDialog() {
             🎉 {unlocked} が解禁されました
           </DialogTitle>
           <DialogDescription>
-            卒業課題を全てクリアし、 次のステージに進めるようになりました。
+            チャレンジ問題を全てクリアし、 次のステージに進めるようになりました。
           </DialogDescription>
         </DialogHeader>
         {info && (

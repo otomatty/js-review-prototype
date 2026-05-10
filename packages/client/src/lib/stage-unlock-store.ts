@@ -4,10 +4,9 @@
  * - キー: `jsreview/stages-unlocked`
  * - 値:   `{ v: 1, stages: Stage[] }`
  *
- * S0 / S1 はカリキュラム上 capstone gate で塞ぐべき問題が無いため初期解禁。
- * S(n+1) は Sn の `isCapstone: true` の問題が 1 個以上あり、 全て cleared
- * になった時点で解禁される。 一度解禁されたステージは単調増加 (capstone の
- * cleared が後から外れないのと同様、 unlock は剥奪されない)。
+ * S0 だけが初期解禁。 S(n+1) は Sn の `isCapstone: true` の問題が 1 個以上
+ * あり、 全て cleared になった時点で解禁される。 一度解禁されたステージは
+ * 単調増加 (capstone の cleared が後から外れないのと同様、 unlock は剥奪されない)。
  *
  * `progress-store` の cleared 変化を購読して自動再計算し、 新規解禁が起きた
  * 場合は「直近で解禁したステージ」 として queue に積む。 Dialog 表示側は
@@ -37,13 +36,10 @@ export const STAGE_ORDER: readonly Stage[] = [
 /**
  * 初期解禁ステージ。
  *
- * - S0: setup のみで capstone を持たないため常に解禁。
- * - S1: S0 capstone が無い (gate なし) ため、 デフォルト解禁とする。
- *
- * 将来 S0 capstone が追加されたら、 この配列を `["S0"]` に絞り、
- * S0 capstones を pass することで S1 が解禁される設計に変更する。
+ * - S0 のみがデフォルトで解禁される。
+ * - S0 のチャレンジ問題を全 pass した時点で S1 が解禁され、 以降同様に連鎖する。
  */
-const INITIAL_UNLOCKED: readonly Stage[] = ["S0", "S1"];
+const INITIAL_UNLOCKED: readonly Stage[] = ["S0"];
 
 interface StoredShape {
   v: number;

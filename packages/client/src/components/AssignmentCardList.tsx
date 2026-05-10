@@ -49,7 +49,7 @@ export function AssignmentCardList({
               )}
               aria-label={`${a.title} (難易度 ${a.difficulty}, ${
                 cleared ? "クリア済み" : "未クリア"
-              }${isCapstone ? ", 卒業課題" : ""})`}
+              }${isCapstone ? ", チャレンジ問題" : ""})`}
             >
               <span
                 className={cn(
@@ -119,9 +119,9 @@ function CardStatusBadge({
     return (
       <span
         className="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-[3px] font-sans text-[10.5px] font-bold uppercase tracking-[0.08em] text-amber-700 dark:border-amber-500/60 dark:bg-amber-500/10 dark:text-amber-300"
-        aria-label="卒業課題"
+        aria-label="チャレンジ問題"
       >
-        卒業課題
+        チャレンジ問題
       </span>
     );
   }
