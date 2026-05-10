@@ -24,25 +24,35 @@ const linter = new Linter();
 // 課題コードが利用しがちなグローバル一式 (no-undef を有効化したくても落ちないように)。
 // 本番側 (client/src/lib/eslint-runner.ts) と意図的にスーパーセットにしてある。
 const GLOBALS: Record<string, "readonly"> = {
-  Math: "readonly",
-  JSON: "readonly",
-  console: "readonly",
-  Object: "readonly",
   Array: "readonly",
-  Number: "readonly",
-  String: "readonly",
+  BigInt: "readonly",
   Boolean: "readonly",
+  Date: "readonly",
+  Error: "readonly",
+  Infinity: "readonly",
+  Intl: "readonly",
+  JSON: "readonly",
   Map: "readonly",
+  Math: "readonly",
+  NaN: "readonly",
+  Number: "readonly",
+  Object: "readonly",
+  Promise: "readonly",
+  RangeError: "readonly",
+  RegExp: "readonly",
   Set: "readonly",
+  String: "readonly",
+  Symbol: "readonly",
+  TypeError: "readonly",
   WeakMap: "readonly",
   WeakSet: "readonly",
-  Date: "readonly",
-  RegExp: "readonly",
-  Error: "readonly",
-  Symbol: "readonly",
-  Promise: "readonly",
-  Infinity: "readonly",
-  NaN: "readonly",
+  console: "readonly",
+  decodeURI: "readonly",
+  encodeURI: "readonly",
+  isFinite: "readonly",
+  isNaN: "readonly",
+  parseFloat: "readonly",
+  parseInt: "readonly",
   undefined: "readonly",
 };
 
@@ -72,14 +82,16 @@ export function lintCode(
         globals: GLOBALS,
       },
       rules: configuredRules,
-    }) as RawMessage[];
+    });
   } catch {
     return [];
   }
 
   return messages
     .filter((m) => {
-      if (m.ruleId !== "no-unused-vars") return true;
+      if (m.ruleId !== "no-unused-vars") {
+        return true;
+      }
       const unusedName = m.message.match(/'([^']+)'/)?.[1];
       return !unusedName || !ignored.has(unusedName);
     })

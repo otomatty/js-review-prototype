@@ -12,8 +12,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
-import type { Assignment } from "@jsreview/shared/types";
+import type { Assignment, ScaffoldLevel } from "@jsreview/shared/types";
 import {
+  DEFAULT_SCAFFOLD_LEVEL,
   getScaffoldCode,
   getStaticAnalysisSettings,
 } from "@jsreview/shared/assignment-helpers";
@@ -21,7 +22,9 @@ import {
 import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
 import { AssignmentView } from "../components/AssignmentView.js";
+import { OutputPane } from "../components/OutputPane.js";
 import { RunResultDialog } from "../components/RunResultDialog.js";
+import { ScaffoldChips } from "../components/ScaffoldChips.js";
 import { ThemeToggle } from "../components/ThemeToggle.js";
 import { AppHeader } from "../components/AppHeader.js";
 import { Button } from "../components/ui/button.js";
@@ -29,6 +32,7 @@ import { Button } from "../components/ui/button.js";
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "../hooks/useGradeRunner.js";
 import { useProgress } from "../hooks/useProgress.js";
+import { runFreeRun } from "../lib/api.js";
 
 /**
  * URL から課題を解決し、不正な ID なら一覧へリダイレクトするガード。
@@ -55,6 +59,14 @@ interface InnerProps {
 function PracticePageInner({ assignment }: InnerProps) {
   const navigate = useNavigate();
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
+  const [scaffoldLevel, setScaffoldLevel] = useState<ScaffoldLevel>(
+    DEFAULT_SCAFFOLD_LEVEL,
+  );
+  const [freeRun, setFreeRun] = useState<{
+    stdout?: string;
+    error?: string;
+  } | null>(null);
+  const [freeRunPending, setFreeRunPending] = useState(false);
 
   const { code, setCode, cleared, recordResult, clear } = useProgress({
     assignmentId: assignment.id,
@@ -72,27 +84,30 @@ function PracticePageInner({ assignment }: InnerProps) {
   // ダイアログでクリア時に「次の問題へ」リンクを出すために使う。
   const nextAssignment = useMemo(() => {
     const idx = assignments.findIndex((a) => a.id === assignment.id);
-    if (idx === -1 || idx >= assignments.length - 1) return null;
+    if (idx === -1 || idx >= assignments.length - 1) {return null;}
     return assignments[idx + 1];
   }, [assignment.id]);
 
   const handleGoToNext = useCallback(() => {
-    if (!nextAssignment) return;
+    if (!nextAssignment) {return;}
     setResultDialogOpen(false);
     navigate(`/problems/${nextAssignment.id}`);
   }, [navigate, nextAssignment]);
 
-  // 課題切替時、結果表示は無関係になるのでクリア
+  // 課題切替時、結果表示と自由実行出力をクリア
   useEffect(() => {
     reset();
+    setFreeRun(null);
+    setFreeRunPending(false);
+    setScaffoldLevel(DEFAULT_SCAFFOLD_LEVEL);
   }, [assignment.id, reset]);
 
   // `[` / `]` で前後の課題に移動 (両端は循環)。
   // CodeMirror など編集可能要素にフォーカス中は通常の文字入力を優先する。
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (e.key !== "[" && e.key !== "]") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) {return;}
+      if (e.key !== "[" && e.key !== "]") {return;}
       const t = e.target;
       if (
         t instanceof HTMLElement &&
@@ -103,7 +118,7 @@ function PracticePageInner({ assignment }: InnerProps) {
         return;
       }
       const idx = assignments.findIndex((a) => a.id === assignment.id);
-      if (idx === -1) return;
+      if (idx === -1) {return;}
       const len = assignments.length;
       const nextIdx =
         e.key === "[" ? (idx - 1 + len) % len : (idx + 1) % len;
@@ -120,7 +135,7 @@ function PracticePageInner({ assignment }: InnerProps) {
         "[OK] 保存も含めてリセット\n" +
         "[キャンセル] このまま編集を続ける",
     );
-    if (!wipeStorage) return;
+    if (!wipeStorage) {return;}
     clear();
     reset();
   }, [clear, reset]);
@@ -139,6 +154,40 @@ function PracticePageInner({ assignment }: InnerProps) {
     });
     recordResult(res.evaluation.cleared, submittedCode);
   }, [code, assignment, lint, ast, reset, run, recordResult]);
+
+  // 「実行」 (採点せずコードを isolated-vm で動かして stdout を取る)
+  const handleFreeRun = useCallback(async () => {
+    const submittedCode = code;
+    const targetAssignmentId = assignment.id;
+    setFreeRunPending(true);
+    setFreeRun({ stdout: undefined, error: undefined });
+    try {
+      const res = await runFreeRun(submittedCode);
+      // 実行中に課題が切り替わったら結果を捨てる
+      if (assignment.id !== targetAssignmentId) {return;}
+      setFreeRun({
+        stdout: res.stdout ?? "",
+        error: res.error,
+      });
+    } catch (e) {
+      if (assignment.id !== targetAssignmentId) {return;}
+      setFreeRun({
+        error: e instanceof Error ? e.message : String(e),
+      });
+    } finally {
+      if (assignment.id === targetAssignmentId) {
+        setFreeRunPending(false);
+      }
+    }
+  }, [code, assignment.id]);
+
+  const handleScaffoldSelect = useCallback(
+    (level: ScaffoldLevel) => {
+      setCode(getScaffoldCode(assignment, level));
+      setScaffoldLevel(level);
+    },
+    [assignment, setCode],
+  );
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
@@ -174,7 +223,13 @@ function PracticePageInner({ assignment }: InnerProps) {
           <AssignmentView assignment={assignment} />
         </aside>
 
-        <section className="grid grid-rows-[1fr_auto] overflow-hidden bg-background">
+        <section className="grid grid-rows-[auto_1fr_auto_auto] overflow-hidden bg-background">
+          <ScaffoldChips
+            assignment={assignment}
+            currentCode={code}
+            activeLevel={scaffoldLevel}
+            onSelect={handleScaffoldSelect}
+          />
           <div className="flex min-h-0 flex-col overflow-hidden bg-background">
             <div className="flex-1 overflow-auto">
               <Editor
@@ -185,6 +240,12 @@ function PracticePageInner({ assignment }: InnerProps) {
               />
             </div>
           </div>
+          <OutputPane
+            stdout={freeRun?.stdout}
+            error={freeRun?.error}
+            running={freeRunPending}
+            onClear={() => setFreeRun(null)}
+          />
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-6 py-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -195,14 +256,24 @@ function PracticePageInner({ assignment }: InnerProps) {
                 Server · isolated-vm
               </span>
             </div>
-            <Button
-              variant="acial"
-              size="lg"
-              onClick={handleRun}
-              disabled={running}
-            >
-              {running ? "実行中..." : "▶ 採点を実行"}
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleFreeRun}
+                disabled={freeRunPending || running}
+              >
+                {freeRunPending ? "実行中..." : "▶ 実行"}
+              </Button>
+              <Button
+                variant="acial"
+                size="lg"
+                onClick={handleRun}
+                disabled={running}
+              >
+                {running ? "採点中..." : "✓ 採点を実行"}
+              </Button>
+            </div>
           </div>
 
           <RunResultDialog

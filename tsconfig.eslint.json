@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["packages/client/src/*"],
+      "@jsreview/shared": ["packages/shared/src/index.ts"],
+      "@jsreview/shared/*": ["packages/shared/src/*"]
+    },
+    "types": ["bun", "node", "vite/client"]
+  },
+  "include": [
+    "packages/client/src/**/*",
+    "packages/client/vite.config.ts",
+    "packages/client/vite-plugins/**/*.ts",
+    "packages/server/src/**/*",
+    "packages/shared/scripts/**/*.ts",
+    "packages/shared/src/**/*",
+    "packages/shared/test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/shared/src/problems/**/*"
+  ]
+}

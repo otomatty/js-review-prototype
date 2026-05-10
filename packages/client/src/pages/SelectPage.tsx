@@ -69,7 +69,7 @@ export function SelectPage() {
   const summary = useMemo(() => {
     let cleared = 0;
     for (const a of assignments) {
-      if (clearedSet.has(a.id)) cleared++;
+      if (clearedSet.has(a.id)) {cleared++;}
     }
     return {
       total: assignments.length,
@@ -92,11 +92,11 @@ export function SelectPage() {
           }
           if (statusFilter !== "all") {
             const s = statusOf(clearedSet.has(a.id));
-            if (s !== statusFilter) return false;
+            if (s !== statusFilter) {return false;}
           }
           if (normalizedQuery !== "") {
             const haystack = `${a.title} ${chapter.label}`.toLowerCase();
-            if (!haystack.includes(normalizedQuery)) return false;
+            if (!haystack.includes(normalizedQuery)) {return false;}
           }
           return true;
         });

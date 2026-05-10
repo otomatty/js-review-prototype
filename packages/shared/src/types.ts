@@ -259,6 +259,12 @@ export interface RunTestsRequest {
   testKind: TestKind;
   tests: TestCase[];
   entryPoints?: string[];
+  /**
+   * "test" (既定): tests を採点する通常モード。
+   * "freerun": tests を無視してコードを実行し stdout のみ返す。
+   * 学習者が採点とは別に「いまの出力を見たい」用途で使う。
+   */
+  mode?: "test" | "freerun";
 }
 
 export interface RunTestsResponse {

@@ -3,9 +3,16 @@
   "configurations": [
     {
       "name": "client",
-      "runtimeExecutable": "pnpm",
+      "runtimeExecutable": "bun",
       "runtimeArgs": ["--filter", "@jsreview/client", "dev"],
-      "port": 5174
+      "autoPort": true,
+      "port": 5175
+    },
+    {
+      "name": "server",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["--filter", "@jsreview/server", "dev"],
+      "port": 3001
     }
   ]
 }

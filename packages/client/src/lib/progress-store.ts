@@ -25,7 +25,7 @@ interface StoredEntry extends ProgressEntry {
 
 function safeStorage(): Storage | null {
   try {
-    if (typeof window === "undefined") return null;
+    if (typeof window === "undefined") {return null;}
     return window.localStorage;
   } catch {
     return null;
@@ -45,7 +45,7 @@ let cachedCleared: Set<string> | null = null;
 
 function emitChange(): void {
   cachedCleared = null;
-  for (const l of listeners) l();
+  for (const l of listeners) {l();}
 }
 
 export function subscribeProgress(listener: Listener): () => void {
@@ -58,26 +58,26 @@ export function subscribeProgress(listener: Listener): () => void {
 /** 起動時に呼ぶ。バージョン不一致なら旧データを破棄する。 */
 export function initProgressStore(): void {
   const ls = safeStorage();
-  if (!ls) return;
+  if (!ls) {return;}
 
   // 別タブでの編集にも追従する (key === null は localStorage.clear())。
   if (typeof window !== "undefined") {
     window.addEventListener("storage", (e) => {
-      if (e.key === null || e.key.startsWith(PREFIX)) emitChange();
+      if (e.key === null || e.key.startsWith(PREFIX)) {emitChange();}
     });
   }
 
   const stored = ls.getItem(VERSION_KEY);
-  if (stored === String(VERSION)) return;
+  if (stored === String(VERSION)) {return;}
 
   // バージョン不一致 (または未設定) → 旧データを掃除
   // v1 → v2 (bestScore: number → cleared: boolean) は互換維持しないことに決定。
   const obsolete: string[] = [];
   for (let i = 0; i < ls.length; i++) {
     const k = ls.key(i);
-    if (k && k.startsWith(PREFIX) && k !== VERSION_KEY) obsolete.push(k);
+    if (k && k.startsWith(PREFIX) && k !== VERSION_KEY) {obsolete.push(k);}
   }
-  for (const k of obsolete) ls.removeItem(k);
+  for (const k of obsolete) {ls.removeItem(k);}
   try {
     ls.setItem(VERSION_KEY, String(VERSION));
   } catch {
@@ -87,14 +87,14 @@ export function initProgressStore(): void {
 
 export function loadEntry(assignmentId: string): ProgressEntry | null {
   const ls = safeStorage();
-  if (!ls) return null;
+  if (!ls) {return null;}
   const raw = ls.getItem(entryKey(assignmentId));
-  if (!raw) return null;
+  if (!raw) {return null;}
   try {
     const parsed = JSON.parse(raw) as Partial<StoredEntry>;
-    if (parsed.v !== VERSION) return null;
-    if (typeof parsed.lastCode !== "string") return null;
-    if (typeof parsed.cleared !== "boolean") return null;
+    if (parsed.v !== VERSION) {return null;}
+    if (typeof parsed.lastCode !== "string") {return null;}
+    if (typeof parsed.cleared !== "boolean") {return null;}
     return {
       cleared: parsed.cleared,
       lastCode: parsed.lastCode,
@@ -123,7 +123,7 @@ export function saveEntry(
   opts: SaveOptions = {},
 ): void {
   const ls = safeStorage();
-  if (!ls) return;
+  if (!ls) {return;}
   const payload: StoredEntry = { v: VERSION, ...entry };
   const serialized = JSON.stringify(payload);
   let written = false;
@@ -143,7 +143,7 @@ export function saveEntry(
       }
     }
   }
-  if (!written) return;
+  if (!written) {return;}
   // 容量逼迫で他課題のエントリが削除された可能性があるパスでは、
   // cleared に変化がなくても一括ビューのキャッシュを無効化する必要がある
   // (削除済み課題のクリア状態を表示し続けるのを防ぐ)。
@@ -161,10 +161,10 @@ export function saveEntry(
 
 export function deleteEntry(assignmentId: string): void {
   const ls = safeStorage();
-  if (!ls) return;
+  if (!ls) {return;}
   const had = ls.getItem(entryKey(assignmentId)) !== null;
   ls.removeItem(entryKey(assignmentId));
-  if (had) emitChange();
+  if (had) {emitChange();}
 }
 
 /**
@@ -173,7 +173,7 @@ export function deleteEntry(assignmentId: string): void {
  * `useSyncExternalStore` の getSnapshot として安全に使える。
  */
 export function getClearedSnapshot(): Set<string> {
-  if (cachedCleared) return cachedCleared;
+  if (cachedCleared) {return cachedCleared;}
   const set = new Set<string>();
   const ls = safeStorage();
   if (!ls) {
@@ -182,12 +182,12 @@ export function getClearedSnapshot(): Set<string> {
   }
   for (let i = 0; i < ls.length; i++) {
     const k = ls.key(i);
-    if (!k || !k.startsWith(PREFIX) || k === VERSION_KEY) continue;
+    if (!k || !k.startsWith(PREFIX) || k === VERSION_KEY) {continue;}
     const raw = ls.getItem(k);
-    if (!raw) continue;
+    if (!raw) {continue;}
     try {
       const parsed = JSON.parse(raw) as Partial<StoredEntry>;
-      if (parsed.v !== VERSION) continue;
+      if (parsed.v !== VERSION) {continue;}
       if (parsed.cleared === true) {
         set.add(k.slice(PREFIX.length));
       }
@@ -200,7 +200,7 @@ export function getClearedSnapshot(): Set<string> {
 }
 
 function isQuotaError(e: unknown): boolean {
-  if (!(e instanceof Error)) return false;
+  if (!(e instanceof Error)) {return false;}
   // ブラウザによって名称が異なる
   return (
     e.name === "QuotaExceededError" ||
@@ -215,8 +215,8 @@ function pruneOldest(ls: Storage, currentAssignmentId: string): void {
   const items: Item[] = [];
   for (let i = 0; i < ls.length; i++) {
     const k = ls.key(i);
-    if (!k || !k.startsWith(PREFIX) || k === VERSION_KEY) continue;
-    if (k === entryKey(currentAssignmentId)) continue;
+    if (!k || !k.startsWith(PREFIX) || k === VERSION_KEY) {continue;}
+    if (k === entryKey(currentAssignmentId)) {continue;}
     const raw = ls.getItem(k);
     let ts = 0;
     if (raw) {

@@ -1,5 +1,9 @@
 import { Fragment } from "react";
-import type { Assignment, MdnSection } from "@jsreview/shared/types";
+import type {
+  Assignment,
+  Difficulty,
+  MdnSection,
+} from "@jsreview/shared/types";
 import { findChapter } from "@jsreview/shared/assignments";
 import javascript from "highlight.js/lib/languages/javascript";
 import ReactMarkdown from "react-markdown";
@@ -8,9 +12,14 @@ import type { Options as RehypeHighlightOptions } from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 
 import { cn } from "@/lib/utils";
+import { HintsPanel } from "./HintsPanel.js";
 
 interface Props {
   assignment: Assignment;
+}
+
+function difficultyStars(d: Difficulty): string {
+  return "★".repeat(d) + "☆".repeat(3 - d);
 }
 
 /**
@@ -79,15 +88,19 @@ export function AssignmentView({ assignment }: Props) {
             </a>
             {chapter.description ? ` — ${chapter.description}` : null}
           </div>
-          {sections.length > 0 && (
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-sans text-[11.5px] leading-[1.55] text-muted-foreground">
-              <span
-                className="font-semibold uppercase tracking-widest text-ink-400 dark:text-ink-500"
-                aria-label="参考にする MDN セクション"
-              >
-                参考
-              </span>
-              {sections.map((section, i) => {
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-sans text-[11.5px] leading-[1.55] text-muted-foreground">
+            <span
+              className="font-semibold uppercase tracking-widest text-ink-400 dark:text-ink-500"
+              aria-label={
+                sections.length > 0
+                  ? "参考にする MDN セクション"
+                  : "この章の MDN ページ"
+              }
+            >
+              {sections.length > 0 ? "参考" : "Reference"}
+            </span>
+            {sections.length > 0 ? (
+              sections.map((section, i) => {
                 const url = buildMdnSectionUrl(
                   section,
                   chapter.defaultMdnPage,
@@ -112,17 +125,47 @@ export function AssignmentView({ assignment }: Props) {
                     </a>
                   </Fragment>
                 );
-              })}
-            </div>
-          )}
+              })
+            ) : (
+              <a
+                href={chapter.defaultMdnPage}
+                target="_blank"
+                rel="noreferrer"
+                className="text-ink-600 no-underline underline-offset-[3px] hover:text-blue-700 hover:underline dark:text-ink-300 dark:hover:text-blue-300"
+              >
+                【{chapter.label}】
+              </a>
+            )}
+          </div>
         </div>
       )}
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        <span
+          className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-[3px] font-sans text-[11px] font-semibold text-muted-foreground"
+          title="新しく学ぶ概念"
+        >
+          NEW · {assignment.newConcept}
+        </span>
+        <span
+          className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-[3px] font-sans text-[11px] font-semibold text-muted-foreground"
+          title="想定所要時間"
+        >
+          ⏱ 約 {assignment.estimatedMinutes} 分
+        </span>
+        <span
+          className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-[3px] font-sans text-[11px] font-semibold text-amber-600 dark:text-amber-300"
+          title={`難易度 ${assignment.difficulty}/3`}
+        >
+          {difficultyStars(assignment.difficulty)}
+        </span>
+      </div>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[[rehypeHighlight, rehypeHighlightOptions]]}
       >
         {assignment.description}
       </ReactMarkdown>
+      <HintsPanel key={assignment.id} hints={assignment.hints} />
     </div>
   );
 }

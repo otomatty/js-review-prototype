@@ -9,7 +9,7 @@ import ivm from "isolated-vm";
 import { withWallTimeout } from "@jsreview/shared/util/timeout";
 
 import type { TestCase, TestKind, TestResult } from "../types.js";
-import { IsolatePool } from "../isolate-pool.js";
+import type { IsolatePool } from "../isolate-pool.js";
 
 const PER_TEST_TIMEOUT_MS = 1000;
 /** Promise チェーンを許容する全体タイムアウト。 */
@@ -52,6 +52,20 @@ export class TestRunner {
     }
   }
 
+  /**
+   * 自由実行モード。テストを評価せず、stdout (と発生時のエラー) のみを返す。
+   * 「実行」ボタンから呼ばれる。
+   */
+  async runFreeRun(code: string): Promise<TestResult> {
+    const captured = await this.executeAndCaptureStdout(code);
+    return {
+      name: "freerun",
+      passed: captured.error === undefined,
+      stdout: captured.stdout,
+      ...(captured.error !== undefined ? { error: captured.error } : {}),
+    };
+  }
+
   private async runStdoutTest(
     code: string,
     test: TestCase,
@@ -65,6 +79,34 @@ export class TestRunner {
     }
     const expectedStdout = test.expectedStdout;
 
+    const captured = await this.executeAndCaptureStdout(code);
+    const expected = normalizeStdout(expectedStdout);
+
+    if (captured.error !== undefined) {
+      return {
+        name: test.name,
+        passed: false,
+        stdout: captured.stdout,
+        expectedStdout: expected,
+        error: captured.error,
+      };
+    }
+
+    return {
+      name: test.name,
+      passed: captured.stdout === expected,
+      stdout: captured.stdout,
+      expectedStdout: expected,
+    };
+  }
+
+  /**
+   * isolated-vm 内でコードを実行し console.log を捕捉する共通処理。
+   * 採点 (`runStdoutTest`) と自由実行 (`runFreeRun`) の両方から呼ばれる。
+   */
+  private async executeAndCaptureStdout(
+    code: string,
+  ): Promise<{ stdout: string; error?: string }> {
     const isolate = await this.pool.acquire();
     const stdout: string[] = [];
     try {
@@ -78,12 +120,15 @@ export class TestRunner {
 
       let script: ivm.Script;
       try {
-        script = await isolate.compileScript(`${consoleHookSource()}\n${code}`);
+        // 末尾に `;undefined` を追加し、 評価結果が常に literal undefined になるようにする。
+        // promise:true でスクリプトの完了値を待つ際、 user コードが何も返さない (コメントのみ等) と
+        // isolated-vm が "A non-transferable value was passed" を投げるための回避策。
+        script = await isolate.compileScript(
+          `${consoleHookSource()}\n${code}\n;undefined;`,
+        );
       } catch (e) {
         return {
-          name: test.name,
-          passed: false,
-          expectedStdout,
+          stdout: normalizeStdout(stdout.join("\n")),
           error: `COMPILE_ERROR: ${formatErr(e)}`,
         };
       }
@@ -99,10 +144,7 @@ export class TestRunner {
       } catch (e) {
         const msg = formatErr(e);
         return {
-          name: test.name,
-          passed: false,
           stdout: normalizeStdout(stdout.join("\n")),
-          expectedStdout: normalizeStdout(expectedStdout),
           error:
             msg.includes("Script execution timed out") || msg === "TIMEOUT"
               ? "TIMEOUT"
@@ -110,14 +152,7 @@ export class TestRunner {
         };
       }
 
-      const actual = normalizeStdout(stdout.join("\n"));
-      const expected = normalizeStdout(expectedStdout);
-      return {
-        name: test.name,
-        passed: actual === expected,
-        stdout: actual,
-        expectedStdout: expected,
-      };
+      return { stdout: normalizeStdout(stdout.join("\n")) };
     } finally {
       this.pool.release(isolate);
     }
@@ -235,6 +270,6 @@ function normalizeStdout(output: string): string {
 }
 
 function formatErr(e: unknown): string {
-  if (e instanceof Error) return e.message;
+  if (e instanceof Error) {return e.message;}
   return String(e);
 }

@@ -51,7 +51,7 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
   // 切替直後の useState は初回マウントの値しか反映しないため effect で更新する。
   const lastAssignmentRef = useRef<string>(assignmentId);
   useEffect(() => {
-    if (lastAssignmentRef.current === assignmentId) return;
+    if (lastAssignmentRef.current === assignmentId) {return;}
     lastAssignmentRef.current = assignmentId;
     const next = readInitial(assignmentId, starterCode);
     setCodeState(next.code);
@@ -63,7 +63,7 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
     const timer = setTimeout(() => {
       // starterCode と完全一致なら entry を作らない (新規ノイズを避ける)
       const existing = loadEntry(assignmentId);
-      if (!existing && code === starterCode) return;
+      if (!existing && code === starterCode) {return;}
       const nextCleared = existing?.cleared ?? cleared;
       saveEntry(
         assignmentId,
@@ -97,7 +97,7 @@ export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
         previousCleared: existing?.cleared ?? null,
       });
       // 表示中の課題が切り替わっていれば cleared の state は触らない。
-      if (lastAssignmentRef.current === assignmentId) setCleared(nextCleared);
+      if (lastAssignmentRef.current === assignmentId) {setCleared(nextCleared);}
     },
     [assignmentId],
   );
@@ -116,6 +116,6 @@ function readInitial(
   starterCode: string,
 ): { code: string; cleared: boolean } {
   const entry = loadEntry(assignmentId);
-  if (!entry) return { code: starterCode, cleared: false };
+  if (!entry) {return { code: starterCode, cleared: false };}
   return { code: entry.lastCode, cleared: entry.cleared };
 }
