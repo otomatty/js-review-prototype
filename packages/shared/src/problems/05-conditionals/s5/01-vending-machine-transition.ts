@@ -108,6 +108,13 @@ function applyVendingAction(state, action) {
       })()`,
     },
     {
+      name: "idle + insert は balance を上書きせず加算する (balance: 50 + amount: 100 = 150)",
+      code: `(() => {
+        const s = applyVendingAction({ status: "idle", balance: 50, selectedItem: null, message: "" }, { type: "insert", amount: 100 });
+        return s.status === "accepting" && s.balance === 150;
+      })()`,
+    },
+    {
       name: "idle + insert で amount が 0 のときは状態を変えない",
       code: `(() => {
         const s = applyVendingAction({ status: "idle", balance: 0, selectedItem: null, message: "" }, { type: "insert", amount: 0 });
@@ -213,7 +220,7 @@ function applyVendingAction(state, action) {
     "外側で switch (state.status) を書き、 内側で switch (action.type) を書く 2 段構造にすると 「どの状態でどの操作が来たか」 が表形式で並んで読みやすくなります。",
     "状態は変えないが message だけ更新したい場合も、 必ず { ...state, message: ... } のスプレッドで新しいオブジェクトを返すこと。 元の state を破壊しないのが S5 の不変更新パターンです。",
     "残高ぴったりで払い出した後の遷移 (idle へ戻すか accepting に残すか) は、 dispense 後の残高で三項演算子 1 つで分岐できます: status: remaining > 0 ? \"accepting\" : \"idle\"",
-    "解答例:\n```js\nconst PRICES = { cola: 150, water: 100, tea: 120 };\n\nfunction applyVendingAction(state, action) {\n  switch (state.status) {\n    case \"idle\": {\n      if (action.type === \"insert\" && typeof action.amount === \"number\" && action.amount > 0) {\n        return { ...state, status: \"accepting\", balance: action.amount, message: \"投入を受け付けました\" };\n      }\n      return { ...state, message: \"先にお金を投入してください\" };\n    }\n    case \"accepting\": {\n      switch (action.type) {\n        case \"insert\":\n          if (typeof action.amount !== \"number\" || !(action.amount > 0)) {\n            return { ...state, message: \"不正な投入金額です\" };\n          }\n          return { ...state, balance: state.balance + action.amount, message: \"追加投入を受け付けました\" };\n        case \"select\": {\n          const price = PRICES[action.item];\n          if (typeof price !== \"number\") {\n            return { ...state, message: \"未対応の商品です\" };\n          }\n          if (state.balance < price) {\n            return { ...state, message: \"残高不足です\" };\n          }\n          return { ...state, status: \"selected\", selectedItem: action.item, message: \"商品を選択しました\" };\n        }\n        case \"cancel\":\n          return { ...state, status: \"idle\", balance: 0, selectedItem: null, message: \"投入金を返却しました\" };\n        case \"dispense\":\n          return { ...state, message: \"商品を選択してください\" };\n        default:\n          return { ...state, message: \"未対応の操作です\" };\n      }\n    }\n    case \"selected\": {\n      switch (action.type) {\n        case \"dispense\": {\n          const remaining = state.balance - PRICES[state.selectedItem];\n          return {\n            ...state,\n            status: remaining > 0 ? \"accepting\" : \"idle\",\n            balance: remaining,\n            selectedItem: null,\n            message: \"商品を払い出しました\",\n          };\n        }\n        case \"cancel\":\n          return { ...state, status: \"idle\", balance: 0, selectedItem: null, message: \"投入金を返却しました\" };\n        default:\n          return { ...state, message: \"先の選択をキャンセルするか払い出してください\" };\n      }\n    }\n    default:\n      return { ...state, message: \"未対応の状態です\" };\n  }\n}\n```",
+    "解答例:\n```js\nconst PRICES = { cola: 150, water: 100, tea: 120 };\n\nfunction applyVendingAction(state, action) {\n  switch (state.status) {\n    case \"idle\": {\n      if (action.type === \"insert\" && typeof action.amount === \"number\" && action.amount > 0) {\n        return { ...state, status: \"accepting\", balance: state.balance + action.amount, message: \"投入を受け付けました\" };\n      }\n      return { ...state, message: \"先にお金を投入してください\" };\n    }\n    case \"accepting\": {\n      switch (action.type) {\n        case \"insert\":\n          if (typeof action.amount !== \"number\" || !(action.amount > 0)) {\n            return { ...state, message: \"不正な投入金額です\" };\n          }\n          return { ...state, balance: state.balance + action.amount, message: \"追加投入を受け付けました\" };\n        case \"select\": {\n          const price = PRICES[action.item];\n          if (typeof price !== \"number\") {\n            return { ...state, message: \"未対応の商品です\" };\n          }\n          if (state.balance < price) {\n            return { ...state, message: \"残高不足です\" };\n          }\n          return { ...state, status: \"selected\", selectedItem: action.item, message: \"商品を選択しました\" };\n        }\n        case \"cancel\":\n          return { ...state, status: \"idle\", balance: 0, selectedItem: null, message: \"投入金を返却しました\" };\n        case \"dispense\":\n          return { ...state, message: \"商品を選択してください\" };\n        default:\n          return { ...state, message: \"未対応の操作です\" };\n      }\n    }\n    case \"selected\": {\n      switch (action.type) {\n        case \"dispense\": {\n          const remaining = state.balance - PRICES[state.selectedItem];\n          return {\n            ...state,\n            status: remaining > 0 ? \"accepting\" : \"idle\",\n            balance: remaining,\n            selectedItem: null,\n            message: \"商品を払い出しました\",\n          };\n        }\n        case \"cancel\":\n          return { ...state, status: \"idle\", balance: 0, selectedItem: null, message: \"投入金を返却しました\" };\n        default:\n          return { ...state, message: \"先の選択をキャンセルするか払い出してください\" };\n      }\n    }\n    default:\n      return { ...state, message: \"未対応の状態です\" };\n  }\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -234,7 +241,7 @@ function applyVendingAction(state, action) {
   switch (state.status) {
     case "idle": {
       if (action.type === "insert" && typeof action.amount === "number" && action.amount > 0) {
-        return { ...state, status: "accepting", balance: action.amount, message: "投入を受け付けました" };
+        return { ...state, status: "accepting", balance: state.balance + action.amount, message: "投入を受け付けました" };
       }
       return { ...state, message: "先にお金を投入してください" };
     }
