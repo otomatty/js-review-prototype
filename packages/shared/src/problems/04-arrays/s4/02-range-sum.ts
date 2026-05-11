@@ -79,6 +79,7 @@ rangeSum([-1, -2, -3, -4], 1, 3);  // → -5
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で合計を返す" },
         { kind: "node", nodeType: "ForStatement", label: "for (let i = 0; ...) で累積和を組み立てる" },
+        { kind: "const-declaration", name: "prefix", label: "const prefix = [0] で累積和テーブルを作る" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
@@ -106,13 +107,13 @@ rangeSum([-1, -2, -3, -4], 1, 3);  // → -5
     {
       code: `function rangeSum(arr, l, r) {
   let sum = 0;
-  for (let i = l; i <= r; i++) {
+  for (let i = l; i < r; i++) {
     sum += arr[i];
   }
   return sum;
 }
 `,
-      description: "i <= r になっており区間の末尾を含めてしまっている (off-by-one でテスト失敗)",
+      description: "累積和テーブル prefix を作らずに毎回 i = l..r-1 で直接合計している (AST required 違反: const prefix が無い)",
     },
     {
       code: `function rangeSum(arr, l, r) {

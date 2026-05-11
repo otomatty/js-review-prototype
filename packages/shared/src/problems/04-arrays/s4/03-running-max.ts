@@ -27,12 +27,13 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
 
 ## ポイント
 
-- 「現在の最大候補」 を \`let m\` で保持し、 配列を 1 周しながら **\`if (n > m) m = n;\`** で更新します。
+- 「現在の最大候補」 を \`let m\` で保持し、 配列を 1 周しながら **\`if (arr[i] > m) m = arr[i];\`** で更新します。
 - 更新したあとに \`out.push(m)\` で各位置の累積最大を記録します。
-- AST で \`if 文\` を必須にしているので、 \`m = Math.max(m, n)\` の 1 行更新では通りません。 自分の手で **条件分岐** を書いてください。
+- AST で **添字 \`for\`** と **\`if 文\`** を必須にしているので、 \`for...of\` や \`m = Math.max(m, arr[i])\` の 1 行更新では通りません。 自分の手で **添字 for + 条件分岐** を書いてください。
 `,
   starterCode: `function runningMax(arr) {
-  // let m を初期化し、 for...of で if (n > m) m = n; を回して out に push する
+  // const out = [] と let m を用意し、 for (let i = 0; i < arr.length; i++) で
+  // if (i === 0 || arr[i] > m) m = arr[i]; を回して out.push(m) する
 }
 `,
   entryPoints: ["runningMax"],
@@ -64,14 +65,15 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
     },
   ],
   hints: [
-    "let m = arr[0] で初期化、 const out = [] を用意。 ただし空配列の場合は最初の if で初期化する手もある。",
-    "for (const n of arr) で走査し、 「初回 or n > m なら m = n」 → out.push(m) の順。",
-    "解答例:\n```js\nfunction runningMax(arr) {\n  const out = [];\n  let m = 0;\n  let first = true;\n  for (const n of arr) {\n    if (first) {\n      m = n;\n      first = false;\n    } else if (n > m) {\n      m = n;\n    }\n    out.push(m);\n  }\n  return out;\n}\n```",
+    "let m = 0 と const out = [] を用意 (初回は if 内で m = arr[i] と代入する)。",
+    "for (let i = 0; i < arr.length; i++) で添字を回し、 if (i === 0 || arr[i] > m) m = arr[i]; の後に out.push(m)。",
+    "解答例:\n```js\nfunction runningMax(arr) {\n  const out = [];\n  let m = 0;\n  for (let i = 0; i < arr.length; i++) {\n    if (i === 0 || arr[i] > m) {\n      m = arr[i];\n    }\n    out.push(m);\n  }\n  return out;\n}\n```",
   ],
   staticAnalysis: {
     ast: {
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で累積最大値の配列を返す" },
+        { kind: "node", nodeType: "ForStatement", label: "for (let i = 0; ...) で添字を回す" },
         { kind: "node", nodeType: "IfStatement", label: "if で最大値を更新する" },
       ],
       forbidden: [
@@ -85,13 +87,9 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
   solution: `function runningMax(arr) {
   const out = [];
   let m = 0;
-  let first = true;
-  for (const n of arr) {
-    if (first) {
-      m = n;
-      first = false;
-    } else if (n > m) {
-      m = n;
+  for (let i = 0; i < arr.length; i++) {
+    if (i === 0 || arr[i] > m) {
+      m = arr[i];
     }
     out.push(m);
   }
@@ -109,9 +107,9 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
     {
       code: `function runningMax(arr) {
   const out = [];
-  let m = arr[0];
-  for (const n of arr) {
-    m = Math.max(m, n);
+  let m = -Infinity;
+  for (let i = 0; i < arr.length; i++) {
+    m = Math.max(m, arr[i]);
     out.push(m);
   }
   return out;
@@ -123,16 +121,16 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
       code: `function runningMax(arr) {
   const out = [];
   let m = 0;
-  for (const n of arr) {
-    if (n > m) {
-      m = n;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] > m) {
+      m = arr[i];
     }
     out.push(m);
   }
   return out;
 }
 `,
-      description: "初期値を 0 にしているため全要素が負のとき誤った最大を返す (テスト失敗)",
+      description: "初期値を 0 にしているため全要素が負のとき誤った最大 (0) を返す (テスト失敗)",
     },
   ],
   mdnSections: [
