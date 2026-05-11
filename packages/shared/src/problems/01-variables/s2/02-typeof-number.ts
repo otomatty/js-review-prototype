@@ -56,6 +56,11 @@ number
           argument: { kind: "string", value: "number" },
           label: "答えを文字列リテラルで直接書かない",
         },
+        {
+          kind: "console-log",
+          argument: { kind: "binary", operator: "+" },
+          label: "文字列連結 ('num' + 'ber') で答えを組み立てない",
+        },
       ],
     },
   },

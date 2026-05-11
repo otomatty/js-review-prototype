@@ -65,6 +65,11 @@ a=2 b=1
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "a=2 b=1" },
+          label: "結果を文字列リテラルで直接出力しない",
+        },
       ],
     },
   },

@@ -50,6 +50,11 @@ false
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "loose-eq", label: "== / != は使わず === / !== を使う" },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "false" },
+          label: "比較せず文字列を直接書かない",
+        },
       ],
     },
   },

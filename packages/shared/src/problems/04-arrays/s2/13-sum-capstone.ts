@@ -56,6 +56,7 @@ for (let i = 0; i < nums.length; i++) {
   staticAnalysis: {
     ast: {
       required: [
+        { kind: "const-declaration", name: "nums", label: "const nums を宣言する" },
         { kind: "node", nodeType: "ForStatement", label: "for ループを使う" },
         { kind: "node", nodeType: "TemplateLiteral", label: "テンプレートリテラルで出力する" },
       ],

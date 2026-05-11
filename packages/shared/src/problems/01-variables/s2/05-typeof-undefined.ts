@@ -51,6 +51,11 @@ undefined
           argument: { kind: "string", value: "undefined" },
           label: "答えを文字列リテラルで直接書かない",
         },
+        {
+          kind: "console-log",
+          argument: { kind: "identifier", name: "undefined" },
+          label: "undefined を直接渡さない (typeof で確認する)",
+        },
       ],
     },
   },
