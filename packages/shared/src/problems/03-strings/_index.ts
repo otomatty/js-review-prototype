@@ -38,6 +38,9 @@ import { s4Ch03IsAnagram } from "./s4/02-is-anagram.js";
 import { s4Ch03ClassifyChars } from "./s4/03-classify-chars.js";
 import { s4Ch03CaesarCipher } from "./s4/04-caesar-cipher.js";
 import { s4Ch03PalindromeCleanCapstone } from "./s4/05-palindrome-clean-capstone.js";
+import { s5Ch03CsvToMarkdownTable } from "./s5/01-csv-to-markdown-table.js";
+import { s5Ch03LogLevelAggregate } from "./s5/02-log-level-aggregate.js";
+import { s5Ch03CsvWithHeaderParseCapstone } from "./s5/03-csv-with-header-parse-capstone.js";
 
 export const ch03Strings: Assignment[] = [
   s1Ch03StringLiteral,
@@ -78,4 +81,7 @@ export const ch03Strings: Assignment[] = [
   s4Ch03ClassifyChars,
   s4Ch03CaesarCipher,
   s4Ch03PalindromeCleanCapstone,
+  s5Ch03CsvToMarkdownTable,
+  s5Ch03LogLevelAggregate,
+  s5Ch03CsvWithHeaderParseCapstone,
 ];

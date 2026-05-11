@@ -24,7 +24,7 @@
 ├── s2/   # Phase 7 で追加済み (12 問)
 ├── s3/   # Phase 8 で追加済み (8 問)
 ├── s4/   # Phase 9 で追加済み (5 問、 末尾は卒業課題)
-└── s5/   # Phase 9 で追加予定
+└── s5/   # Phase 9 で追加済み (3 問、 末尾は卒業課題)
 ```
 
 ## S1 で扱う問題 (13 問、 13 番目がチャレンジ問題)
@@ -112,6 +112,21 @@
 - 文字コード操作: `charCodeAt` で取り、 演算し、 `String.fromCharCode` で戻す
 - `replace(/.../g, "")` で **正規表現の文字クラスを使った一括除去** が頻出
 
+## S5 で扱う問題 (3 問、 3 番目が卒業課題)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S5-Ch03-01-csv-to-markdown-table` | 複数行 CSV を Markdown 表にフォーマット変換 |
+| 02 | `S5-Ch03-02-log-level-aggregate` | 複数行ログをパースしてラベル別件数を集計 |
+| 03 | `S5-Ch03-03-csv-with-header-parse-capstone` ⭐ | **[卒業課題]** ヘッダ付き CSV をオブジェクト配列にパース |
+
+### S5 学習ポイント
+
+- 複数行文字列の処理は **`split("\n")` → 各行を加工 → `join` / `map → return`** の 3 ステップ
+- 末尾改行・空行は `.filter((line) => line.length > 0)` で先に除外しておくと本処理が壊れない
+- ヘッダ行は **データ行とは分けて先に取り出す**、 その上でデータ行は `lines.slice(1).map(...)` で写像する、 という設計判断を身につける
+- 1 行 → 1 オブジェクトの組み立ては `Object.fromEntries(headers.map((h, i) => [h, cells[i]]))` の定型
+
 ## 状態
 
-S1: 13 問、 S2: 12 問、 S3: 8 問、 S4: 5 問追加済み (Phase 5 / Phase 7 / Phase 8 / Phase 9)。 S5 は未着手。
+S1: 13 問、 S2: 12 問、 S3: 8 問、 S4: 5 問、 S5: 3 問追加済み (Phase 5 / Phase 7 / Phase 8 / Phase 9)。 Ch03 文字列 章は完成。
