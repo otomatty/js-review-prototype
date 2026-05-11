@@ -33,7 +33,7 @@ parseDate("");             // → null
 - 数値化は \`Number(...)\` で。 \`parseInt\` でも可ですが、 ここでは \`Number\` を推奨します。
 `,
   starterCode: `function parseDate(s) {
-  // キャプチャグループでYYYY/MM/DDを取り出してください
+  // キャプチャグループで YYYY-MM-DD を取り出してください
   // マッチしなければ null を返します
 }
 `,

@@ -31,7 +31,7 @@ snakeToCamel("user_id_2");        // → "userId2"  (数字の場合はアンダ
 
 - \`String.replace\` の **第 2 引数に関数** を渡すと、 マッチごとにその関数で置換結果を組み立てられます。
   関数の引数は \`(マッチ全体, キャプチャ1, キャプチャ2, ...)\`。
-- パターン: \`/_(\\\\w)/g\` で 「アンダースコア + 単語文字 1 文字」 をキャプチャ。
+- パターン: \`/_([A-Za-z0-9])/g\` で 「アンダースコア + 英数字 1 文字」 をキャプチャ (区切りの \`_\` 自体を取り込まないように \`\\\\w\` ではなく文字クラスを使う)。
 - コールバックで \`(_, c) => c.toUpperCase()\` のように 「キャプチャを大文字化したもの」 を返せばアンダースコアごと置換できます。
   (数字に対する \`toUpperCase\` はそのまま数字なので、 結果としてアンダースコアだけが消えます)
 
@@ -55,8 +55,8 @@ snakeToCamel("user_id_2");        // → "userId2"  (数字の場合はアンダ
     { name: '"a_b_c_d" は "aBCD"', code: `snakeToCamel("a_b_c_d") === "aBCD"` },
   ],
   hints: [
-    "s.replace(/_(\\w)/g, (_, c) => c.toUpperCase()) のように、 replace の第 2 引数に関数を渡します。",
-    "解答例:\n```js\nfunction snakeToCamel(s) {\n  return s.replace(/_(\\w)/g, (_, c) => c.toUpperCase());\n}\n```",
+    "s.replace(/_([A-Za-z0-9])/g, (_, c) => c.toUpperCase()) のように、 replace の第 2 引数に関数を渡します。",
+    "解答例:\n```js\nfunction snakeToCamel(s) {\n  return s.replace(/_([A-Za-z0-9])/g, (_, c) => c.toUpperCase());\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -72,7 +72,7 @@ snakeToCamel("user_id_2");        // → "userId2"  (数字の場合はアンダ
     },
   },
   solution: `function snakeToCamel(s) {
-  return s.replace(/_(\\w)/g, (_, c) => c.toUpperCase());
+  return s.replace(/_([A-Za-z0-9])/g, (_, c) => c.toUpperCase());
 }
 `,
   badSolutions: [
