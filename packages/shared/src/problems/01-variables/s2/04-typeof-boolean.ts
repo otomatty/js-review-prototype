@@ -51,6 +51,16 @@ boolean
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "boolean" },
+          label: "答えを文字列リテラルで直接書かない",
+        },
+        {
+          kind: "console-log",
+          argument: { kind: "binary", operator: "+" },
+          label: "文字列連結で答えを組み立てない",
+        },
       ],
     },
   },
