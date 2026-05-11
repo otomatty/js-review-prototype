@@ -20,6 +20,11 @@ import { s3Ch05DayKind } from "./s3/02-day-kind.js";
 import { s3Ch05CategorizeAge } from "./s3/03-categorize-age.js";
 import { s3Ch05CompareCount } from "./s3/04-compare-count.js";
 import { s3Ch05MaxOfThree } from "./s3/05-max-of-three.js";
+import { s4Ch05OrderStatusTransition } from "./s4/01-order-status-transition.js";
+import { s4Ch05ValidateUserInput } from "./s4/02-validate-user-input.js";
+import { s4Ch05ScoreBand } from "./s4/03-score-band.js";
+import { s4Ch05BusinessHours } from "./s4/04-business-hours.js";
+import { s4Ch05AccountActionCapstone } from "./s4/05-account-action-capstone.js";
 
 export const ch05Conditionals: Assignment[] = [
   s2Ch05IfPositive,
@@ -42,4 +47,9 @@ export const ch05Conditionals: Assignment[] = [
   s3Ch05CategorizeAge,
   s3Ch05CompareCount,
   s3Ch05MaxOfThree,
+  s4Ch05OrderStatusTransition,
+  s4Ch05ValidateUserInput,
+  s4Ch05ScoreBand,
+  s4Ch05BusinessHours,
+  s4Ch05AccountActionCapstone,
 ];
