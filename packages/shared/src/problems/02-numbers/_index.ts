@@ -33,6 +33,10 @@ import { s3Ch02SumToN } from "./s3/05-sum-to-n.js";
 import { s3Ch02CountDigits } from "./s3/06-count-digits.js";
 import { s3Ch02FizzBuzzValue } from "./s3/07-fizzbuzz-value.js";
 import { s3Ch02Gcd } from "./s3/08-gcd.js";
+import { s4Ch02ToBinary } from "./s4/01-to-binary.js";
+import { s4Ch02IsArithmetic } from "./s4/02-is-arithmetic.js";
+import { s4Ch02PrimeFactors } from "./s4/03-prime-factors.js";
+import { s4Ch02ToBaseCapstone } from "./s4/04-to-base-capstone.js";
 
 export const ch02Numbers: Assignment[] = [
   s1Ch02Add,
@@ -68,4 +72,8 @@ export const ch02Numbers: Assignment[] = [
   s3Ch02CountDigits,
   s3Ch02FizzBuzzValue,
   s3Ch02Gcd,
+  s4Ch02ToBinary,
+  s4Ch02IsArithmetic,
+  s4Ch02PrimeFactors,
+  s4Ch02ToBaseCapstone,
 ];
