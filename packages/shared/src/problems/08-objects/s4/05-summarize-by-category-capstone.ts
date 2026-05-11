@@ -68,7 +68,7 @@ summarizeByCategory([]);
       name: "空配列は空オブジェクト",
       code: `(() => {
         const r = summarizeByCategory([]);
-        return typeof r === "object" && r !== null && Object.keys(r).length === 0;
+        return r !== null && typeof r === "object" && !Array.isArray(r) && Object.keys(r).length === 0;
       })()`,
     },
     {
@@ -103,7 +103,7 @@ summarizeByCategory([]);
       name: "戻り値はプレーンオブジェクト (Map ではない)",
       code: `(() => {
         const r = summarizeByCategory([{ category: "x", price: 1, sold: 1 }]);
-        return !(r instanceof Map) && typeof r === "object";
+        return !(r instanceof Map) && r !== null && typeof r === "object" && !Array.isArray(r);
       })()`,
     },
     {
