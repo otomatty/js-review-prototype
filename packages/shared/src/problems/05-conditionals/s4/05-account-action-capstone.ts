@@ -166,11 +166,43 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
       code: `applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 10 }) === null && applyAccountAction({ status: "closed", balance: 0 }, { type: "unfreeze" }) === null`,
     },
     {
-      name: "元の account は変更されない",
+      name: "元の account は deposit でも変更されない",
       code: `(() => {
         const before = { status: "open", balance: 100 };
         applyAccountAction(before, { type: "deposit", amount: 50 });
         return before.status === "open" && before.balance === 100;
+      })()`,
+    },
+    {
+      name: "元の account は withdraw でも変更されない",
+      code: `(() => {
+        const before = { status: "open", balance: 100 };
+        applyAccountAction(before, { type: "withdraw", amount: 40 });
+        return before.status === "open" && before.balance === 100;
+      })()`,
+    },
+    {
+      name: "元の account は freeze でも変更されない",
+      code: `(() => {
+        const before = { status: "open", balance: 100 };
+        applyAccountAction(before, { type: "freeze" });
+        return before.status === "open" && before.balance === 100;
+      })()`,
+    },
+    {
+      name: "元の account は close でも変更されない",
+      code: `(() => {
+        const before = { status: "open", balance: 100 };
+        applyAccountAction(before, { type: "close" });
+        return before.status === "open" && before.balance === 100;
+      })()`,
+    },
+    {
+      name: "元の account は frozen→unfreeze でも変更されない",
+      code: `(() => {
+        const before = { status: "frozen", balance: 100 };
+        applyAccountAction(before, { type: "unfreeze" });
+        return before.status === "frozen" && before.balance === 100;
       })()`,
     },
     {
