@@ -26,6 +26,9 @@ import { s4Ch06IsPrime } from "./s4/02-is-prime.js";
 import { s4Ch06MatrixSum } from "./s4/03-matrix-sum.js";
 import { s4Ch06FindPairSum } from "./s4/04-find-pair-sum.js";
 import { s4Ch06TransposeCapstone } from "./s4/05-transpose-capstone.js";
+import { s5Ch06TwoSumMap } from "./s5/01-two-sum-map.js";
+import { s5Ch06FirstDuplicateAction } from "./s5/02-first-duplicate-action.js";
+import { s5Ch06TopSpenderPerCategoryCapstone } from "./s5/03-top-spender-per-category-capstone.js";
 
 export const ch06Loops: Assignment[] = [
   s2Ch06ForCountUp,
@@ -54,4 +57,7 @@ export const ch06Loops: Assignment[] = [
   s4Ch06MatrixSum,
   s4Ch06FindPairSum,
   s4Ch06TransposeCapstone,
+  s5Ch06TwoSumMap,
+  s5Ch06FirstDuplicateAction,
+  s5Ch06TopSpenderPerCategoryCapstone,
 ];
