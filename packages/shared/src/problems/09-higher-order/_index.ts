@@ -8,6 +8,11 @@ import { s3Ch09Adults } from "./s3/05-adults.js";
 import { s3Ch09CountTrue } from "./s3/06-count-true.js";
 import { s3Ch09FindByName } from "./s3/07-find-by-name.js";
 import { s3Ch09PipelineCapstone } from "./s3/08-pipeline-capstone.js";
+import { s4Ch09MyMap } from "./s4/01-my-map.js";
+import { s4Ch09Partition } from "./s4/02-partition.js";
+import { s4Ch09GroupBy } from "./s4/03-group-by.js";
+import { s4Ch09Scan } from "./s4/04-scan.js";
+import { s4Ch09PipelineCapstone } from "./s4/05-pipeline-capstone.js";
 
 export const ch09HigherOrder: Assignment[] = [
   s3Ch09DoubleAll,
@@ -18,4 +23,9 @@ export const ch09HigherOrder: Assignment[] = [
   s3Ch09CountTrue,
   s3Ch09FindByName,
   s3Ch09PipelineCapstone,
+  s4Ch09MyMap,
+  s4Ch09Partition,
+  s4Ch09GroupBy,
+  s4Ch09Scan,
+  s4Ch09PipelineCapstone,
 ];
