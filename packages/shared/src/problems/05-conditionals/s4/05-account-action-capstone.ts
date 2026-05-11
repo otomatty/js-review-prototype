@@ -100,6 +100,14 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
       code: `applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: -10 }) === null`,
     },
     {
+      name: "amount が NaN の deposit は null",
+      code: `applyAccountAction({ status: "open", balance: 100 }, { type: "deposit", amount: NaN }) === null`,
+    },
+    {
+      name: "amount が NaN の withdraw は null",
+      code: `applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: NaN }) === null`,
+    },
+    {
       name: "open + freeze で frozen になる",
       code: `JSON.stringify(applyAccountAction({ status: "open", balance: 100 }, { type: "freeze" })) === JSON.stringify({ status: "frozen", balance: 100 })`,
     },
@@ -150,9 +158,9 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
   ],
   hints: [
     "外側で switch (account.status)、 open の中でさらに switch (action.type)。 closed は問答無用で null。",
-    "deposit / withdraw の amount チェックは amount > 0 を共通条件にし、 withdraw は balance >= amount も合わせて確認する。",
+    "deposit / withdraw の amount チェックは !(amount > 0) を共通条件にし (こう書くと NaN もまとめて弾ける)、 withdraw は balance >= amount も合わせて確認する。",
     "戻り値は { ...account, status: ..., balance: ... } のスプレッドで新しいオブジェクトにする。",
-    "解答例:\n```js\nfunction applyAccountAction(account, action) {\n  switch (account.status) {\n    case \"closed\":\n      return null;\n    case \"frozen\":\n      if (action.type === \"unfreeze\") {\n        return { ...account, status: \"open\" };\n      }\n      return null;\n    case \"open\":\n      switch (action.type) {\n        case \"deposit\":\n          if (typeof action.amount !== \"number\" || action.amount <= 0) {\n            return null;\n          }\n          return { ...account, balance: account.balance + action.amount };\n        case \"withdraw\":\n          if (\n            typeof action.amount !== \"number\" ||\n            action.amount <= 0 ||\n            account.balance < action.amount\n          ) {\n            return null;\n          }\n          return { ...account, balance: account.balance - action.amount };\n        case \"freeze\":\n          return { ...account, status: \"frozen\" };\n        case \"close\":\n          return { ...account, status: \"closed\" };\n        default:\n          return null;\n      }\n    default:\n      return null;\n  }\n}\n```",
+    "解答例:\n```js\nfunction applyAccountAction(account, action) {\n  switch (account.status) {\n    case \"closed\":\n      return null;\n    case \"frozen\":\n      if (action.type === \"unfreeze\") {\n        return { ...account, status: \"open\" };\n      }\n      return null;\n    case \"open\":\n      switch (action.type) {\n        case \"deposit\":\n          if (typeof action.amount !== \"number\" || !(action.amount > 0)) {\n            return null;\n          }\n          return { ...account, balance: account.balance + action.amount };\n        case \"withdraw\":\n          if (\n            typeof action.amount !== \"number\" ||\n            !(action.amount > 0) ||\n            account.balance < action.amount\n          ) {\n            return null;\n          }\n          return { ...account, balance: account.balance - action.amount };\n        case \"freeze\":\n          return { ...account, status: \"frozen\" };\n        case \"close\":\n          return { ...account, status: \"closed\" };\n        default:\n          return null;\n      }\n    default:\n      return null;\n  }\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -179,14 +187,14 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
     case "open":
       switch (action.type) {
         case "deposit":
-          if (typeof action.amount !== "number" || action.amount <= 0) {
+          if (typeof action.amount !== "number" || !(action.amount > 0)) {
             return null;
           }
           return { ...account, balance: account.balance + action.amount };
         case "withdraw":
           if (
             typeof action.amount !== "number" ||
-            action.amount <= 0 ||
+            !(action.amount > 0) ||
             account.balance < action.amount
           ) {
             return null;
@@ -266,6 +274,46 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
 }
 `,
       description: "deposit / withdraw の amount 検証と残高チェックを省いている (テスト失敗)",
+    },
+    {
+      code: `function applyAccountAction(account, action) {
+  switch (account.status) {
+    case "closed":
+      return null;
+    case "frozen":
+      if (action.type === "unfreeze") {
+        return { ...account, status: "open" };
+      }
+      return null;
+    case "open":
+      switch (action.type) {
+        case "deposit":
+          if (typeof action.amount !== "number" || action.amount <= 0) {
+            return null;
+          }
+          return { ...account, balance: account.balance + action.amount };
+        case "withdraw":
+          if (
+            typeof action.amount !== "number" ||
+            action.amount <= 0 ||
+            account.balance < action.amount
+          ) {
+            return null;
+          }
+          return { ...account, balance: account.balance - action.amount };
+        case "freeze":
+          return { ...account, status: "frozen" };
+        case "close":
+          return { ...account, status: "closed" };
+        default:
+          return null;
+      }
+    default:
+      return null;
+  }
+}
+`,
+      description: "amount <= 0 で弾いており NaN がすり抜けて balance が NaN になる (NaN <= 0 は false のため。 !(amount > 0) と書くと NaN もまとめて弾ける)",
     },
   ],
   mdnSections: [
