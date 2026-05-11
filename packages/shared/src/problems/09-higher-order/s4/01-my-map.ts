@@ -84,6 +84,11 @@ myMap([], (x) => x);                       // → []
         { kind: "var", label: "var を使わない" },
         { kind: "method", name: "map", label: "自作課題なので組み込みの map は使わない" },
         { kind: "method", name: "forEach", label: "forEach ではなく reduce で組み立てる" },
+        { kind: "node", nodeType: "ForStatement", label: "reduce 課題なので for は使わない" },
+        { kind: "node", nodeType: "ForOfStatement", label: "reduce 課題なので for...of は使わない" },
+        { kind: "node", nodeType: "ForInStatement", label: "reduce 課題なので for...in は使わない" },
+        { kind: "node", nodeType: "WhileStatement", label: "reduce 課題なので while は使わない" },
+        { kind: "node", nodeType: "DoWhileStatement", label: "reduce 課題なので do...while は使わない" },
       ],
     },
   },
@@ -118,7 +123,7 @@ myMap([], (x) => x);                       // → []
   }, []);
 }
 `,
-      description: "コールバックで acc を return していないので 2 件目以降が undefined になる (テスト失敗)",
+      description: "コールバックで acc を return していないため、 次の周回で acc が undefined になり acc.push 呼び出しで TypeError になる (テスト失敗)",
     },
   ],
   mdnSections: [

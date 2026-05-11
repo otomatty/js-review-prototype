@@ -95,6 +95,12 @@ groupBy([], (x) => x).size;   // → 0
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
+        { kind: "method", name: "forEach", label: "reduce 課題なので forEach は使わない" },
+        { kind: "node", nodeType: "ForStatement", label: "reduce 課題なので for は使わない" },
+        { kind: "node", nodeType: "ForOfStatement", label: "reduce 課題なので for...of は使わない" },
+        { kind: "node", nodeType: "ForInStatement", label: "reduce 課題なので for...in は使わない" },
+        { kind: "node", nodeType: "WhileStatement", label: "reduce 課題なので while は使わない" },
+        { kind: "node", nodeType: "DoWhileStatement", label: "reduce 課題なので do...while は使わない" },
       ],
     },
   },
