@@ -31,7 +31,7 @@ pickFields({ a: 1 }, []);
 ## ポイント
 
 - 空オブジェクト \`const result = {}\` を作り、 各キーが存在すれば \`result[key] = obj[key]\` で追加します。
-- 存在チェックは \`Object.hasOwn\` か \`key in obj\`。
+- 存在チェックは \`Object.hasOwn(obj, key)\` を使います (継承プロパティは含めない)。
 `,
   starterCode: `function pickFields(obj, keys) {
   // ここを実装してください
@@ -55,6 +55,15 @@ pickFields({ a: 1 }, []);
     {
       name: "空配列の keys なら空オブジェクト",
       code: `(() => { const r = pickFields({ a: 1 }, []); return Object.keys(r).length === 0; })()`,
+    },
+    {
+      name: "継承プロパティは含めない",
+      code: `(() => {
+        const src = Object.create({ inherited: 1 });
+        src.own = 2;
+        const r = pickFields(src, ["inherited", "own"]);
+        return r.own === 2 && r.inherited === undefined && Object.keys(r).length === 1;
+      })()`,
     },
   ],
   hints: [

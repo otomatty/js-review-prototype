@@ -53,6 +53,15 @@ filterEven([0, 2, 4]);        // → [0, 2, 4]   (0 も偶数)
       name: "filterEven([10,11,12,13,14]) は [10,12,14]",
       code: `(() => { const r = filterEven([10,11,12,13,14]); return JSON.stringify(r) === "[10,12,14]"; })()`,
     },
+    {
+      name: "元の配列は変更されず、 新しい配列を返す",
+      code: `(() => {
+        const src = [3, 2, 1, 4];
+        const before = JSON.stringify(src);
+        const r = filterEven(src);
+        return JSON.stringify(src) === before && r !== src;
+      })()`,
+    },
   ],
   hints: [
     "result = []; if (n % 2 === 0) result.push(n);",

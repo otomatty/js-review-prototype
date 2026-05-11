@@ -38,6 +38,10 @@ hasProperty({}, "a");                      // → false
     { name: 'hasProperty({a:undefined}, "a") は true', code: `hasProperty({ a: undefined }, "a") === true` },
     { name: 'hasProperty({}, "a") は false', code: `hasProperty({}, "a") === false` },
     { name: 'hasProperty({x:0}, "x") は true', code: `hasProperty({ x: 0 }, "x") === true` },
+    {
+      name: '継承プロパティ (Object.create({a:1}).a) は false',
+      code: `(() => { const obj = Object.create({ a: 1 }); return hasProperty(obj, "a") === false; })()`,
+    },
   ],
   hints: [
     "Object.hasOwn(obj, key) を使う。",

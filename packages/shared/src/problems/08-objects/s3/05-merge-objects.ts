@@ -49,8 +49,18 @@ mergeObjects({ a: 1, b: 2 }, { b: 3 });   // → { a: 1, b: 3 }
       code: `(() => { const r = mergeObjects({ a: 1, b: 2 }, { b: 3 }); return r.a === 1 && r.b === 3; })()`,
     },
     {
-      name: "元の a, b は変更されない",
-      code: `(() => { const a = { x: 1 }; const b = { y: 2 }; mergeObjects(a, b); return a.y === undefined && b.x === undefined; })()`,
+      name: "元の a, b は変更されず、 戻り値は新しいオブジェクト",
+      code: `(() => {
+        const a = { x: 1 };
+        const b = { y: 2 };
+        const beforeA = JSON.stringify(a);
+        const beforeB = JSON.stringify(b);
+        const r = mergeObjects(a, b);
+        return JSON.stringify(a) === beforeA
+          && JSON.stringify(b) === beforeB
+          && r !== a
+          && r !== b;
+      })()`,
     },
   ],
   hints: [

@@ -5,7 +5,7 @@ export const s3Ch13ValidateAge: Assignment = {
   stage: "S3",
   chapterId: "Ch13",
   sequence: 3,
-  title: "不正な入力で TypeError を投げる",
+  title: "不正な入力で TypeError / RangeError を投げる",
   newConcept: "事前条件チェックで TypeError / RangeError を投げる",
   estimatedMinutes: 12,
   difficulty: 2,

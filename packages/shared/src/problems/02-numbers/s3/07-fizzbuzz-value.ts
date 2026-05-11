@@ -40,6 +40,7 @@ fizzBuzzValue(30);  // → "FizzBuzz"
   demoCall: `console.log(fizzBuzzValue(15));`,
   tests: [
     { name: 'fizzBuzzValue(1) は "1"', code: `fizzBuzzValue(1) === "1"` },
+    { name: 'fizzBuzzValue(0) は "FizzBuzz"', code: `fizzBuzzValue(0) === "FizzBuzz"` },
     { name: 'fizzBuzzValue(3) は "Fizz"', code: `fizzBuzzValue(3) === "Fizz"` },
     { name: 'fizzBuzzValue(5) は "Buzz"', code: `fizzBuzzValue(5) === "Buzz"` },
     { name: 'fizzBuzzValue(15) は "FizzBuzz"', code: `fizzBuzzValue(15) === "FizzBuzz"` },

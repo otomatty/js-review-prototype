@@ -45,8 +45,8 @@ function divideOrZero(a, b) {
     { name: "divideOrZero(-6, 3) は -2", code: `divideOrZero(-6, 3) === -2` },
     { name: "divideOrZero(0, 5) は 0", code: `divideOrZero(0, 5) === 0` },
     {
-      name: "divide(10, 0) は例外を投げる",
-      code: `(() => { try { divide(10, 0); return false; } catch (e) { return true; } })()`,
+      name: 'divide(10, 0) は Error("zero") を投げる',
+      code: `(() => { try { divide(10, 0); return false; } catch (e) { return e instanceof Error && e.message === "zero"; } })()`,
     },
     { name: "divide(10, 2) は 5", code: `divide(10, 2) === 5` },
   ],

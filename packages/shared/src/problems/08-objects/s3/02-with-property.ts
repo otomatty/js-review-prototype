@@ -6,7 +6,7 @@ export const s3Ch08WithProperty: Assignment = {
   chapterId: "Ch08",
   sequence: 2,
   title: "プロパティを追加した新しいオブジェクトを返す",
-  newConcept: "スプレッド構文 \`{...obj, key: value}\` で非破壊更新",
+  newConcept: "スプレッド構文 \`{ ...obj, [key]: value }\` で非破壊更新",
   estimatedMinutes: 10,
   difficulty: 2,
   testKind: "function",

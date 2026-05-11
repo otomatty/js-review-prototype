@@ -46,6 +46,7 @@ maxOfThree(7, 7, 7);    // → 7
     ast: {
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で最大値を返す" },
+        { kind: "node", nodeType: "IfStatement", label: "if 文で比較する (三項演算子のみは不可)" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },

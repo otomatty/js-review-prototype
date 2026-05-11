@@ -6,13 +6,13 @@ export const s3Ch12FixIsEmpty: Assignment = {
   chapterId: "Ch12",
   sequence: 2,
   title: "[デバッグ] isEmpty の判定ミスを直す",
-  newConcept: "比較演算子の方向 (>= vs ===) を見直す",
+  newConcept: "比較条件の向き (> 0 vs === 0) を見直す",
   estimatedMinutes: 8,
   difficulty: 2,
   testKind: "function",
   description: `## やること
 
-下記の \`isEmpty\` 関数は **空配列なら true、 1 要素以上なら false** を返すはずですが、 比較が間違っていて常に \`false\` になります。 修正してください。
+下記の \`isEmpty\` 関数は **空配列なら true、 1 要素以上なら false** を返すはずですが、 比較が逆で **空配列で false / 要素ありで true** になっています。 修正してください。
 
 \`\`\`js
 isEmpty([]);          // → true

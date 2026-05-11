@@ -62,8 +62,8 @@ attempt(() => "hello");
     },
   ],
   hints: [
-    "try { return { ok: true, value: fn() }; } catch (e) { return { ok: false, error: e.message }; }",
-    "解答例:\n```js\nfunction attempt(fn) {\n  try {\n    return { ok: true, value: fn() };\n  } catch (e) {\n    return { ok: false, error: e.message };\n  }\n}\n```",
+    "try { return { ok: true, value: fn() }; } catch (e) { return { ok: false, error: e instanceof Error ? e.message : String(e) }; }",
+    "解答例:\n```js\nfunction attempt(fn) {\n  try {\n    return { ok: true, value: fn() };\n  } catch (e) {\n    return { ok: false, error: e instanceof Error ? e.message : String(e) };\n  }\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -80,7 +80,7 @@ attempt(() => "hello");
   try {
     return { ok: true, value: fn() };
   } catch (e) {
-    return { ok: false, error: e.message };
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
   }
 }
 `,

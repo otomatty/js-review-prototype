@@ -71,7 +71,7 @@ isEven(-4);  // → true
   return n % 2;
 }
 `,
-      description: "真偽値ではなく数値 (0 or 1) を返している",
+      description: "真偽値ではなく数値を返している (偶数で 0、 奇数で 0 以外。 負の奇数では -1)",
     },
   ],
   mdnSections: [

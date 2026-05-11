@@ -40,6 +40,7 @@ isPrime(13);  // → true
     { name: "isPrime(7) は true", code: `isPrime(7) === true` },
     { name: "isPrime(1) は false", code: `isPrime(1) === false` },
     { name: "isPrime(0) は false", code: `isPrime(0) === false` },
+    { name: "isPrime(-5) は false", code: `isPrime(-5) === false` },
     { name: "isPrime(9) は false", code: `isPrime(9) === false` },
     { name: "isPrime(13) は true", code: `isPrime(13) === true` },
     { name: "isPrime(97) は true", code: `isPrime(97) === true` },

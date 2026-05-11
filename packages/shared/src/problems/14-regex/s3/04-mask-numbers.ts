@@ -23,7 +23,7 @@ maskNumbers("0");             // → "#"
 
 ## ポイント
 
-- \`s.replace(/\\\\d/g, "#")\` で「すべての数字を # に」 置換できます。
+- \`s.replace(/\\d/g, "#")\` で「すべての数字を # に」 置換できます。
 - \`g\` フラグが無いと最初の 1 文字しか置換されません。
 `,
   starterCode: `function maskNumbers(s) {

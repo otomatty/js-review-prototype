@@ -38,11 +38,11 @@ swapPair(true, false);  // → [false, true]
     },
     {
       name: 'swapPair("x", "y") は ["y", "x"]',
-      code: `(() => { const r = swapPair("x", "y"); return Array.isArray(r) && r[0] === "y" && r[1] === "x"; })()`,
+      code: `(() => { const r = swapPair("x", "y"); return Array.isArray(r) && r.length === 2 && r[0] === "y" && r[1] === "x"; })()`,
     },
     {
       name: "swapPair(true, false) は [false, true]",
-      code: `(() => { const r = swapPair(true, false); return Array.isArray(r) && r[0] === false && r[1] === true; })()`,
+      code: `(() => { const r = swapPair(true, false); return Array.isArray(r) && r.length === 2 && r[0] === false && r[1] === true; })()`,
     },
   ],
   hints: [

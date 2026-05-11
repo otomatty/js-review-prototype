@@ -65,6 +65,10 @@ stats([-3, -1, -2]);
       name: "stats([100,200,300]) の avg は 200",
       code: `(() => { const r = stats([100,200,300]); return r.avg === 200 && r.min === 100 && r.max === 300; })()`,
     },
+    {
+      name: "stats([1,2]) の avg は 1.5 (小数も正しく返る)",
+      code: `(() => { const r = stats([1,2]); return r.count === 2 && r.sum === 3 && r.min === 1 && r.max === 2 && r.avg === 1.5; })()`,
+    },
   ],
   hints: [
     "min と max は arr[0] で初期化、 sum は 0 で初期化。",
