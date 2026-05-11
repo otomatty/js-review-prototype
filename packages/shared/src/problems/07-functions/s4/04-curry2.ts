@@ -4,7 +4,7 @@ export const s4Ch07Curry2: Assignment = {
   id: "S4-Ch07-04-curry2",
   stage: "S4",
   chapterId: "Ch07",
-  sequence: 28,
+  sequence: 4,
   title: "curry: 2 引数関数を 1 引数ずつ受け取れる形に変える",
   newConcept: "2 引数関数を 「関数を返す関数」 に組み直すカリー化の入口",
   estimatedMinutes: 25,

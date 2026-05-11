@@ -4,7 +4,7 @@ export const s4Ch07Once: Assignment = {
   id: "S4-Ch07-01-once",
   stage: "S4",
   chapterId: "Ch07",
-  sequence: 25,
+  sequence: 1,
   title: "once: 関数を 1 度だけ実行できるようラップする",
   newConcept: "クロージャに 「呼ばれたか」 のフラグと初回結果を覚えさせる高階関数",
   estimatedMinutes: 25,

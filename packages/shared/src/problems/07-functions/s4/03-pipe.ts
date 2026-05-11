@@ -4,7 +4,7 @@ export const s4Ch07Pipe: Assignment = {
   id: "S4-Ch07-03-pipe",
   stage: "S4",
   chapterId: "Ch07",
-  sequence: 27,
+  sequence: 3,
   title: "pipe: 関数を任意個数で左から順に適用する",
   newConcept: "残余引数で受けた関数列を reduce で順番に適用する可変長合成",
   estimatedMinutes: 25,

@@ -4,7 +4,7 @@ export const s4Ch07ValidatorCapstone: Assignment = {
   id: "S4-Ch07-05-validator-capstone",
   stage: "S4",
   chapterId: "Ch07",
-  sequence: 29,
+  sequence: 5,
   title: "[卒業課題] combineChecks: 検証関数を組み合わせて 1 つにまとめる",
   newConcept: "複数の小さな検証関数を残余引数で受け、 早期 return で最初のエラーだけ返す合成",
   estimatedMinutes: 40,

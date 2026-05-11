@@ -4,7 +4,7 @@ export const s4Ch07Memoize: Assignment = {
   id: "S4-Ch07-02-memoize",
   stage: "S4",
   chapterId: "Ch07",
-  sequence: 26,
+  sequence: 2,
   title: "memoize: 同じ引数のときは結果を Map にキャッシュする",
   newConcept: "Map をクロージャに閉じ込め、 引数→結果のキャッシュを持つ高階関数",
   estimatedMinutes: 30,
