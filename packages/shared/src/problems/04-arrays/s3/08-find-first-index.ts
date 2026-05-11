@@ -48,10 +48,12 @@ findFirstIndex([1, 2, 1, 2], 2);    // → 1   (最初の 2)
     ast: {
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で添字を返す" },
+        { kind: "node", nodeType: "ForStatement", label: "for ループで探索する" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "method", name: "indexOf", label: "indexOf を使わない" },
+        { kind: "method", name: "findIndex", label: "findIndex を使わない" },
         { kind: "loose-eq", label: "== / != を使わない" },
       ],
     },

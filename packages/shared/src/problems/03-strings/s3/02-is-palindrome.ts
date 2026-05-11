@@ -40,6 +40,10 @@ isPalindrome("");       // → true   (空文字列は回文扱い)
     { name: 'isPalindrome("a") は true', code: `isPalindrome("a") === true` },
     { name: 'isPalindrome("") は true', code: `isPalindrome("") === true` },
     { name: 'isPalindrome("ab") は false', code: `isPalindrome("ab") === false` },
+    {
+      name: 'isPalindrome("Aa") は false (大文字小文字を区別する)',
+      code: `isPalindrome("Aa") === false`,
+    },
   ],
   hints: [
     "反転した文字列と元を比較。",
