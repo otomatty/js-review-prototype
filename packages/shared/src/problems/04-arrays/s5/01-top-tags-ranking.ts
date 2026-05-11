@@ -47,7 +47,7 @@ topTagsRanking(["x", "x"], 0);    // → []
   3. \`.sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))\` で **count 降順 + tag 昇順** の 2 段ソート
   4. \`.slice(0, topN)\` で上位 N 件を切り出す
 - S4 までと違って、 S5 では **\`map\` / \`filter\` / \`sort\` / \`slice\`** などの配列メソッドを **積極的に使う** ことが目的です (チェーンで読みやすく書く設計演習)。
-- AST で **\`sort\` の使用** と **\`slice\` の使用** を必須にしています。
+- AST で **\`map\` の使用** と **\`sort\` の使用** と **\`slice\` の使用** を必須にしています。
 `,
   starterCode: `function topTagsRanking(tags, topN) {
   // 1) for...of でタグごとの出現回数を集計する (counts オブジェクト)

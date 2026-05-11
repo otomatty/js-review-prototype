@@ -58,7 +58,7 @@ popularProductsRanking([{ userId: "u1", productId: "x" }], 0); // → []
 - 学習目標:
   - **配列を状態として使う** (\`users[]\` を \`includes\` でユニーク判定しながら成長させる)
   - **集計データを「最終形」 に整形してから検索 (sort + slice)** という、 ステップを分けた設計
-  - AST で **\`sort\` の使用** と **\`slice\` の使用** と **\`includes\` の使用** を必須にしています
+  - AST で **\`map\` / \`includes\` / \`sort\` / \`slice\` の使用** を必須にしています
 `,
   starterCode: `function popularProductsRanking(transactions, topN) {
   // 1) stats = {} を用意。 productId をキーにして { purchases, users: [] } を貯める
