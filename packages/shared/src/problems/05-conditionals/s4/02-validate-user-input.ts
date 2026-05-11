@@ -98,6 +98,14 @@ validateUserInput({ name: "山田", age: 30, email: "no-at-sign" });
       code: `validateUserInput({ name: "A", age: 151, email: "a@b" }) === "年齢は 0 以上 150 以下の整数で指定してください"`,
     },
     {
+      name: "age が undefined (未指定) は 年齢エラー",
+      code: `validateUserInput({ name: "A", email: "a@b" }) === "年齢は 0 以上 150 以下の整数で指定してください"`,
+    },
+    {
+      name: "age が NaN は 年齢エラー",
+      code: `validateUserInput({ name: "A", age: NaN, email: "a@b" }) === "年齢は 0 以上 150 以下の整数で指定してください"`,
+    },
+    {
       name: "email に @ が無いと メールエラー",
       code: `validateUserInput({ name: "A", age: 30, email: "no-at-sign" }) === "メールアドレスの形式が正しくありません"`,
     },

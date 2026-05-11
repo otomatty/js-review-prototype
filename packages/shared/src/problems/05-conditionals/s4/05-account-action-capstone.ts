@@ -96,8 +96,16 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
       code: `applyAccountAction({ status: "open", balance: 100 }, { type: "deposit", amount: 0 }) === null`,
     },
     {
+      name: "amount 未指定の deposit は null",
+      code: `applyAccountAction({ status: "open", balance: 100 }, { type: "deposit" }) === null`,
+    },
+    {
       name: "amount が負の withdraw は null",
       code: `applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: -10 }) === null`,
+    },
+    {
+      name: "amount 未指定の withdraw は null",
+      code: `applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw" }) === null`,
     },
     {
       name: "amount が NaN の deposit は null",

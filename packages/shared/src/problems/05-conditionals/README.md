@@ -76,7 +76,7 @@
 | 01 | `S4-Ch05-01-order-status-transition` | `switch` で状態遷移を整理する |
 | 02 | `S4-Ch05-02-validate-user-input` | ガード節 (`if (...) return;`) で異常系を順番に弾く |
 | 03 | `S4-Ch05-03-score-band` | 入力検証 + 範囲判定 (`>=` の階段) でスコア帯を返す |
-| 04 | `S4-Ch05-04-business-hours` | `&&` / `||` の複合条件と短絡評価で営業時間を判定する |
+| 04 | `S4-Ch05-04-business-hours` | `&&` / `\|\|` の複合条件と短絡評価で営業時間を判定する |
 | 05 | `S4-Ch05-05-account-action-capstone` | [卒業課題] `switch` × ガード節で口座の状態機械を組む |
 
 ### S4 学習ポイント

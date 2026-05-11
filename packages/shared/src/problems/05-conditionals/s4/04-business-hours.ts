@@ -67,6 +67,7 @@ isOpen(1, 24);   // → false  (hour が範囲外)
     { name: "hour=24 は範囲外", code: `isOpen(1, 24) === false` },
     { name: "hour=-1 は範囲外", code: `isOpen(1, -1) === false` },
     { name: "day が小数は範囲外", code: `isOpen(1.5, 12) === false` },
+    { name: "hour が小数は範囲外", code: `isOpen(1, 12.5) === false` },
   ],
   hints: [
     "入力検証は Number.isInteger と範囲チェックを && で連結する。",

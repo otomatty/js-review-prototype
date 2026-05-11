@@ -71,6 +71,8 @@ scoreBand(80.5, 80); // → "Invalid"  (整数のみ)
     { name: "101 は Invalid", code: `scoreBand(80, 101) === "Invalid"` },
     { name: "小数は Invalid", code: `scoreBand(80.5, 80) === "Invalid"` },
     { name: "NaN は Invalid", code: `scoreBand(NaN, 80) === "Invalid"` },
+    { name: "english が小数は Invalid", code: `scoreBand(80, 80.5) === "Invalid"` },
+    { name: "english が NaN は Invalid", code: `scoreBand(80, NaN) === "Invalid"` },
     { name: "math だけでも片方が異常なら Invalid", code: `scoreBand(50, -5) === "Invalid"` },
   ],
   hints: [
