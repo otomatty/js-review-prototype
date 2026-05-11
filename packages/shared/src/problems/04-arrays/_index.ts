@@ -39,6 +39,9 @@ import { s4Ch04RangeSum } from "./s4/02-range-sum.js";
 import { s4Ch04RunningMax } from "./s4/03-running-max.js";
 import { s4Ch04MaxWindowSum } from "./s4/04-max-window-sum.js";
 import { s4Ch04SplitByThresholdCapstone } from "./s4/05-split-by-threshold-capstone.js";
+import { s5Ch04TopTagsRanking } from "./s5/01-top-tags-ranking.js";
+import { s5Ch04StudentsAboveAverage } from "./s5/02-students-above-average.js";
+import { s5Ch04PopularProductsCapstone } from "./s5/03-popular-products-capstone.js";
 
 export const ch04Arrays: Assignment[] = [
   s1Ch04ArrayLiteral,
@@ -80,4 +83,7 @@ export const ch04Arrays: Assignment[] = [
   s4Ch04RunningMax,
   s4Ch04MaxWindowSum,
   s4Ch04SplitByThresholdCapstone,
+  s5Ch04TopTagsRanking,
+  s5Ch04StudentsAboveAverage,
+  s5Ch04PopularProductsCapstone,
 ];
