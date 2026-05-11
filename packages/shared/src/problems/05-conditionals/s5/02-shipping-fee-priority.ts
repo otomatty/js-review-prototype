@@ -95,6 +95,14 @@ calculateShippingFee({ totalAmount: -100, weight: 2, distance: 50, isPremium: tr
       code: `calculateShippingFee({ totalAmount: 3000, weight: 2, distance: 50, isPremium: false, isFragile: false }) === 500`,
     },
     {
+      name: "0 円・0kg・0km も有効入力として基本料金のみ (>= 0 境界)",
+      code: `calculateShippingFee({ totalAmount: 0, weight: 0, distance: 0, isPremium: false, isFragile: false }) === 500`,
+    },
+    {
+      name: "0 円注文に壊れ物加算は適用される (非プレミアム)",
+      code: `calculateShippingFee({ totalAmount: 0, weight: 0, distance: 0, isPremium: false, isFragile: true }) === 1000`,
+    },
+    {
       name: "プレミアム会員はどんな注文でも 0",
       code: `calculateShippingFee({ totalAmount: 100, weight: 100, distance: 1000, isPremium: true, isFragile: false }) === 0`,
     },

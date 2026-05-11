@@ -234,8 +234,9 @@ function canPerformAction(role, resource, action) {
     ast: {
       required: [
         { kind: "node", nodeType: "MemberExpression", label: "PERMISSIONS[role] のようなデータルックアップを使う" },
+        { kind: "node", nodeType: "WhileStatement", label: "while ループで継承チェーンを辿る" },
         { kind: "method", name: "includes", label: "includes で許可リストに action が含まれるかを判定する" },
-        { kind: "node", nodeType: "ReturnStatement", label: "return で { allowed, reason } の判定結果を返す" },
+        { kind: "node", nodeType: "ReturnStatement", label: "return で 許可フラグと拒否理由を持つオブジェクトを返す" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
