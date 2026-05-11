@@ -23,10 +23,14 @@ myMap([], (x) => x);                       // → []
 ## ポイント
 
 - S4 は **アルゴリズム編**。 S3 で「使う側」 だった \`map\` を、 ここで **自作する側** に回って中身を理解します。
-- \`reduce\` の初期値を空配列 \`[]\` にして、 1 件ずつ \`fn(x)\` を後ろに追加すれば \`map\` と同じ結果になります:
+- \`reduce\` の初期値を空配列 \`[]\` にして、 1 件ずつ \`acc.push(fn(x))\` で末尾に追加すれば \`map\` と同じ結果になります:
   \`\`\`js
-  arr.reduce((acc, x) => [...acc, fn(x)], []);
+  arr.reduce((acc, x) => {
+    acc.push(fn(x));
+    return acc;
+  }, []);
   \`\`\`
+- **計算量**: S4 はアルゴリズム編なので **O(N)** で書くこと。 \`[...acc, fn(x)]\` のような **毎回コピー** はループ全体で **O(N²)** になり NG。 \`push\` で末尾に追加する方が効率的です。
 - AST で **\`map\` の使用は禁止** しています (自作問題なので \`arr.map(fn)\` で済ませることはできません)。
 - 入力配列 \`arr\` を **書き換えない** こと (非破壊)。
 `,
@@ -67,7 +71,7 @@ myMap([], (x) => x);                       // → []
     },
   ],
   hints: [
-    "arr.reduce((acc, x) => [...acc, fn(x)], []) で書ける。 acc.push(fn(x)) して return acc; でも可。",
+    "arr.reduce((acc, x) => { acc.push(fn(x)); return acc; }, []) のように push を使うと O(N) で効率的。 [...acc, fn(x)] でも結果は同じだが毎ステップでコピーが走り O(N²) になるので避けたい。",
     "解答例:\n```js\nfunction myMap(arr, fn) {\n  return arr.reduce((acc, x) => {\n    acc.push(fn(x));\n    return acc;\n  }, []);\n}\n```",
   ],
   staticAnalysis: {

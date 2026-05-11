@@ -74,7 +74,7 @@ partition([1, 2], () => true);  // → [[1, 2], []]
     },
   ],
   hints: [
-    "arr.reduce(([yes, no], x) => pred(x) ? [[...yes, x], no] : [yes, [...no, x]], [[], []])",
+    "arr.reduce((acc, x) => { if (pred(x)) acc[0].push(x); else acc[1].push(x); return acc; }, [[], []]) のように push で振り分けると O(N)。 [[...yes, x], no] のようなスプレッド版は毎ステップで配列をコピーするので O(N²) になり避けたい。",
     "解答例:\n```js\nfunction partition(arr, pred) {\n  return arr.reduce(\n    (acc, x) => {\n      if (pred(x)) acc[0].push(x);\n      else acc[1].push(x);\n      return acc;\n    },\n    [[], []],\n  );\n}\n```",
   ],
   staticAnalysis: {
