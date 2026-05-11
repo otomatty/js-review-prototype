@@ -25,6 +25,14 @@ import { s2Ch02NumberIsNaN } from "./s2/09-number-isnan.js";
 import { s2Ch02ToFixed } from "./s2/10-tofixed.js";
 import { s2Ch02NumberIsInteger } from "./s2/11-number-isinteger.js";
 import { s2Ch02PercentOnesPlace } from "./s2/12-percent-ones-place.js";
+import { s3Ch02IsEven } from "./s3/01-is-even.js";
+import { s3Ch02Abs } from "./s3/02-abs.js";
+import { s3Ch02Factorial } from "./s3/03-factorial.js";
+import { s3Ch02IsPrime } from "./s3/04-is-prime.js";
+import { s3Ch02SumToN } from "./s3/05-sum-to-n.js";
+import { s3Ch02CountDigits } from "./s3/06-count-digits.js";
+import { s3Ch02FizzBuzzValue } from "./s3/07-fizzbuzz-value.js";
+import { s3Ch02Gcd } from "./s3/08-gcd.js";
 
 export const ch02Numbers: Assignment[] = [
   s1Ch02Add,
@@ -52,4 +60,12 @@ export const ch02Numbers: Assignment[] = [
   s2Ch02ToFixed,
   s2Ch02NumberIsInteger,
   s2Ch02PercentOnesPlace,
+  s3Ch02IsEven,
+  s3Ch02Abs,
+  s3Ch02Factorial,
+  s3Ch02IsPrime,
+  s3Ch02SumToN,
+  s3Ch02CountDigits,
+  s3Ch02FizzBuzzValue,
+  s3Ch02Gcd,
 ];

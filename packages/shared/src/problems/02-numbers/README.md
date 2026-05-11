@@ -21,7 +21,7 @@
 ├── _index.ts
 ├── s1/   # Phase 5 で追加済み (13 問、 末尾はチャレンジ問題)
 ├── s2/   # Phase 7 で追加済み (12 問)
-├── s3/   # Phase 8 で追加予定
+├── s3/   # Phase 8 で追加済み (8 問)
 └── s4/   # Phase 9 で追加予定
 ```
 
@@ -75,6 +75,25 @@
 - `Number.isNaN` / `Number.isInteger` などの判定系を使う
 - `%` で「1 の位」「下 N 桁」 を取り出すのは定番イディオム
 
+## S3 で扱う問題 (8 問)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S3-Ch02-01-is-even` | 剰余で偶奇判定 |
+| 02 | `S3-Ch02-02-abs` | Math.abs を使わず絶対値を計算 |
+| 03 | `S3-Ch02-03-factorial` | for で階乗を計算 |
+| 04 | `S3-Ch02-04-is-prime` | 素数判定 (sqrt(n) まで) |
+| 05 | `S3-Ch02-05-sum-to-n` | 1〜n の合計 |
+| 06 | `S3-Ch02-06-count-digits` | while で桁数を数える |
+| 07 | `S3-Ch02-07-fizzbuzz-value` | FizzBuzz の 1 ステップを文字列で返す |
+| 08 | `S3-Ch02-08-gcd` | ユークリッド互除法で GCD |
+
+### S3 学習ポイント
+
+- 関数の中で **for / while** を使ってループ計算する
+- **早期 return** で関数の流れを制御する (`if (n < 2) return false;`)
+- 比較は `===`、 浮動小数点誤差は `Math.round` で吸収
+
 ## 状態
 
-S1: 13 問、 S2: 12 問追加済み (Phase 5 / Phase 7)。 S3-S4 は未着手。
+S1: 13 問、 S2: 12 問、 S3: 8 問追加済み (Phase 5 / Phase 7 / Phase 8)。 S4 は未着手。

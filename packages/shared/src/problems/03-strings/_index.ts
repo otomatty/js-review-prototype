@@ -25,6 +25,14 @@ import { s2Ch03IndexOfString } from "./s2/09-indexOf-string.js";
 import { s2Ch03PadStart } from "./s2/10-padStart.js";
 import { s2Ch03Repeat } from "./s2/11-repeat.js";
 import { s2Ch03CharAt } from "./s2/12-charAt.js";
+import { s3Ch03ReverseString } from "./s3/01-reverse-string.js";
+import { s3Ch03IsPalindrome } from "./s3/02-is-palindrome.js";
+import { s3Ch03CountChar } from "./s3/03-count-char.js";
+import { s3Ch03Capitalize } from "./s3/04-capitalize.js";
+import { s3Ch03Truncate } from "./s3/05-truncate.js";
+import { s3Ch03RemoveSpaces } from "./s3/06-remove-spaces.js";
+import { s3Ch03Initials } from "./s3/07-initials.js";
+import { s3Ch03MaskTail } from "./s3/08-mask-tail.js";
 
 export const ch03Strings: Assignment[] = [
   s1Ch03StringLiteral,
@@ -52,4 +60,12 @@ export const ch03Strings: Assignment[] = [
   s2Ch03PadStart,
   s2Ch03Repeat,
   s2Ch03CharAt,
+  s3Ch03ReverseString,
+  s3Ch03IsPalindrome,
+  s3Ch03CountChar,
+  s3Ch03Capitalize,
+  s3Ch03Truncate,
+  s3Ch03RemoveSpaces,
+  s3Ch03Initials,
+  s3Ch03MaskTail,
 ];

@@ -15,6 +15,11 @@ import { s2Ch05TernaryChain } from "./s2/12-ternary-chain.js";
 import { s2Ch05RangeCheck } from "./s2/13-range-check.js";
 import { s2Ch05DefaultFallback } from "./s2/14-default-fallback.js";
 import { s2Ch05SwitchDefault } from "./s2/15-switch-default.js";
+import { s3Ch05ClassifyNumber } from "./s3/01-classify-number.js";
+import { s3Ch05DayKind } from "./s3/02-day-kind.js";
+import { s3Ch05CategorizeAge } from "./s3/03-categorize-age.js";
+import { s3Ch05CompareCount } from "./s3/04-compare-count.js";
+import { s3Ch05MaxOfThree } from "./s3/05-max-of-three.js";
 
 export const ch05Conditionals: Assignment[] = [
   s2Ch05IfPositive,
@@ -32,4 +37,9 @@ export const ch05Conditionals: Assignment[] = [
   s2Ch05RangeCheck,
   s2Ch05DefaultFallback,
   s2Ch05SwitchDefault,
+  s3Ch05ClassifyNumber,
+  s3Ch05DayKind,
+  s3Ch05CategorizeAge,
+  s3Ch05CompareCount,
+  s3Ch05MaxOfThree,
 ];

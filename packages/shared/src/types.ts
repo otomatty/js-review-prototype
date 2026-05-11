@@ -112,6 +112,12 @@ export interface Assignment {
   starterCode: string;
   /** function 採点でコードから取り出す関数名・クラス名。 */
   entryPoints?: string[];
+  /**
+   * function 採点課題で「▶ 関数を試す」 を押したときに、 提出コードの末尾に
+   * 追記して実行する 1 行のサンプル呼び出し (例: `console.log(sum([1, 2, 3]))`)。
+   * 未指定の function 課題ではフリー実行ボタンを無効化する。
+   */
+  demoCall?: string;
   /** テストケース */
   tests: TestCase[];
   /** クライアント側静的解析の枠。プリセットの中身は各 content phase で詰める。 */

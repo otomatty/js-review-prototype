@@ -169,13 +169,20 @@ function PracticePageInner({ assignment }: InnerProps) {
   }, [code, assignment, lint, ast, reset, run, recordResult]);
 
   // 「実行」 (採点せずコードを isolated-vm で動かして stdout を取る)
+  // function 採点では assignment.demoCall を末尾に追記し、 entryPoint を呼ばせる。
+  const freeRunDisabled =
+    assignment.testKind === "function" && !assignment.demoCall;
   const handleFreeRun = useCallback(async () => {
     const submittedCode = code;
     const targetAssignmentId = assignment.id;
     setFreeRunPending(true);
     setFreeRun({ stdout: undefined, error: undefined });
+    const codeToRun =
+      assignment.testKind === "function" && assignment.demoCall
+        ? `${submittedCode}\n\n${assignment.demoCall}\n`
+        : submittedCode;
     try {
-      const res = await runFreeRun(submittedCode);
+      const res = await runFreeRun(codeToRun);
       // 実行中に課題が切り替わったら結果を捨てる (古い useCallback の assignment は stale)
       if (activeAssignmentIdRef.current !== targetAssignmentId) {return;}
       setFreeRun({
@@ -192,7 +199,7 @@ function PracticePageInner({ assignment }: InnerProps) {
         setFreeRunPending(false);
       }
     }
-  }, [code, assignment.id]);
+  }, [code, assignment.id, assignment.testKind, assignment.demoCall]);
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
@@ -260,9 +267,18 @@ function PracticePageInner({ assignment }: InnerProps) {
                 variant="outline"
                 size="lg"
                 onClick={handleFreeRun}
-                disabled={freeRunPending || running}
+                disabled={freeRunPending || running || freeRunDisabled}
+                title={
+                  freeRunDisabled
+                    ? "function 採点課題: 「採点を実行」 を使ってテストを動かしてください"
+                    : undefined
+                }
               >
-                {freeRunPending ? "実行中..." : "▶ 実行"}
+                {freeRunPending
+                  ? "実行中..."
+                  : assignment.testKind === "function"
+                    ? "▶ 関数を試す"
+                    : "▶ 実行"}
               </Button>
               <Button
                 variant="acial"

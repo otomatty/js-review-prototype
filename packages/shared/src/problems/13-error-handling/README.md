@@ -18,11 +18,26 @@
 13-error-handling/
 ├── README.md
 ├── _index.ts
-├── s3/   # Phase 8 で追加予定
+├── s3/   # Phase 8 で追加済み (4 問)
 ├── s4/   # Phase 9 で追加予定
 └── s5/   # Phase 9 で追加予定
 ```
 
+## S3 で扱う問題 (4 問)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S3-Ch13-01-safe-parse-json` | try/catch で安全にパース |
+| 02 | `S3-Ch13-02-divide-or-zero` | throw + try/catch でフォールバック |
+| 03 | `S3-Ch13-03-validate-age` | TypeError / RangeError を投げる |
+| 04 | `S3-Ch13-04-attempt-result` | Result パターンで成功/失敗を返す |
+
+### S3 学習ポイント
+
+- 例外は **「処理を止めて呼び出し元に伝える」 仕組み**。 `throw` で送り、 `try/catch` で受ける
+- 02 / 04 は **AST で TryStatement を強制**、 02 / 03 は **ThrowStatement を強制** している
+- 組み込みエラー型 (`TypeError` / `RangeError`) を選んで使い分けると、 catch 側で `instanceof` で振り分けられる
+
 ## 状態
 
-問題は未追加。
+S3: 4 問追加済み (Phase 8)。 S4-S5 は未着手。

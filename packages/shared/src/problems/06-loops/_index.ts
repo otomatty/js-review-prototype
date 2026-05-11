@@ -16,6 +16,11 @@ import { s2Ch06FindMax } from "./s2/13-find-max.js";
 import { s2Ch06ReversePrint } from "./s2/14-reverse-print.js";
 import { s2Ch06PowerLoop } from "./s2/15-power-loop.js";
 import { s2Ch06FizzBuzzCapstone } from "./s2/16-fizzbuzz-capstone.js";
+import { s3Ch06CountdownString } from "./s3/01-countdown-string.js";
+import { s3Ch06MultiplicationTableRow } from "./s3/02-multiplication-table-row.js";
+import { s3Ch06SumOfDivisors } from "./s3/03-sum-of-divisors.js";
+import { s3Ch06RepeatJoin } from "./s3/04-repeat-join.js";
+import { s3Ch06ReverseArray } from "./s3/05-reverse-array.js";
 
 export const ch06Loops: Assignment[] = [
   s2Ch06ForCountUp,
@@ -34,4 +39,9 @@ export const ch06Loops: Assignment[] = [
   s2Ch06ReversePrint,
   s2Ch06PowerLoop,
   s2Ch06FizzBuzzCapstone,
+  s3Ch06CountdownString,
+  s3Ch06MultiplicationTableRow,
+  s3Ch06SumOfDivisors,
+  s3Ch06RepeatJoin,
+  s3Ch06ReverseArray,
 ];

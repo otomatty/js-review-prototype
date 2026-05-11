@@ -16,6 +16,14 @@ import { s2Ch07HelperFunction } from "./s2/13-helper-function.js";
 import { s2Ch07ArrowBlock } from "./s2/14-arrow-block.js";
 import { s2Ch07FunctionLoopSum } from "./s2/15-function-loop-sum.js";
 import { s2Ch07GradingCapstone } from "./s2/16-grading-capstone.js";
+import { s3Ch07DefaultGreet } from "./s3/01-default-greet.js";
+import { s3Ch07MakeMultiplier } from "./s3/02-make-multiplier.js";
+import { s3Ch07ApplyTwice } from "./s3/03-apply-twice.js";
+import { s3Ch07SumRest } from "./s3/04-sum-rest.js";
+import { s3Ch07Clamp } from "./s3/05-clamp.js";
+import { s3Ch07CallNTimes } from "./s3/06-call-n-times.js";
+import { s3Ch07NegatePredicate } from "./s3/07-negate-predicate.js";
+import { s3Ch07Compose } from "./s3/08-compose.js";
 
 export const ch07Functions: Assignment[] = [
   s2Ch07FunctionGreet,
@@ -34,4 +42,12 @@ export const ch07Functions: Assignment[] = [
   s2Ch07ArrowBlock,
   s2Ch07FunctionLoopSum,
   s2Ch07GradingCapstone,
+  s3Ch07DefaultGreet,
+  s3Ch07MakeMultiplier,
+  s3Ch07ApplyTwice,
+  s3Ch07SumRest,
+  s3Ch07Clamp,
+  s3Ch07CallNTimes,
+  s3Ch07NegatePredicate,
+  s3Ch07Compose,
 ];
