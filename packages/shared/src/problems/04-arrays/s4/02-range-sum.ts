@@ -84,6 +84,8 @@ rangeSum([-1, -2, -3, -4], 1, 3);  // → -5
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "method", name: "reduce", label: "S4 では reduce を使わない (Ch09 で導入)" },
+        { kind: "method", name: "map", label: "S4 では map を使わない (Ch09 で導入)" },
+        { kind: "method", name: "filter", label: "S4 では filter を使わない (Ch09 で導入)" },
         { kind: "method", name: "slice", label: "slice + 合計の安易解を避ける (累積和で解く)" },
       ],
     },
