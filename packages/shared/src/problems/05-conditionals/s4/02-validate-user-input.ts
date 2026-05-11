@@ -117,6 +117,14 @@ validateUserInput({ name: "山田", age: 30, email: "no-at-sign" });
       name: "name と email の両方が不正なら 順番で 名前エラーが先",
       code: `validateUserInput({ name: "", age: 30, email: "bad" }) === "名前は必須です"`,
     },
+    {
+      name: "age と email の両方が不正なら 順番で 年齢エラーが先",
+      code: `validateUserInput({ name: "A", age: -1, email: "bad" }) === "年齢は 0 以上 150 以下の整数で指定してください"`,
+    },
+    {
+      name: "age (NaN) と email の両方が不正でも 年齢エラーが先",
+      code: `validateUserInput({ name: "A", age: NaN, email: "bad" }) === "年齢は 0 以上 150 以下の整数で指定してください"`,
+    },
   ],
   hints: [
     "if (異常条件) return エラー文字列; を 4 つ並べ、 最後に return \"OK\"; で締める。",
