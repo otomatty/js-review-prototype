@@ -34,6 +34,11 @@ import { s3Ch04UniqueValues } from "./s3/06-unique-values.js";
 import { s3Ch04ArrayAverage } from "./s3/07-array-average.js";
 import { s3Ch04FindFirstIndex } from "./s3/08-find-first-index.js";
 import { s3Ch04StatsCapstone } from "./s3/09-stats-capstone.js";
+import { s4Ch04PrefixSum } from "./s4/01-prefix-sum.js";
+import { s4Ch04RangeSum } from "./s4/02-range-sum.js";
+import { s4Ch04RunningMax } from "./s4/03-running-max.js";
+import { s4Ch04MaxWindowSum } from "./s4/04-max-window-sum.js";
+import { s4Ch04SplitByThresholdCapstone } from "./s4/05-split-by-threshold-capstone.js";
 
 export const ch04Arrays: Assignment[] = [
   s1Ch04ArrayLiteral,
@@ -70,4 +75,9 @@ export const ch04Arrays: Assignment[] = [
   s3Ch04ArrayAverage,
   s3Ch04FindFirstIndex,
   s3Ch04StatsCapstone,
+  s4Ch04PrefixSum,
+  s4Ch04RangeSum,
+  s4Ch04RunningMax,
+  s4Ch04MaxWindowSum,
+  s4Ch04SplitByThresholdCapstone,
 ];
