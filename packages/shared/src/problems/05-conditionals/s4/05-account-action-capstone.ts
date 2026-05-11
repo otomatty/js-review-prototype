@@ -77,15 +77,24 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
   tests: [
     {
       name: "open + deposit で残高が増える",
-      code: `JSON.stringify(applyAccountAction({ status: "open", balance: 100 }, { type: "deposit", amount: 50 })) === JSON.stringify({ status: "open", balance: 150 })`,
+      code: `(() => {
+        const r = applyAccountAction({ status: "open", balance: 100 }, { type: "deposit", amount: 50 });
+        return r !== null && r.status === "open" && r.balance === 150;
+      })()`,
     },
     {
       name: "open + withdraw で残高が減る",
-      code: `JSON.stringify(applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: 40 })) === JSON.stringify({ status: "open", balance: 60 })`,
+      code: `(() => {
+        const r = applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: 40 });
+        return r !== null && r.status === "open" && r.balance === 60;
+      })()`,
     },
     {
       name: "残高ちょうどの withdraw も OK (balance: 0)",
-      code: `JSON.stringify(applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: 100 })) === JSON.stringify({ status: "open", balance: 0 })`,
+      code: `(() => {
+        const r = applyAccountAction({ status: "open", balance: 100 }, { type: "withdraw", amount: 100 });
+        return r !== null && r.status === "open" && r.balance === 0;
+      })()`,
     },
     {
       name: "残高不足の withdraw は null",
@@ -117,11 +126,17 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
     },
     {
       name: "open + freeze で frozen になる",
-      code: `JSON.stringify(applyAccountAction({ status: "open", balance: 100 }, { type: "freeze" })) === JSON.stringify({ status: "frozen", balance: 100 })`,
+      code: `(() => {
+        const r = applyAccountAction({ status: "open", balance: 100 }, { type: "freeze" });
+        return r !== null && r.status === "frozen" && r.balance === 100;
+      })()`,
     },
     {
       name: "open + close で closed になる",
-      code: `JSON.stringify(applyAccountAction({ status: "open", balance: 100 }, { type: "close" })) === JSON.stringify({ status: "closed", balance: 100 })`,
+      code: `(() => {
+        const r = applyAccountAction({ status: "open", balance: 100 }, { type: "close" });
+        return r !== null && r.status === "closed" && r.balance === 100;
+      })()`,
     },
     {
       name: "open + unfreeze は null (すでに open)",
@@ -133,7 +148,10 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
     },
     {
       name: "frozen + unfreeze で open に戻る",
-      code: `JSON.stringify(applyAccountAction({ status: "frozen", balance: 100 }, { type: "unfreeze" })) === JSON.stringify({ status: "open", balance: 100 })`,
+      code: `(() => {
+        const r = applyAccountAction({ status: "frozen", balance: 100 }, { type: "unfreeze" });
+        return r !== null && r.status === "open" && r.balance === 100;
+      })()`,
     },
     {
       name: "frozen + deposit は null",
