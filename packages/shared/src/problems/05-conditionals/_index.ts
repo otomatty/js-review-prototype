@@ -25,6 +25,9 @@ import { s4Ch05ValidateUserInput } from "./s4/02-validate-user-input.js";
 import { s4Ch05ScoreBand } from "./s4/03-score-band.js";
 import { s4Ch05BusinessHours } from "./s4/04-business-hours.js";
 import { s4Ch05AccountActionCapstone } from "./s4/05-account-action-capstone.js";
+import { s5Ch05VendingMachineTransition } from "./s5/01-vending-machine-transition.js";
+import { s5Ch05ShippingFeePriority } from "./s5/02-shipping-fee-priority.js";
+import { s5Ch05PermissionMatrixCapstone } from "./s5/03-permission-matrix-capstone.js";
 
 export const ch05Conditionals: Assignment[] = [
   s2Ch05IfPositive,
@@ -52,4 +55,7 @@ export const ch05Conditionals: Assignment[] = [
   s4Ch05ScoreBand,
   s4Ch05BusinessHours,
   s4Ch05AccountActionCapstone,
+  s5Ch05VendingMachineTransition,
+  s5Ch05ShippingFeePriority,
+  s5Ch05PermissionMatrixCapstone,
 ];
