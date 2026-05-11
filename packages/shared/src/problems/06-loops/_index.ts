@@ -21,6 +21,11 @@ import { s3Ch06MultiplicationTableRow } from "./s3/02-multiplication-table-row.j
 import { s3Ch06SumOfDivisors } from "./s3/03-sum-of-divisors.js";
 import { s3Ch06RepeatJoin } from "./s3/04-repeat-join.js";
 import { s3Ch06ReverseArray } from "./s3/05-reverse-array.js";
+import { s4Ch06MultiplicationTable } from "./s4/01-multiplication-table.js";
+import { s4Ch06IsPrime } from "./s4/02-is-prime.js";
+import { s4Ch06MatrixSum } from "./s4/03-matrix-sum.js";
+import { s4Ch06FindPairSum } from "./s4/04-find-pair-sum.js";
+import { s4Ch06TransposeCapstone } from "./s4/05-transpose-capstone.js";
 
 export const ch06Loops: Assignment[] = [
   s2Ch06ForCountUp,
@@ -44,4 +49,9 @@ export const ch06Loops: Assignment[] = [
   s3Ch06SumOfDivisors,
   s3Ch06RepeatJoin,
   s3Ch06ReverseArray,
+  s4Ch06MultiplicationTable,
+  s4Ch06IsPrime,
+  s4Ch06MatrixSum,
+  s4Ch06FindPairSum,
+  s4Ch06TransposeCapstone,
 ];
