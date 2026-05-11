@@ -7,6 +7,14 @@ import { s1Ch12PrecedenceBug } from "./s1/04-precedence-bug.js";
 import { s1Ch12TypoVariable } from "./s1/05-typo-variable.js";
 import { s1Ch12TemplateCurly } from "./s1/06-template-curly.js";
 import { s1Ch12ArrayOffByOne } from "./s1/07-array-off-by-one.js";
+import { s2Ch12OffByOneFor } from "./s2/01-off-by-one-for.js";
+import { s2Ch12ConditionFlipped } from "./s2/02-condition-flipped.js";
+import { s2Ch12MissingReturn } from "./s2/03-missing-return.js";
+import { s2Ch12UndefinedTrace } from "./s2/04-undefined-trace.js";
+import { s2Ch12LooseEqBug } from "./s2/05-loose-eq-bug.js";
+import { s2Ch12InfiniteLoopFix } from "./s2/06-infinite-loop-fix.js";
+import { s2Ch12ElseIfOrder } from "./s2/07-else-if-order.js";
+import { s2Ch12MutationBug } from "./s2/08-mutation-bug.js";
 
 export const ch12Debug: Assignment[] = [
   s1Ch12LogIntermediate,
@@ -16,4 +24,12 @@ export const ch12Debug: Assignment[] = [
   s1Ch12TypoVariable,
   s1Ch12TemplateCurly,
   s1Ch12ArrayOffByOne,
+  s2Ch12OffByOneFor,
+  s2Ch12ConditionFlipped,
+  s2Ch12MissingReturn,
+  s2Ch12UndefinedTrace,
+  s2Ch12LooseEqBug,
+  s2Ch12InfiniteLoopFix,
+  s2Ch12ElseIfOrder,
+  s2Ch12MutationBug,
 ];

@@ -5,7 +5,7 @@
 ## 含まれるステージ
 
 - **S1** 文法体験 — 1 文 1 構文で `const` / `let` の宣言と代入を体験する。
-- **S2** 文法定着 — 既習構文と組み合わせて再代入・スコープを意識する。
+- **S2** 文法定着 — 既習構文と組み合わせて再代入・スコープ・typeof を意識する。
 - **S3** ロジック入門 — 関数引数として変数を扱い、 自力で命名する。
 
 ## MDN 既定ページ
@@ -19,7 +19,7 @@
 ├── README.md
 ├── _index.ts
 ├── s1/   # Phase 5 で追加済み (12 問)
-├── s2/   # Phase 7 で追加予定
+├── s2/   # Phase 7 で追加済み (10 問)
 └── s3/   # Phase 8 で追加予定
 ```
 
@@ -40,13 +40,35 @@
 | 11 | `S1-Ch01-11-template-literal-basic` | テンプレートリテラルで埋め込み |
 | 12 | `S1-Ch01-12-const-array` | const に配列を入れて添字でアクセス |
 
-### 学習ポイント
+### S1 学習ポイント
 
 - 値が変わらないものは `const`、 変わるものは `let` を使う
 - 変数名は **意味が伝わる camelCase** で書く (`userName`, `firstName` 等)
 - 変数は **値の入れ物** ではなく **値に付ける名前**。 一度入れた値はそのまま `console.log` に渡せる
 - テンプレートリテラル (`` ` ``) を使うと文字列の中に変数を埋め込める
 
+## S2 で扱う問題 (10 問)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S2-Ch01-01-block-scope-let` | ブロック内 let は外に漏れない |
+| 02 | `S2-Ch01-02-typeof-number` | typeof で数値型を確認 |
+| 03 | `S2-Ch01-03-typeof-string` | typeof で文字列型を確認 |
+| 04 | `S2-Ch01-04-typeof-boolean` | typeof で真偽値型を確認 |
+| 05 | `S2-Ch01-05-typeof-undefined` | 未代入の let は undefined |
+| 06 | `S2-Ch01-06-shadowing-block` | ブロックでシャドーイング |
+| 07 | `S2-Ch01-07-let-update-multi` | let を 3 回更新 |
+| 08 | `S2-Ch01-08-typeof-array` | typeof で配列は "object" |
+| 09 | `S2-Ch01-09-temp-swap` | テンポラリ変数で値を交換 |
+| 10 | `S2-Ch01-10-typeof-null` | typeof null は "object" (罠) |
+
+### S2 学習ポイント
+
+- `{ }` ブロック内の `let` / `const` は外には漏れない (ブロックスコープ)
+- `typeof` で値の型を文字列として取り出せる: `"number"`, `"string"`, `"boolean"`, `"undefined"`, `"object"`
+- 配列と null は両方とも `typeof` が `"object"` になる罠を覚える
+- シャドーイングで内側スコープだけ値を変えられる
+
 ## 状態
 
-S1: 12 問追加済み (Phase 5)。 S2 / S3 は未着手。
+S1: 12 問、 S2: 10 問追加済み (Phase 5 / Phase 7)。 S3 は未着手。

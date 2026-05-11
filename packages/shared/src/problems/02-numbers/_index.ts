@@ -13,6 +13,18 @@ import { s1Ch02MathAbs } from "./s1/10-math-abs.js";
 import { s1Ch02MathMax } from "./s1/11-math-max.js";
 import { s1Ch02CompoundAssign } from "./s1/12-compound-assign.js";
 import { s1Ch02BmiCapstone } from "./s1/13-bmi-capstone.js";
+import { s2Ch02NumberFromString } from "./s2/01-number-from-string.js";
+import { s2Ch02ParseIntBasic } from "./s2/02-parseInt-basic.js";
+import { s2Ch02ParseIntRadix } from "./s2/03-parseInt-radix.js";
+import { s2Ch02ParseFloat } from "./s2/04-parseFloat.js";
+import { s2Ch02MathPow } from "./s2/05-math-pow.js";
+import { s2Ch02MathSqrt } from "./s2/06-math-sqrt.js";
+import { s2Ch02MathMinMulti } from "./s2/07-math-min-multi.js";
+import { s2Ch02MathFloorDivide } from "./s2/08-math-floor-divide.js";
+import { s2Ch02NumberIsNaN } from "./s2/09-number-isnan.js";
+import { s2Ch02ToFixed } from "./s2/10-tofixed.js";
+import { s2Ch02NumberIsInteger } from "./s2/11-number-isinteger.js";
+import { s2Ch02PercentOnesPlace } from "./s2/12-percent-ones-place.js";
 
 export const ch02Numbers: Assignment[] = [
   s1Ch02Add,
@@ -28,4 +40,16 @@ export const ch02Numbers: Assignment[] = [
   s1Ch02MathMax,
   s1Ch02CompoundAssign,
   s1Ch02BmiCapstone,
+  s2Ch02NumberFromString,
+  s2Ch02ParseIntBasic,
+  s2Ch02ParseIntRadix,
+  s2Ch02ParseFloat,
+  s2Ch02MathPow,
+  s2Ch02MathSqrt,
+  s2Ch02MathMinMulti,
+  s2Ch02MathFloorDivide,
+  s2Ch02NumberIsNaN,
+  s2Ch02ToFixed,
+  s2Ch02NumberIsInteger,
+  s2Ch02PercentOnesPlace,
 ];

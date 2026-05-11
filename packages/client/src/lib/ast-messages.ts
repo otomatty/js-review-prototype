@@ -184,6 +184,22 @@ function hintForNode(nodeType: ASTNodeType, mode: "required" | "forbidden"): str
       return required
         ? "`const [first] = array` の形で配列を分割代入してみましょう。"
         : "今回は配列の分割代入を使わず、インデックス参照などで書いてみましょう。";
+    case "IfStatement":
+      return required
+        ? "`if (条件) { ... }` で条件分岐を入れてみましょう。"
+        : "今回は if 文を使わず、別の書き方を考えてみましょう。";
+    case "BreakStatement":
+      return required
+        ? "`break;` でループを途中で抜けてみましょう。"
+        : "今回は break を使わず、ループの条件式だけで終了させましょう。";
+    case "ContinueStatement":
+      return required
+        ? "`continue;` で今の反復をスキップしてみましょう。"
+        : "今回は continue を使わず、条件式の組み立てで対処してみましょう。";
+    case "ReturnStatement":
+      return required
+        ? "`return 値;` で関数から値を返してみましょう。"
+        : "今回は return を使わない処理として書いてみましょう。";
     default: {
       const exhaustive: never = nodeType;
       return exhaustive;
