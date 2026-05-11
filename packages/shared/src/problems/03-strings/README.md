@@ -22,7 +22,7 @@
 ├── _index.ts
 ├── s1/   # Phase 5 で追加済み (13 問、 末尾はチャレンジ問題)
 ├── s2/   # Phase 7 で追加済み (12 問)
-├── s3/   # Phase 8 で追加予定
+├── s3/   # Phase 8 で追加済み (8 問)
 ├── s4/   # Phase 9 で追加予定
 └── s5/   # Phase 9 で追加予定
 ```
@@ -76,6 +76,25 @@
 - `includes` / `startsWith` / `endsWith` で 「ある文字を含むか」 系の判定が簡潔に書ける
 - `padStart` / `repeat` は文字列を「整形する」 系のメソッド
 
+## S3 で扱う問題 (8 問)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S3-Ch03-01-reverse-string` | split → reverse → join で文字列反転 |
+| 02 | `S3-Ch03-02-is-palindrome` | 回文判定 |
+| 03 | `S3-Ch03-03-count-char` | for で文字の出現回数を数える |
+| 04 | `S3-Ch03-04-capitalize` | 先頭だけ大文字、 残りを小文字に |
+| 05 | `S3-Ch03-05-truncate` | 長さ超過なら "..." で省略 |
+| 06 | `S3-Ch03-06-remove-spaces` | 全スペース削除 |
+| 07 | `S3-Ch03-07-initials` | 氏名からイニシャル作成 |
+| 08 | `S3-Ch03-08-mask-tail` | 末尾 4 文字以外を `*` でマスク |
+
+### S3 学習ポイント
+
+- 文字列処理は **split → 配列で加工 → join** の 3 ステップが定番
+- 1 文字ずつ取り出すなら `for (let i = 0; i < s.length; i++)` + `s[i]`
+- 境界条件 (空文字列・短い文字列) を **先に if で弾く** と本処理が綺麗
+
 ## 状態
 
-S1: 13 問、 S2: 12 問追加済み (Phase 5 / Phase 7)。 S3-S5 は未着手。
+S1: 13 問、 S2: 12 問、 S3: 8 問追加済み (Phase 5 / Phase 7 / Phase 8)。 S4-S5 は未着手。

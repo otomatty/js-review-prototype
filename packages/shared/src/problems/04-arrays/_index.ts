@@ -25,6 +25,15 @@ import { s2Ch04Flat } from "./s2/10-flat.js";
 import { s2Ch04Fill } from "./s2/11-fill.js";
 import { s2Ch04AtNegative } from "./s2/12-at-negative.js";
 import { s2Ch04SumCapstone } from "./s2/13-sum-capstone.js";
+import { s3Ch04SumArray } from "./s3/01-sum-array.js";
+import { s3Ch04MaxValue } from "./s3/02-max-value.js";
+import { s3Ch04CountPositive } from "./s3/03-count-positive.js";
+import { s3Ch04FilterEven } from "./s3/04-filter-even.js";
+import { s3Ch04LastElement } from "./s3/05-last-element.js";
+import { s3Ch04UniqueValues } from "./s3/06-unique-values.js";
+import { s3Ch04ArrayAverage } from "./s3/07-array-average.js";
+import { s3Ch04FindFirstIndex } from "./s3/08-find-first-index.js";
+import { s3Ch04StatsCapstone } from "./s3/09-stats-capstone.js";
 
 export const ch04Arrays: Assignment[] = [
   s1Ch04ArrayLiteral,
@@ -52,4 +61,13 @@ export const ch04Arrays: Assignment[] = [
   s2Ch04Fill,
   s2Ch04AtNegative,
   s2Ch04SumCapstone,
+  s3Ch04SumArray,
+  s3Ch04MaxValue,
+  s3Ch04CountPositive,
+  s3Ch04FilterEven,
+  s3Ch04LastElement,
+  s3Ch04UniqueValues,
+  s3Ch04ArrayAverage,
+  s3Ch04FindFirstIndex,
+  s3Ch04StatsCapstone,
 ];

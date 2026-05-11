@@ -15,6 +15,10 @@ import { s2Ch12LooseEqBug } from "./s2/05-loose-eq-bug.js";
 import { s2Ch12InfiniteLoopFix } from "./s2/06-infinite-loop-fix.js";
 import { s2Ch12ElseIfOrder } from "./s2/07-else-if-order.js";
 import { s2Ch12MutationBug } from "./s2/08-mutation-bug.js";
+import { s3Ch12FixSumRange } from "./s3/01-fix-sum-range.js";
+import { s3Ch12FixIsEmpty } from "./s3/02-fix-is-empty.js";
+import { s3Ch12FixCapitalize } from "./s3/03-fix-capitalize.js";
+import { s3Ch12FixAverage } from "./s3/04-fix-average.js";
 
 export const ch12Debug: Assignment[] = [
   s1Ch12LogIntermediate,
@@ -32,4 +36,8 @@ export const ch12Debug: Assignment[] = [
   s2Ch12InfiniteLoopFix,
   s2Ch12ElseIfOrder,
   s2Ch12MutationBug,
+  s3Ch12FixSumRange,
+  s3Ch12FixIsEmpty,
+  s3Ch12FixCapitalize,
+  s3Ch12FixAverage,
 ];

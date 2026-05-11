@@ -182,6 +182,18 @@ export function AssignmentView({ assignment }: Props) {
         >
           {difficultyStars(assignment.difficulty)}
         </span>
+        <span
+          className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-[3px] font-sans text-[11px] font-semibold text-muted-foreground"
+          title={
+            assignment.testKind === "function"
+              ? "関数を実装してテストを通す形式"
+              : "console.log の出力を採点する形式"
+          }
+        >
+          {assignment.testKind === "function"
+            ? "⚙ 関数を実装"
+            : "🖥 stdout で結果確認"}
+        </span>
       </div>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}

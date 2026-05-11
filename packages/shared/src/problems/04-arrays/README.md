@@ -22,7 +22,7 @@
 ├── _index.ts
 ├── s1/   # Phase 5 で追加済み (12 問、 末尾はチャレンジ問題)
 ├── s2/   # Phase 7 で追加済み (13 問、 末尾はチャレンジ問題)
-├── s3/   # Phase 8 で追加予定
+├── s3/   # Phase 8 で追加済み (9 問、 末尾は卒業課題)
 ├── s4/   # Phase 9 で追加予定
 └── s5/   # Phase 9 で追加予定
 ```
@@ -77,6 +77,27 @@
 - `at(-1)` で末尾要素を読みやすく取得
 - チャレンジでは for ループ (Ch06 で詳しく扱う) と配列を組み合わせる
 
+## S3 で扱う問題 (9 問、 9 番目が S3 卒業課題)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S3-Ch04-01-sum-array` | for...of で合計を計算 |
+| 02 | `S3-Ch04-02-max-value` | Math.max を使わず最大値を更新 |
+| 03 | `S3-Ch04-03-count-positive` | 条件カウント |
+| 04 | `S3-Ch04-04-filter-even` | push で偶数だけ集める |
+| 05 | `S3-Ch04-05-last-element` | 末尾要素 (空なら undefined) |
+| 06 | `S3-Ch04-06-unique-values` | includes で重複排除 |
+| 07 | `S3-Ch04-07-array-average` | 合計 / 要素数で平均 |
+| 08 | `S3-Ch04-08-find-first-index` | indexOf を使わず添字探索 |
+| 09 | `S3-Ch04-09-stats-capstone` ⭐ | **[S3 卒業課題]** sum/min/max/avg を 1 オブジェクトで返す |
+
+### S3 学習ポイント
+
+- 配列処理の **for ループ + 累積** が S3 の基本形 (reduce / filter は Ch09 で扱う)
+- 「新しい配列を作る」 系は \`const result = []\` + push が定番
+- min / max は **初期値を arr[0]** にすると安全
+- 1 回のループで複数の集計を同時にやれると S4 アルゴリズムへの足がかりになる
+
 ## 状態
 
-S1: 12 問、 S2: 13 問追加済み (Phase 5 / Phase 7)。 S3-S5 は未着手。
+S1: 12 問、 S2: 13 問、 S3: 9 問追加済み (Phase 5 / Phase 7 / Phase 8)。 S4-S5 は未着手。

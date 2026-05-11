@@ -22,6 +22,11 @@ import { s2Ch01LetUpdateMulti } from "./s2/07-let-update-multi.js";
 import { s2Ch01TypeofArray } from "./s2/08-typeof-array.js";
 import { s2Ch01TempSwap } from "./s2/09-temp-swap.js";
 import { s2Ch01TypeofNull } from "./s2/10-typeof-null.js";
+import { s3Ch01Double } from "./s3/01-double.js";
+import { s3Ch01AddTax } from "./s3/02-add-tax.js";
+import { s3Ch01Greet } from "./s3/03-greet.js";
+import { s3Ch01RectangleArea } from "./s3/04-rectangle-area.js";
+import { s3Ch01SwapPair } from "./s3/05-swap-pair.js";
 
 export const ch01Variables: Assignment[] = [
   s1Ch01ConstString,
@@ -46,4 +51,9 @@ export const ch01Variables: Assignment[] = [
   s2Ch01TypeofArray,
   s2Ch01TempSwap,
   s2Ch01TypeofNull,
+  s3Ch01Double,
+  s3Ch01AddTax,
+  s3Ch01Greet,
+  s3Ch01RectangleArea,
+  s3Ch01SwapPair,
 ];
