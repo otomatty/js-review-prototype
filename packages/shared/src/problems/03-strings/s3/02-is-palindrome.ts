@@ -52,7 +52,7 @@ isPalindrome("");       // → true   (空文字列は回文扱い)
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
-        { kind: "loose-eq", label: "=== を使う" },
+        { kind: "loose-eq", label: "== / != を使わない" },
       ],
     },
   },

@@ -52,7 +52,7 @@ findFirstIndex([1, 2, 1, 2], 2);    // → 1   (最初の 2)
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "method", name: "indexOf", label: "indexOf を使わない" },
-        { kind: "loose-eq", label: "=== を使う" },
+        { kind: "loose-eq", label: "== / != を使わない" },
       ],
     },
   },

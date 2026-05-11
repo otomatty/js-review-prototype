@@ -50,7 +50,7 @@ isEven(-4);  // → true
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
-        { kind: "loose-eq", label: "=== を使う (== はダメ)" },
+        { kind: "loose-eq", label: "== / != を使わない" },
       ],
     },
   },

@@ -14,7 +14,7 @@ export const s3Ch13ValidateAge: Assignment = {
 
 数値 \`age\` を受け取り、 以下のチェックを行う関数 \`validateAge\` を実装してください。
 
-- \`typeof age !== "number"\` のとき: \`throw new TypeError("age must be a number")\`
+- \`typeof age !== "number"\` または \`!Number.isFinite(age)\` (= NaN / Infinity) のとき: \`throw new TypeError("age must be a finite number")\`
 - \`age < 0\` または \`age > 150\` のとき: \`throw new RangeError("age out of range")\`
 - それ以外: そのまま \`age\` を返す
 
@@ -23,6 +23,7 @@ validateAge(30);    // → 30
 validateAge(0);     // → 0
 validateAge(150);   // → 150
 validateAge("30");  // throws TypeError
+validateAge(NaN);   // throws TypeError   (NaN は typeof === "number" だがすり抜けてはいけない)
 validateAge(-1);    // throws RangeError
 validateAge(200);   // throws RangeError
 \`\`\`
@@ -30,6 +31,7 @@ validateAge(200);   // throws RangeError
 ## ポイント
 
 - **TypeError** / **RangeError** は組み込みの Error サブクラス。 \`new TypeError(...)\` で作って throw します。
+- \`typeof NaN === "number"\` なので、 NaN を弾くには **\`Number.isFinite\`** を併用します。
 - AST で **ThrowStatement** を必須にしています。
 `,
   starterCode: `function validateAge(age) {
@@ -54,12 +56,20 @@ validateAge(200);   // throws RangeError
       name: "150 超えで RangeError",
       code: `(() => { try { validateAge(200); return false; } catch (e) { return e instanceof RangeError; } })()`,
     },
+    {
+      name: "NaN で TypeError",
+      code: `(() => { try { validateAge(NaN); return false; } catch (e) { return e instanceof TypeError; } })()`,
+    },
+    {
+      name: "Infinity で TypeError",
+      code: `(() => { try { validateAge(Infinity); return false; } catch (e) { return e instanceof TypeError; } })()`,
+    },
     { name: "validateAge(99) は 99", code: `validateAge(99) === 99` },
   ],
   hints: [
-    "if (typeof age !== \"number\") throw new TypeError(...);",
+    "if (typeof age !== \"number\" || !Number.isFinite(age)) throw new TypeError(...);",
     "if (age < 0 || age > 150) throw new RangeError(...);",
-    "解答例:\n```js\nfunction validateAge(age) {\n  if (typeof age !== \"number\") throw new TypeError(\"age must be a number\");\n  if (age < 0 || age > 150) throw new RangeError(\"age out of range\");\n  return age;\n}\n```",
+    "解答例:\n```js\nfunction validateAge(age) {\n  if (typeof age !== \"number\" || !Number.isFinite(age)) throw new TypeError(\"age must be a finite number\");\n  if (age < 0 || age > 150) throw new RangeError(\"age out of range\");\n  return age;\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -73,8 +83,8 @@ validateAge(200);   // throws RangeError
     },
   },
   solution: `function validateAge(age) {
-  if (typeof age !== "number") {
-    throw new TypeError("age must be a number");
+  if (typeof age !== "number" || !Number.isFinite(age)) {
+    throw new TypeError("age must be a finite number");
   }
   if (age < 0 || age > 150) {
     throw new RangeError("age out of range");

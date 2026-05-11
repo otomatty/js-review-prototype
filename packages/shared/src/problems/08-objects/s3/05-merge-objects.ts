@@ -62,6 +62,23 @@ mergeObjects({ a: 1, b: 2 }, { b: 3 });   // → { a: 1, b: 3 }
           && r !== b;
       })()`,
     },
+    {
+      name: "重複キーでも元の a, b は変更されず、 b 後勝ち + 新しいオブジェクト",
+      code: `(() => {
+        const a = { x: 1, z: 3 };
+        const b = { x: 2, y: 4 };
+        const beforeA = JSON.stringify(a);
+        const beforeB = JSON.stringify(b);
+        const r = mergeObjects(a, b);
+        return JSON.stringify(a) === beforeA
+          && JSON.stringify(b) === beforeB
+          && r !== a
+          && r !== b
+          && r.x === 2
+          && r.y === 4
+          && r.z === 3;
+      })()`,
+    },
   ],
   hints: [
     "return { ...a, ...b };",

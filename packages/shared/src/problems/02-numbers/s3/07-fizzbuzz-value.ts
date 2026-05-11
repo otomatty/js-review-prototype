@@ -45,6 +45,7 @@ fizzBuzzValue(30);  // → "FizzBuzz"
     { name: 'fizzBuzzValue(5) は "Buzz"', code: `fizzBuzzValue(5) === "Buzz"` },
     { name: 'fizzBuzzValue(15) は "FizzBuzz"', code: `fizzBuzzValue(15) === "FizzBuzz"` },
     { name: 'fizzBuzzValue(30) は "FizzBuzz"', code: `fizzBuzzValue(30) === "FizzBuzz"` },
+    { name: 'fizzBuzzValue(45) は "FizzBuzz"', code: `fizzBuzzValue(45) === "FizzBuzz"` },
     { name: 'fizzBuzzValue(7) は "7"', code: `fizzBuzzValue(7) === "7"` },
     { name: 'fizzBuzzValue(9) は "Fizz"', code: `fizzBuzzValue(9) === "Fizz"` },
     { name: 'fizzBuzzValue(25) は "Buzz"', code: `fizzBuzzValue(25) === "Buzz"` },

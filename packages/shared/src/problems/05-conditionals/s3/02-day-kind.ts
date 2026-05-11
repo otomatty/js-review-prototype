@@ -50,7 +50,7 @@ dayKind(6);   // → "休日"   (土)
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
-        { kind: "loose-eq", label: "=== を使う" },
+        { kind: "loose-eq", label: "== / != を使わない" },
       ],
     },
   },
