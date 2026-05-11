@@ -67,6 +67,11 @@ export const s2Ch01BlockScopeLet: Assignment = {
           argument: { kind: "string", value: "内側" },
           label: "結果を文字列リテラルで直接出力しない",
         },
+        {
+          kind: "console-log",
+          argument: { kind: "binary", operator: "+" },
+          label: "文字列連結で結果を組み立てない",
+        },
       ],
     },
   },

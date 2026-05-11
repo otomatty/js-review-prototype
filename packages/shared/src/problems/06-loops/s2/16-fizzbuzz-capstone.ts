@@ -73,6 +73,11 @@ FizzBuzz
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
+        {
+          kind: "console-log",
+          argument: { kind: "binary", operator: "+" },
+          label: "文字列連結で出力を組み立てない",
+        },
       ],
     },
   },

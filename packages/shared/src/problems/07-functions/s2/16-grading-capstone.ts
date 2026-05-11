@@ -88,6 +88,10 @@ console.log("50: C");
 `,
       description: "関数・ループを使わず結果を直接出力している",
     },
+    {
+      code: "function gradeOf(score) {\n  if (score >= 80) {\n    return \"A\";\n  }\n  if (score >= 60) {\n    return \"B\";\n  }\n  return \"C\";\n}\nfunction reportAll(scores) {\n  for (let i = 0; i < scores.length; i++) {\n    console.log(`95: A`);\n  }\n}\nreportAll([95, 72, 50]);\n",
+      description: "テンプレートリテラルで固定文字列を直書きしている (gradeOf が呼ばれていない)",
+    },
   ],
   mdnSections: [
     { heading: "function 宣言", pageUrl: "https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/function", pageTitle: "function 宣言" },
