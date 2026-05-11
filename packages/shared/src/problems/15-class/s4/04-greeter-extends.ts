@@ -18,12 +18,12 @@ export const s4Ch15GreeterExtends: Assignment = {
 ### Greeter
 
 - \`constructor(name)\`: \`this.name = name\` をセットする。
-- \`greet()\`: \`"Hello, " + name + "!"\` を返す。
+- \`greet()\`: \`"Hello, " + this.name + "!"\` を返す。
 
 ### FormalGreeter extends Greeter
 
 - \`constructor(name, title)\`: **まず \`super(name)\` を呼んで** 親の constructor に \`name\` を渡し、 そのうえで \`this.title = title\` をセットする。
-- \`greet()\`: \`"Good day, " + title + " " + name + "."\` を返す (親の \`greet\` を上書き)。
+- \`greet()\`: \`"Good day, " + this.title + " " + this.name + "."\` を返す (親の \`greet\` を上書き)。
 
 \`\`\`js
 new Greeter("Alice").greet();

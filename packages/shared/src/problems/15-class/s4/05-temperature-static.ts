@@ -19,7 +19,7 @@ export const s4Ch15TemperatureStatic: Assignment = {
 
 - \`constructor(celsius)\`: \`this.celsius = celsius\` を保存する。
 - \`toCelsius()\`: \`this.celsius\` をそのまま返す。
-- \`toFahrenheit()\`: 華氏に変換した値 (\`celsius * 9 / 5 + 32\`) を返す。
+- \`toFahrenheit()\`: 華氏に変換した値 (\`this.celsius * 9 / 5 + 32\`) を返す。
 - \`static fromFahrenheit(f)\`: 華氏 \`f\` から **新しい \`Temperature\` インスタンス** を作って返す (内部は摂氏で保持)。
 
 \`\`\`js

@@ -16,9 +16,9 @@ export const s4Ch15Rectangle: Assignment = {
 幅と高さを持つ \`Rectangle\` クラスを実装してください。
 
 - \`constructor(width, height)\`: \`this.width\` と \`this.height\` に保存する。
-- \`area()\`: 面積 (\`width * height\`) を返す。
-- \`perimeter()\`: 周長 (\`2 * (width + height)\`) を返す。
-- \`isSquare()\`: \`width === height\` のとき \`true\`、 そうでないとき \`false\` を返す。
+- \`area()\`: 面積 (\`this.width * this.height\`) を返す。
+- \`perimeter()\`: 周長 (\`2 * (this.width + this.height)\`) を返す。
+- \`isSquare()\`: \`this.width === this.height\` のとき \`true\`、 そうでないとき \`false\` を返す。
 
 \`\`\`js
 const r = new Rectangle(3, 4);
