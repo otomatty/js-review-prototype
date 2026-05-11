@@ -39,7 +39,16 @@ classifyChars("!@# ");
 - 集計の合計 (\`upper + lower + digit + other\`) は **必ず元の文字列長と一致する** はずです。 自分でも検算しましょう。
 `,
   starterCode: `function classifyChars(s) {
-  // 各カテゴリの出現数を { upper, lower, digit, other } で返してください
+  // 説明文の 4 カテゴリを 0 で初期化した集計用オブジェクトを用意する
+
+
+  // for ループで s の各文字を 1 つずつ取り出す
+
+
+  // 文字の比較で英大文字 / 英小文字 / 数字 / その他に if/else if で振り分け、 対応カテゴリを 1 増やす
+
+
+  // ループを抜けたら集計用オブジェクトを return する
 }
 `,
   entryPoints: ["classifyChars"],

@@ -25,8 +25,10 @@ export const s2Ch02MathSqrt: Assignment = {
 - \`Math.sqrt(144)\` は \`12\` を返します (12 × 12 = 144)。
 - 距離計算 (三平方の定理) などで使います。
 `,
-  starterCode: `// 1. const result = Math.sqrt(144);
-// 2. console.log(result);
+  starterCode: `// Math.sqrt で平方根を計算した結果を const の変数に入れる
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

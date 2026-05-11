@@ -43,7 +43,13 @@ bubbleSort([]);               // → []
 - 内側ループの上限を \`length - 1 - i\` にすると、 既に確定した末尾を再走査せずに済んで少し速くなります。
 `,
   starterCode: `function bubbleSort(arr) {
-  // const out = [...arr]; のあと、 二重ループで隣同士を swap する
+  // 入力配列を破壊しないようにコピーした配列を作る
+
+
+  // 二重 for ループで隣同士を比較し、 左 > 右 なら swap する
+
+
+  // 並べ替え終わった配列を return する
 }
 `,
   entryPoints: ["bubbleSort"],

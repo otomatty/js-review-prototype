@@ -27,12 +27,17 @@ export const s2Ch06FindMax: Assignment = {
 - 最大値用の変数を 1 要素目で初期化: \`let max = nums[0];\`
 - ループの中で「現在の max より大きければ更新」 を繰り返します。
 `,
-  starterCode: `// const nums = [3, 1, 8, 4, 7];
-// let max = nums[0];
-// for (let i = 1; i < nums.length; i++) {
-//   if (nums[i] > max) { max = nums[i]; }
-// }
-// console.log(max);
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// 最大値を入れる let の変数を、 配列の先頭要素で初期化する
+
+
+// for ループで添字 1 から length 未満まで回し、
+// 現在の要素が最大より大きければ最大を更新する
+
+
+// 最大値を console.log で出力する
 
 `,
   tests: [

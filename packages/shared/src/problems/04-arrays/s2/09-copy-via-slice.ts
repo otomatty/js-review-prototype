@@ -31,10 +31,17 @@ original: [1,2,3]
 - \`arr.slice()\` (引数なし) は配列を **複製** します。
 - コピー側を変更しても、 元配列には影響しません。
 `,
-  starterCode: `// 1. const original = [1, 2, 3];
-// 2. const copy = original.slice();
-// 3. copy.push(4);
-// 4. テンプレートリテラルで 2 行出力
+  starterCode: `// 元になる数値の配列を const の変数に入れる
+
+
+// その配列に slice() を呼んでコピーを作り、 別の const の変数に入れる
+
+
+// コピー側にだけ push で要素を追加する
+
+
+// テンプレートリテラルで「copy: ...」「original: ...」 の 2 行を console.log で出力する
+// (配列の中身を埋め込むには JSON.stringify を使うとよい)
 
 `,
   tests: [

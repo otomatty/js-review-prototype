@@ -32,7 +32,11 @@ export const s2Ch01LetUpdateMulti: Assignment = {
 - \`let\` は何度でも再代入できます。 後から値が変わる変数には \`let\` を使います。
 - \`const\` で同じことをしようとするとエラーになります。
 `,
-  starterCode: `// let score = 0; から始めて 10 / 30 / 100 と順に更新し、 毎回出力する
+  starterCode: `// let で変数を宣言し、 初期値を入れる
+
+
+// 説明文に書かれた段階値の順に、 値を再代入しては console.log で出力する
+// (let は最初の 1 回だけ書き、 再代入時は変数名 = 値 だけ)
 
 `,
   tests: [

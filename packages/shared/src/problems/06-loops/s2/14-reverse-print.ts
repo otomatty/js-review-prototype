@@ -27,8 +27,10 @@ one
 - 末尾の添字 \`arr.length - 1\` から開始し、 \`i >= 0\` の間、 \`i--\` で減らします。
 - 配列自体は **変更しません**。
 `,
-  starterCode: `// const items = ["one", "two", "three"];
-// for (let i = items.length - 1; i >= 0; i--) { console.log(items[i]); }
+  starterCode: `// 文字列の配列を const の変数に入れる
+
+
+// for ループで添字 length - 1 から 0 まで 1 ずつ減らしながら、 各要素を console.log で出力する
 
 `,
   tests: [

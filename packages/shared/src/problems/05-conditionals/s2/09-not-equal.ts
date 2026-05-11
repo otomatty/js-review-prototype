@@ -25,8 +25,10 @@ export const s2Ch05NotEqual: Assignment = {
 - \`!==\` は厳密不等価。 \`===\` の反対です。
 - \`!=\` (緩い不等価) は型変換するので **避けます**。
 `,
-  starterCode: `// 1. const status = "error";
-// 2. if (status !== "ok") { console.log("異常終了"); }
+  starterCode: `// ステータスの文字列を const の変数に入れる
+
+
+// その変数を !== で「ok」 と比較した条件の if で文字列を console.log で出力する
 
 `,
   tests: [

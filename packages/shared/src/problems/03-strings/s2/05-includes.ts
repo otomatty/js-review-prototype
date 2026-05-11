@@ -26,8 +26,10 @@ true
 - \`"Hello".includes("xy")\` → \`false\`
 - 大文字小文字は区別されます。
 `,
-  starterCode: `// 1. const text = "Hello, JavaScript!";
-// 2. console.log(text.includes("Script"));
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// その変数に対して includes で部分文字列を含むかを判定した結果を console.log で出力する
 
 `,
   tests: [

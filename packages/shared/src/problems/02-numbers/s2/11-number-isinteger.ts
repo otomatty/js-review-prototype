@@ -26,7 +26,7 @@ false
 - \`Number.isInteger(小数)\` → \`false\`
 - 「人数」 や「個数」 など整数で扱うべき値の検証に使います。
 `,
-  starterCode: `// console.log(Number.isInteger(7.5));
+  starterCode: `// Number.isInteger に説明文の数値を渡した結果を console.log で出力する
 
 `,
   tests: [

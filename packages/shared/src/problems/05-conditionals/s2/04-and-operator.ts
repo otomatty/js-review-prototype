@@ -28,8 +28,10 @@ OK
 - \`A && B\` は **A と B の両方が真** のときだけ真になります。
 - \`if (age >= 18 && hasTicket) { ... }\` のように 1 つの条件式にまとめます。
 `,
-  starterCode: `// 1. const age = 25; const hasTicket = true;
-// 2. if (age >= 18 && hasTicket) { console.log("OK"); }
+  starterCode: `// 年齢 (数値) とチケット有無 (boolean) を、 それぞれ const の変数に入れる
+
+
+// && で 2 つの条件を AND 結合した if で文字列を console.log で出力する
 
 `,
   tests: [

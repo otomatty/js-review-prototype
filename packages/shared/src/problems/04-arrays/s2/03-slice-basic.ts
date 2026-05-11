@@ -25,8 +25,11 @@ export const s2Ch04SliceBasic: Assignment = {
 - \`arr.slice(1, 4)\` → 添字 1, 2, 3 を取り出す ( **添字 4 は含まれない** )。
 - \`slice\` は元の配列を **書き換えません**。
 `,
-  starterCode: `// 1. const nums = [10, 20, 30, 40, 50];
-// 2. console.log(nums.slice(1, 4));
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// その配列に対して slice(start, end) で部分配列を取り出した結果を console.log で出力する
+// (end は含まれない)
 
 `,
   tests: [

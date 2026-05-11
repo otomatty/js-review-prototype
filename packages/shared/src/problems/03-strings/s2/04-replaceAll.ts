@@ -25,8 +25,10 @@ a:b:c:d
 - \`"a-b-c-d".replaceAll("-", ":")\` → \`"a:b:c:d"\`
 - \`replace\` だと最初の 1 箇所しか置き換わりません。 全置換するなら \`replaceAll\`。
 `,
-  starterCode: `// 1. const text = "a-b-c-d";
-// 2. console.log(text.replaceAll("-", ":"));
+  starterCode: `// 区切り文字付きの文字列を const の変数に入れる
+
+
+// その変数に対して replaceAll で全ての区切り文字を別の文字に置換した結果を console.log で出力する
 
 `,
   tests: [

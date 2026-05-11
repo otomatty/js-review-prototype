@@ -38,9 +38,22 @@ toBase(2748, 16);  // → "abc"
 - 組み込みの \`Number.prototype.toString(base)\` を使うと逃げられてしまうため、 AST で **\`toString\` の呼び出しを禁止** しています。
 `,
   starterCode: `function toBase(n, base) {
-  // value % base で下位桁を取り出し、 "0123456789abcdef" の対応する文字を先頭に追加
-  // value = Math.floor(value / base) で次の桁へ
-  // n === 0 のときは "0" を返す
+  // n が 0 のときは説明文の特別扱いに従って文字列を return する
+
+
+  // 0-9 と a-f を並べた変換表の文字列と、 結果用の文字列、 走査用の数値変数を用意する
+
+
+  // while で走査用変数が 0 より大きい間ループする
+
+
+  // 剰余で下位 1 桁の数値を取り出して、 対応する変換表の文字を結果文字列の先頭側に積む
+
+
+  // 走査用変数を Math.floor で base で割って次の桁に進める
+
+
+  // ループを抜けたら結果文字列を return する
 }
 `,
   entryPoints: ["toBase"],

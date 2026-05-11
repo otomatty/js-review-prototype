@@ -39,9 +39,17 @@ JavaScript
 - \`const total = 80 + 15;\` のように、 計算結果も変数に入れられます。
 - \`console.log\` を 2 回呼ぶと、 2 行に分かれて出力されます。
 `,
-  starterCode: `// 1. const subject = "JavaScript";
-// 2. const total = 80 + 15;
-// 3. console.log で subject と total を順に出す
+  starterCode: `// 教科名を const の変数に入れる
+
+
+// 2 つのテストの点数を + で足し算して、 計算結果を const の変数に入れる
+// (答えを直接書かずに、計算式のまま入れる)
+
+
+// 1 つ目の変数を console.log で出力する
+
+
+// 2 つ目の変数を console.log で出力する
 
 `,
   tests: [

@@ -22,7 +22,7 @@ export const s1Ch02MathRound: Assignment = {
 3
 \`\`\`
 `,
-  starterCode: `// console.log の中で Math.round(2.6) を呼ぶ
+  starterCode: `// 説明文の小数を Math.round で四捨五入して、 結果を console.log で出力する
 
 `,
   tests: [

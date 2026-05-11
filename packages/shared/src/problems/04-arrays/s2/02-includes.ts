@@ -25,8 +25,10 @@ true
 - \`arr.includes(値)\` で \`true\` / \`false\` が返ります。
 - 「存在チェック」 だけが目的なら \`indexOf !== -1\` より \`includes\` の方が読みやすいです。
 `,
-  starterCode: `// 1. const nums = [1, 3, 5, 7, 9];
-// 2. console.log(nums.includes(5));
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// その配列に対して includes で対象要素を含むかを判定した結果を console.log で出力する
 
 `,
   tests: [

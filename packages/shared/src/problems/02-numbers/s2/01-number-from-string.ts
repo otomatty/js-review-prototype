@@ -29,9 +29,13 @@ const text = "42";
 - ユーザー入力など **文字列として届く数値** はそのままでは計算できません (\`"42" + 8\` は \`"428"\` という文字列連結になる)。
 - \`Number(値)\` で数値に変換できます。
 `,
-  starterCode: `// 1. const text = "42";
-// 2. const n = Number(text);
-// 3. console.log(n + 8);
+  starterCode: `// 数字を表す文字列を const の変数に入れる
+
+
+// その変数を Number() で数値に変換し、 別の const の変数に入れる
+
+
+// 変換後の値に説明文の数値を + で足した結果を console.log で出力する
 
 `,
   tests: [

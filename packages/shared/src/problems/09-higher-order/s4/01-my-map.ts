@@ -35,7 +35,10 @@ myMap([], (x) => x);                       // → []
 - 入力配列 \`arr\` を **書き換えない** こと (非破壊)。
 `,
   starterCode: `function myMap(arr, fn) {
-  // reduce を使って arr.map(fn) と同じ動きを実装してください
+  // reduce で arr を走査し、 初期値に空配列を渡して、 各要素に fn を適用した結果を蓄積用配列の末尾へ push する
+
+
+  // 蓄積用配列を return する (= reduce の最終結果を return する)
 }
 `,
   entryPoints: ["myMap"],

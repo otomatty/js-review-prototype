@@ -26,10 +26,10 @@ export const s1Ch01MultipleVars: Assignment = {
 25
 \`\`\`
 `,
-  starterCode: `// 1. const firstName = "花子"
-// 2. const lastName = "山田"
-// 3. const age = 25
-// 4. それぞれを順に console.log で出力
+  starterCode: `// const で 3 つの変数を順に宣言する (1 つ目・2 つ目は文字列、 3 つ目は数値)
+
+
+// 宣言した順に console.log でそれぞれを出力する
 
 `,
   tests: [

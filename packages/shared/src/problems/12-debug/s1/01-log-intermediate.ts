@@ -27,8 +27,8 @@ export const s1Ch12LogIntermediate: Assignment = {
 
 - バグを探すときは「期待した値と違う場所はどこか」 を切り分ける必要があります。 \`console.log\` を要所要所に入れると、 中間値が見えて切り分けに役立ちます。
 `,
-  starterCode: `// console.log(x + y); の前に、 x の値を出す行を追加する
-// 最終的に 12 と 20 の 2 行を出力する
+  starterCode: `// 最終結果を出している行の手前に、 中間値 (足し算する前の値) を確認するための
+// console.log を 1 行追加する
 
 const x = 12;
 const y = 8;

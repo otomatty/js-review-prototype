@@ -30,9 +30,14 @@ export const s2Ch01BlockScopeLet: Assignment = {
 - \`{ }\` で囲まれた範囲を **ブロック** と呼びます。 \`const\` / \`let\` で作った変数は **そのブロックの中だけ** で有効です。
 - 中で同じ名前を使っても外には影響しません。 これを「ブロックスコープ」 と呼びます。
 `,
-  starterCode: `// 1. 外側で const message = "外側" を宣言する
-// 2. { ... } の中で const message = "内側" を宣言して出力
-// 3. ブロックの外で console.log(message) をもう一度
+  starterCode: `// ブロックの外側で const の変数に文字列を入れる
+
+
+// { } のブロックを開き、 その中でも同じ名前の const の変数に別の文字列を入れて
+// console.log で出力する
+
+
+// ブロックを閉じたあと、 もう一度 console.log で同じ変数を出力する
 
 `,
   tests: [

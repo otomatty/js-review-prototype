@@ -48,7 +48,22 @@ sumNested([1, [2, 3], 4, [[5, 6]]]);  // → 21
 - 再帰呼び出しの結果は **数値が返る** ので、 そのまま \`total\` に足せばよいです。
 `,
   starterCode: `function sumNested(arr) {
-  // for (const item of arr) { Array.isArray(item) なら sumNested(item) を足す }
+  // 合計を貯めるための数値変数を 0 で用意する
+
+
+  // for...of で arr の各要素を 1 つずつ取り出す
+
+
+  // Array.isArray で要素が配列かどうかを判定する
+
+
+  // 配列なら sumNested を再帰呼び出ししてその結果を合計に足す
+
+
+  // 配列でなければ (= 数値なら) その値をそのまま合計に足す
+
+
+  // ループを抜けたら合計を return する
 }
 `,
   entryPoints: ["sumNested"],

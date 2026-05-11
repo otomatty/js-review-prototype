@@ -29,9 +29,13 @@ const text = "3.14kg";
 - \`parseFloat\` は小数点を含む数字を読み取ります。 \`parseInt\` だと小数点以下が落ちます。
 - \`parseFloat\` には基数の引数はありません (常に 10 進数)。
 `,
-  starterCode: `// 1. const text = "3.14kg";
-// 2. const n = parseFloat(text);
-// 3. console.log(n);
+  starterCode: `// 小数+単位の文字列を const の変数に入れる
+
+
+// その変数を parseFloat で小数として読み取り、 別の const の変数に入れる
+
+
+// 変換後の値を console.log で出力する
 
 `,
   tests: [

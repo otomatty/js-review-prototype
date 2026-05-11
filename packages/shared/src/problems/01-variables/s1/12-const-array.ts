@@ -26,8 +26,10 @@ red
 - 最初の要素は **0 番目** で、 \`colors[0]\` で取り出せます。
 - 配列の詳しい使い方は Ch04 で扱います。
 `,
-  starterCode: `// 1. const colors = ["red", "green", "blue"];
-// 2. console.log(colors[0]);   ← 0 番目を取り出す
+  starterCode: `// 3 つの色の文字列を [ ] で並べた配列を const の変数に入れる
+
+
+// 配列の最初の要素 (添字 0) を console.log で出力する
 
 `,
   tests: [

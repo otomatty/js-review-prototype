@@ -25,8 +25,10 @@ export const s2Ch02PercentOnesPlace: Assignment = {
 - \`n % 10\` で \`n\` の **1 の位** が取り出せます。
 - 同様に \`n % 100\` なら **下 2 桁**、 \`Math.floor(n / 10) % 10\` で **10 の位** が取れます。
 `,
-  starterCode: `// const n = 12345;
-// console.log(n % 10);
+  starterCode: `// 説明文の数値を const の変数に入れる
+
+
+// その変数を 10 で割った余り (% 演算子) を console.log で出力する
 
 `,
   tests: [

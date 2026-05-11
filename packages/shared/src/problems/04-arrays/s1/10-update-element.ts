@@ -25,9 +25,13 @@ export const s1Ch04UpdateElement: Assignment = {
 - \`letters[1] = "X";\` のように添字に代入することで、 その位置の値を上書きできます。
 - const で宣言した配列の **中身は書き換え可能** です (再代入と中身の変更は別物)。
 `,
-  starterCode: `// 1. const letters = ["A", "B", "C"];
-// 2. letters[1] = "X";
-// 3. console.log(letters);
+  starterCode: `// 配列を const の変数に入れる
+
+
+// 添字に直接代入して、 指定位置の要素を別の値に書き換える
+
+
+// 書き換えたあとの配列を console.log で出力する
 
 `,
   tests: [

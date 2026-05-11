@@ -25,9 +25,13 @@ export const s2Ch04Reverse: Assignment = {
 - \`arr.reverse()\` は **元の配列を書き換えます** (破壊的)。
 - 元配列を残したいときは \`arr.slice().reverse()\` のようにコピーしてから呼びます。
 `,
-  starterCode: `// 1. const nums = [1, 2, 3, 4, 5];
-// 2. nums.reverse();
-// 3. console.log(nums);
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// その配列に対して reverse を呼び、 順序を反転させる (元の配列が書き換わる)
+
+
+// 反転後の配列を console.log で出力する
 
 `,
   tests: [

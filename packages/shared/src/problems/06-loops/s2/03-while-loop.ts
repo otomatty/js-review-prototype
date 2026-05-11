@@ -35,7 +35,10 @@ while (i <= 3) {
 - \`while (条件) { ... }\` は条件が真の間ずっと繰り返します。
 - ループ内で **値を更新しないと無限ループ** になります。
 `,
-  starterCode: `// let i = 1; while (i <= 3) { console.log(i); i++; }
+  starterCode: `// while の外で let のカウンタ変数を初期化する
+
+
+// while で条件を満たす間ループし、 中で console.log で出力してからカウンタを 1 増やす
 
 `,
   tests: [

@@ -34,8 +34,11 @@ export const s2Ch05SwitchDay: Assignment = {
 - 各 \`case\` の最後に \`break;\` を付けないと **下に流れます (fallthrough)**。
 - 該当しないときの **\`default:\`** を必ず書く習慣をつけます。
 `,
-  starterCode: `// 1. const day = 3;
-// 2. switch (day) { case 0: ...; break; default: ...; }
+  starterCode: `// 曜日番号の数値を const の変数に入れる
+
+
+// switch でその変数を分岐し、 case ごとに対応する曜日名を console.log で出力する
+// (各 case の最後に break を忘れない)
 
 `,
   tests: [

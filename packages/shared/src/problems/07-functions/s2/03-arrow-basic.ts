@@ -29,8 +29,11 @@ Hello
 - アロー関数: \`() => 値\` の形は **その値を return する** という意味。
 - \`{ }\` を書くと中身は通常の関数本体になり、 \`return\` が必要になります。
 `,
-  starterCode: `// const hello = () => "Hello";
-// console.log(hello());
+  starterCode: `// 引数を取らないアロー関数を const の変数に入れる
+// (式形式 () => 値 で、 値をそのまま返すようにする)
+
+
+// 関数を呼び出した結果を console.log で出力する
 
 `,
   tests: [

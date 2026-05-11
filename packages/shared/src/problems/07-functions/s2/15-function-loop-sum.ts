@@ -25,12 +25,12 @@ export const s2Ch07FunctionLoopSum: Assignment = {
 - 関数の中で \`let total = 0;\` を準備し、 for ループで配列要素を足し込みます。
 - 最後に \`return total;\`。
 `,
-  starterCode: `// function sum(arr) {
-//   let total = 0;
-//   for (let i = 0; i < arr.length; i++) { total += arr[i]; }
-//   return total;
-// }
-// console.log(sum([1, 2, 3, 4, 5]));
+  starterCode: `// 配列を引数に取る function 文の関数を宣言する
+// 中で合計用の let の変数を 0 で初期化し、
+// for ループで全要素を += で足し込んで合計を return する
+
+
+// 関数に説明文の配列を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

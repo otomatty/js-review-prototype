@@ -25,8 +25,10 @@ export const s2Ch07FunctionAdd: Assignment = {
 - 引数は \`function add(a, b) { ... }\` のように **括弧の中** に並べます。
 - \`return\` で値を返すと、 呼び出し側で受け取って使えます。
 `,
-  starterCode: `// 1. function add(a, b) { return a + b; }
-// 2. console.log(add(3, 4));
+  starterCode: `// 2 つの引数を取る function 文の関数を宣言し、 引数同士を + で足した結果を return する
+
+
+// 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

@@ -25,9 +25,13 @@ export const s1Ch04Push: Assignment = {
 - \`配列.push(値)\` は配列の末尾に値を追加します。
 - 元の配列が **変更されます** (push は新しい配列を返さない)。 const で宣言していても push できます (中身を入れ替えるだけなので)。
 `,
-  starterCode: `// 1. const items = ["a", "b"];
-// 2. items.push("c");
-// 3. console.log(items);
+  starterCode: `// 配列を const の変数に入れる
+
+
+// 末尾に新しい要素を push で追加する
+
+
+// 追加後の配列を console.log で出力する
 
 `,
   tests: [

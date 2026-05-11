@@ -27,8 +27,10 @@ cherry
 - \`for (let i = 0; i < arr.length; i++) { console.log(arr[i]); }\` の形が基本。
 - \`arr.length\` は配列の長さ。
 `,
-  starterCode: `// const fruits = ["apple", "banana", "cherry"];
-// for (let i = 0; i < fruits.length; i++) { console.log(fruits[i]); }
+  starterCode: `// 文字列の配列を const の変数に入れる
+
+
+// for ループで添字 0 から length 未満まで回し、 各要素を console.log で出力する
 
 `,
   tests: [

@@ -25,8 +25,10 @@ export const s2Ch03IndexOfString: Assignment = {
 - \`"Hello, World!".indexOf("World")\` → \`7\` (W が 7 番目)
 - 見つからないときは \`-1\` を返します。
 `,
-  starterCode: `// 1. const text = "Hello, World!";
-// 2. console.log(text.indexOf("World"));
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// その変数に対して indexOf で部分文字列の出現位置を取得した結果を console.log で出力する
 
 `,
   tests: [

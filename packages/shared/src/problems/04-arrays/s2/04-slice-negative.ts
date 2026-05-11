@@ -25,8 +25,10 @@ export const s2Ch04SliceNegative: Assignment = {
 - \`slice(-2)\` は **末尾から 2 個** を取り出します。
 - \`slice(start, end)\` の \`end\` を省略すると配列の末尾まで取得します。
 `,
-  starterCode: `// 1. const nums = [1, 2, 3, 4, 5];
-// 2. console.log(nums.slice(-2));
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// その配列に対して slice に負の添字を渡し、 末尾から数えた要素を取り出した結果を console.log で出力する
 
 `,
   tests: [

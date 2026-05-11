@@ -22,8 +22,8 @@ export const s1Ch03SliceRange: Assignment = {
 Java
 \`\`\`
 `,
-  starterCode: `// console.log で "JavaScript".slice(0, 4) を呼ぶ
-// 終了位置 4 は含まれない (0,1,2,3 番目)
+  starterCode: `// 説明文の文字列に slice を使い、 開始位置と終了位置を指定して範囲を取り出して console.log で出力する
+// (終了位置の文字は含まれない点に注意)
 
 `,
   tests: [

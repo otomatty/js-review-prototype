@@ -41,9 +41,13 @@ findLowStock([], 5);                  // → []
 - 元の \`items\` 配列に手を加えてはいけません。 例えば \`items.splice(...)\` で取り出すのは NG (非破壊テストで失敗します)。
 `,
   starterCode: `function findLowStock(items, threshold) {
-  // 1) result = []
-  // 2) for...of で items を走査し、 item.stock < threshold なら result.push(item)
-  // 3) return result
+  // 結果を入れる空の配列を用意する
+
+
+  // for...of で items を 1 件ずつ走査し、 stock が threshold 未満のときだけ結果配列に push する
+
+
+  // 結果配列を return する
 }
 `,
   entryPoints: ["findLowStock"],

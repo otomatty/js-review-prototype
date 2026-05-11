@@ -27,9 +27,13 @@ export const s2Ch07HelperFunction: Assignment = {
 - 例えば消費税率が変わったときに関数の中だけ直せば済みます。
 - 小数の浮動小数点誤差を避けるため \`Math.round\` で丸めます。
 `,
-  starterCode: `// function tax(price) { return Math.round(price * 1.1); }
-// console.log(tax(100));
-// console.log(tax(250));
+  starterCode: `// 引数の価格を 1.1 倍して Math.round で四捨五入した結果を return する function 文の関数を宣言する
+
+
+// 関数に説明文の 1 つ目の値を渡して呼び出した結果を console.log で出力する
+
+
+// 関数に説明文の 2 つ目の値を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

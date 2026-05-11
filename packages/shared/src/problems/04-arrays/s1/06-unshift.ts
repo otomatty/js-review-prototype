@@ -24,9 +24,13 @@ export const s1Ch04Unshift: Assignment = {
 
 - \`unshift(値)\` は配列の **先頭** に値を追加します。 push の逆 (末尾ではなく先頭)。
 `,
-  starterCode: `// 1. const nums = [2, 3];
-// 2. nums.unshift(1);
-// 3. console.log(nums);
+  starterCode: `// 配列を const の変数に入れる
+
+
+// 先頭に新しい要素を unshift で追加する
+
+
+// 追加後の配列を console.log で出力する
 
 `,
   tests: [

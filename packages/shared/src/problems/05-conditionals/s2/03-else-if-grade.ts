@@ -29,8 +29,10 @@ B
 - \`if (条件1) { ... } else if (条件2) { ... } else { ... }\` の形で 3 つ以上の分岐を書けます。
 - 条件は **上から順に評価** され、 最初に真になったブロックだけが実行されます。
 `,
-  starterCode: `// 1. const score = 75;
-// 2. if (score >= 80) { ... } else if (score >= 60) { ... } else { ... }
+  starterCode: `// スコアの数値を const の変数に入れる
+
+
+// if / else if / else で 3 段階に分岐し、 各範囲に対応する文字列を console.log で出力する
 
 `,
   tests: [

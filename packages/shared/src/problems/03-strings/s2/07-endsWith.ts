@@ -25,8 +25,10 @@ true
 - \`fileName.endsWith(".pdf")\` で末尾一致を判定できます。
 - 拡張子チェックなどでよく使う関数です。
 `,
-  starterCode: `// 1. const fileName = "report.pdf";
-// 2. console.log(fileName.endsWith(".pdf"));
+  starterCode: `// ファイル名の文字列を const の変数に入れる
+
+
+// その変数に対して endsWith で末尾の拡張子を判定した結果を console.log で出力する
 
 `,
   tests: [

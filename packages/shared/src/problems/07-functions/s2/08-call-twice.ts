@@ -26,9 +26,13 @@ export const s2Ch07CallTwice: Assignment = {
 - 同じ関数を引数を変えて呼べば、 違う結果が返ります。
 - これが「処理を関数にまとめる」 ことのメリットです。
 `,
-  starterCode: `// function double(n) { return n * 2; }
-// console.log(double(3));
-// console.log(double(7));
+  starterCode: `// 引数を 2 倍にして return する function 文の関数を宣言する
+
+
+// 関数に説明文の 1 つ目の値を渡して呼び出した結果を console.log で出力する
+
+
+// 関数に説明文の 2 つ目の値を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

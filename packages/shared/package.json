@@ -20,7 +20,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "bun test test/problems.spec.ts",
-    "check-integrity": "bun run scripts/check-integrity.ts"
+    "check-integrity": "bun run scripts/check-integrity.ts",
+    "scan-starter-comments": "bun run scripts/scan-starter-comments.ts"
   },
   "dependencies": {
     "@babel/parser": "^7.24.0",

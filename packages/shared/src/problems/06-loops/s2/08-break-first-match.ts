@@ -25,10 +25,11 @@ export const s2Ch06BreakFirstMatch: Assignment = {
 - \`break;\` はそのループを即座に終了します。
 - 「探索して最初の 1 つだけ欲しい」 ときに使います。
 `,
-  starterCode: `// const nums = [3, 7, 4, 9, 6];
-// for (let i = 0; i < nums.length; i++) {
-//   if (nums[i] % 2 === 0) { console.log(nums[i]); break; }
-// }
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// for ループで先頭から走査し、 条件を満たす要素を見つけたら
+// その値を console.log で出力して break でループを抜ける
 
 `,
   tests: [

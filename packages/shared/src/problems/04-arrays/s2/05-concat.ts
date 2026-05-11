@@ -25,8 +25,10 @@ export const s2Ch04Concat: Assignment = {
 - \`a.concat(b)\` で配列 a の後ろに b をつなげた **新しい配列** が返ります。
 - 元の \`a\` と \`b\` は変更されません。
 `,
-  starterCode: `// 1. const a = [1, 2]; const b = [3, 4];
-// 2. console.log(a.concat(b));
+  starterCode: `// 2 つの配列を、 それぞれ const の変数に入れる
+
+
+// 1 つ目の配列に対して concat を呼び、 2 つ目の配列を結合した結果を console.log で出力する
 
 `,
   tests: [

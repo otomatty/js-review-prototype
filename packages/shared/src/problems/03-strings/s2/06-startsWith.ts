@@ -25,8 +25,10 @@ true
 - \`url.startsWith("https://")\` で「先頭一致」 を確認できます。
 - 似た仲間に \`endsWith\` があります (Ch03-07 で扱います)。
 `,
-  starterCode: `// 1. const url = "https://example.com";
-// 2. console.log(url.startsWith("https://"));
+  starterCode: `// URL の文字列を const の変数に入れる
+
+
+// その変数に対して startsWith でプレフィックスを判定した結果を console.log で出力する
 
 `,
   tests: [

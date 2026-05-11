@@ -29,9 +29,13 @@ export const s1Ch01CopyValue: Assignment = {
 - \`=\` の右側には別の変数を書けます。
 - \`const copy = original;\` と書くと、 \`original\` の中身が \`copy\` にコピーされます。
 `,
-  starterCode: `// 1. const original = "宝物";
-// 2. const copy = original;   ← 中身がコピーされる
-// 3. console.log(copy);
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// もう 1 つ const の変数を作り、 = の右辺に最初の変数名を書いて値をコピーする
+
+
+// コピー先の変数を console.log で出力する
 
 `,
   tests: [

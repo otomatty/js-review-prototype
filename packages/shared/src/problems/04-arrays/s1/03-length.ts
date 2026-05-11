@@ -22,8 +22,10 @@ export const s1Ch04Length: Assignment = {
 4
 \`\`\`
 `,
-  starterCode: `// 1. const colors = ["red", "green", "blue", "yellow"];
-// 2. console.log(colors.length);
+  starterCode: `// 配列を const の変数に入れる
+
+
+// その変数の length プロパティを console.log で出力する
 
 `,
   tests: [

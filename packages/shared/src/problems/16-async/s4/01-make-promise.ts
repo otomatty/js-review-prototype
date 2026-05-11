@@ -32,9 +32,9 @@ await safeDivide(1, 0);         // → throws Error("division by zero")
 - reject には **Error オブジェクト** を渡しましょう (\`reject(new Error("..."))\`)。 文字列を直接渡すとスタックトレースが取れません。
 `,
   starterCode: `function safeDivide(a, b) {
-  // new Promise((resolve, reject) => { ... }) を返す
-  // b が 0 なら reject(new Error("division by zero"))
-  // それ以外は resolve(a / b)
+  // resolve / reject を引数に取るコールバックを渡した new Promise を返す
+  // 分母が 0 のときは Error オブジェクトで reject する
+  // それ以外のときは a / b の結果で resolve する
 }
 `,
   entryPoints: ["safeDivide"],

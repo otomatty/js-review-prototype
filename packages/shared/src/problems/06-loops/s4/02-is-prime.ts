@@ -34,9 +34,13 @@ isPrime(25);  // → false  (5 で割り切れる)
 - ループ範囲は \`i = 2; i < n; i++\` で十分通ります (高速化として \`i * i <= n\` まででも OK)。
 `,
   starterCode: `function isPrime(n) {
-  // n < 2 は false
-  // 2 から n - 1 まで for ループで試し割りし、 割り切れたら即 return false
-  // ループを抜けたら true
+  // 2 未満は素数ではないので即 false を return する
+
+
+  // 2 から n - 1 まで for ループで割り算を試し、 割り切れたらその場で false を return する
+
+
+  // ループを抜けたら素数なので true を return する
 }
 `,
   entryPoints: ["isPrime"],

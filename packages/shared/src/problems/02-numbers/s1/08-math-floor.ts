@@ -22,7 +22,7 @@ export const s1Ch02MathFloor: Assignment = {
 3
 \`\`\`
 `,
-  starterCode: `// console.log の中で Math.floor(3.7) を呼ぶ
+  starterCode: `// 説明文の小数を Math.floor で切り捨てて、 結果を console.log で出力する
 
 `,
   tests: [

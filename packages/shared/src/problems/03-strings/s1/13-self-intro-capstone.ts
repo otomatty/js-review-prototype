@@ -31,10 +31,11 @@ export const s1Ch03SelfIntroCapstone: Assignment = {
 - 1 回の console.log で 2 行を出すには、 バッククォートを使った **複数行のテンプレートリテラル** が便利です。
 - \`\${name}\` / \`\${age}\` / \`\${hobby}\` をそれぞれ埋め込みます。
 `,
-  starterCode: `// 1. const name = "花子";
-// 2. const age = 30;
-// 3. const hobby = "読書";
-// 4. テンプレートリテラル (複数行) で自己紹介文を console.log
+  starterCode: `// 名前・年齢・趣味の 3 つを、 それぞれ const の変数に入れる
+
+
+// バッククォートで囲んだ複数行テンプレートリテラルで自己紹介文を組み立て、
+// console.log で出力する (\${変数名} で値を埋め込む)
 
 `,
   tests: [

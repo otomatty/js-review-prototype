@@ -26,8 +26,10 @@ Hello
 - ユーザー入力のフォーム値を扱うときの定番処理です。
 - 片側だけなら \`trimStart\` / \`trimEnd\` を使います。
 `,
-  starterCode: `// 1. const text = "  Hello  ";
-// 2. console.log(text.trim());
+  starterCode: `// 前後に空白を含む文字列を const の変数に入れる
+
+
+// その変数に対して trim を呼んで前後の空白を取り除いた結果を console.log で出力する
 
 `,
   tests: [

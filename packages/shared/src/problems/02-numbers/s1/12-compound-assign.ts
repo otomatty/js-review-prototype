@@ -29,9 +29,13 @@ export const s1Ch02CompoundAssign: Assignment = {
 - \`x += n\` は \`x = x + n\` の **省略形** です。 同じ意味になります。
 - 同様に \`-=\`、 \`*=\`、 \`/=\` もあります。
 `,
-  starterCode: `// 1. let total = 100;
-// 2. total += 50;
-// 3. console.log(total);
+  starterCode: `// let で変数を宣言し、 初期値を入れる
+
+
+// += を使ってその変数に値を加算する
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

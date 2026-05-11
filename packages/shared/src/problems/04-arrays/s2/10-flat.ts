@@ -25,8 +25,10 @@ export const s2Ch04Flat: Assignment = {
 - \`arr.flat()\` は 1 段だけネストを解消します。
 - 深くネストしているなら \`flat(Infinity)\` または \`flat(2)\` 等で深さ指定できます。
 `,
-  starterCode: `// 1. const nested = [[1, 2], [3, 4], [5]];
-// 2. console.log(nested.flat());
+  starterCode: `// 入れ子の配列を const の変数に入れる
+
+
+// その配列に対して flat を呼んで 1 段平らにした結果を console.log で出力する
 
 `,
   tests: [

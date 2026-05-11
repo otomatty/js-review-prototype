@@ -24,9 +24,13 @@ export const s1Ch04Shift: Assignment = {
 
 - \`shift()\` は **先頭** の要素を取り除きます。 pop の逆 (末尾ではなく先頭)。
 `,
-  starterCode: `// 1. const nums = [10, 20, 30];
-// 2. nums.shift();
-// 3. console.log(nums);
+  starterCode: `// 配列を const の変数に入れる
+
+
+// 先頭の要素を shift で取り除く
+
+
+// 取り除いたあとの配列を console.log で出力する
 
 `,
   tests: [

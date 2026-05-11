@@ -40,10 +40,13 @@ BMI: 22
 - 計算結果はそのままだと小数になるので、 \`Math.round(...)\` で整数に丸めます。
 - テンプレートリテラルで \`\` \`BMI: \${bmi}\` \`\` のように埋め込みます。
 `,
-  starterCode: `// 1. const heightM = 1.70;
-// 2. const weightKg = 65;
-// 3. const bmi = Math.round(weightKg / (heightM ** 2));
-// 4. テンプレートリテラルで「BMI: \${bmi}」を組み立てて出力
+  starterCode: `// 身長 (m) と体重 (kg) を const の変数に入れる
+
+
+// 体重 ÷ 身長の 2 乗 で BMI を計算し、 Math.round で整数に丸めた結果を const の変数に入れる
+
+
+// テンプレートリテラルで「BMI: ...」 形式の文字列を組み立てて console.log で出力する
 
 `,
   tests: [

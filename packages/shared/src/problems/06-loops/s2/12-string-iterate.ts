@@ -28,8 +28,10 @@ d
 - 文字列も \`text.length\` と \`text[i]\` でアクセスできます。
 - \`charAt(i)\` でも同じです。
 `,
-  starterCode: `// const text = "abcd";
-// for (let i = 0; i < text.length; i++) { console.log(text[i]); }
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// for ループで添字 0 から length 未満まで回し、 文字列[i] で 1 文字ずつ console.log で出力する
 
 `,
   tests: [

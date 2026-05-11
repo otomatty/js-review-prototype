@@ -22,7 +22,7 @@ export const s1Ch03ReplaceSimple: Assignment = {
 I like dogs
 \`\`\`
 `,
-  starterCode: `// console.log で "I like cats".replace("cats", "dogs") を呼ぶ
+  starterCode: `// 説明文の元文字列に replace を使い、 説明文で指定された旧文字列を新文字列に置き換えて console.log で出力する
 
 `,
   tests: [

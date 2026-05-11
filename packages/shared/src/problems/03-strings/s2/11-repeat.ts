@@ -25,8 +25,10 @@ ababababab
 - \`"ab".repeat(5)\` → \`"ababababab"\`
 - 区切り線 (\`"-".repeat(20)\`) などで便利です。
 `,
-  starterCode: `// 1. const base = "ab";
-// 2. console.log(base.repeat(5));
+  starterCode: `// 元になる文字列を const の変数に入れる
+
+
+// その変数に対して repeat を呼んで指定回数くり返した結果を console.log で出力する
 
 `,
   tests: [

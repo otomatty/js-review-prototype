@@ -33,10 +33,12 @@ const bmi = (heightM, weightKg) => {
 - アロー関数の本体に \`{ }\` を書くと **明示 return が必要**。
 - 短い式なら省略形 \`(a, b) => a + b\` も使えます (Ch07-04 でやった形)。
 `,
-  starterCode: `// const bmi = (heightM, weightKg) => {
-//   return Math.round(weightKg / (heightM * heightM));
-// };
-// console.log(bmi(1.7, 65));
+  starterCode: `// 2 つの引数を取るアロー関数をブロック形式 (中括弧で囲んで return を書く形) で書き、
+// const の変数に入れる
+// 中で BMI の計算式を Math.round で整数に丸めた結果を return する
+
+
+// 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

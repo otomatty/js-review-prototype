@@ -27,8 +27,11 @@ export const s2Ch05RangeCheck: Assignment = {
 - JavaScript は \`a <= x <= b\` の書き方をサポートしません。
 - 2 つの条件を \`&&\` で結びます。
 `,
-  starterCode: `// 1. const score = 75;
-// 2. if (score >= 0 && score <= 100) { ... } else { ... }
+  starterCode: `// スコアの数値を const の変数に入れる
+
+
+// 0 以上 100 以下を && で AND 結合した条件の if / else で、
+// 範囲内 / 範囲外それぞれの文字列を console.log で出力する
 
 `,
   tests: [

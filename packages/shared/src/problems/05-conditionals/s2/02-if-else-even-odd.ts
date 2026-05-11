@@ -27,8 +27,10 @@ odd
 - 偶数判定は \`n % 2 === 0\`。
 - \`if (条件) { ... } else { ... }\` の形で偽の場合の処理を書きます。
 `,
-  starterCode: `// 1. const n = 7;
-// 2. if (n % 2 === 0) { ... } else { ... }
+  starterCode: `// 数値を const の変数に入れる
+
+
+// 2 で割った余り (% 演算子) で if / else に分岐し、 それぞれの場合の文字列を console.log で出力する
 
 `,
   tests: [

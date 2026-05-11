@@ -30,10 +30,13 @@ export const s1Ch01ConcatViaVars: Assignment = {
 - 文字列同士は \`+\` でつなげられます。 これを **連結** と言います。
 - \`"a" + "b"\` は \`"ab"\` になります。
 `,
-  starterCode: `// 1. const hello = "こんにちは、 ";
-// 2. const name = "太郎さん";
-// 3. const greeting = hello + name;
-// 4. console.log(greeting);
+  starterCode: `// 2 つの文字列を、 それぞれ const の変数に入れる
+
+
+// 上の 2 変数を + で連結した結果を、 さらに別の const の変数に入れる
+
+
+// 連結結果を入れた変数を console.log で出力する
 
 `,
   tests: [

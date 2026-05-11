@@ -29,9 +29,8 @@ export const s2Ch06NestedLoop: Assignment = {
 - 単純な 1 重ループでもよいですが、 後の応用 (九九全体) を意識した形で書きます。
 - テンプレートリテラルで埋め込みます。
 `,
-  starterCode: `// for (let i = 1; i <= 3; i++) {
-//   console.log(\`2x\${i}=\${2 * i}\`);
-// }
+  starterCode: `// for ループでカウンタを 1 から上限まで回し、
+// テンプレートリテラルで「2x...=...」 形式の文字列を組み立てて console.log で出力する
 
 `,
   tests: [

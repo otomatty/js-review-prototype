@@ -25,8 +25,10 @@ a
 - 引数として配列も渡せます。 関数内では普通の配列として使えます。
 - 配列の長さや要素を扱うのが関数の典型用途です。
 `,
-  starterCode: `// function first(arr) { return arr[0]; }
-// console.log(first(["a", "b", "c"]));
+  starterCode: `// 配列の引数を取り、 添字 0 の要素を return する function 文の関数を宣言する
+
+
+// 関数に説明文の配列を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

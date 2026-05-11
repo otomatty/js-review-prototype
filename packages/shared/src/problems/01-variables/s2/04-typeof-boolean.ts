@@ -25,8 +25,10 @@ boolean
 - \`true\` / \`false\` の型は \`"boolean"\` です。
 - 後の章で出てくる条件分岐 (\`if\`) では boolean 値を使います。
 `,
-  starterCode: `// 1. const isActive = true; を宣言する
-// 2. console.log(typeof isActive); で型を出力する
+  starterCode: `// boolean 値 (true / false) を const の変数に入れる
+
+
+// その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
 `,
   tests: [

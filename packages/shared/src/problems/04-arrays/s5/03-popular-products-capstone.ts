@@ -61,12 +61,25 @@ popularProductsRanking([{ userId: "u1", productId: "x" }], 0); // → []
   - AST で **\`map\` / \`includes\` / \`sort\` / \`slice\` の使用** を必須にしています
 `,
   starterCode: `function popularProductsRanking(transactions, topN) {
-  // 1) stats = {} を用意。 productId をキーにして { purchases, users: [] } を貯める
-  // 2) for...of でログを 1 周。 同じユーザーが複数回買った場合は purchases だけ増やす
-  //    (users 配列に既に居る userId は再追加しない: includes で判定)
-  // 3) Object.entries(stats) で配列化 → map で { productId, purchases, uniqueUsers } に整形
-  // 4) sort で purchases 降順 → productId 昇順
-  // 5) slice(0, Math.max(0, topN)) で上位 N 件を切り出す
+  // 商品 ID をキーにする集計用オブジェクトを 1 つ用意する
+
+
+  // for...of で transactions を 1 周し、 未登場の商品は集計オブジェクトに初期化して登録する
+
+
+  // 各ログで延べ購入件数を 1 つ増やす
+
+
+  // ユニーク判定用の配列に includes でユーザーが含まれていなければ追加する
+
+
+  // 集計オブジェクトを Object.entries で配列化し、 map で説明文の出力要素形に整える
+
+
+  // sort で延べ購入件数の降順 + 商品 ID の昇順 (localeCompare) の 2 段ソートに並べ替える
+
+
+  // slice で上位 topN 件 (負値は 0 件扱い) に切り出して return する
 }
 `,
   entryPoints: ["popularProductsRanking"],

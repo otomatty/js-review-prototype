@@ -32,8 +32,14 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
 - AST で **添字 \`for\`** と **\`if 文\`** を必須にしているので、 \`for...of\` や \`m = Math.max(m, arr[i])\` の 1 行更新では通りません。 自分の手で **添字 for + 条件分岐** を書いてください。
 `,
   starterCode: `function runningMax(arr) {
-  // const out = [] と let m を用意し、 for (let i = 0; i < arr.length; i++) で
-  // if (i === 0 || arr[i] > m) m = arr[i]; を回して out.push(m) する
+  // 結果を入れる空の配列と、 これまでの最大値を入れる変数を用意する
+
+
+  // for で添字を順に回し、 先頭または直前までの最大より大きければ最大値を更新し、
+  // 毎回その時点の最大を結果配列に push する
+
+
+  // 結果配列を return する
 }
 `,
   entryPoints: ["runningMax"],

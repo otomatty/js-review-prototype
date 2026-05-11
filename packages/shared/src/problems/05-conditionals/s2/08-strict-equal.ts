@@ -27,8 +27,10 @@ false
 - 現代の JS では基本 \`===\` を使います (\`==\` は eslint の \`eqeqeq\` で禁止)。
 - 答えを直接書く (例: \`console.log(false)\` や \`console.log("false")\`) のは NG。 必ず \`a === b\` の **比較式** を出力してください。
 `,
-  starterCode: `// 1. const a = 1; const b = "1";
-// 2. console.log(a === b);
+  starterCode: `// 数値と、 同じ数字の文字列を、 それぞれ const の変数に入れる
+
+
+// 2 つの変数を === で比較した結果を console.log で出力する
 
 `,
   tests: [

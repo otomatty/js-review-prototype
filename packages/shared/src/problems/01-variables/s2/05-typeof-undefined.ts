@@ -27,8 +27,10 @@ undefined
 - \`undefined\` は「まだ値が入っていない」 という意味の特別な値です。
 - 後で代入するつもりの変数を **先に名前だけ用意** したいときに \`let value;\` のように書きます。
 `,
-  starterCode: `// 1. let value; で初期値なしの宣言
-// 2. console.log(typeof value); で型を出力する
+  starterCode: `// let で変数を宣言する (初期値は入れない)
+
+
+// その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
 `,
   tests: [

@@ -31,8 +31,10 @@ positive
 - \`if (条件) { ... }\` の \`条件\` には **真偽値になる式** を書きます。
 - \`>\` は大小比較。 \`value > 0\` は \`true\` か \`false\` になります。
 `,
-  starterCode: `// 1. const value = 5;
-// 2. if (value > 0) { console.log("positive"); }
+  starterCode: `// 数値を const の変数に入れる
+
+
+// その変数が正のときだけ if で「positive」 を console.log で出力する
 
 `,
   tests: [

@@ -32,9 +32,13 @@ const text = "123円";
 - \`Number("123円")\` だと \`NaN\` になります。 \`parseInt\` は「数字として読める部分まで」 を切り取ります。
 - 第 2 引数は **基数** (10 進数なら \`10\`)。 省略は非推奨です。
 `,
-  starterCode: `// 1. const text = "123円";
-// 2. const n = parseInt(text, 10);
-// 3. console.log(n);
+  starterCode: `// 数字+単位の文字列を const の変数に入れる
+
+
+// その変数を parseInt で 10 進数として整数に変換し、 別の const の変数に入れる
+
+
+// 変換後の値を console.log で出力する
 
 `,
   tests: [

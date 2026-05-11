@@ -25,8 +25,10 @@ object
 - \`null\` は「**値が存在しないこと** を明示するための値」 ですが、 \`typeof null\` は歴史的なバグで \`"object"\` を返します。
 - これは仕様の有名な不具合として知られています。 「null かどうか」 を判定したいときは \`value === null\` と書きます。
 `,
-  starterCode: `// 1. const empty = null; を宣言する
-// 2. console.log(typeof empty); で型を出力する
+  starterCode: `// null を const の変数に入れる
+
+
+// その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
 `,
   tests: [

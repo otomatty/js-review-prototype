@@ -25,8 +25,10 @@ S
 - \`"JavaScript".charAt(4)\` → \`"S"\`
 - \`text[4]\` でもほぼ同じですが、 範囲外指定時の挙動が違います (\`charAt\` は空文字、 \`[i]\` は \`undefined\`)。
 `,
-  starterCode: `// 1. const text = "JavaScript";
-// 2. console.log(text.charAt(4));
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// その変数に対して charAt で指定位置の 1 文字を取り出した結果を console.log で出力する
 
 `,
   tests: [

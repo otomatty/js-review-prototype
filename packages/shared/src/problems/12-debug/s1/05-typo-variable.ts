@@ -25,8 +25,8 @@ Taro
 - 宣言していない変数を使うと \`ReferenceError: usre is not defined\` のようなエラーが出ます。
 - まず宣言した名前と参照名が **完全に一致** しているかを確認するのがデバッグの第一歩。
 `,
-  starterCode: `// バグ: console.log(usre) は宣言していない変数を参照して ReferenceError
-// 正しい綴り user に直す
+  starterCode: `// バグ: 下の console.log は宣言していない名前を参照して ReferenceError になる
+// 宣言した変数と綴りを一致させて直す
 
 const user = "Taro";
 console.log(usre);

@@ -25,8 +25,10 @@ export const s2Ch04IndexOf: Assignment = {
 - \`arr.indexOf(値)\` で添字 (0 始まり) が返ります。
 - 見つからないときは \`-1\`。
 `,
-  starterCode: `// 1. const colors = ["red", "green", "blue", "yellow"];
-// 2. console.log(colors.indexOf("blue"));
+  starterCode: `// 文字列の配列を const の変数に入れる
+
+
+// その配列に対して indexOf で対象要素の添字を取得した結果を console.log で出力する
 
 `,
   tests: [

@@ -24,8 +24,11 @@ export const s1Ch04IndexAccess: Assignment = {
 
 - 配列の **最初の要素は 0 番目** です。 2 番目は \`fruits[1]\`。
 `,
-  starterCode: `// 1. const fruits = ["りんご", "みかん", "ぶどう"];
-// 2. console.log(fruits[1]);   ← 0,1,2 で 1 が "みかん"
+  starterCode: `// 文字列の配列を const の変数に入れる
+
+
+// 添字で 2 番目の要素 ([1]) を取り出して console.log で出力する
+// (添字は 0 から数える)
 
 `,
   tests: [

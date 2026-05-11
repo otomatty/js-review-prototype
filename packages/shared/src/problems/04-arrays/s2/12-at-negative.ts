@@ -25,8 +25,10 @@ export const s2Ch04AtNegative: Assignment = {
 - \`arr[arr.length - 1]\` でも末尾は取れますが、 \`arr.at(-1)\` の方が **意図が明確** です。
 - 同様に \`at(-2)\` で末尾から 2 番目を取れます。
 `,
-  starterCode: `// 1. const nums = [10, 20, 30, 40];
-// 2. console.log(nums.at(-1));
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// その配列に対して at に負の添字を渡し、 末尾から数えた要素を取り出した結果を console.log で出力する
 
 `,
   tests: [

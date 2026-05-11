@@ -22,8 +22,10 @@ export const s1Ch01ConstNumber: Assignment = {
 1980
 \`\`\`
 `,
-  starterCode: `// 1. const price = 1980; のように数値を変数に入れる
-// 2. console.log(price) で出力する
+  starterCode: `// 数値を const の変数に入れる
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

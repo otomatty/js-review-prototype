@@ -26,8 +26,10 @@ Hello, JavaScript!
 - 一度変数に入れた値は、 何度でも使い回せます。
 - 同じ文字列を 2 回書く必要はなく、 \`console.log(message)\` を 2 回呼ぶだけで OK。
 `,
-  starterCode: `// 1. const message = "Hello, JavaScript!"; で変数を宣言
-// 2. console.log(message) を 2 回呼ぶ
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// その変数を console.log で 2 回続けて出力する
 
 `,
   tests: [

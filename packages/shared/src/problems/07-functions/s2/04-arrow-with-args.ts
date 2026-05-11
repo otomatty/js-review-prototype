@@ -29,8 +29,11 @@ const multiply = (a, b) => a * b;
 - 引数が 2 つ以上のときは **括弧が必須**: \`(a, b) => a * b\`
 - 引数が 1 つだけなら括弧を省略できます: \`x => x * 2\`
 `,
-  starterCode: `// const multiply = (a, b) => a * b;
-// console.log(multiply(6, 7));
+  starterCode: `// 2 つの引数を取るアロー関数を const の変数に入れる
+// (式形式 (a, b) => 式 で、 引数同士の積をそのまま返すようにする)
+
+
+// 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

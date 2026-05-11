@@ -25,8 +25,10 @@ true
 - \`typeof [1,2,3]\` は \`"object"\` で配列かどうか分かりません。
 - \`Array.isArray\` を使えば配列かどうかを **\`true\` / \`false\` で正確に判定** できます。
 `,
-  starterCode: `// 1. const value = [1, 2, 3];
-// 2. console.log(Array.isArray(value));
+  starterCode: `// 値を const の変数に入れる
+
+
+// その変数を Array.isArray に渡した結果を console.log で出力する
 
 `,
   tests: [

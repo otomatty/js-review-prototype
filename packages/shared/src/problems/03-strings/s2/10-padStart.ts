@@ -28,9 +28,14 @@ export const s2Ch03PadStart: Assignment = {
 - 第 1 引数: 仕上げたい桁数。 第 2 引数: 埋める文字。
 - 数値を直接 \`.padStart\` できないので、 まず文字列に変換します。
 `,
-  starterCode: `// 1. const n = 7;
-// 2. const padded = String(n).padStart(3, "0");
-// 3. console.log(padded);
+  starterCode: `// 数値を const の変数に入れる
+
+
+// String(数値) で文字列化してから padStart で 0 を埋めた結果を、
+// 別の const の変数に入れる
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

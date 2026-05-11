@@ -26,8 +26,10 @@ true
 - \`Number.isNaN(NaN)\` → \`true\`
 - グローバルな \`isNaN(値)\` は罠が多いので、 **\`Number.isNaN\` を使う** のが現代の流儀です。
 `,
-  starterCode: `// 1. const v = Number("abc");
-// 2. console.log(Number.isNaN(v));
+  starterCode: `// 数字に変換できない文字列を Number() で変換した結果を、 const の変数に入れる
+
+
+// その変数を Number.isNaN に渡した結果を console.log で出力する
 
 `,
   tests: [

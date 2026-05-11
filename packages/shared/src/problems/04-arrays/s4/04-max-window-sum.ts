@@ -34,9 +34,14 @@ maxWindowSum([-1, -2, -3, -4], 2);         // → -3  (-1 + -2)
 - \`best\` の初期値を \`0\` にしてしまうと、 全要素が負のときに 0 を返してしまいます。 必ず **最初のウィンドウの合計** で初期化してください。
 `,
   starterCode: `function maxWindowSum(arr, k) {
-  // 1) 最初の k 個の合計を sum に入れ、 best = sum とする
-  // 2) i = k から arr.length - 1 まで sum += arr[i] - arr[i - k] で更新し、 best を if で更新
-  // 3) return best
+  // 最初の k 個の合計を計算し、 現在のウィンドウ合計と最大合計をそれぞれの変数に入れる
+
+
+  // 添字 k から末尾まで for で回し、 ウィンドウを 1 つずらすたびに
+  // 「新しく入る要素 - 抜ける要素」 で合計を更新し、 必要なら最大も更新する
+
+
+  // 最大合計を return する
 }
 `,
   entryPoints: ["maxWindowSum"],

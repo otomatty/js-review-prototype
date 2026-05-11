@@ -24,8 +24,10 @@ Hello!!!
 
 - 文字列の引数も \`+\` で連結したり、 \`.toUpperCase()\` などで加工できます。
 `,
-  starterCode: `// function shout(text) { return text + "!!!"; }
-// console.log(shout("Hello"));
+  starterCode: `// 文字列の引数を取って末尾に「!!!」 を付けて return する function 文の関数を宣言する
+
+
+// 関数に説明文の文字列を渡して呼び出した結果を console.log で出力する
 
 `,
   tests: [

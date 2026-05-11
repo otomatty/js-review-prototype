@@ -26,12 +26,16 @@ export const s2Ch06CountEven: Assignment = {
 - ループの中で \`if (nums[i] % 2 === 0) { count++; }\`。
 - 最後に \`console.log(count);\`。
 `,
-  starterCode: `// const nums = [1, 4, 7, 8, 2, 5, 6];
-// let count = 0;
-// for (let i = 0; i < nums.length; i++) {
-//   if (nums[i] % 2 === 0) { count++; }
-// }
-// console.log(count);
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// 件数を入れる let の変数を 0 で初期化する
+
+
+// for ループで全要素を走査し、 偶数のときだけ件数を 1 増やす
+
+
+// 件数を console.log で出力する
 
 `,
   tests: [

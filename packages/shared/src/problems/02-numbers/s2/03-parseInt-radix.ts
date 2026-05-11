@@ -29,9 +29,13 @@ const hex = "ff";
 - \`parseInt("ff", 16)\` → \`255\` (16 進数 \`ff\` = 10 進数 255)
 - 基数を変えれば 2 進数 (\`2\`) や 8 進数 (\`8\`) も読み取れます。
 `,
-  starterCode: `// 1. const hex = "ff";
-// 2. const n = parseInt(hex, 16);
-// 3. console.log(n);
+  starterCode: `// 16 進数を表す文字列を const の変数に入れる
+
+
+// parseInt の第 2 引数に基数を指定して整数に変換し、 別の const の変数に入れる
+
+
+// 変換後の値を console.log で出力する
 
 `,
   tests: [

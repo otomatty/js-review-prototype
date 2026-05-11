@@ -25,8 +25,10 @@ export const s1Ch04PrintArray: Assignment = {
 - 添字や length と違って、 配列そのものを渡すと **要素全体** が表示されます。
 - ループはまだ習っていませんが、 ループを使わなくても配列の中身を一度に見ることができます。
 `,
-  starterCode: `// 1. const fruits = ["apple", "banana"];
-// 2. console.log(fruits);
+  starterCode: `// 文字列の配列を const の変数に入れる
+
+
+// その変数を、 添字を指定せずにそのまま console.log で出力する
 
 `,
   tests: [

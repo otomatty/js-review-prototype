@@ -25,9 +25,13 @@ export const s2Ch06PowerLoop: Assignment = {
 - \`let result = 1;\` で初期化し、 8 回 \`result *= 2;\` を繰り返します。
 - ループの仕組みを理解するための練習なので Math.pow は禁止です。
 `,
-  starterCode: `// let result = 1;
-// for (let i = 0; i < 8; i++) { result *= 2; }
-// console.log(result);
+  starterCode: `// 結果を入れる let の変数を 1 で初期化する
+
+
+// for ループで指定回数だけ回し、 *= で底の値を掛け込む
+
+
+// 結果を console.log で出力する
 
 `,
   tests: [

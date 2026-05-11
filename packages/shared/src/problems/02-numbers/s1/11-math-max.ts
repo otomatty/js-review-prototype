@@ -22,7 +22,7 @@ export const s1Ch02MathMax: Assignment = {
 45
 \`\`\`
 `,
-  starterCode: `// console.log の中で Math.max(12, 45, 23) を呼ぶ
+  starterCode: `// 説明文の 3 つの数値を Math.max に渡して最大値を求め、 結果を console.log で出力する
 
 `,
   tests: [

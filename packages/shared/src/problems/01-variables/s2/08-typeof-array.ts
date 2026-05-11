@@ -31,8 +31,10 @@ object
 - JavaScript では配列は内部的に **オブジェクト** の一種なので、 \`typeof\` では \`"object"\` としか分かりません。
 - 「配列かどうか」 を判定したいときは \`Array.isArray(...)\` を使います (Ch04 で学習)。
 `,
-  starterCode: `// 1. const nums = [1, 2, 3]; を宣言する
-// 2. console.log(typeof nums); で型を出力する
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
 `,
   tests: [

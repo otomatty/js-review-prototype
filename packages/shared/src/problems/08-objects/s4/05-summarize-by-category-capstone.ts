@@ -41,11 +41,22 @@ summarizeByCategory([]);
 - カテゴリの **登場順** はそのままキーの挿入順になります (オブジェクトの挿入順は ES2015 以降保たれます)。
 `,
   starterCode: `function summarizeByCategory(items) {
-  // 1) result = {}
-  // 2) for...of で items を走査
-  // 3) result[item.category] が未定義なら { count: 0, totalRevenue: 0 } で初期化
-  // 4) count を +1、 totalRevenue に price * sold を足す
-  // 5) result を return
+  // 集計結果を入れるための空オブジェクトを用意する
+
+
+  // for...of で items を 1 件ずつ走査する
+
+
+  // 現在のカテゴリのキーがまだ無ければ、 説明文の初期形 (件数 0 / 売上合計 0) で初期化する
+
+
+  // 現在のカテゴリの件数を 1 増やす
+
+
+  // 現在のカテゴリの売上合計に 単価 * 売上数 を足し込む
+
+
+  // ループを抜けたら集計結果を return する
 }
 `,
   entryPoints: ["summarizeByCategory"],

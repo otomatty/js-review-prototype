@@ -27,10 +27,8 @@ export const s2Ch06ContinueSkip: Assignment = {
 - \`continue;\` で今の反復を **スキップして次へ** 進みます。
 - 「除外する条件を満たしたら continue」 のパターンが定番です。
 `,
-  starterCode: `// for (let i = 1; i <= 6; i++) {
-//   if (i % 2 === 0) { continue; }
-//   console.log(i);
-// }
+  starterCode: `// for ループでカウンタを 1 から上限まで回し、
+// 偶数のときは continue で次の繰り返しへスキップし、 奇数だけ console.log で出力する
 
 `,
   tests: [

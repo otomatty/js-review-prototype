@@ -25,9 +25,13 @@ export const s2Ch05TernaryBasic: Assignment = {
 - \`条件 ? 真のときの値 : 偽のときの値\` で **値を選ぶ** 式が書けます。
 - \`if/else\` を文ではなく **式** として書けるので、 変数代入と相性が良いです。
 `,
-  starterCode: `// 1. const age = 20;
-// 2. const label = age >= 18 ? "大人" : "未成年";
-// 3. console.log(label);
+  starterCode: `// 年齢の数値を const の変数に入れる
+
+
+// 三項演算子 ( 条件 ? 真の値 : 偽の値 ) で対応する文字列を選び、 別の const の変数に入れる
+
+
+// 結果の変数を console.log で出力する
 
 `,
   tests: [

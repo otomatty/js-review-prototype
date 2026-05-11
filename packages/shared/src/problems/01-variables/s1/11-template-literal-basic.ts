@@ -31,10 +31,14 @@ export const s1Ch01TemplateLiteralBasic: Assignment = {
   difficulty: 1,
   testKind: "stdout",
   description,
-  starterCode: `// 1. const name = "花子";
-// 2. テンプレートリテラルで「こんにちは、 \${name}さん!」を作って message に入れる
-//    (\\\`...\\\` のようにバッククォートで囲む)
-// 3. console.log(message);
+  starterCode: `// 名前の文字列を const の変数に入れる
+
+
+// バッククォートで囲んだテンプレートリテラルで挨拶文を組み立て、
+// 別の const の変数に入れる (\${変数名} で値を埋め込む)
+
+
+// 組み立てた文の変数を console.log で出力する
 
 `,
   tests: [

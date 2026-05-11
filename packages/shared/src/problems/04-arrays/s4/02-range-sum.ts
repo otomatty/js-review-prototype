@@ -33,8 +33,10 @@ rangeSum([-1, -2, -3, -4], 1, 3);  // → -5
 - \`slice\` で部分配列を切り出す書き方は **禁止** しています (\`O(r - l)\` のコピーが走るため累積和の意義が薄れる)。
 `,
   starterCode: `function rangeSum(arr, l, r) {
-  // 1) 累積和 prefix を作る (prefix[0] = 0、 長さは arr.length + 1)
-  // 2) return prefix[r] - prefix[l]
+  // 先頭が 0 で、 各位置までの累積和を順に持つ配列を作る (長さは入力配列より 1 大きい)
+
+
+  // 累積和の右端と左端の差を return する
 }
 `,
   entryPoints: ["rangeSum"],

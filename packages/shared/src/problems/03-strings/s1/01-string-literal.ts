@@ -20,8 +20,7 @@ export const s1Ch03StringLiteral: Assignment = {
 こんにちは
 \`\`\`
 `,
-  starterCode: `// console.log("こんにちは"); と書く
-// "" または '' で囲むのを忘れない
+  starterCode: `// 説明文の文字列を "" または '' で囲んで console.log で出力する
 
 `,
   tests: [

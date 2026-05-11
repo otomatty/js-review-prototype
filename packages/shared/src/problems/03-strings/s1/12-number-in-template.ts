@@ -22,8 +22,11 @@ export const s1Ch03NumberInTemplate: Assignment = {
 あなたは 25 歳です
 \`\`\`
 `,
-  starterCode: `// 1. const age = 25;
-// 2. テンプレートリテラル \`あなたは \${age} 歳です\` を出力
+  starterCode: `// 年齢を表す数値を const の変数に入れる
+
+
+// バッククォートで囲んだテンプレートリテラルに \${変数名} で値を埋め込み、
+// console.log で出力する
 
 `,
   tests: [

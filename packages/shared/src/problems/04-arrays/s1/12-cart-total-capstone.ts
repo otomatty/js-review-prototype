@@ -33,9 +33,14 @@ S1 ではループをまだ使わないので、 \`prices[0] + prices[1] + price
 - 合計は \`prices[0] + prices[1] + prices[2]\` を const \`total\` に入れます。
 - 出力はテンプレートリテラルで \`\` \`合計: \${total} 円\` \`\` の形にします。
 `,
-  starterCode: `// 1. const prices = [100, 250, 380];
-// 2. const total = prices[0] + prices[1] + prices[2];
-// 3. テンプレートリテラルで \`合計: \${total} 円\` を出力
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// 添字 0 / 1 / 2 の要素を + で足し算した結果を、 別の const の変数に入れる
+// (ループはまだ使わず、 添字を直接並べる)
+
+
+// テンプレートリテラルで「合計: ... 円」 形式の文字列を組み立て、 console.log で出力する
 
 `,
   tests: [

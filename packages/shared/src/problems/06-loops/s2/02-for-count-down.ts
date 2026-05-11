@@ -29,7 +29,7 @@ export const s2Ch06ForCountDown: Assignment = {
 - \`for (let i = 5; i >= 1; i--) { ... }\` のように初期値・条件・更新を逆向きにします。
 - \`i--\` は \`i = i - 1\` の省略形。
 `,
-  starterCode: `// for (let i = 5; i >= 1; i--) { console.log(i); }
+  starterCode: `// for ループでカウンタ変数を上限から始めて、 1 まで 1 ずつ減らしながら毎回 console.log で出力する
 
 `,
   tests: [

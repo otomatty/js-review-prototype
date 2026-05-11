@@ -25,8 +25,10 @@ Hello JavaScript
 - \`"Hello World".replace("World", "JavaScript")\` → \`"Hello JavaScript"\`
 - \`replace\` は **最初に見つかった 1 箇所だけ** を置き換えます。 全箇所を置きたいときは次の \`replaceAll\` を使います。
 `,
-  starterCode: `// 1. const text = "Hello World";
-// 2. console.log(text.replace("World", "JavaScript"));
+  starterCode: `// 文字列を const の変数に入れる
+
+
+// その変数に対して replace で部分文字列を置換した結果を console.log で出力する
 
 `,
   tests: [

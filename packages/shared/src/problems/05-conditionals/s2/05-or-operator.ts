@@ -25,8 +25,10 @@ export const s2Ch05OrOperator: Assignment = {
 - \`A || B\` は **A か B のどちらかが真** なら真になります (両方真でも OK)。
 - \`if (isWeekend || isHoliday)\` のように使います。
 `,
-  starterCode: `// 1. const isWeekend = false; const isHoliday = true;
-// 2. if (isWeekend || isHoliday) { console.log("休み"); }
+  starterCode: `// 2 つの boolean 値を、 それぞれ const の変数に入れる
+
+
+// || で 2 つの条件を OR 結合した if で文字列を console.log で出力する
 
 `,
   tests: [

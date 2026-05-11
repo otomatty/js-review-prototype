@@ -26,9 +26,13 @@ export const s2Ch06Sum1ToN: Assignment = {
 - ループの中で \`total += i\` を繰り返します。
 - 最後にループの外で \`total\` を出力します。
 `,
-  starterCode: `// let total = 0;
-// for (let i = 1; i <= 10; i++) { total += i; }
-// console.log(total);
+  starterCode: `// 合計を入れる let の変数を 0 で初期化する
+
+
+// for ループで 1 から上限まで回し、 += で値を足し込む
+
+
+// 合計を console.log で出力する
 
 `,
   tests: [

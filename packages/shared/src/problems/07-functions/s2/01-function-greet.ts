@@ -25,8 +25,10 @@ export const s2Ch07FunctionGreet: Assignment = {
 - \`function 名前() { ... }\` で関数を **宣言** します。
 - 関数は宣言しただけでは実行されません。 \`greet()\` のように呼ばないと中身は動きません。
 `,
-  starterCode: `// 1. function greet() { console.log("こんにちは"); }
-// 2. greet();
+  starterCode: `// 引数を取らない function 文で関数を宣言し、 中で console.log で文字列を出力する
+
+
+// 宣言した関数を呼び出す
 
 `,
   tests: [

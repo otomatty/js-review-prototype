@@ -25,8 +25,10 @@ apple / banana / cherry
 - \`arr.join(" / ")\` で \`"apple / banana / cherry"\` が得られます。
 - 引数を省略するとカンマ区切りになります (\`arr.join()\` = \`"apple,banana,cherry"\`)。
 `,
-  starterCode: `// 1. const items = ["apple", "banana", "cherry"];
-// 2. console.log(items.join(" / "));
+  starterCode: `// 文字列の配列を const の変数に入れる
+
+
+// その配列に対して join で指定の区切り文字で連結した文字列を、 console.log で出力する
 
 `,
   tests: [

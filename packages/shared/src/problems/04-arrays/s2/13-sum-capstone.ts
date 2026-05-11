@@ -36,10 +36,16 @@ for (let i = 0; i < nums.length; i++) {
 - ループ条件は \`i < nums.length\` (添字が長さ未満の間)。
 - 最後にテンプレートリテラルで \`合計: \${total}\` を出力します。
 `,
-  starterCode: `// 1. const nums = [10, 25, 33, 47, 5];
-// 2. let total = 0;
-// 3. for (let i = 0; i < nums.length; i++) { total += nums[i]; }
-// 4. console.log(\`合計: \${total}\`);
+  starterCode: `// 数値の配列を const の変数に入れる
+
+
+// 合計を入れる let の変数を 0 で初期化する
+
+
+// for ループで配列の全要素を += で足し込む
+
+
+// テンプレートリテラルで「合計: ...」 形式の文字列を組み立て、 console.log で出力する
 
 `,
   tests: [

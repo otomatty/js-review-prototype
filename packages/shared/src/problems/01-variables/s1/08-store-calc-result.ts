@@ -29,10 +29,14 @@ export const s1Ch01StoreCalcResult: Assignment = {
 - \`=\` の右側には数値だけでなく **計算式** も書けます。
 - \`const sum = a + b;\` のように書くと、 計算結果 \`20\` が \`sum\` に入ります。
 `,
-  starterCode: `// 1. const a = 12;
-// 2. const b = 8;
-// 3. const sum = a + b;
-// 4. console.log(sum);
+  starterCode: `// 2 つの数値を、 それぞれ const の変数に入れる
+
+
+// 上の 2 変数を + で足し算した結果を、 さらに別の const の変数に入れる
+// (答えを直接書かずに、 計算式のまま入れる)
+
+
+// 計算結果を入れた変数を console.log で出力する
 
 `,
   tests: [

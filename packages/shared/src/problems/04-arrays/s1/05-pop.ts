@@ -20,9 +20,13 @@ export const s1Ch04Pop: Assignment = {
 ["x","y"]
 \`\`\`
 `,
-  starterCode: `// 1. const items = ["x", "y", "z"];
-// 2. items.pop();
-// 3. console.log(items);
+  starterCode: `// 配列を const の変数に入れる
+
+
+// 末尾の要素を pop で取り除く
+
+
+// 取り除いたあとの配列を console.log で出力する
 
 `,
   tests: [

@@ -43,8 +43,19 @@ s.pop();    // → undefined (空)
 - AST で **\`ClassDeclaration\`** と **\`ReturnStatement\`** を必須にしています。
 `,
   starterCode: `class Stack {
-  // constructor() で this.items = [] を用意する
-  // push / pop / peek / size を定義する
+  // constructor を定義し、 内部用の配列フィールドを空配列で初期化する
+
+
+  // push メソッド: 受け取った値を内部配列の末尾に積む
+
+
+  // pop メソッド: 内部配列の末尾を取り出して return する
+
+
+  // peek メソッド: 内部配列の末尾要素を取り出さずに読んで return する
+
+
+  // size メソッド: 内部配列の要素数を return する
 }
 `,
   entryPoints: ["Stack"],

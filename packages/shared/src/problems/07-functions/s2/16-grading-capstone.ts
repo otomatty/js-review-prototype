@@ -38,17 +38,15 @@ export const s2Ch07GradingCapstone: Assignment = {
 - \`reportAll\` の中で for ループと \`gradeOf\` 呼び出しを組み合わせます。
 - 出力はテンプレートリテラルを使います。
 `,
-  starterCode: `// function gradeOf(score) {
-//   if (score >= 80) return "A";
-//   if (score >= 60) return "B";
-//   return "C";
-// }
-// function reportAll(scores) {
-//   for (let i = 0; i < scores.length; i++) {
-//     console.log(\`\${scores[i]}: \${gradeOf(scores[i])}\`);
-//   }
-// }
-// reportAll([95, 72, 50]);
+  starterCode: `// 1 つ目の関数: 点数を引数に取り、 説明文の閾値に応じた評価ラベルを return する
+// (3 段階を if で 2 回早期 return → 残りはそのまま return)
+
+
+// 2 つ目の関数: 点数の配列を引数に取り、 for ループで各点数を 1 つ目の関数に渡して
+// テンプレートリテラルで「点数: ラベル」 形式の文字列を console.log で出力する
+
+
+// 2 つ目の関数に説明文の配列を渡して呼び出す
 
 `,
   tests: [

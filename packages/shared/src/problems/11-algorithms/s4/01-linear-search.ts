@@ -35,7 +35,8 @@ linearSearch([], 5);                // → -1
 - ループを最後まで抜けたら 「見つからなかった」 ので \`-1\` を返します。
 `,
   starterCode: `function linearSearch(arr, target) {
-  // for (let i = 0; i < arr.length; i++) で 1 つずつ確かめる
+  // for で添字を 0 から順に回し、 arr[i] が target と一致したらその添字を return する
+  // ループを抜けても見つからなければ -1 を return する
 }
 `,
   entryPoints: ["linearSearch"],

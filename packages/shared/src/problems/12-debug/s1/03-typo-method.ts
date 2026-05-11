@@ -25,8 +25,8 @@ hello
 - メソッド名の綴り間違いは実行時 (= コードを動かしたとき) にエラーになります。 「\`...is not a function\`」 のようなエラーが出たら、 まず綴りを疑います。
 - JavaScript のメソッド名は **大文字小文字を区別** します。
 `,
-  starterCode: `// バグ: tolwerCase というメソッドは存在しない (TypeError になる)
-// 正しい綴り toLowerCase に直す
+  starterCode: `// バグ: 下のメソッド名は綴り間違いで、 実行時 TypeError になる
+// 大文字小文字を意識して正しい綴りに直す
 
 console.log("HELLO".tolwerCase());
 `,

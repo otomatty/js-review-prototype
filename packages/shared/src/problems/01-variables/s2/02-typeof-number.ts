@@ -25,8 +25,10 @@ number
 - \`typeof 値\` は **値の型を文字列で返す** 演算子です。
 - 数値の型は \`"number"\` という文字列で返されます。
 `,
-  starterCode: `// 1. const age = 30; を宣言する
-// 2. console.log(typeof age); で型を出力する
+  starterCode: `// 数値を const の変数に入れる
+
+
+// その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
 `,
   tests: [

@@ -27,8 +27,10 @@ export const s2Ch02MathFloorDivide: Assignment = {
 - \`17 / 5\` は \`3.4\`。 \`Math.floor(3.4)\` は \`3\`。
 - 「人数を 5 人ずつ何チームに分けられるか」 のような **整数の割り算** で使います。
 `,
-  starterCode: `// 1. const quotient = Math.floor(17 / 5);
-// 2. console.log(quotient);
+  starterCode: `// 説明文の割り算を Math.floor で切り捨てた結果を、 const の変数に入れる
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

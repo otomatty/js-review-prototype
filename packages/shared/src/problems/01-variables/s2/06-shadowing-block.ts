@@ -29,9 +29,14 @@ export const s2Ch01ShadowingBlock: Assignment = {
 - 内側ブロックで同じ名前を再宣言することを **シャドーイング** と呼びます。
 - 内側の \`price\` がブロック内だけで有効になり、 外側の \`price\` は **書き換わりません**。
 `,
-  starterCode: `// 1. const price = 100;
-// 2. { const price = 200; console.log(price); }
-// 3. console.log(price);
+  starterCode: `// ブロックの外側で const の変数に数値を入れる
+
+
+// { } のブロックを開き、 同じ名前の const の変数に別の数値を入れて
+// console.log で出力する
+
+
+// ブロックを閉じたあと、 もう一度 console.log で同じ名前の変数を出力する
 
 `,
   tests: [

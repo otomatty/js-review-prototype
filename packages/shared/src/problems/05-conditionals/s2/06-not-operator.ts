@@ -25,8 +25,10 @@ export const s2Ch05NotOperator: Assignment = {
 - \`!\` は **真偽値の反転** を行う演算子です。 \`!true\` は \`false\`、 \`!false\` は \`true\`。
 - 「○○ ではない」 という条件を素直に書けます。
 `,
-  starterCode: `// 1. const isLoggedIn = false;
-// 2. if (!isLoggedIn) { console.log("ログインしてください"); }
+  starterCode: `// boolean 値を const の変数に入れる
+
+
+// その変数の前に ! を付けた条件の if で文字列を console.log で出力する
 
 `,
   tests: [

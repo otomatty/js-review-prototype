@@ -26,8 +26,10 @@ export const s1Ch04ArrayLiteral: Assignment = {
 
 - console.log に配列を渡すと、 そのまま \`[10,20,30]\` のように表示されます (環境によって少し見え方が違う場合があります)。
 `,
-  starterCode: `// 1. const numbers = [10, 20, 30];
-// 2. console.log(numbers);
+  starterCode: `// 数値を [ ] で並べた配列を const の変数に入れる
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

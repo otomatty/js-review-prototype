@@ -26,8 +26,11 @@ undefined
 - 関数は \`return\` 文を書かなければ自動的に \`undefined\` を返します。
 - これを **副作用専用の関数** と呼ぶことがあります (引数を受けて何かするだけ)。
 `,
-  starterCode: `// function shout() { console.log("OK"); }
-// console.log(shout());
+  starterCode: `// 中で console.log だけして return を書かない function 文の関数を宣言する
+
+
+// その関数を呼び出した戻り値を、 さらに外側の console.log に渡す
+// (関数本体の console.log と外側の console.log で 2 行出力されることを確認する)
 
 `,
   tests: [

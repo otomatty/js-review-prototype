@@ -36,7 +36,8 @@ do {
 - そのため **条件が最初から偽** でもブロックは 1 回実行されます。
 - 最後にセミコロン \`;\` を忘れない。
 `,
-  starterCode: `// let i = 1; do { console.log(i * 10); i++; } while (i <= 3);
+  starterCode: `// do { ... } while (条件) の形で、 中で計算結果を console.log で出力してからカウンタを更新する
+// (カウンタは事前に let で初期化しておく)
 
 `,
   tests: [

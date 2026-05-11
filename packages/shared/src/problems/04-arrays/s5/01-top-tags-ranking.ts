@@ -50,10 +50,16 @@ topTagsRanking(["x", "x"], 0);    // → []
 - AST で **\`map\` の使用** と **\`sort\` の使用** と **\`slice\` の使用** を必須にしています。
 `,
   starterCode: `function topTagsRanking(tags, topN) {
-  // 1) for...of でタグごとの出現回数を集計する (counts オブジェクト)
-  // 2) Object.entries(counts) で配列化し、 map で { tag, count } に整える
-  // 3) sort で count 降順、 同数なら tag 昇順に並べる
-  // 4) slice(0, topN) で上位を切り出す
+  // for...of で tags を 1 周し、 タグごとの出現回数を集計用オブジェクトに貯める
+
+
+  // 集計オブジェクトを Object.entries で配列化し、 map で説明文の出力要素形に整える
+
+
+  // sort で件数の降順 + タグの昇順 (localeCompare) の 2 段ソートに並べ替える
+
+
+  // slice で上位 topN 件に切り出して return する
 }
 `,
   entryPoints: ["topTagsRanking"],

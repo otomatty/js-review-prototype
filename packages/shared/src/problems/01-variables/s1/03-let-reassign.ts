@@ -26,10 +26,16 @@ export const s1Ch01LetReassign: Assignment = {
 - \`let\` で作った変数は **後から値を入れ直せます** (= 再代入)。
 - 入れ直すときは \`let\` を **2 回目には書きません**。 \`count = 1;\` のように変数名と値だけを書きます。
 `,
-  starterCode: `// 1. let count = 0; で初期値を入れる
-// 2. console.log(count) で 0 を出す
-// 3. count = 1; で値を入れ直す (let は書かない)
-// 4. もう一度 console.log(count) で 1 を出す
+  starterCode: `// let で変数を宣言し、 初期値を入れる
+
+
+// その変数の値を console.log で出力する
+
+
+// let を書かずに変数名 = 新しい値 で値を入れ直す
+
+
+// もう一度 console.log で出力する
 
 `,
   tests: [

@@ -22,9 +22,11 @@ export const s1Ch04NestedAccess: Assignment = {
 4
 \`\`\`
 `,
-  starterCode: `// 1. const matrix = [[1, 2], [3, 4]];
-// 2. matrix[1] は [3, 4]、 そこから [1] で 4 を取る
-// 3. console.log(matrix[1][1]);
+  starterCode: `// 入れ子の配列 (要素が配列) を const の変数に入れる
+
+
+// 添字を 2 つ並べて内側の要素を取り出し、 console.log で出力する
+// (まず外側の添字で内側の配列、 次にその添字で値を取り出す)
 
 `,
   tests: [

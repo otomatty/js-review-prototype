@@ -26,8 +26,10 @@ export const s2Ch04Fill: Assignment = {
 - \`fill(値)\` で中身を一気に書き換えます。
 - 「ゼロで初期化された長さ N の配列」 を作る定番イディオムです。
 `,
-  starterCode: `// 1. const zeros = new Array(5).fill(0);
-// 2. console.log(zeros);
+  starterCode: `// new Array(長さ).fill(値) で同じ値を埋めた配列を作り、 const の変数に入れる
+
+
+// その変数を console.log で出力する
 
 `,
   tests: [

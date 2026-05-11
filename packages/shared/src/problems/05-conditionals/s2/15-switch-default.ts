@@ -29,8 +29,11 @@ export const s2Ch05SwitchDefault: Assignment = {
 - いずれの \`case\` にも該当しないときは \`default:\` のブロックが実行されます。
 - 全ケースに \`break;\` を入れます。
 `,
-  starterCode: `// 1. const role = "guest";
-// 2. switch (role) { case "admin": ...; break; case "user": ...; break; default: ...; }
+  starterCode: `// 権限を表す文字列を const の変数に入れる
+
+
+// switch でその変数を分岐し、 case でメッセージを console.log で出力する
+// (どの case にも当てはまらない場合は default 節で処理する)
 
 `,
   tests: [
