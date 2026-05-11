@@ -55,6 +55,7 @@ export const s2Ch07NestedCall: Assignment = {
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "console-log", argument: { kind: "number", value: 25 }, label: "計算せず答えを直接書かない" },
+        { kind: "console-log", argument: { kind: "string", value: "25" }, label: "文字列で答えを直接書かない" },
       ],
     },
   },

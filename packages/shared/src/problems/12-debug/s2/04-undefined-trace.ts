@@ -45,7 +45,7 @@ console.log(total);
   ],
   hints: [
     "宣言と参照で **同じ綴り** に揃えます。",
-    "今回は `totl` を `total` に修正するか、 `console.log(totl)` に直すかのどちらかです。",
+    "今回は `totl` を `total` に修正し、 `console.log(total)` に揃えます (採点条件は const total を必須としているため)。",
     "解答例:\n```js\nconst a = 10;\nconst b = 20;\nconst total = a + b;\nconsole.log(total);\n```",
   ],
   staticAnalysis: {

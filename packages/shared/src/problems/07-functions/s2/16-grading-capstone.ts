@@ -20,7 +20,7 @@ export const s2Ch07GradingCapstone: Assignment = {
 - 60 以上 80 未満: \`"B"\`
 - それ未満: \`"C"\`
 
-\`function reportAll(scores)\` を作り、 配列の各要素を for ループで巡って \`\` \`\${score}: \${gradeOf(score)}\` \`\` の形で出力します。
+\`function reportAll(scores)\` を作り、 配列の各要素を for ループで巡って \`\${score}: \${gradeOf(score)}\` の形で出力します。
 
 \`reportAll([95, 72, 50])\` を呼んで結果を確認してください。
 
