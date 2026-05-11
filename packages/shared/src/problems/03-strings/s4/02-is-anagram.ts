@@ -67,6 +67,14 @@ isAnagram("aabb", "abab");       // → true
       code: `isAnagram("aabb", "aabc") === false`,
     },
     {
+      name: '記号も 1 文字として比較する (isAnagram("ab!", "ab?") は false)',
+      code: `isAnagram("ab!", "ab?") === false`,
+    },
+    {
+      name: '空白も 1 文字として比較する (isAnagram("a b", "b a") は true)',
+      code: `isAnagram("a b", "b a") === true`,
+    },
+    {
       name: "戻り値は真偽値",
       code: `typeof isAnagram("a", "a") === "boolean"`,
     },
