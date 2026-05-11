@@ -44,6 +44,7 @@ FizzBuzz
 
 - **判定の順序が大事**: \`15 の倍数\` を最初にチェックしないと、 \`3 の倍数\` で先に Fizz を出力してしまいます。
 - if/else if/else で書きます。
+- **ハードコード禁止**: ループや if を使わず 15 行分の文字列を 1 つの \`console.log\` で出力するのは NG。 必ず for ループと条件分岐で計算してください。
 `,
   starterCode: `// for (let i = 1; i <= 15; i++) {
 //   if (i % 15 === 0) { console.log("FizzBuzz"); }

@@ -75,6 +75,7 @@ export const s2Ch07GradingCapstone: Assignment = {
         { kind: "console-log", argument: { kind: "string", value: "95: A" }, label: "出力を文字列リテラルで直接書かない" },
         { kind: "console-log", argument: { kind: "string", value: "72: B" }, label: "出力を文字列リテラルで直接書かない" },
         { kind: "console-log", argument: { kind: "string", value: "50: C" }, label: "出力を文字列リテラルで直接書かない" },
+        { kind: "console-log", argument: { kind: "binary", operator: "+" }, label: "文字列連結で出力を直接組み立てない" },
       ],
     },
   },
