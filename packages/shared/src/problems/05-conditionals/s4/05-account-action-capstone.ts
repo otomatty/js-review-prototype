@@ -206,6 +206,32 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
       })()`,
     },
     {
+      name: "拒否される操作 (null を返す経路) でも元の account は変更されない",
+      code: `(() => {
+        const cases = [
+          [{ status: "open", balance: 100 }, { type: "withdraw", amount: 200 }],
+          [{ status: "open", balance: 100 }, { type: "deposit", amount: 0 }],
+          [{ status: "open", balance: 100 }, { type: "deposit", amount: -5 }],
+          [{ status: "open", balance: 100 }, { type: "deposit", amount: NaN }],
+          [{ status: "open", balance: 100 }, { type: "withdraw" }],
+          [{ status: "open", balance: 100 }, { type: "transfer", amount: 10 }],
+          [{ status: "open", balance: 100 }, { type: "unfreeze" }],
+          [{ status: "frozen", balance: 50 }, { type: "deposit", amount: 10 }],
+          [{ status: "frozen", balance: 50 }, { type: "withdraw", amount: 10 }],
+          [{ status: "closed", balance: 0 }, { type: "deposit", amount: 10 }],
+          [{ status: "closed", balance: 0 }, { type: "unfreeze" }],
+        ];
+        for (const [before, action] of cases) {
+          const snap = { status: before.status, balance: before.balance };
+          applyAccountAction(before, action);
+          if (before.status !== snap.status || before.balance !== snap.balance) {
+            return false;
+          }
+        }
+        return true;
+      })()`,
+    },
+    {
       name: "戻り値は元の account とは別オブジェクト",
       code: `(() => {
         const before = { status: "open", balance: 100 };
