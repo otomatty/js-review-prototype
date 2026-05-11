@@ -16,6 +16,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/node_modules/**",
       "packages/shared/src/problems/**",
+      "packages/client/api/**/*.test.ts",
     ],
   },
   js.configs.recommended,
@@ -90,6 +91,7 @@ export default tseslint.config(
     files: [
       "eslint.config.mjs",
       "packages/client/vite.config.ts",
+      "packages/client/api/**/*.ts",
       "packages/server/src/**/*.ts",
     ],
     languageOptions: {

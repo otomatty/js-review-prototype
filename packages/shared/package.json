@@ -14,7 +14,8 @@
     "./curriculum/stages": "./src/curriculum/stages.ts",
     "./grading/ast": "./src/grading/ast.ts",
     "./grading/evaluate": "./src/grading/evaluate.ts",
-    "./util/timeout": "./src/util/timeout.ts"
+    "./util/timeout": "./src/util/timeout.ts",
+    "./util/validate-run-tests-request": "./src/util/validate-run-tests-request.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

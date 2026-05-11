@@ -12,6 +12,7 @@
     "types": ["bun", "node", "vite/client"]
   },
   "include": [
+    "packages/client/api/**/*.ts",
     "packages/client/src/**/*",
     "packages/client/vite.config.ts",
     "packages/client/vite-plugins/**/*.ts",
@@ -23,6 +24,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "packages/shared/src/problems/**/*"
+    "packages/shared/src/problems/**/*",
+    "packages/client/api/**/*.test.ts"
   ]
 }
