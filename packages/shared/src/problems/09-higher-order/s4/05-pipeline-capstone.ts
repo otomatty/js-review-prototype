@@ -120,6 +120,7 @@ topCategoriesBySales([{ category: "x", product: "p", amount: 1 }], 0);   // → 
         { kind: "method", name: "reduce", label: "Array.reduce で集計する" },
         { kind: "node", nodeType: "NewExpression", label: "new Map() で集計コンテナを作る" },
         { kind: "method", name: "sort", label: "Array.sort で降順に並べる" },
+        { kind: "method", name: "slice", label: "上位 n 件を Array.slice で切り出す" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
