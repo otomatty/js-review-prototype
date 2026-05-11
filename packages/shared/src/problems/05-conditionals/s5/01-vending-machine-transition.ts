@@ -215,6 +215,22 @@ function applyVendingAction(state, action) {
         return after !== before;
       })()`,
     },
+    {
+      name: "idle + select (no-op) でも戻り値は別オブジェクト",
+      code: `(() => {
+        const before = { status: "idle", balance: 0, selectedItem: null, message: "" };
+        const after = applyVendingAction(before, { type: "select", item: "water" });
+        return after !== before;
+      })()`,
+    },
+    {
+      name: "accepting + dispense (no-op) でも戻り値は別オブジェクト",
+      code: `(() => {
+        const before = { status: "accepting", balance: 100, selectedItem: null, message: "" };
+        const after = applyVendingAction(before, { type: "dispense" });
+        return after !== before;
+      })()`,
+    },
   ],
   hints: [
     "外側で switch (state.status) を書き、 内側で switch (action.type) を書く 2 段構造にすると 「どの状態でどの操作が来たか」 が表形式で並んで読みやすくなります。",
