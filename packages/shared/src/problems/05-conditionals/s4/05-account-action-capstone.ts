@@ -162,8 +162,18 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
       code: `applyAccountAction({ status: "frozen", balance: 100 }, { type: "withdraw", amount: 50 }) === null`,
     },
     {
-      name: "closed は何をしても null",
-      code: `applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 10 }) === null && applyAccountAction({ status: "closed", balance: 0 }, { type: "unfreeze" }) === null`,
+      name: "closed は何をしても null (5 種類の action 全て)",
+      code: `(() => {
+        const account = { status: "closed", balance: 0 };
+        const actions = [
+          { type: "deposit", amount: 10 },
+          { type: "withdraw", amount: 10 },
+          { type: "freeze" },
+          { type: "close" },
+          { type: "unfreeze" },
+        ];
+        return actions.every((a) => applyAccountAction(account, a) === null);
+      })()`,
     },
     {
       name: "元の account は deposit でも変更されない",
