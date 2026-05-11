@@ -39,13 +39,15 @@ csvToMarkdownTable("a,b,c\\n1,2,3");
 
 - これは S5 (設計演習) の問題です。 paiza B/A 風に **「複数行文字列を 1 引数で受け取って 1 度に処理する」** モデルに慣れることが目的です。
 - 推奨フロー:
-  1. \`csv.split("\\n")\` で行に分解
-  2. 各行を \`.split(",")\` で列に分解
-  3. ヘッダ行から **列数と同じ長さの \`["---", "---", ...]\` セパレータ** を作る
-  4. 各行を \`\\\`| \${cells.join(" | ")} |\\\`\` のテンプレートで整形
-  5. すべてを \`.join("\\n")\` で結合
+  1. \`csv.split("\\n")\` で行に分解し、 **空行を除外** する (\`.filter((line) => line.length > 0)\`) — 末尾改行や空入力でも壊れないようにするため
+  2. 行が無ければ空文字列 \`""\` を early return
+  3. 各行を \`.split(",")\` で列に分解
+  4. ヘッダ行から **列数と同じ長さの \`["---", "---", ...]\` セパレータ** を作る
+  5. 各行を \`\\\`| \${cells.join(" | ")} |\\\`\` のテンプレートで整形
+  6. すべてを \`.join("\\n")\` で結合
 - AST で **\`split\` の使用** と **\`join\` の使用** を必須にしているので、 固定文字列を返すだけの実装や \`for\` ループでの直接連結は通りません。
 - ヘッダだけの 1 行入力 (例: \`"name,age"\`) の場合は、 セパレータ行まで含めた **2 行** の出力になります。
+- 空文字列 \`""\` を渡されたときは **空文字列を返す** ことにします。
 `,
   starterCode: `function csvToMarkdownTable(csv) {
   // CSV を Markdown 表に変換して返してください
@@ -91,11 +93,19 @@ csvToMarkdownTable("a,b,c\\n1,2,3");
       name: "データ行は (入力行数 - 1) 行ぶん追加される",
       code: `csvToMarkdownTable("a,b\\n1,2\\n3,4\\n5,6").split("\\n").length === 5`,
     },
+    {
+      name: "末尾改行があっても空セル行が混ざらない",
+      code: `csvToMarkdownTable("a,b\\nAlice,30\\n") === "| a | b |\\n| --- | --- |\\n| Alice | 30 |"`,
+    },
+    {
+      name: "空文字列入力では空文字列を返す",
+      code: `csvToMarkdownTable("") === ""`,
+    },
   ],
   hints: [
-    "csv.split(\"\\n\") で行に分け、 各行を .split(\",\") で列に分けるところから始めてください。",
+    "csv.split(\"\\n\") で行に分け、 .filter((line) => line.length > 0) で空行を除いてから処理を始めると、 末尾改行や空入力で壊れません。",
     "セパレータ行は ヘッダの列数と同じ長さの [\"---\", \"---\", ...] を作って \" | \" で繋ぐと作れます。 ヘッダ行を `.map(() => \"---\")` で写像すると簡潔です。",
-    "解答例:\n```js\nfunction csvToMarkdownTable(csv) {\n  const rows = csv.split(\"\\n\").map((row) => row.split(\",\"));\n  const formatRow = (cells) => `| ${cells.join(\" | \")} |`;\n  const headerLine = formatRow(rows[0]);\n  const separatorLine = formatRow(rows[0].map(() => \"---\"));\n  const bodyLines = rows.slice(1).map(formatRow);\n  return [headerLine, separatorLine, ...bodyLines].join(\"\\n\");\n}\n```",
+    "解答例:\n```js\nfunction csvToMarkdownTable(csv) {\n  const lines = csv.split(\"\\n\").filter((line) => line.length > 0);\n  if (lines.length === 0) {\n    return \"\";\n  }\n  const rows = lines.map((row) => row.split(\",\"));\n  const formatRow = (cells) => `| ${cells.join(\" | \")} |`;\n  const headerLine = formatRow(rows[0]);\n  const separatorLine = formatRow(rows[0].map(() => \"---\"));\n  const bodyLines = rows.slice(1).map(formatRow);\n  return [headerLine, separatorLine, ...bodyLines].join(\"\\n\");\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -110,7 +120,11 @@ csvToMarkdownTable("a,b,c\\n1,2,3");
     },
   },
   solution: `function csvToMarkdownTable(csv) {
-  const rows = csv.split("\\n").map((row) => row.split(","));
+  const lines = csv.split("\\n").filter((line) => line.length > 0);
+  if (lines.length === 0) {
+    return "";
+  }
+  const rows = lines.map((row) => row.split(","));
   const formatRow = (cells) => \`| \${cells.join(" | ")} |\`;
   const headerLine = formatRow(rows[0]);
   const separatorLine = formatRow(rows[0].map(() => "---"));
