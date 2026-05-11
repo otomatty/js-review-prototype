@@ -112,6 +112,7 @@ topTagsRanking(["x", "x"], 0);    // → []
   staticAnalysis: {
     ast: {
       required: [
+        { kind: "method", name: "map", label: "map で { tag, count } のオブジェクト配列に変換する" },
         { kind: "method", name: "sort", label: "sort で並べ替える" },
         { kind: "method", name: "slice", label: "slice で上位 N 件を切り出す" },
         { kind: "node", nodeType: "ReturnStatement", label: "return で結果配列を返す" },

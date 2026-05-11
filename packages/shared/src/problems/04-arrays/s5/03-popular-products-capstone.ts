@@ -128,12 +128,13 @@ popularProductsRanking([{ userId: "u1", productId: "x" }], 0); // → []
   ],
   hints: [
     "stats[productId] が未定義のときに 「初期化」 する典型イディオム: if (!stats[productId]) { stats[productId] = { purchases: 0, users: [] }; } を for ループの先頭で書きます。",
-    "ユニークユーザー判定は users.includes(userId) === false のとき push する形が S5 でも素直で読みやすいです。 Set を使っても良いですが、 この章は配列での状態管理を練習する意図なので includes + push がおすすめです。",
+    "この問題は AST で includes の使用を必須にしています。 ユニークユーザー判定は users.includes(userId) === false のとき users.push(userId) する形で実装してください (配列での状態管理を練習する意図のため、 Set ベースの実装は採点で通りません)。",
     "解答例:\n```js\nfunction popularProductsRanking(transactions, topN) {\n  const stats = {};\n  for (const t of transactions) {\n    if (!stats[t.productId]) {\n      stats[t.productId] = { purchases: 0, users: [] };\n    }\n    stats[t.productId].purchases += 1;\n    if (!stats[t.productId].users.includes(t.userId)) {\n      stats[t.productId].users.push(t.userId);\n    }\n  }\n  return Object.entries(stats)\n    .map(([productId, s]) => ({ productId, purchases: s.purchases, uniqueUsers: s.users.length }))\n    .sort((a, b) => b.purchases - a.purchases || a.productId.localeCompare(b.productId))\n    .slice(0, Math.max(0, topN));\n}\n```",
   ],
   staticAnalysis: {
     ast: {
       required: [
+        { kind: "method", name: "map", label: "map で最終的な { productId, purchases, uniqueUsers } の形に変換する" },
         { kind: "method", name: "includes", label: "includes でユーザーがすでに登場済みかを判定する" },
         { kind: "method", name: "sort", label: "sort で並べ替える" },
         { kind: "method", name: "slice", label: "slice で上位 N 件を切り出す" },
