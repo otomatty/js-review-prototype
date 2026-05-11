@@ -28,6 +28,7 @@ m.size;       // → 2
   - \`if (!map.has(key)) map.set(key, []);\`
   - \`map.get(key).push(word);\`
 - 配列の **出現順** はそのまま保ってください (Map の挿入順は維持されます)。
+- 入力 \`words\` には **空文字列は含まれない** 前提です (各単語は 1 文字以上)。
 `,
   starterCode: `function groupByFirstLetter(words) {
   // 先頭文字 (小文字化) をキーとして Map にグルーピングしてください

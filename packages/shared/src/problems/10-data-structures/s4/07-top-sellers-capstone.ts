@@ -13,7 +13,7 @@ export const s4Ch10TopSellersCapstone: Assignment = {
   isCapstone: true,
   description: `## やること
 
-\`{ product: string, quantity: number }\` の売上配列 \`sales\` と整数 \`n\` を受け取り、 以下の手順で上位 \`n\` 件の \`[product, total]\` ペア配列を返す関数 \`topNSellers\` を実装してください。
+\`{ product: string, quantity: number }\` の売上配列 \`sales\` と **0 以上の整数** \`n\` を受け取り、 以下の手順で上位 \`n\` 件の \`[product, total]\` ペア配列を返す関数 \`topNSellers\` を実装してください (\`n\` は非負前提)。
 
 1. **集計**: \`product\` ごとに \`quantity\` の合計を Map に貯める
 2. **配列化**: \`[...map.entries()]\` で \`[key, total]\` のペア配列に変換

@@ -73,6 +73,7 @@ m.size;       // → 3
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で Map を返す" },
         { kind: "node", nodeType: "NewExpression", label: "new Map() を使う" },
+        { kind: "method", name: "set", label: "Map#set で出現回数を更新する" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
