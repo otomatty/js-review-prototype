@@ -33,6 +33,11 @@ import { s3Ch03Truncate } from "./s3/05-truncate.js";
 import { s3Ch03RemoveSpaces } from "./s3/06-remove-spaces.js";
 import { s3Ch03Initials } from "./s3/07-initials.js";
 import { s3Ch03MaskTail } from "./s3/08-mask-tail.js";
+import { s4Ch03CharFrequency } from "./s4/01-char-frequency.js";
+import { s4Ch03IsAnagram } from "./s4/02-is-anagram.js";
+import { s4Ch03ClassifyChars } from "./s4/03-classify-chars.js";
+import { s4Ch03CaesarCipher } from "./s4/04-caesar-cipher.js";
+import { s4Ch03PalindromeCleanCapstone } from "./s4/05-palindrome-clean-capstone.js";
 
 export const ch03Strings: Assignment[] = [
   s1Ch03StringLiteral,
@@ -68,4 +73,9 @@ export const ch03Strings: Assignment[] = [
   s3Ch03RemoveSpaces,
   s3Ch03Initials,
   s3Ch03MaskTail,
+  s4Ch03CharFrequency,
+  s4Ch03IsAnagram,
+  s4Ch03ClassifyChars,
+  s4Ch03CaesarCipher,
+  s4Ch03PalindromeCleanCapstone,
 ];
