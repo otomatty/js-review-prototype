@@ -51,6 +51,11 @@ object
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "object" },
+          label: "答えを文字列リテラルで直接書かない",
+        },
       ],
     },
   },

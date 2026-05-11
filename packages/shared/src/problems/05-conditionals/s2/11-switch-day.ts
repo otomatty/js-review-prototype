@@ -53,6 +53,7 @@ export const s2Ch05SwitchDay: Assignment = {
     ast: {
       required: [
         { kind: "node", nodeType: "SwitchStatement", label: "switch 文を使う" },
+        { kind: "node", nodeType: "BreakStatement", label: "各 case の末尾に break を入れる" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },

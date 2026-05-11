@@ -43,7 +43,7 @@ FizzBuzz
 ## ポイント
 
 - **判定の順序が大事**: \`15 の倍数\` を最初にチェックしないと、 \`3 の倍数\` で先に Fizz を出力してしまいます。
-- if/else if/else または三項演算子で書けます。
+- if/else if/else で書きます。
 `,
   starterCode: `// for (let i = 1; i <= 15; i++) {
 //   if (i % 15 === 0) { console.log("FizzBuzz"); }

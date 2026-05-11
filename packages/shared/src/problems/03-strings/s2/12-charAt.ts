@@ -12,7 +12,7 @@ export const s2Ch03CharAt: Assignment = {
   testKind: "stdout",
   description: `## やること
 
-\`"JavaScript"\` の **4 文字目** (\`a\`, \`v\`, \`a\`, **\`S\`**) を \`charAt\` で取り出して出力してください。 添字は 0 始まりなので位置は \`4\`。
+\`"JavaScript"\` の **5 文字目** (\`J\`, \`a\`, \`v\`, \`a\`, **\`S\`**) を \`charAt\` で取り出して出力してください。 添字は 0 始まりなので位置は \`4\`。
 
 ## 期待する出力
 

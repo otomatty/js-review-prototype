@@ -43,6 +43,7 @@ true
   staticAnalysis: {
     ast: {
       required: [
+        { kind: "const-declaration", name: "value", label: "const value を宣言する" },
         { kind: "method", name: "isArray", label: "Array.isArray を使う" },
       ],
       forbidden: [

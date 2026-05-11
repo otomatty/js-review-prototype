@@ -33,7 +33,7 @@
 | 02 | `S2-Ch05-02-if-else-even-odd` | if/else で偶奇判定 |
 | 03 | `S2-Ch05-03-else-if-grade` | else if で 3 段階成績判定 |
 | 04 | `S2-Ch05-04-and-operator` | && で AND 連結 |
-| 05 | `S2-Ch05-05-or-operator` | || で OR 連結 |
+| 05 | `S2-Ch05-05-or-operator` | `\|\|` で OR 連結 |
 | 06 | `S2-Ch05-06-not-operator` | ! で真偽値反転 |
 | 07 | `S2-Ch05-07-ternary-basic` | 三項演算子で値選択 |
 | 08 | `S2-Ch05-08-strict-equal` | === で厳密等価 |
@@ -42,7 +42,7 @@
 | 11 | `S2-Ch05-11-switch-day` | switch で曜日判定 |
 | 12 | `S2-Ch05-12-ternary-chain` | 三項を 2 段で連結 |
 | 13 | `S2-Ch05-13-range-check` | && で範囲チェック |
-| 14 | `S2-Ch05-14-default-fallback` | || でデフォルト値 |
+| 14 | `S2-Ch05-14-default-fallback` | `\|\|` でデフォルト値 |
 | 15 | `S2-Ch05-15-switch-default` | switch の default 分岐 |
 
 ### S2 学習ポイント

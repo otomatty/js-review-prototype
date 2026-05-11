@@ -46,6 +46,7 @@ export const s2Ch06BreakFirstMatch: Assignment = {
     ast: {
       required: [
         { kind: "node", nodeType: "ForStatement", label: "for ループを使う" },
+        { kind: "node", nodeType: "IfStatement", label: "if で偶数判定する" },
         { kind: "node", nodeType: "BreakStatement", label: "break で抜ける" },
       ],
       forbidden: [
