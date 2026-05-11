@@ -98,6 +98,7 @@ bubbleSort([]);               // → []
         { kind: "method", name: "reduce", label: "S4 では reduce を使わない (Ch09 で導入)" },
         { kind: "method", name: "map", label: "S4 では map を使わない (Ch09 で導入)" },
         { kind: "method", name: "filter", label: "S4 では filter を使わない (Ch09 で導入)" },
+        { kind: "method", name: "forEach", label: "S4 では forEach を使わない (Ch09 で導入)" },
       ],
     },
   },

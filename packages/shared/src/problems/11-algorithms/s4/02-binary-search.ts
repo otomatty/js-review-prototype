@@ -84,7 +84,7 @@ binarySearch([], 5);                // → -1
     },
   ],
   hints: [
-    "1) left=0, right=arr.length-1 で初期化。 2) while (left <= right) { mid=Math.floor((left+right)/2); ... }。 3) 一致なら return mid、 小さければ left=mid+1、 大きければ right=mid-1。",
+    "1) left=0, right=sortedArr.length-1 で初期化。 2) while (left <= right) { mid=Math.floor((left+right)/2); ... }。 3) 一致なら return mid、 小さければ left=mid+1、 大きければ right=mid-1。",
     "解答例:\n```js\nfunction binarySearch(sortedArr, target) {\n  let left = 0;\n  let right = sortedArr.length - 1;\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n    if (sortedArr[mid] === target) {\n      return mid;\n    }\n    if (sortedArr[mid] < target) {\n      left = mid + 1;\n    } else {\n      right = mid - 1;\n    }\n  }\n  return -1;\n}\n```",
   ],
   staticAnalysis: {

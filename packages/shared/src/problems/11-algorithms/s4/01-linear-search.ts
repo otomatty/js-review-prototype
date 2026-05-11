@@ -85,6 +85,8 @@ linearSearch([], 5);                // → -1
         { kind: "method", name: "indexOf", label: "Array.indexOf を使わない (自分で実装する)" },
         { kind: "method", name: "findIndex", label: "Array.findIndex を使わない (自分で実装する)" },
         { kind: "method", name: "includes", label: "Array.includes を使わない (自分で実装する)" },
+        { kind: "method", name: "find", label: "Array.find を使わない (自分で実装する)" },
+        { kind: "method", name: "forEach", label: "S4 では forEach を使わない (Ch09 で導入)" },
       ],
     },
   },
