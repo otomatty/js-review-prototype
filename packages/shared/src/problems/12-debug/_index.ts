@@ -19,6 +19,10 @@ import { s3Ch12FixSumRange } from "./s3/01-fix-sum-range.js";
 import { s3Ch12FixIsEmpty } from "./s3/02-fix-is-empty.js";
 import { s3Ch12FixCapitalize } from "./s3/03-fix-capitalize.js";
 import { s3Ch12FixAverage } from "./s3/04-fix-average.js";
+import { s4Ch12FixBinarySearch } from "./s4/01-fix-binary-search.js";
+import { s4Ch12FixFloatEqual } from "./s4/02-fix-float-equal.js";
+import { s4Ch12FixMergeSorted } from "./s4/03-fix-merge-sorted.js";
+import { s4Ch12FixCounterFactoryCapstone } from "./s4/04-fix-counter-factory-capstone.js";
 
 export const ch12Debug: Assignment[] = [
   s1Ch12LogIntermediate,
@@ -40,4 +44,8 @@ export const ch12Debug: Assignment[] = [
   s3Ch12FixIsEmpty,
   s3Ch12FixCapitalize,
   s3Ch12FixAverage,
+  s4Ch12FixBinarySearch,
+  s4Ch12FixFloatEqual,
+  s4Ch12FixMergeSorted,
+  s4Ch12FixCounterFactoryCapstone,
 ];
