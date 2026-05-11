@@ -44,7 +44,7 @@ const PERMISSIONS = {
 ### 判定ルール
 
 1. **入力検証**: \`role\` / \`resource\` / \`action\` のいずれかが文字列でないか空文字なら \`{ allowed: false, reason: "invalid-input" }\`
-2. **ロール解決**: \`PERMISSIONS[role]\` が存在しなければ \`{ allowed: false, reason: "unknown-role" }\`
+2. **ロール解決**: \`PERMISSIONS\` に \`role\` が **固有プロパティとして登録されていなければ** \`{ allowed: false, reason: "unknown-role" }\` (\`role = "__proto__"\` のようなプロトタイプ連鎖の値は拾わないこと)
 3. **継承の連鎖を辿りながらリソース検索**: ロールエントリで対象 \`resource\` の配列を探す。 見つかった時点で確定。 見つからなければ \`inherits\` を辿って親ロールへ。 ループ防止のため上限回数 (5 回程度) で打ち切り
 4. **リソースが見つからない**: \`{ allowed: false, reason: "unknown-resource" }\`
 5. **ワイルドカード判定**: 許可リストが \`"*"\` を含むなら \`{ allowed: true, reason: "ok" }\`
@@ -177,6 +177,13 @@ function canPerformAction(role, resource, action) {
       })()`,
     },
     {
+      name: "__proto__/posts/read も 未知ロール (プロトタイプ連鎖を拾わない)",
+      code: `(() => {
+        const r = canPerformAction("__proto__", "posts", "read");
+        return r.allowed === false && r.reason === "unknown-role";
+      })()`,
+    },
+    {
       name: "空文字 action は 不正入力",
       code: `(() => {
         const r = canPerformAction("viewer", "posts", "");
@@ -225,10 +232,10 @@ function canPerformAction(role, resource, action) {
     },
   ],
   hints: [
-    "ロール解決はオブジェクトの計算プロパティアクセスで一発。 PERMISSIONS[role] が undefined なら 未知ロール、 そうでなければ次のステップへ。 if (role === \"admin\") の連鎖は AST で禁止されている switch と同じ匂いなのでやめます。",
+    "ロール解決はオブジェクトの固有プロパティチェックで行います。 Object.hasOwn(PERMISSIONS, role) が false なら 未知ロール。 単に !PERMISSIONS[role] と書くと、 role = \"__proto__\" のようなプロトタイプ連鎖の値を未知扱いできず通過してしまう罠があります。 if (role === \"admin\") の連鎖は AST で禁止されている switch と同じ匂いなのでやめます。",
     "継承の連鎖は while ループで current 変数を 1 つ持って辿るのが定石。 ループ脱出条件は 「current が undefined」 または 「該当リソースを見つけた」。 無限ループ防止に depth カウンタを上限 5 で見張ると安全です。",
     "ワイルドカード判定は list.includes(\"*\") を最初に置くと action の判定と並べやすい。 || で短絡させればワイルドカードか action か どちらかが該当すれば許可、 と 1 行で書けます。",
-    "解答例:\n```js\nconst PERMISSIONS = {\n  admin:  { inherits: \"editor\", users: [\"*\"] },\n  editor: { inherits: \"viewer\", posts: [\"read\", \"write\", \"delete\"], comments: [\"read\", \"write\"] },\n  viewer: { posts: [\"read\"], comments: [\"read\"] },\n  guest:  { posts: [\"read\"] },\n};\n\nfunction canPerformAction(role, resource, action) {\n  if (typeof role !== \"string\" || role === \"\" ||\n      typeof resource !== \"string\" || resource === \"\" ||\n      typeof action !== \"string\" || action === \"\") {\n    return { allowed: false, reason: \"invalid-input\" };\n  }\n  if (!PERMISSIONS[role]) {\n    return { allowed: false, reason: \"unknown-role\" };\n  }\n  let current = role;\n  let allowedList = null;\n  let depth = 0;\n  while (current && PERMISSIONS[current] && depth < 5) {\n    const entry = PERMISSIONS[current];\n    if (Array.isArray(entry[resource])) {\n      allowedList = entry[resource];\n      break;\n    }\n    current = entry.inherits;\n    depth += 1;\n  }\n  if (!allowedList) {\n    return { allowed: false, reason: \"unknown-resource\" };\n  }\n  if (allowedList.includes(\"*\") || allowedList.includes(action)) {\n    return { allowed: true, reason: \"ok\" };\n  }\n  return { allowed: false, reason: \"action-not-allowed\" };\n}\n```",
+    "解答例:\n```js\nconst PERMISSIONS = {\n  admin:  { inherits: \"editor\", users: [\"*\"] },\n  editor: { inherits: \"viewer\", posts: [\"read\", \"write\", \"delete\"], comments: [\"read\", \"write\"] },\n  viewer: { posts: [\"read\"], comments: [\"read\"] },\n  guest:  { posts: [\"read\"] },\n};\n\nfunction canPerformAction(role, resource, action) {\n  if (typeof role !== \"string\" || role === \"\" ||\n      typeof resource !== \"string\" || resource === \"\" ||\n      typeof action !== \"string\" || action === \"\") {\n    return { allowed: false, reason: \"invalid-input\" };\n  }\n  if (!Object.hasOwn(PERMISSIONS, role)) {\n    return { allowed: false, reason: \"unknown-role\" };\n  }\n  let current = role;\n  let allowedList = null;\n  let depth = 0;\n  while (typeof current === \"string\" && Object.hasOwn(PERMISSIONS, current) && depth < 5) {\n    const entry = PERMISSIONS[current];\n    if (Array.isArray(entry[resource])) {\n      allowedList = entry[resource];\n      break;\n    }\n    current = entry.inherits;\n    depth += 1;\n  }\n  if (!allowedList) {\n    return { allowed: false, reason: \"unknown-resource\" };\n  }\n  if (allowedList.includes(\"*\") || allowedList.includes(action)) {\n    return { allowed: true, reason: \"ok\" };\n  }\n  return { allowed: false, reason: \"action-not-allowed\" };\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -258,13 +265,13 @@ function canPerformAction(role, resource, action) {
       typeof action !== "string" || action === "") {
     return { allowed: false, reason: "invalid-input" };
   }
-  if (!PERMISSIONS[role]) {
+  if (!Object.hasOwn(PERMISSIONS, role)) {
     return { allowed: false, reason: "unknown-role" };
   }
   let current = role;
   let allowedList = null;
   let depth = 0;
-  while (current && PERMISSIONS[current] && depth < 5) {
+  while (typeof current === "string" && Object.hasOwn(PERMISSIONS, current) && depth < 5) {
     const entry = PERMISSIONS[current];
     if (Array.isArray(entry[resource])) {
       allowedList = entry[resource];
