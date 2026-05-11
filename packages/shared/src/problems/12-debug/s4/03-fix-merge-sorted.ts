@@ -26,7 +26,7 @@ mergeSorted([1, 2], []);              // → [1, 2]                (現状は []
 - \`while (i < a.length && j < b.length)\` は **どちらかが尽きた瞬間に終了** するので、 もう片方の残りは結果に入っていない。
 - 終了後に \`while (i < a.length) result.push(a[i++])\` と \`while (j < b.length) result.push(b[j++])\` の **両方** を流して、 残りを順に積む必要がある。
 - 「\`a\` または \`b\` のどちらかしか残らない」 ので 2 本の while を並べても両方を実行することはなく、 計算量は \`O(a.length + b.length)\` のまま。
-- 配列のスライス + concat (\`result.concat(a.slice(i), b.slice(j))\`) でも書ける。 計算量・可読性は好みで選ぶ。
+- 配列のスライス + concat (\`result.concat(a.slice(i), b.slice(j))\`) でも書ける。 ただし \`concat\` は **元の配列を変更せず新しい配列を返す** ので、 戻り値を受け取らないと結果が捨てられる点に注意 (\`push\` のような破壊的メソッドと混同しやすい)。 計算量・可読性は好みで選ぶ。
 `,
   starterCode: `function mergeSorted(a, b) {
   const result = [];
