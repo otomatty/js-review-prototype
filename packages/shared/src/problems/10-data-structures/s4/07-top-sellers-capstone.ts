@@ -110,6 +110,8 @@ topNSellers([{ product: "x", quantity: 1 }], 0);   // → []
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で配列を返す" },
         { kind: "node", nodeType: "NewExpression", label: "new Map() を使う" },
+        { kind: "method", name: "set", label: "Map#set で集計する" },
+        { kind: "method", name: "entries", label: "Map#entries で配列化する" },
         { kind: "method", name: "sort", label: "Array.sort で降順に並べる" },
       ],
       forbidden: [
