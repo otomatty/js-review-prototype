@@ -94,6 +94,7 @@ binarySearch([], 5);                // → -1
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で添字または -1 を返す" },
         { kind: "node", nodeType: "WhileStatement", label: "while (left <= right) で探索範囲を狭める" },
+        { kind: "method", name: "floor", label: "Math.floor で真ん中の添字を計算する (線形 while 探索を防ぐ)" },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
