@@ -163,6 +163,14 @@ calculateShippingFee({ totalAmount: -100, weight: 2, distance: 50, isPremium: tr
       code: `calculateShippingFee({ totalAmount: NaN, weight: 2, distance: 50, isPremium: false, isFragile: false }) === -1`,
     },
     {
+      name: "weight が NaN なら -1",
+      code: `calculateShippingFee({ totalAmount: 1000, weight: NaN, distance: 50, isPremium: false, isFragile: false }) === -1`,
+    },
+    {
+      name: "distance が NaN なら -1",
+      code: `calculateShippingFee({ totalAmount: 1000, weight: 2, distance: NaN, isPremium: false, isFragile: false }) === -1`,
+    },
+    {
       name: "distance が undefined (number でない) なら -1",
       code: `calculateShippingFee({ totalAmount: 1000, weight: 2, distance: undefined, isPremium: false, isFragile: false }) === -1`,
     },

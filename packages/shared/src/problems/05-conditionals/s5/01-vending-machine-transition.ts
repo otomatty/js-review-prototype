@@ -122,10 +122,14 @@ function applyVendingAction(state, action) {
       })()`,
     },
     {
-      name: "idle + select は無視され idle のまま",
+      name: "idle + select は状態フィールドを 1 つも変えない (status / balance / selectedItem 全て不変、 別オブジェクト)",
       code: `(() => {
-        const s = applyVendingAction({ status: "idle", balance: 0, selectedItem: null, message: "" }, { type: "select", item: "water" });
-        return s.status === "idle" && s.selectedItem === null;
+        const before = { status: "idle", balance: 0, selectedItem: null, message: "" };
+        const after = applyVendingAction(before, { type: "select", item: "water" });
+        return after !== before
+          && after.status === before.status
+          && after.balance === before.balance
+          && after.selectedItem === before.selectedItem;
       })()`,
     },
     {
@@ -164,10 +168,14 @@ function applyVendingAction(state, action) {
       })()`,
     },
     {
-      name: "accepting + dispense (未選択) は accepting のまま",
+      name: "accepting + dispense (未選択) は状態フィールドを 1 つも変えない (status / balance / selectedItem 全て不変、 別オブジェクト)",
       code: `(() => {
-        const s = applyVendingAction({ status: "accepting", balance: 100, selectedItem: null, message: "" }, { type: "dispense" });
-        return s.status === "accepting" && s.balance === 100;
+        const before = { status: "accepting", balance: 100, selectedItem: null, message: "" };
+        const after = applyVendingAction(before, { type: "dispense" });
+        return after !== before
+          && after.status === before.status
+          && after.balance === before.balance
+          && after.selectedItem === before.selectedItem;
       })()`,
     },
     {

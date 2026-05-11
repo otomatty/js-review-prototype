@@ -16,7 +16,7 @@ export const s5Ch05PermissionMatrixCapstone: Assignment = {
 
 ロール (\`role\`) と リソース (\`resource\`) と 操作 (\`action\`) を受け取り、 **その操作が許可されているか** を判定する関数 \`canPerformAction\` を実装してください。
 
-戻り値は \`{ allowed: boolean, reason: string }\` 形式のオブジェクトで、 拒否理由を **5 種類** に区別します:
+戻り値は \`{ allowed: boolean, reason: string }\` 形式のオブジェクトで、 判定理由を **5 種類** に区別します (許可 1 種類 + 拒否 4 種類):
 
 - \`"ok"\` — 許可
 - \`"invalid-input"\` — 入力が文字列でない、 または空文字
