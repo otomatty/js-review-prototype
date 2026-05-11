@@ -19,7 +19,7 @@
 ├── README.md
 ├── _index.ts
 ├── s3/   # Phase 8 で追加済み (4 問)
-├── s4/   # Phase 9 で追加予定
+├── s4/   # Phase 9 で追加 (5 問、 うち 1 問が卒業課題)
 └── s5/   # Phase 9 で追加予定
 ```
 
@@ -38,6 +38,24 @@
 - 02 / 04 は **AST で TryStatement を強制**、 02 / 03 は **ThrowStatement を強制** している
 - 組み込みエラー型 (`TypeError` / `RangeError`) を選んで使い分けると、 catch 側で `instanceof` で振り分けられる
 
+## S4 で扱う問題 (5 問、 卒業課題 1 問)
+
+| # | ID | 主題 |
+|---|---|---|
+| 01 | `S4-Ch13-01-validation-error` | `class ValidationError extends Error` を定義して投げる |
+| 02 | `S4-Ch13-02-classify-error` | `instanceof` で複数の Error 型を catch 内分岐 |
+| 03 | `S4-Ch13-03-retry-with-fallback` | try/catch をループで回すリトライ + フォールバック |
+| 04 | `S4-Ch13-04-cleanup-with-finally` | `finally` でクリーンアップを保証する |
+| 05 | `S4-Ch13-05-safe-runner-capstone` | [卒業課題] カスタム Error + 振り分け + finally を 1 関数にまとめる |
+
+### S4 学習ポイント
+
+- **カスタム Error クラス** (`extends Error`) は「失敗の種類を呼び出し側で識別する」 ための基本道具。 必ず `super(message)` を呼び、 `this.name` をセットする
+- 1 つの `catch` 節の中で **`instanceof` を並べる** ことで複数の Error 型に分岐できる。 並べる順は **継承の具体的な型から先** に
+- 失敗を「呼び出し元に伝搬させる」 / 「リトライする」 / 「既定値を返す」 のどれを選ぶかは設計判断。 03 はその「リトライ + フォールバック」 の典型形を扱う
+- `finally` は **try / catch のどちらを通っても必ず通る** ブロック。 統計の更新やリソース解放など、 「絶対に走らせたい」 処理に使う
+- 05 (卒業課題) はここまでの **カスタム Error / 振り分け / finally** を 1 つの関数で組み合わせる演習
+
 ## 状態
 
-S3: 4 問追加済み (Phase 8)。 S4-S5 は未着手。
+S3: 4 問追加済み (Phase 8)。 S4: 5 問追加済み (Phase 9)。 S5 は未着手。
