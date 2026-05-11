@@ -24,6 +24,11 @@ import { s3Ch07Clamp } from "./s3/05-clamp.js";
 import { s3Ch07CallNTimes } from "./s3/06-call-n-times.js";
 import { s3Ch07NegatePredicate } from "./s3/07-negate-predicate.js";
 import { s3Ch07Compose } from "./s3/08-compose.js";
+import { s4Ch07Once } from "./s4/01-once.js";
+import { s4Ch07Memoize } from "./s4/02-memoize.js";
+import { s4Ch07Pipe } from "./s4/03-pipe.js";
+import { s4Ch07Curry2 } from "./s4/04-curry2.js";
+import { s4Ch07ValidatorCapstone } from "./s4/05-validator-capstone.js";
 
 export const ch07Functions: Assignment[] = [
   s2Ch07FunctionGreet,
@@ -50,4 +55,9 @@ export const ch07Functions: Assignment[] = [
   s3Ch07CallNTimes,
   s3Ch07NegatePredicate,
   s3Ch07Compose,
+  s4Ch07Once,
+  s4Ch07Memoize,
+  s4Ch07Pipe,
+  s4Ch07Curry2,
+  s4Ch07ValidatorCapstone,
 ];
