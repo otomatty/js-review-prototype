@@ -29,6 +29,7 @@ export const s2Ch07NestedCall: Assignment = {
 
 - 関数の中から **別の関数** を呼べます。 これを組み合わせて複雑な処理を作ります。
 - 「小さい関数 × 組み合わせ」 が関数型の基本です。
+- \`squareThenAdd\` の中で \`a * a + b * b\` のように式を直書きすると、 \`square\` を再利用していないので **関数合成の学習意図から外れます**。 必ず \`square(a) + square(b)\` の形にしてください。
 `,
   starterCode: `// function square(n) { return n * n; }
 // function squareThenAdd(a, b) { return square(a) + square(b); }

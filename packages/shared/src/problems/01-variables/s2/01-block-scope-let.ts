@@ -57,6 +57,16 @@ export const s2Ch01BlockScopeLet: Assignment = {
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "外側" },
+          label: "結果を文字列リテラルで直接出力しない",
+        },
+        {
+          kind: "console-log",
+          argument: { kind: "string", value: "内側" },
+          label: "結果を文字列リテラルで直接出力しない",
+        },
       ],
     },
   },

@@ -23,7 +23,7 @@ string
 ## ポイント
 
 - 文字列の \`typeof\` は \`"string"\` です。
-- \`typeof "Taro"\` のように直接値に対しても使えます。
+- \`typeof\` は直接値にも使えますが、 この問題では \`const name\` を宣言して \`typeof name\` を使います。
 `,
   starterCode: `// 1. const name = "Taro"; を宣言する
 // 2. console.log(typeof name); で型を出力する

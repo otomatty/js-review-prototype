@@ -56,6 +56,11 @@ undefined
           argument: { kind: "identifier", name: "undefined" },
           label: "undefined を直接渡さない (typeof で確認する)",
         },
+        {
+          kind: "console-log",
+          argument: { kind: "binary", operator: "+" },
+          label: "文字列連結で答えを組み立てない",
+        },
       ],
     },
   },

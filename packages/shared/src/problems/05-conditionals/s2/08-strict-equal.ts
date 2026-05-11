@@ -25,6 +25,7 @@ false
 - \`==\` (緩い等価) は型変換して比較するので \`1 == "1"\` は \`true\`。
 - \`===\` (厳密等価) は型もチェックするので \`1 === "1"\` は \`false\`。
 - 現代の JS では基本 \`===\` を使います (\`==\` は eslint の \`eqeqeq\` で禁止)。
+- 答えを直接書く (例: \`console.log(false)\` や \`console.log("false")\`) のは NG。 必ず \`a === b\` の **比較式** を出力してください。
 `,
   starterCode: `// 1. const a = 1; const b = "1";
 // 2. console.log(a === b);
