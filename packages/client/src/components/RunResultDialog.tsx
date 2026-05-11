@@ -570,7 +570,7 @@ function TestsRow({
 
       {status === "evaluating" && (running || !result) ? (
         <p className="text-sm text-muted-foreground">
-          サーバの isolated-vm でテストを実行しています...
+          テストを実行しています...
         </p>
       ) : null}
 

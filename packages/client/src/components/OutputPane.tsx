@@ -61,7 +61,7 @@ export function OutputPane({ stdout, error, running, onClear }: Props) {
         ) : null}
         {running && !hasResult ? (
           <p className="font-sans text-[12px] text-muted-foreground">
-            isolated-vm でコードを実行しています...
+            コードを実行しています...
           </p>
         ) : null}
         {error ? (

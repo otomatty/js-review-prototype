@@ -1,11 +1,11 @@
 /**
- * Hono エントリポイント。
+ * Hono エントリポイント（ローカル開発用・isolated-vm）。
  *
  * エンドポイント:
- *   POST /run-tests   テストを isolated-vm で実行
- *   GET  /healthz     ヘルスチェック
+ *   POST /api/run-tests   テストを isolated-vm で実行（本番は Vercel Edge + QuickJS）
+ *   GET  /api/healthz
  *
- * CORS は http://localhost:5173 のみ許可。
+ * CORS: localhost の Vite (5173 付近) のみ。
  */
 
 import { serve } from "@hono/node-server";
@@ -13,7 +13,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 
-import type { RunTestsRequest, RunTestsResponse } from "./types.js";
+import { validateRunTestsBody } from "@jsreview/shared/util/validate-run-tests-request";
+import type { RunTestsResponse } from "./types.js";
 import { IsolatePool } from "./isolate-pool.js";
 import { TestRunner } from "./grading/runner.js";
 
@@ -38,41 +39,32 @@ app.use(
   }),
 );
 
-app.get("/healthz", (c) =>
-  c.json({ ok: true, poolSize: POOL_SIZE, memoryLimitMb: MEMORY_LIMIT_MB }),
+app.get("/api/healthz", (c) =>
+  c.json({
+    ok: true,
+    runner: "isolated-vm",
+    poolSize: POOL_SIZE,
+    memoryLimitMb: MEMORY_LIMIT_MB,
+  }),
 );
 
-app.post("/run-tests", async (c) => {
-  let body: RunTestsRequest;
+app.post("/api/run-tests", async (c) => {
+  let raw: unknown;
   try {
-    body = (await c.req.json());
+    raw = await c.req.json();
   } catch {
     return c.json({ error: "Invalid JSON body" }, 400);
   }
 
-  // 最低限のバリデーション
-  if (typeof body.code !== "string") {
-    return c.json({ error: "Missing 'code' (string)" }, 400);
+  const validated = validateRunTestsBody(raw);
+  if (!validated.ok) {
+    return c.json(
+      { error: validated.message },
+      { status: validated.status as 400 | 500 },
+    );
   }
-  if (body.mode !== undefined && body.mode !== "test" && body.mode !== "freerun") {
-    return c.json({ error: "'mode' must be 'test' | 'freerun' when provided" }, 400);
-  }
+  const body = validated.body;
   const isFreeRun = body.mode === "freerun";
-
-  if (!isFreeRun) {
-    if (!Array.isArray(body.tests)) {
-      return c.json({ error: "Missing 'tests' (array)" }, 400);
-    }
-    if (body.testKind !== "stdout" && body.testKind !== "function") {
-      return c.json(
-        { error: "Missing 'testKind' ('stdout' | 'function')" },
-        400,
-      );
-    }
-  }
-  if (body.entryPoints !== undefined && !Array.isArray(body.entryPoints)) {
-    return c.json({ error: "'entryPoints' must be an array when provided" }, 400);
-  }
 
   const start = Date.now();
   const results = isFreeRun

@@ -7,14 +7,13 @@ import type {
   TestResult,
 } from "@jsreview/shared/types";
 
-const SERVER_URL =
-  (import.meta.env.VITE_SERVER_URL) ??
-  "http://localhost:3001";
+/** 空なら同一オリジン (Vercel の `/api/run-tests`)。ローカルでは Vite proxy または `http://localhost:3001` を指定。 */
+const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? "";
 
 export async function runTests(
   body: RunTestsRequest,
 ): Promise<RunTestsResponse> {
-  const res = await fetch(`${SERVER_URL}/run-tests`, {
+  const res = await fetch(`${SERVER_URL}/api/run-tests`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

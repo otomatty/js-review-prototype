@@ -168,7 +168,7 @@ function PracticePageInner({ assignment }: InnerProps) {
     recordResult(res.evaluation.cleared, submittedCode);
   }, [code, assignment, lint, ast, reset, run, recordResult]);
 
-  // 「実行」 (採点せずコードを isolated-vm で動かして stdout を取る)
+  // 「実行」 (採点せずコードを動かして stdout を取る)
   // function 採点では assignment.demoCall を末尾に追記し、 entryPoint を呼ばせる。
   const freeRunDisabled =
     assignment.testKind === "function" && !assignment.demoCall;
@@ -253,15 +253,7 @@ function PracticePageInner({ assignment }: InnerProps) {
             onClear={() => setFreeRun(null)}
           />
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-6 py-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-[3px] font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                Client · ESLint + AST
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-[3px] font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-red-700 dark:bg-red-900/30 dark:text-red-300">
-                Server · isolated-vm
-              </span>
-            </div>
+          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border bg-card px-6 py-3">
             <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="outline"

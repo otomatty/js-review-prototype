@@ -1,7 +1,10 @@
 # js-review-prototype
 
 JS自動コードレビューロジックのデモプロトタイプ。
-**「クライアント側でLint/AST解析、サーバ側のisolated-vmでテスト実行」** という役割分担を実物で説明するためのアプリ。
+**「クライアント側でLint/AST解析、サーバ側でテスト実行」** という役割分担を実物で説明するためのアプリ。
+
+- **本番 (Vercel)**: `packages/client/api` の Edge Function で **quickjs-emscripten** (QuickJS WASM) によりテスト実行。
+- **ローカル**: `packages/server` の **Node.js + Hono + isolated-vm**（ネイティブ VM に近い挙動・検証用）。
 
 > 本番運用は想定していません。永続化・認証・課題管理などの機能は持ちません。
 
@@ -11,8 +14,8 @@ JS自動コードレビューロジックのデモプロトタイプ。
 js-review-prototype/
 ├── packages/
 │   ├── shared/   # 共有型・課題定義・AST解析・スコア集計 (クライアントから利用)
-│   ├── client/   # Bun + Vite + React + CodeMirror 6 + ESLint browserify
-│   └── server/   # Node.js + Hono + isolated-vm (テストランナー)
+│   ├── client/   # Vite + React + Edge API (quickjs) / 静的ビルド
+│   └── server/   # Node.js + Hono + isolated-vm（ローカル開発用テストランナー）
 └── tsconfig.base.json
 ```
 
@@ -35,27 +38,48 @@ bun install
 
 ## 起動方法
 
+### A. Vite + ローカルサーバ（推奨・従来どおり）
+
 ターミナルを2つ開きます。
 
-### ターミナル1: クライアント (Vite)
+**ターミナル1 — クライアント (Vite)**
 
 ```bash
 cd packages/client
 bun run dev
 ```
 
-→ http://localhost:5173
+→ http://localhost:5173 （`/api/*` は Vite の proxy で http://localhost:3001 に転送）
 
-### ターミナル2: サーバ (Hono + isolated-vm)
+**ターミナル2 — サーバ (Hono + isolated-vm)**
 
 ```bash
 cd packages/server
 bun run dev
 ```
 
-→ http://localhost:3001
+→ http://localhost:3001 · エンドポイントは **`POST /api/run-tests`** · **`GET /api/healthz`**
 
-サーバは `node --no-node-snapshot --import tsx` で起動します(Bunではなく)。これは isolated-vm がNode.js依存のため。Node.js 20 以降では `isolated-vm` の制約により `--no-node-snapshot` フラグが必須です。
+サーバは `node --no-node-snapshot --import tsx` で起動します（Bun ではなく）。isolated-vm が Node 依存のため。Node.js 20 以降では `--no-node-snapshot` が必須です。
+
+フロントは既定で同一オリジン `/api/run-tests` を叩くため、`VITE_SERVER_URL` は未設定で問題ありません。
+
+### B. Vercel CLI（本番に近い Edge + QuickJS）
+
+```bash
+cd packages/client
+npx vercel dev
+```
+
+同一プロセスで静的アプリと `api/run-tests` が動きます。
+
+## Vercel デプロイ
+
+- **Root Directory**: `packages/client`（`vercel.json` あり）
+- **Framework**: Vite
+- **Install**: リポジトリルートで `bun install`（`vercel.json` の `installCommand` 参照）
+- **環境変数 (任意)**: `ISOLATE_MEMORY_LIMIT` — QuickJS ランタイムのメモリ上限 (MB、既定 32)
+- **レート制限**: アプリ内の in-memory 制限は Edge では効かないため、必要なら Vercel Firewall のレート制限ルールをダッシュボードで設定する。
 
 ## デモシナリオ
 
@@ -74,10 +98,10 @@ bun run dev
 |---|---|---|
 | ESLint | クライアント | コードを実行しない静的解析、リアルタイムフィードバック |
 | AST解析 | クライアント | 同上 |
-| テスト実行 | サーバ (isolated-vm) | 信頼できないコードを安全に隔離して動かす |
+| テスト実行 | Vercel Edge (QuickJS WASM) / ローカルは isolated-vm | 信頼できないコードを隔離して動かす |
 | スコア集計 | クライアント | 上記3つを合算するだけ |
 
-サーバが `packages/shared` から import するのは `types.ts` のみ。これにより構造的に「サーバはテスト実行のみが責務」が保証されている。
+ローカルサーバが `packages/shared` から import するのは主に `types.ts` とバリデーション用ユーティリティ。Edge API も同じリクエスト検証を共有する。
 
 ## スタイリング方針
 
