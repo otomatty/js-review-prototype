@@ -22,6 +22,24 @@ describe("QuickJsRunner", async () => {
     expect(r.stdout).toBe("hi");
   });
 
+  test("freerun drains promise jobs before reading stdout", async () => {
+    const r = await runner.runFreeRun(`
+      await Promise.resolve();
+      console.log("after await");
+    `);
+    expect(r.passed).toBe(true);
+    expect(r.stdout).toBe("after await");
+  });
+
+  test("function mode accepts promise-returning tests", async () => {
+    const results = await runner.runAll(
+      `function add(a, b) { return a + b; }`,
+      [{ name: "async function assertion", code: "Promise.resolve(add(1, 2) === 3)" }],
+      { testKind: "function", entryPoints: ["add"] },
+    );
+    expect(results[0]?.passed).toBe(true);
+  });
+
   test("infinite loop times out", async () => {
     const r = await runner.runFreeRun(`while(true){}`);
     expect(r.passed).toBe(false);

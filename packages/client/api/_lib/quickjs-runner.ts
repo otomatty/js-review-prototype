@@ -19,7 +19,11 @@ import type {
   TestResult,
 } from "@jsreview/shared/types";
 
-const PER_TEST_WALL_TIMEOUT_MS = 3000;
+const rawWallTimeoutMs = Number(process.env.TEST_TIMEOUT_MS ?? 3000);
+const PER_TEST_WALL_TIMEOUT_MS =
+  Number.isFinite(rawWallTimeoutMs) && rawWallTimeoutMs > 0
+    ? rawWallTimeoutMs
+    : 3000;
 
 /** WASM モジュールは Edge のコールドスタートごとに初回だけロードする */
 export const getQuickJSModule = memoizePromiseFactory(() =>
@@ -344,7 +348,16 @@ function drainToFulfillment(
       jobs.dispose();
     }
 
-    if (!runtime.hasPendingJob() && state.type === "pending") {
+    const nextState = context.getPromiseState(handle);
+    if (nextState.type === "fulfilled") {
+      return { ok: true, value: nextState.value };
+    }
+    if (nextState.type === "rejected") {
+      const msg = errorHandleToMessage(context, nextState.error);
+      return { ok: false, error: msg };
+    }
+
+    if (!runtime.hasPendingJob() && nextState.type === "pending") {
       return { ok: false, error: "TIMEOUT" };
     }
   }

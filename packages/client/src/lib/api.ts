@@ -8,7 +8,7 @@ import type {
 } from "@jsreview/shared/types";
 
 /** 空なら同一オリジン (Vercel の `/api/run-tests`)。ローカルでは Vite proxy または `http://localhost:3001` を指定。 */
-const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? "";
+const SERVER_URL = (import.meta.env.VITE_SERVER_URL ?? "").replace(/\/+$/, "");
 
 export async function runTests(
   body: RunTestsRequest,
