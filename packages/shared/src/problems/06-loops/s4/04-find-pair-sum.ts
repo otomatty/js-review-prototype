@@ -59,8 +59,8 @@ findPairSum([], 0);              // → null
       code: `findPairSum([5], 5) === null`,
     },
     {
-      name: "複数ペアあれば i が小さい方を優先",
-      code: `JSON.stringify(findPairSum([1, 4, 5, 6], 10)) === JSON.stringify([1, 3])`,
+      name: "複数ペアがある場合は i が小さい方を優先",
+      code: `JSON.stringify(findPairSum([1, 2, 3, 4, 5], 6)) === JSON.stringify([0, 4])`,
     },
     {
       name: "同じ値の重複でもインデックスで区別",
