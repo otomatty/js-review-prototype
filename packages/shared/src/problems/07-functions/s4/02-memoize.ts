@@ -83,6 +83,23 @@ calls;     // → 2   ("hi" と "yo" の 2 回だけ)
       name: "戻り値は関数",
       code: `typeof memoize((n) => n) === "function"`,
     },
+    {
+      name: "別の memoize 呼び出しで作られたキャッシュは混ざらない",
+      code: `(() => {
+        let callsA = 0;
+        let callsB = 0;
+        const a = memoize((n) => { callsA += 1; return n + 1; });
+        const b = memoize((n) => { callsB += 1; return n + 100; });
+        return (
+          a(1) === 2 &&
+          b(1) === 101 &&
+          a(1) === 2 &&
+          b(1) === 101 &&
+          callsA === 1 &&
+          callsB === 1
+        );
+      })()`,
+    },
   ],
   hints: [
     "外側で `const cache = new Map();` を作り、 返す関数で `if (cache.has(x)) return cache.get(x);` → 計算 → `cache.set(x, v);` → return v。",

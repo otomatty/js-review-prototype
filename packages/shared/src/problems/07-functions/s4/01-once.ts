@@ -80,6 +80,21 @@ calls;            // → 1   (実際に走ったのは 1 回だけ)
         return f() === 42 && f() === 42;
       })()`,
     },
+    {
+      name: "複数引数もそのまま fn に渡される (初回)",
+      code: `(() => {
+        const f = once((a, b) => a + b);
+        return f(2, 3) === 5;
+      })()`,
+    },
+    {
+      name: "複数引数でも 2 回目以降は初回の結果が返る",
+      code: `(() => {
+        const f = once((a, b) => a + b);
+        f(2, 3);
+        return f(100, 200) === 5;
+      })()`,
+    },
   ],
   hints: [
     "外側の関数で `let called = false; let cached;` を用意し、 内側の関数で `if (!called) { called = true; cached = fn(...args); }` の形で更新する。",
@@ -89,6 +104,7 @@ calls;            // → 1   (実際に走ったのは 1 回だけ)
     ast: {
       required: [
         { kind: "node", nodeType: "ReturnStatement", label: "return で関数を返す" },
+        { kind: "node", nodeType: "RestElement", label: "...args で任意個数の引数を受ける" },
         { kind: "node", nodeType: "ArrowFunctionExpression", label: "アロー関数でラップした関数を返す" },
       ],
       forbidden: [
