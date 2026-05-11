@@ -65,28 +65,32 @@ function splitResults(promises) {
           Promise.reject("oops"),
           Promise.resolve(2),
         ]);
-        return JSON.stringify(r) === JSON.stringify({ fulfilled: [1, 2], rejected: ["oops"] });
+        return JSON.stringify(r.fulfilled) === JSON.stringify([1, 2])
+          && JSON.stringify(r.rejected) === JSON.stringify(["oops"]);
       })()`,
     },
     {
       name: "全件 fulfilled なら rejected は空",
       code: `(async () => {
         const r = await splitResults([Promise.resolve(10), Promise.resolve(20)]);
-        return JSON.stringify(r) === JSON.stringify({ fulfilled: [10, 20], rejected: [] });
+        return JSON.stringify(r.fulfilled) === JSON.stringify([10, 20])
+          && JSON.stringify(r.rejected) === JSON.stringify([]);
       })()`,
     },
     {
       name: "全件 rejected なら fulfilled は空",
       code: `(async () => {
         const r = await splitResults([Promise.reject("a"), Promise.reject("b")]);
-        return JSON.stringify(r) === JSON.stringify({ fulfilled: [], rejected: ["a", "b"] });
+        return JSON.stringify(r.fulfilled) === JSON.stringify([])
+          && JSON.stringify(r.rejected) === JSON.stringify(["a", "b"]);
       })()`,
     },
     {
       name: "空配列なら両方とも空",
       code: `(async () => {
         const r = await splitResults([]);
-        return JSON.stringify(r) === JSON.stringify({ fulfilled: [], rejected: [] });
+        return JSON.stringify(r.fulfilled) === JSON.stringify([])
+          && JSON.stringify(r.rejected) === JSON.stringify([]);
       })()`,
     },
     {
