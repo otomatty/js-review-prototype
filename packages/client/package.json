@@ -11,6 +11,7 @@
     "test:quickjs": "bun test api/_lib/quickjs-runner.test.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lint": "^6.5.0",
     "@codemirror/state": "^6.4.1",

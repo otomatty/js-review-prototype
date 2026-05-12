@@ -15,7 +15,9 @@
     "./grading/ast": "./src/grading/ast.ts",
     "./grading/evaluate": "./src/grading/evaluate.ts",
     "./util/timeout": "./src/util/timeout.ts",
-    "./util/validate-run-tests-request": "./src/util/validate-run-tests-request.ts"
+    "./util/validate-run-tests-request": "./src/util/validate-run-tests-request.ts",
+    "./ai/types": "./src/ai/types.ts",
+    "./ai/prompt": "./src/ai/prompt.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

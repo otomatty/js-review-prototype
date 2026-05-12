@@ -23,6 +23,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
+import type { GradingSummary } from "@jsreview/shared/ai/types";
 
 import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
@@ -107,6 +108,47 @@ function PracticePageInner({ assignment }: InnerProps) {
     setResultDialogOpen(false);
     navigate(`/problems/${nextAssignment.id}`);
   }, [navigate, nextAssignment]);
+
+  // 「AI に質問する」: 採点失敗情報を要約して、チャット画面へ navigation state
+  // で渡す。 ChatPage 側で履歴が空ならそれを基に初回投稿を組み立てる。
+  const handleAskAi = useCallback(() => {
+    if (!result) {return;}
+    const summary: GradingSummary = {
+      cleared: result.evaluation.cleared,
+      lintFailures: result.lintAtRun
+        .filter((v) => v.severity === 2)
+        .map((v) => ({
+          ruleId: v.ruleId,
+          line: v.line,
+          message: v.message,
+        })),
+      astFailures: [
+        ...result.astAtRun.required
+          .filter((r) => !r.found)
+          .map((r) => ({
+            kind: "required-missing" as const,
+            label: r.label,
+          })),
+        ...result.astAtRun.forbidden.map((f) => ({
+          kind: "forbidden-found" as const,
+          label: f.label,
+          line: f.line,
+        })),
+      ],
+      testFailures: result.testResults
+        .filter((t) => !t.passed)
+        .map((t) => ({
+          name: t.name,
+          error: t.error,
+          expectedStdout: t.expectedStdout,
+          actualStdout: t.stdout,
+        })),
+    };
+    setResultDialogOpen(false);
+    navigate(`/problems/${assignment.id}/chat`, {
+      state: { userCode: code, gradingSummary: summary },
+    });
+  }, [result, assignment.id, code, navigate]);
 
   // 課題切替時、結果表示と自由実行出力をクリア
   useEffect(() => {
@@ -293,6 +335,7 @@ function PracticePageInner({ assignment }: InnerProps) {
             ast={ast}
             nextAssignment={nextAssignment}
             onGoToNext={handleGoToNext}
+            onAskAi={handleAskAi}
           />
         </section>
       </div>
