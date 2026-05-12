@@ -13,6 +13,9 @@ import { s4Ch09Partition } from "./s4/02-partition.js";
 import { s4Ch09GroupBy } from "./s4/03-group-by.js";
 import { s4Ch09Scan } from "./s4/04-scan.js";
 import { s4Ch09PipelineCapstone } from "./s4/05-pipeline-capstone.js";
+import { s5Ch09BuildLeaderboard } from "./s5/01-build-leaderboard.js";
+import { s5Ch09PipeReports } from "./s5/02-pipe-reports.js";
+import { s5Ch09MonthlySalesReportCapstone } from "./s5/03-monthly-sales-report-capstone.js";
 
 export const ch09HigherOrder: Assignment[] = [
   s3Ch09DoubleAll,
@@ -28,4 +31,7 @@ export const ch09HigherOrder: Assignment[] = [
   s4Ch09GroupBy,
   s4Ch09Scan,
   s4Ch09PipelineCapstone,
+  s5Ch09BuildLeaderboard,
+  s5Ch09PipeReports,
+  s5Ch09MonthlySalesReportCapstone,
 ];
