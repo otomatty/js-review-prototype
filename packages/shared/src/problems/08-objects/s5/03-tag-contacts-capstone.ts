@@ -237,11 +237,15 @@ function findByTag(state, tag) {
       })()`,
     },
     {
-      name: "tagContact: 同じ tag を 2 回追加しても 1 つだけ (重複排除)",
+      name: "tagContact: 同じ tag を 2 回追加しても 1 つだけ (重複排除) かつ 重複時でも新しい state インスタンスを返す",
       code: `(() => {
         const s0 = { nextId: 2, contacts: [{ id: 1, name: "A", email: "a", tags: ["friend"] }] };
         const s1 = tagContact(s0, 1, "friend");
-        return s1.contacts[0].tags.length === 1 && s1.contacts[0].tags[0] === "friend";
+        return s1 !== s0
+          && s1.contacts !== s0.contacts
+          && s1.contacts[0] === s0.contacts[0]
+          && s1.contacts[0].tags.length === 1
+          && s1.contacts[0].tags[0] === "friend";
       })()`,
     },
     {
