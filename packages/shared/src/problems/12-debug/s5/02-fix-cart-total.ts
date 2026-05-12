@@ -170,6 +170,10 @@ function calcTotal(cart) {
       code: `calcTotal({ items: [{ productId: "A", name: "A", price: 1000, quantity: 1 }], discountPercent: 25 }) === 825`,
     },
     {
+      name: "calcTotal: 小数第3位を四捨五入して 2 桁で返す",
+      code: `calcTotal({ items: [{ productId: "A", name: "A", price: 1, quantity: 1 }], discountPercent: 33 }) === 0.74`,
+    },
+    {
       name: "calcTotal: 空カートは 0",
       code: `calcTotal({ items: [], discountPercent: 0 }) === 0`,
     },
