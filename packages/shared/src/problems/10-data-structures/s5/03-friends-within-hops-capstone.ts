@@ -316,7 +316,7 @@ friendsWithinHops([{ from: "u1", to: "u2" }], "u1", 0);          // → []
   return result.sort((a, b) => a.hop - b.hop || a.user.localeCompare(b.user));
 }
 `,
-      description: "隣接リストを Object + 配列で組んでおり Map / Set を使っていない (AST required 違反)。 さらに visited を持たないため同じユーザーが複数回 result に積まれ、 サイクルでは無限ループにもなりうる (テスト失敗)",
+      description: "隣接リストを Object + 配列で組んでおり Map / Set を使っていない (AST required 違反)。 さらに visited を持たないため、 サイクルや複数経路で 同じユーザーを何度も展開して result に重複したエントリを積んでしまう (`hop >= maxHops` の打ち切りはあるので無限ループにはならないが、 重複混入と順序の乱れでテスト失敗)",
     },
     {
       code: `function friendsWithinHops(follows, startUser, maxHops) {
