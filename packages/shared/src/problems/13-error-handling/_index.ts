@@ -9,6 +9,9 @@ import { s4Ch13ClassifyError } from "./s4/02-classify-error.js";
 import { s4Ch13RetryWithFallback } from "./s4/03-retry-with-fallback.js";
 import { s4Ch13CleanupWithFinally } from "./s4/04-cleanup-with-finally.js";
 import { s4Ch13SafeRunnerCapstone } from "./s4/05-safe-runner-capstone.js";
+import { s5Ch13ChainResult } from "./s5/01-chain-result.js";
+import { s5Ch13ValidateUserResult } from "./s5/02-validate-user-result.js";
+import { s5Ch13TryAllCapstone } from "./s5/03-try-all-capstone.js";
 
 export const ch13ErrorHandling: Assignment[] = [
   s3Ch13SafeParseJson,
@@ -20,4 +23,7 @@ export const ch13ErrorHandling: Assignment[] = [
   s4Ch13RetryWithFallback,
   s4Ch13CleanupWithFinally,
   s4Ch13SafeRunnerCapstone,
+  s5Ch13ChainResult,
+  s5Ch13ValidateUserResult,
+  s5Ch13TryAllCapstone,
 ];
