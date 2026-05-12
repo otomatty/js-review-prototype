@@ -90,8 +90,11 @@ mergeIntervals([[1, 10], [2, 3]]);
     {
       name: "単一区間はそのまま (新しい配列として)",
       code: `(() => {
-        const result = mergeIntervals([[1, 5]]);
-        return JSON.stringify(result) === JSON.stringify([[1, 5]]);
+        const input = [[1, 5]];
+        const result = mergeIntervals(input);
+        return result !== input
+          && result[0] !== input[0]
+          && JSON.stringify(result) === JSON.stringify([[1, 5]]);
       })()`,
     },
     {

@@ -129,6 +129,16 @@ function calcTotal(cart) {
       })()`,
     },
     {
+      name: "addItem: 入力 item を参照共有せずコピーして保持する",
+      code: `(() => {
+        const cart = { items: [], discountPercent: 0 };
+        const item = { productId: "A", name: "A", price: 100, quantity: 1 };
+        addItem(cart, item);
+        item.quantity = 99;
+        return cart.items[0].quantity === 1 && cart.items[0] !== item;
+      })()`,
+    },
+    {
       name: "applyDiscount: discountPercent をセットして cart を返す",
       code: `(() => {
         const cart = { items: [], discountPercent: 0 };
