@@ -157,6 +157,15 @@ function resolvePostAuthors(posts, users) {
       })()`,
     },
     {
+      name: "resolvePostAuthors: 元の users 配列を破壊しない",
+      code: `(() => {
+        const users = [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }];
+        const before = JSON.stringify(users);
+        resolvePostAuthors([{ id: 10, title: "Hello", authorId: 1 }], users);
+        return JSON.stringify(users) === before;
+      })()`,
+    },
+    {
       name: "resolvePostAuthors: 元の post オブジェクトを破壊しない (author を直接生やさない)",
       code: `(() => {
         const post = { id: 1, title: "A", authorId: 1 };

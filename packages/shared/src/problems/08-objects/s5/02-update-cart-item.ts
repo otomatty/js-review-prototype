@@ -69,7 +69,7 @@ updateCartItem(cart, 999, 1);
   3. \`item.id !== id\` の場合は **\`item\` をそのまま** \`newItems.push(item)\` (構造共有)。
   4. \`item.id === id\` の場合は \`newQty = item.qty + delta\` を計算し、 \`newQty > 0\` なら \`{ ...item, qty: newQty }\` を push。 \`newQty <= 0\` なら **何も push しない** (除外)。
   5. 最後に \`return { ...cart, items: newItems }\`。
-- カート全体も items 配列も **常に新しいインスタンスを返す** こと。 該当 id が無い場合に \`return cart\` してしまうと、 呼び出し側が 「変わった or 変わらない」 を === で判定できなくなり、 状態管理のセオリーから外れます。
+- カート全体も items 配列も **常に新しいインスタンスを返す** こと。 該当 id が無い場合に \`return cart\` してしまうと、 「該当無しでも別インスタンス」 のテストが落ちます。 Redux/React の reducer に倣えば 「未変更なら元の参照を返す」 のが一般的ですが、 この課題では返却規約を単純化するため あえて 「常に新インスタンス」 に統一しています。
 - 影響を受けないアイテムは新オブジェクトを作らない (\`{ ...item }\` を全件にかけない)。 全件コピーすると、 React 等で 「全部変わった」 と誤検知して再レンダリングが多発します。
 `,
   starterCode: `function updateCartItem(cart, id, delta) {

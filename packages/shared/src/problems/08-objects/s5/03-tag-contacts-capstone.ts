@@ -32,7 +32,7 @@ const state = {
 
 ### 実装する 4 関数
 
-- \`addContact(state, contact)\` — \`contact = { name, email, tags? }\` を受け取り、 \`state.nextId\` を新しい \`id\` として採番、 \`tags\` が無ければ \`[]\` を補い、 \`contacts\` の末尾に追加した **新しい state** を返す。 戻り値の \`nextId\` は \`+1\` 進める。
+- \`addContact(state, contact)\` — \`contact = { name, email, tags? }\` を受け取り、 \`state.nextId\` を新しい \`id\` として採番、 \`tags\` は **入力配列をそのまま使わず スプレッドでコピーした新配列** にする (省略時は \`[]\`)、 \`contacts\` の末尾に追加した **新しい state** を返す。 戻り値の \`nextId\` は \`+1\` 進める。 (入力 \`contact.tags\` を後から書き換えても state に波及しないように)
 - \`removeContact(state, id)\` — 指定 \`id\` の contact を除外した新しい state を返す。 該当無しのときは contacts の中身は同じ。 \`nextId\` は変えない。 戻り値は **常に元と別インスタンス**。
 - \`tagContact(state, id, tag)\` — 指定 \`id\` の contact の \`tags\` 配列に \`tag\` を **重複しないよう** 追加した新しい state を返す。 既に同じ tag があれば contacts は内容変わらず。 戻り値は **常に元と別インスタンス**。 \`nextId\` は変えない。
 - \`findByTag(state, tag)\` — 指定 \`tag\` を **\`tags\` 配列に含む** contact だけを集めた **配列** を返す (state は変えない)。 該当無しなら空配列。
@@ -69,7 +69,7 @@ s = removeContact(s, 1);
 
 - これは S5 卒業課題です。 S5 全体のテーマ — 「**役割の異なる純粋関数を協調させる**」 「**ネストしたオブジェクトの非破壊更新**」 「**主従関係 (id) の解決**」 「**設計判断を伴う関数分割**」 — を 1 ドメインにまとめた統合演習。
 - 推奨フロー (関数ごと):
-  - **addContact**: \`const id = state.nextId; const newContact = { ...contact, id, tags: contact.tags ?? [] }; return { ...state, nextId: id + 1, contacts: [...state.contacts, newContact] };\`
+  - **addContact**: \`const id = state.nextId; const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] }; return { ...state, nextId: id + 1, contacts: [...state.contacts, newContact] };\`
   - **removeContact**: \`const newContacts = []; for...of で id 違いだけ push; return { ...state, contacts: newContacts };\`
   - **tagContact**: \`const newContacts = []; for...of で 該当 id 以外はそのまま push。 該当 id は c.tags.includes(tag) ならそのまま push、 そうでなければ { ...c, tags: [...c.tags, tag] } を push。 最後に { ...state, contacts: newContacts } を return。\`
   - **findByTag**: \`const result = []; for...of で contact.tags.includes(tag) を満たすものだけ push。 result を return。 state は触らない。\`
@@ -79,7 +79,7 @@ s = removeContact(s, 1);
 `,
   starterCode: `function addContact(state, contact) {
   // 1) const id = state.nextId; を採番する。
-  // 2) const newContact = { ...contact, id, tags: contact.tags ?? [] };
+  // 2) const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };
   // 3) return { ...state, nextId: id + 1, contacts: [...state.contacts, newContact] };
 }
 
@@ -162,6 +162,18 @@ function findByTag(state, tag) {
         const input = { name: "A", email: "a" };
         addContact({ nextId: 1, contacts: [] }, input);
         return !Object.hasOwn(input, "id") && !Object.hasOwn(input, "tags");
+      })()`,
+    },
+    {
+      name: "addContact: 入力 contact.tags 配列を そのまま参照共有しない (後から push されても state に波及しない)",
+      code: `(() => {
+        const tags = ["work"];
+        const input = { name: "A", email: "a@x.com", tags };
+        const s1 = addContact({ nextId: 1, contacts: [] }, input);
+        tags.push("later");
+        return s1.contacts[0].tags.length === 1
+          && s1.contacts[0].tags[0] === "work"
+          && s1.contacts[0].tags !== tags;
       })()`,
     },
     {
@@ -324,9 +336,9 @@ function findByTag(state, tag) {
   ],
   hints: [
     "4 関数とも 「state を読み、 新しい state を返す」 純粋関数として書きます。 state そのものを書き換えたり、 contacts 配列を push で増やしたり、 contact の tags を直接 push で増やしたりはしません。",
-    "addContact は 一番シンプルです。 const id = state.nextId; を採番し、 newContact = { ...contact, id, tags: contact.tags ?? [] }; を作って、 contacts: [...state.contacts, newContact] と nextId: id + 1 を持つ新しい state を返すだけ。",
+    "addContact は 一番シンプルです。 const id = state.nextId; を採番し、 newContact = { ...contact, id, tags: [...(contact.tags ?? [])] }; を作って、 contacts: [...state.contacts, newContact] と nextId: id + 1 を持つ新しい state を返すだけ。",
     "tagContact は 2 段階のスプレッドが必要です。 1) 該当 contact を { ...c, tags: [...c.tags, tag] } で新オブジェクトに置き換え、 2) その新オブジェクトを含む newContacts 配列を作り、 3) { ...state, contacts: newContacts } を返します。 includes(tag) が true なら 2 段スプレッドはせず 元の c をそのまま push して構造共有します。",
-    "解答例:\n```js\nfunction addContact(state, contact) {\n  const id = state.nextId;\n  const newContact = { ...contact, id, tags: contact.tags ?? [] };\n  return {\n    ...state,\n    nextId: id + 1,\n    contacts: [...state.contacts, newContact],\n  };\n}\n\nfunction removeContact(state, id) {\n  const newContacts = [];\n  for (const c of state.contacts) {\n    if (c.id !== id) {\n      newContacts.push(c);\n    }\n  }\n  return { ...state, contacts: newContacts };\n}\n\nfunction tagContact(state, id, tag) {\n  const newContacts = [];\n  for (const c of state.contacts) {\n    if (c.id !== id || c.tags.includes(tag)) {\n      newContacts.push(c);\n    } else {\n      newContacts.push({ ...c, tags: [...c.tags, tag] });\n    }\n  }\n  return { ...state, contacts: newContacts };\n}\n\nfunction findByTag(state, tag) {\n  const result = [];\n  for (const c of state.contacts) {\n    if (c.tags.includes(tag)) {\n      result.push(c);\n    }\n  }\n  return result;\n}\n```",
+    "解答例:\n```js\nfunction addContact(state, contact) {\n  const id = state.nextId;\n  const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };\n  return {\n    ...state,\n    nextId: id + 1,\n    contacts: [...state.contacts, newContact],\n  };\n}\n\nfunction removeContact(state, id) {\n  const newContacts = [];\n  for (const c of state.contacts) {\n    if (c.id !== id) {\n      newContacts.push(c);\n    }\n  }\n  return { ...state, contacts: newContacts };\n}\n\nfunction tagContact(state, id, tag) {\n  const newContacts = [];\n  for (const c of state.contacts) {\n    if (c.id !== id || c.tags.includes(tag)) {\n      newContacts.push(c);\n    } else {\n      newContacts.push({ ...c, tags: [...c.tags, tag] });\n    }\n  }\n  return { ...state, contacts: newContacts };\n}\n\nfunction findByTag(state, tag) {\n  const result = [];\n  for (const c of state.contacts) {\n    if (c.tags.includes(tag)) {\n      result.push(c);\n    }\n  }\n  return result;\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -351,7 +363,7 @@ function findByTag(state, tag) {
   },
   solution: `function addContact(state, contact) {
   const id = state.nextId;
-  const newContact = { ...contact, id, tags: contact.tags ?? [] };
+  const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };
   return {
     ...state,
     nextId: id + 1,
@@ -438,7 +450,7 @@ function findByTag(state, tag) {
   return {
     ...state,
     nextId: id + 1,
-    contacts: [...state.contacts, { ...contact, id, tags: contact.tags ?? [] }],
+    contacts: [...state.contacts, { ...contact, id, tags: [...(contact.tags ?? [])] }],
   };
 }
 
@@ -464,7 +476,7 @@ function findByTag(state, tag) {
     {
       code: `function addContact(state, contact) {
   const id = state.nextId;
-  const newContact = { ...contact, id, tags: contact.tags ?? [] };
+  const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };
   return {
     ...state,
     nextId: id + 1,
@@ -509,7 +521,7 @@ function findByTag(state, tag) {
     {
       code: `function addContact(state, contact) {
   const id = state.nextId;
-  const newContact = { ...contact, id, tags: contact.tags ?? [] };
+  const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };
   return {
     ...state,
     nextId: id + 1,
@@ -554,7 +566,7 @@ function findByTag(state, tag) {
     {
       code: `function addContact(state, contact) {
   const id = state.nextId;
-  const newContact = { ...contact, id, tags: contact.tags ?? [] };
+  const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };
   return {
     ...state,
     nextId: id + 1,
