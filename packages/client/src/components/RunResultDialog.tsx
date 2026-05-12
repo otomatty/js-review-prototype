@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
+  Bot,
   ChevronDown,
   Circle,
   CircleAlert,
@@ -57,6 +58,11 @@ interface RunResultDialogProps {
    */
   nextAssignment: Assignment | null;
   onGoToNext: () => void;
+  /**
+   * 不正解時に表示する「AI に質問する」ボタンのハンドラ。
+   * 親 (`PracticePage`) がチャット画面への遷移と採点コンテキストの引き渡しを行う。
+   */
+  onAskAi?: () => void;
 }
 
 const STEP_DELAY_MS = 380;
@@ -72,6 +78,7 @@ export function RunResultDialog({
   ast,
   nextAssignment,
   onGoToNext,
+  onAskAi,
 }: RunResultDialogProps) {
   const [phase, setPhase] = useState<Phase>("lint");
   const [revealedTests, setRevealedTests] = useState(0);
@@ -203,6 +210,20 @@ export function RunResultDialog({
           >
             {running ? "実行中..." : "閉じる"}
           </Button>
+          {phase === "done" &&
+          result &&
+          !result.evaluation.cleared &&
+          onAskAi ? (
+            <Button
+              variant="default"
+              onClick={onAskAi}
+              className="gap-2"
+              title="この問題と提出コードについて AI に質問する"
+            >
+              <Bot className="size-4 shrink-0" />
+              AI に質問する
+            </Button>
+          ) : null}
           {phase === "done" && result?.evaluation.cleared && nextAssignment ? (
             <Button
               onClick={onGoToNext}

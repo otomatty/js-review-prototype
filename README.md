@@ -58,11 +58,26 @@ cd packages/server
 bun run dev
 ```
 
-→ http://localhost:3001 · エンドポイントは **`POST /api/run-tests`** · **`GET /api/healthz`**
+→ http://localhost:3001 · エンドポイントは **`POST /api/run-tests`** · **`POST /api/chat`** · **`GET /api/healthz`**
 
 サーバは `node --no-node-snapshot --import tsx` で起動します（Bun ではなく）。isolated-vm が Node 依存のため。Node.js 20 以降では `--no-node-snapshot` が必須です。
 
 フロントは既定で同一オリジン `/api/run-tests` を叩くため、`VITE_SERVER_URL` は未設定で問題ありません。
+
+### AI 質問機能を使うとき
+
+不正解時にチャット画面で AI が解説する機能は Anthropic Claude API を使います。利用するには API キーを環境変数で渡してください。
+
+```bash
+# ローカル: server プロセスに渡す
+export ANTHROPIC_API_KEY=sk-ant-...
+cd packages/server && bun run dev
+```
+
+- 既定モデルは `claude-sonnet-4-6`。変更したい場合は `ANTHROPIC_MODEL` を指定。
+- 本番 (Vercel) では Edge Function (`/api/chat`) が同じ環境変数を参照するので、 Vercel ダッシュボードの Environment Variables に `ANTHROPIC_API_KEY` を登録してください。
+- API キーはサーバ側でのみ参照し、クライアントには露出しません。
+- 未設定の場合、チャット画面で「ANTHROPIC_API_KEY が設定されていません」というエラーバナーが表示されます。
 
 ### B. Vercel CLI（本番に近い Edge + QuickJS）
 
