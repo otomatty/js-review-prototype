@@ -223,25 +223,46 @@ function buildLeaderboard(players, n) {
       })()`,
     },
     {
-      name: "buildLeaderboard: onlyActive / toRanking / takeTop を合成して呼ぶ (二重実装の防止)",
+      name: "buildLeaderboard: onlyActive → toRanking → takeTop の順に戻り値を渡しながら合成する (二重実装の防止)",
       code: `(() => {
         const _onlyActive = globalThis.onlyActive;
         const _toRanking = globalThis.toRanking;
         const _takeTop = globalThis.takeTop;
-        let c1 = 0, c2 = 0, c3 = 0;
-        globalThis.onlyActive = (...args) => { c1 += 1; return _onlyActive(...args); };
-        globalThis.toRanking = (...args) => { c2 += 1; return _toRanking(...args); };
-        globalThis.takeTop = (...args) => { c3 += 1; return _takeTop(...args); };
+        const _filter = Array.prototype.filter;
+        const _map = Array.prototype.map;
+        const _sort = Array.prototype.sort;
+        const _slice = Array.prototype.slice;
+        const stage1 = [{ name: "S1", score: 10, isActive: true }];
+        const stage2 = [{ name: "S2", score: 20 }];
+        const finalResult = [{ name: "S3", score: 30 }];
+        const calls = [];
+        globalThis.onlyActive = (_players) => { calls.push("onlyActive"); return stage1; };
+        globalThis.toRanking = (players) => {
+          calls.push(players === stage1 ? "toRanking" : "toRanking:bad-arg");
+          return stage2;
+        };
+        globalThis.takeTop = (rankings, n) => {
+          calls.push(rankings === stage2 && n === 1 ? "takeTop" : "takeTop:bad-arg");
+          return finalResult;
+        };
+        Array.prototype.filter = function () { throw new Error("buildLeaderboard で filter を直接呼ばないこと"); };
+        Array.prototype.map = function () { throw new Error("buildLeaderboard で map を直接呼ばないこと"); };
+        Array.prototype.sort = function () { throw new Error("buildLeaderboard で sort を直接呼ばないこと"); };
+        Array.prototype.slice = function () { throw new Error("buildLeaderboard で slice を直接呼ばないこと"); };
         try {
-          buildLeaderboard([
+          const out = buildLeaderboard([
             { name: "A", score: 1, isActive: true },
             { name: "B", score: 2, isActive: false },
           ], 1);
-          return c1 > 0 && c2 > 0 && c3 > 0;
+          return out === finalResult && calls.join(">") === "onlyActive>toRanking>takeTop";
         } finally {
           globalThis.onlyActive = _onlyActive;
           globalThis.toRanking = _toRanking;
           globalThis.takeTop = _takeTop;
+          Array.prototype.filter = _filter;
+          Array.prototype.map = _map;
+          Array.prototype.sort = _sort;
+          Array.prototype.slice = _slice;
         }
       })()`,
     },
@@ -402,7 +423,33 @@ function buildLeaderboard(players, n) {
     .slice(0, n);
 }
 `,
-      description: "buildLeaderboard の中で onlyActive / toRanking / takeTop を呼ばずに filter / map / sort / slice を直接書いている。 ヘルパー関数を作った意味が消え、 ロジックが二重実装になっている (テスト失敗: 「onlyActive / toRanking / takeTop を合成して呼ぶ」 のスパイ検証で c1 / c2 / c3 が 0 のまま)",
+      description: "buildLeaderboard の中で onlyActive / toRanking / takeTop を呼ばずに filter / map / sort / slice を直接書いている。 ヘルパー関数を作った意味が消え、 ロジックが二重実装になっている (合成検証テストで Array.prototype.filter のスタブが投げる例外で失敗)",
+    },
+    {
+      code: `function onlyActive(players) {
+  return players.filter((p) => p.isActive);
+}
+
+function toRanking(players) {
+  return players.map((p) => ({ name: p.name, score: p.score }));
+}
+
+function takeTop(rankings, n) {
+  return [...rankings].sort((a, b) => b.score - a.score).slice(0, n);
+}
+
+function buildLeaderboard(players, n) {
+  onlyActive(players);
+  toRanking(players);
+  takeTop(players, n);
+  return [...players]
+    .filter((p) => p.isActive)
+    .map((p) => ({ name: p.name, score: p.score }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, n);
+}
+`,
+      description: "ヘルパー関数を呼びはするが 戻り値を 使わず破棄して、 本処理は buildLeaderboard 内に inline で書いている (= 「呼ぶだけ」 アリバイ実装)。 合成検証テストでは onlyActive のスタブが返す stage1 を toRanking に渡さないので呼び出し順序が成立せず、 さらに直接 filter / map / sort / slice を使うのでスタブが例外を投げて失敗する",
     },
   ],
   mdnSections: [
