@@ -101,8 +101,8 @@ twoSumMap([], 0);               // → null
       code: `twoSumMap([5], 10) === null`,
     },
     {
-      name: "大きな配列でも O(n) で完走する (10000 要素、 末尾に解)",
-      code: `(() => { const arr = []; for (let k = 0; k < 9998; k++) { arr.push(k); } arr.push(1000000); arr.push(1000001); const r = twoSumMap(arr, 2000001); return r[0] === 9998 && r[1] === 9999; })()`,
+      name: "大きな配列でも O(n) で完走する (100000 要素、 末尾に解) — 二重ループ O(n²) はタイムアウトで弾く",
+      code: `(() => { const N = 100000; const arr = []; for (let k = 0; k < N - 2; k++) { arr.push(k); } arr.push(1000000); arr.push(1000001); const r = twoSumMap(arr, 2000001); return r[0] === N - 2 && r[1] === N - 1; })()`,
     },
   ],
   hints: [
@@ -116,6 +116,7 @@ twoSumMap([], 0);               // → null
         { kind: "node", nodeType: "NewExpression", label: "new Map() でデータ構造を用意する" },
         { kind: "method", name: "set", label: "Map.set で 「値 → index」 を記録する" },
         { kind: "method", name: "has", label: "Map.has で過去に見た値かを判定する" },
+        { kind: "method", name: "get", label: "Map.get で対応する index を取得する" },
         { kind: "node", nodeType: "ForStatement", label: "for で 1 周だけ走査する" },
         { kind: "node", nodeType: "IfStatement", label: "if で 「相方が見つかった」 を判定する" },
         { kind: "node", nodeType: "ReturnStatement", label: "return で [i, j] または null を返す" },
@@ -123,10 +124,11 @@ twoSumMap([], 0);               // → null
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "loose-eq", label: "== / != を使わない" },
-        { kind: "method", name: "indexOf", label: "indexOf による線形探索を使わない (計算量が落ちる)" },
+        { kind: "method", name: "indexOf", label: "indexOf による線形探索を使わない (計算量が増大し、 Map を使う利点がなくなるため)" },
         { kind: "method", name: "map", label: "S5-Ch06 では .map を使わない (Ch09 で導入)" },
         { kind: "method", name: "filter", label: "S5-Ch06 では .filter を使わない (Ch09 で導入)" },
         { kind: "method", name: "reduce", label: "S5-Ch06 では .reduce を使わない (Ch09 で導入)" },
+        { kind: "method", name: "sort", label: "S5-Ch06 では .sort を使わない (O(n) の設計を練習するため)" },
       ],
     },
   },
