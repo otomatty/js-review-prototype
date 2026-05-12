@@ -235,6 +235,7 @@ friendsWithinHops([{ from: "u1", to: "u2" }], "u1", 0);          // → []
       required: [
         { kind: "node", nodeType: "NewExpression", label: "new Map() / new Set() で隣接リストと visited を作る" },
         { kind: "method", name: "set", label: "Map#set で隣接リストや距離を記録する" },
+        { kind: "method", name: "add", label: "Set#add で隣接集合や訪問済み集合を更新する" },
         { kind: "method", name: "has", label: "has で 「すでに登録/訪問済みか」 を判定する" },
         { kind: "method", name: "get", label: "Map#get で隣接ユーザー集合を取り出す" },
         { kind: "method", name: "sort", label: "sort で hop 昇順 + user 昇順に並べる" },
