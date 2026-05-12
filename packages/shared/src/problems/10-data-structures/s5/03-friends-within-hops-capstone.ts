@@ -82,6 +82,7 @@ friendsWithinHops([{ from: "u1", to: "u2" }], "u1", 0);          // → []
 - **Map と Set の役割分担**: 隣接リスト本体 (Map)、 隣接ユーザー集合 (Set)、 訪問済み判定 (Set)、 距離記録 (Map) と、 同じ問題の中で **4 つの用途で使い分ける**
 - **BFS の定型**: \`visited\` で再訪を防ぎ、 キューに \`{ ノード, 距離 }\` を入れて FIFO で取り出す
 - AST で **\`new Map()\` / \`new Set()\` / \`Map#set\` / \`has\` / \`get\` / \`sort\` / \`while\` の使用** を必須にしています。 隣接リストを作らない実装や、 再帰だけで書いた DFS では通りません。
+- **(補足) パフォーマンス**: ここでは可読性を優先して \`queue.shift()\` を使っていますが、 \`shift()\` は配列要素を 1 つずつ前にずらすため **O(N)** のコストがかかり、 頂点数が数千以上の大きなグラフでは BFS 全体が O(V²) に膨らみます。 大規模グラフでは \`let head = 0; while (head < queue.length) { const next = queue[head++]; ... }\` のように **読み取り位置をポインタで進める** 形にすると \`shift()\` の O(N) を避けられます。 計算量の本格的な話は Ch11 (アルゴリズム) で扱います。
 `,
   starterCode: `function friendsWithinHops(follows, startUser, maxHops) {
   // maxHops <= 0 のときは早期 return []
