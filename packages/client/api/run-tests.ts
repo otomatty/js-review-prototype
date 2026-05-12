@@ -1,13 +1,11 @@
 /**
- * Vercel Edge Function: POST /api/run-tests
+ * Vercel Serverless Function: POST /api/run-tests
  */
 
 import type { RunTestsResponse } from "@jsreview/shared/types";
 import { validateRunTestsBody } from "@jsreview/shared/util/validate-run-tests-request";
 
 import { getQuickJSModule, QuickJsRunner } from "./_lib/quickjs-runner";
-
-export const runtime = "edge";
 
 const MEMORY_LIMIT_MB = Number(process.env.ISOLATE_MEMORY_LIMIT ?? 32);
 

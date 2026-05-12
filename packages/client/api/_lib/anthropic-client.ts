@@ -1,5 +1,5 @@
 /**
- * Anthropic SDK のラッパー (Vercel Edge ランタイム用)。
+ * Anthropic SDK のラッパー (Vercel Serverless ランタイム用)。
  */
 
 import Anthropic from "@anthropic-ai/sdk";

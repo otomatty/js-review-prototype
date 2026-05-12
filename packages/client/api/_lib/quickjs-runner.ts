@@ -25,7 +25,7 @@ const PER_TEST_WALL_TIMEOUT_MS =
     ? rawWallTimeoutMs
     : 3000;
 
-/** WASM モジュールは Edge のコールドスタートごとに初回だけロードする */
+/** WASM モジュールはコールドスタートごとに初回だけロードする */
 export const getQuickJSModule = memoizePromiseFactory(() =>
   newQuickJSWASMModuleFromVariant(
     import("@jitl/quickjs-singlefile-cjs-release-sync"),

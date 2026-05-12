@@ -1,8 +1,6 @@
 /**
- * Vercel Edge Function: GET /api/healthz
+ * Vercel Serverless Function: GET /api/healthz
  */
-
-export const runtime = "edge";
 
 export default function handler(_request: Request): Response {
   return Response.json({

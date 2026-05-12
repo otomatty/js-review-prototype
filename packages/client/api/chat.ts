@@ -1,5 +1,5 @@
 /**
- * Vercel Edge Function: POST /api/chat
+ * Vercel Serverless Function: POST /api/chat
  *
  * Anthropic Claude にメッセージ列を投げ、SSE で逐次イベントを返す。
  * イベント形式は `ChatStreamEvent` (text / done / error) を JSON 直列化したもの。
@@ -10,8 +10,6 @@ import type { ChatStreamEvent } from "@jsreview/shared/ai/types";
 import { validateChatRequest } from "@jsreview/shared/ai/validate-chat-request";
 
 import { MissingApiKeyError, streamChat } from "./_lib/anthropic-client";
-
-export const runtime = "edge";
 
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== "POST") {
@@ -47,7 +45,7 @@ export default async function handler(request: Request): Promise<Response> {
       const upstreamAbort = new AbortController();
       const onClientAbort = () => upstreamAbort.abort();
       request.signal.addEventListener("abort", onClientAbort);
-      // 上流ハング時に Edge ストリームを確実に閉じる保険
+      // 上流ハング時にレスポンスストリームを確実に閉じる保険
       const timeoutId = setTimeout(
         () => upstreamAbort.abort(),
         SERVER_TIMEOUT_MS,

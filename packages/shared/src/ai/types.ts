@@ -1,7 +1,7 @@
 /**
  * AI チャット機能の共有型定義。
  *
- * このモジュールはランタイム依存を持たず、Vercel Edge API ハンドラと
+ * このモジュールはランタイム依存を持たず、Vercel Serverless API ハンドラと
  * クライアントの両方から import される。Anthropic SDK へは一切依存しない。
  */
 
