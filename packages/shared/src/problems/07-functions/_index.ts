@@ -29,6 +29,9 @@ import { s4Ch07Memoize } from "./s4/02-memoize.js";
 import { s4Ch07Pipe } from "./s4/03-pipe.js";
 import { s4Ch07Curry2 } from "./s4/04-curry2.js";
 import { s4Ch07ValidatorCapstone } from "./s4/05-validator-capstone.js";
+import { s5Ch07DecomposeStats } from "./s5/01-decompose-stats.js";
+import { s5Ch07RunSteps } from "./s5/02-run-steps.js";
+import { s5Ch07MakeStoreCapstone } from "./s5/03-make-store-capstone.js";
 
 export const ch07Functions: Assignment[] = [
   s2Ch07FunctionGreet,
@@ -60,4 +63,7 @@ export const ch07Functions: Assignment[] = [
   s4Ch07Pipe,
   s4Ch07Curry2,
   s4Ch07ValidatorCapstone,
+  s5Ch07DecomposeStats,
+  s5Ch07RunSteps,
+  s5Ch07MakeStoreCapstone,
 ];
