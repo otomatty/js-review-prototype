@@ -139,6 +139,14 @@ function calcTotal(cart) {
       })()`,
     },
     {
+      name: "addItem: cart を返す (チェーン可能契約)",
+      code: `(() => {
+        const cart = { items: [], discountPercent: 0 };
+        const ret = addItem(cart, { productId: "A", name: "A", price: 100, quantity: 1 });
+        return ret === cart;
+      })()`,
+    },
+    {
       name: "applyDiscount: discountPercent をセットして cart を返す",
       code: `(() => {
         const cart = { items: [], discountPercent: 0 };
