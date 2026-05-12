@@ -1,7 +1,7 @@
 /**
- * `POST /api/chat` の入力バリデータ (環境共通)。
+ * `POST /api/chat` の入力バリデータ。
  *
- * Node ランタイム (Hono サーバ) と Vercel Edge ランタイムの両方から import される。
+ * Vercel Edge ランタイムの API ハンドラから import される。
  * ランタイム依存を持たない純粋関数なので `@jsreview/shared` に置く。
  *
  * 検証内容:

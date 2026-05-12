@@ -92,7 +92,6 @@ export default tseslint.config(
       "eslint.config.mjs",
       "packages/client/vite.config.ts",
       "packages/client/api/**/*.ts",
-      "packages/server/src/**/*.ts",
     ],
     languageOptions: {
       globals: {

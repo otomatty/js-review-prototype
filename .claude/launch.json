@@ -7,12 +7,6 @@
       "runtimeArgs": ["--filter", "@jsreview/client", "dev"],
       "autoPort": true,
       "port": 5175
-    },
-    {
-      "name": "server",
-      "runtimeExecutable": "bun",
-      "runtimeArgs": ["--filter", "@jsreview/server", "dev"],
-      "port": 3001
     }
   ]
 }

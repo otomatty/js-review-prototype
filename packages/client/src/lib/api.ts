@@ -1,5 +1,5 @@
 /**
- * サーバの POST /run-tests と POST /chat を叩く HTTP クライアント。
+ * Vercel Edge API (`/api/run-tests` と `/api/chat`) を叩く HTTP クライアント。
  */
 import type {
   RunTestsRequest,
@@ -11,7 +11,7 @@ import type {
   ChatStreamEvent,
 } from "@jsreview/shared/ai/types";
 
-/** 空なら同一オリジン (Vercel の `/api/run-tests`)。ローカルでは Vite proxy または `http://localhost:3001` を指定。 */
+/** 空なら同一オリジン (Vercel の `/api/run-tests`)。デプロイ済み URL を別ホストから叩きたい場合に指定する。 */
 const SERVER_URL = (import.meta.env.VITE_SERVER_URL ?? "").replace(/\/+$/, "");
 
 export async function runTests(

@@ -2,7 +2,7 @@
  * 評価回帰テスト用の合算ヘルパ。
  *
  * - クライアント向けの `analyzeAst` / `evaluate` を直接使用 (本番の判定ロジックと同一)
- * - テスト実行は test/runner.ts (Node vm) で代替 (本番は isolated-vm)
+ * - テスト実行は test/runner.ts (Node vm) で代替 (本番は Vercel Edge 上の QuickJS)
  * - Lint は test/lint.ts で同じ `eslint-linter-browserify` を使って計測
  *
  * これにより「solution が全チェック通過するか」「badSolution が必ず1つ以上失敗するか」を、

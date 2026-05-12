@@ -16,7 +16,6 @@
     "packages/client/src/**/*",
     "packages/client/vite.config.ts",
     "packages/client/vite-plugins/**/*.ts",
-    "packages/server/src/**/*",
     "packages/shared/scripts/**/*.ts",
     "packages/shared/src/**/*",
     "packages/shared/test/**/*.ts"
