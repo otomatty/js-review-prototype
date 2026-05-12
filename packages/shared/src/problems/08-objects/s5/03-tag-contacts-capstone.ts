@@ -74,7 +74,7 @@ s = removeContact(s, 1);
   - **tagContact**: \`const newContacts = []; for...of で 該当 id 以外はそのまま push。 該当 id は c.tags.includes(tag) ならそのまま push、 そうでなければ { ...c, tags: [...c.tags, tag] } を push。 最後に { ...state, contacts: newContacts } を return。\`
   - **findByTag**: \`const result = []; for...of で contact.tags.includes(tag) を満たすものだけ push。 result を return。 state は触らない。\`
 - \`tags ?? []\` のように **Nullish 合体演算子** で省略時のデフォルトを書ける (S2 で導入済みの「短く書く」 技法)。
-- 「該当 id が無くても 新しい state を返す」 のは、 呼び出し側が === で 「変わったか」 を判定できるようにするため。 ストア設計のセオリー。
+- 「該当 id が無くても 新しい state を返す」 のは、 この課題で更新関数の返却規約を単純化するため。 Redux/React の reducer 慣行では 「未変更なら元の参照を返して === で変化検知させる」 のが一般的だが、 ここでは学習のブレを無くす目的で あえて 「変更があってもなくても常に新インスタンス」 に統一する。
 - **影響を受けない contact は元の参照のまま** 入れること。 全件を \`{ ...c }\` で複製してしまうと、 React 等で 「全部変わった」 と誤検知されて再レンダリングが起きる。 これも設計判断。
 `,
   starterCode: `function addContact(state, contact) {
