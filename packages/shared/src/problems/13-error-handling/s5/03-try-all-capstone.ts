@@ -48,6 +48,7 @@ attempt(() => 42);                                  // → { ok: true, value: 42
 attempt(() => { throw new Error("boom"); });        // → { ok: false, error: "boom" }
 attempt(() => { throw new TypeError("bad"); });     // → { ok: false, error: "bad" }
 attempt(() => { throw "string-throw"; });           // → { ok: false, error: "string-throw" }  (e.message が無いケース)
+attempt(() => { throw { message: "plain-obj" }; }); // → { ok: false, error: "plain-obj" }     (Error でなくても message があればそれを使う)
 
 // tryAll
 tryAll([
@@ -144,6 +145,10 @@ function loadConfig(sources, fallback) {
     {
       name: "attempt: 文字列 throw は String(e) で error に入る",
       code: `(() => { const r = attempt(() => { throw "string-throw"; }); return r.ok === false && r.error === "string-throw"; })()`,
+    },
+    {
+      name: "attempt: Error でない オブジェクトでも message があれば それを使う",
+      code: `(() => { const r = attempt(() => { throw { message: "from-plain-obj" }; }); return r.ok === false && r.error === "from-plain-obj"; })()`,
     },
     {
       name: "attempt: 戻り値 0 / false / null も成功扱い (例外じゃないので)",
@@ -304,10 +309,10 @@ function loadConfig(sources, fallback) {
     },
   ],
   hints: [
-    "attempt は try { return { ok: true, value: fn() }; } catch (e) { return { ok: false, error: e instanceof Error ? e.message : String(e) }; } のように 1 行ずつ。 e.message が無いケース (文字列を throw されたなど) でも壊れないようにする。",
+    "attempt は try { return { ok: true, value: fn() }; } catch (e) { return { ok: false, error: e?.message ?? String(e) }; } のように 1 行ずつ。 e.message が無いケース (文字列を throw されたなど) でも壊れないようにする。",
     "tryAll は if (fns.length === 0) で空配列を最初に弾き、 for ループで 1 つずつ呼んで ok なら即 return、 最後まで通ったら 最後の Result を return します。 last という変数を更新しながら for で回すのが楽です。",
     "loadConfig は const wrapped = sources.map((fn) => () => attempt(fn)); で 「Result を返す関数の配列」 に変換し、 tryAll(wrapped) で結果を取り、 ok なら value、 そうでなければ fallback を返します。 例外処理を attempt の中に押し込めるのがポイント。",
-    "解答例:\n```js\nfunction attempt(fn) {\n  try {\n    return { ok: true, value: fn() };\n  } catch (e) {\n    return { ok: false, error: e instanceof Error ? e.message : String(e) };\n  }\n}\n\nfunction tryAll(fns) {\n  if (fns.length === 0) {\n    return { ok: false, error: 'no attempts' };\n  }\n  let last = { ok: false, error: 'no attempts' };\n  for (const fn of fns) {\n    last = fn();\n    if (last.ok) {\n      return last;\n    }\n  }\n  return last;\n}\n\nfunction loadConfig(sources, fallback) {\n  const wrapped = sources.map((fn) => () => attempt(fn));\n  const result = tryAll(wrapped);\n  if (result.ok) {\n    return result.value;\n  }\n  return fallback;\n}\n```",
+    "解答例:\n```js\nfunction attempt(fn) {\n  try {\n    return { ok: true, value: fn() };\n  } catch (e) {\n    return { ok: false, error: e?.message ?? String(e) };\n  }\n}\n\nfunction tryAll(fns) {\n  if (fns.length === 0) {\n    return { ok: false, error: 'no attempts' };\n  }\n  let last = { ok: false, error: 'no attempts' };\n  for (const fn of fns) {\n    last = fn();\n    if (last.ok) {\n      return last;\n    }\n  }\n  return last;\n}\n\nfunction loadConfig(sources, fallback) {\n  const wrapped = sources.map((fn) => () => attempt(fn));\n  const result = tryAll(wrapped);\n  if (result.ok) {\n    return result.value;\n  }\n  return fallback;\n}\n```",
   ],
   staticAnalysis: {
     ast: {
@@ -327,15 +332,16 @@ function loadConfig(sources, fallback) {
           nodeType: "ReturnStatement",
           label: "return で結果や fallback を返す",
         },
-        {
-          kind: "node",
-          nodeType: "ForOfStatement",
-          label: "tryAll で各 fn を 順番に呼ぶループを書く (for...of)",
-        },
       ],
       forbidden: [
         { kind: "var", label: "var を使わない" },
         { kind: "loose-eq", label: "== / != を使わない" },
+        {
+          kind: "node",
+          nodeType: "ThrowStatement",
+          label:
+            "throw は使わない (例外を Result に変換するのは attempt の try/catch だけ)",
+        },
       ],
     },
   },
@@ -343,7 +349,7 @@ function loadConfig(sources, fallback) {
   try {
     return { ok: true, value: fn() };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+    return { ok: false, error: e?.message ?? String(e) };
   }
 }
 
@@ -376,7 +382,7 @@ function loadConfig(sources, fallback) {
   try {
     return { ok: true, value: fn() };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+    return { ok: false, error: e?.message ?? String(e) };
   }
 }
 
@@ -440,7 +446,7 @@ function loadConfig(sources, fallback) {
   try {
     return { ok: true, value: fn() };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+    return { ok: false, error: e?.message ?? String(e) };
   }
 }
 
@@ -478,7 +484,7 @@ function loadConfig(sources, fallback) {
   try {
     return { ok: true, value: fn() };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+    return { ok: false, error: e?.message ?? String(e) };
   }
 }
 

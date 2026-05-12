@@ -210,7 +210,7 @@ function validateUser(input) {
       })()`,
     },
     {
-      name: "validateUser: 失敗時に後続のステップを呼ばない (副作用なし)",
+      name: "validateUser: 複数項目が同時に不正でも 最初 (name) のエラーだけを返す",
       code: `(() => {
         const r = validateUser({ name: "", age: "not-a-number", email: 999 });
         return r.ok === false && r.error === "name required";
