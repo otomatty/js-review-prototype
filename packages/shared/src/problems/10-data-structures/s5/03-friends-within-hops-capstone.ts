@@ -113,7 +113,7 @@ friendsWithinHops([{ from: "u1", to: "u2" }], "u1", 0);          // → []
 ], "u1", 2));`,
   tests: [
     {
-      name: "問題文の例: 4 人を 2 ホップ以内で集める (u5 は 3 ホップなので除外)",
+      name: "問題文の例: 3 人を 2 ホップ以内で集める (u5 は 3 ホップなので除外)",
       code: `JSON.stringify(friendsWithinHops([
         { from: "u1", to: "u2" },
         { from: "u1", to: "u3" },
