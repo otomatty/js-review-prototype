@@ -1,9 +1,5 @@
 /**
  * Anthropic SDK のラッパー (Vercel Edge ランタイム用)。
- *
- * Node 版は `packages/server/src/ai/anthropic-client.ts` にあり、ロジックは同じ。
- * デプロイ単位が分かれているため別ファイルで二重持ちしている。
- * 変更時は両方を合わせて修正すること。
  */
 
 import Anthropic from "@anthropic-ai/sdk";

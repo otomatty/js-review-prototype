@@ -178,7 +178,7 @@ export interface StdoutTestCase {
 export interface FunctionTestCase {
   name: string;
   /**
-   * 評価対象のテスト式。 isolated-vm 内で、`code` を読み込んだ後に評価される。
+   * 評価対象のテスト式。 QuickJS ランタイム内で、`code` を読み込んだ後に評価される。
    * 例: 'sum([1,2,3]) === 6'
    *
    * 真値であれば PASS、それ以外は FAIL。例外は `error` として返る。

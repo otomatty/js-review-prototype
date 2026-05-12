@@ -1,5 +1,5 @@
 /**
- * QuickJS-WASM によるテスト実行 (isolated-vm ランナーの移植)。
+ * QuickJS-WASM によるテスト実行。
  */
 
 import {

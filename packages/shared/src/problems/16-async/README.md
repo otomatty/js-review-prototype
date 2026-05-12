@@ -36,5 +36,5 @@
 
 ## 実装上の注意
 
-- 採点ランナー (`packages/server/src/grading/runner.ts`) は `isolated-vm` 上で実行され、 **`setTimeout` などのタイマー API は使えません**。 課題は `Promise.resolve` / `Promise.reject` / 同期的に resolve する `new Promise(...)` のみで構成しています。
+- 採点ランナー (`packages/client/api/_lib/quickjs-runner.ts`) は QuickJS-WASM 上で実行され、 **`setTimeout` などのタイマー API は使えません**。 課題は `Promise.resolve` / `Promise.reject` / 同期的に resolve する `new Promise(...)` のみで構成しています。
 - 関数テスト式は `(async () => await fn(...) === expected)()` の形で Promise を返し、 ランナー側で解決値を真偽判定します (`script.run(..., { promise: true })`)。

@@ -1,8 +1,8 @@
 /**
  * 評価回帰テスト専用の軽量 runner。
  *
- * サーバ本番の runner (`packages/server/src/runner.ts`) は isolated-vm を使うが、
- * ネイティブビルドが重く、CI では Node の `vm` モジュールで十分。
+ * 本番の runner (`packages/client/api/_lib/quickjs-runner.ts`) は QuickJS-WASM を使うが、
+ * CI では Node の `vm` モジュールで十分。
  * 評価式の組み立て方 (entryPoints を `__jsreview_scope__` に集めて `with` で参照可能にする) は
  * 本番 runner と同じシェイプを保つことで、テストカバレッジが本番挙動を反映する。
  *

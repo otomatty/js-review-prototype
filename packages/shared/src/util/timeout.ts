@@ -1,7 +1,7 @@
 /**
  * テスト実行で共有するタイムアウト/Promise ヘルパ。
  *
- * サーバ本番 (`packages/server/src/runner.ts`, isolated-vm) と
+ * 本番 (`packages/client/api/_lib/quickjs-runner.ts`, QuickJS) と
  * 採点回帰テスト (`packages/shared/test/runner.ts`, Node vm) の両方が、
  * テスト式が返した Promise の解決を待ち合わせる必要がある。
  * VM 側の `timeout` オプションは同期実行時間しかカバーしないため、
