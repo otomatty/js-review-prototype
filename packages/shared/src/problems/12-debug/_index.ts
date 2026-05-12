@@ -23,6 +23,9 @@ import { s4Ch12FixBinarySearch } from "./s4/01-fix-binary-search.js";
 import { s4Ch12FixFloatEqual } from "./s4/02-fix-float-equal.js";
 import { s4Ch12FixMergeSorted } from "./s4/03-fix-merge-sorted.js";
 import { s4Ch12FixCounterFactoryCapstone } from "./s4/04-fix-counter-factory-capstone.js";
+import { s5Ch12FixOrderStateMachine } from "./s5/01-fix-order-state-machine.js";
+import { s5Ch12FixCartTotal } from "./s5/02-fix-cart-total.js";
+import { s5Ch12FixMergeIntervalsCapstone } from "./s5/03-fix-merge-intervals-capstone.js";
 
 export const ch12Debug: Assignment[] = [
   s1Ch12LogIntermediate,
@@ -48,4 +51,7 @@ export const ch12Debug: Assignment[] = [
   s4Ch12FixFloatEqual,
   s4Ch12FixMergeSorted,
   s4Ch12FixCounterFactoryCapstone,
+  s5Ch12FixOrderStateMachine,
+  s5Ch12FixCartTotal,
+  s5Ch12FixMergeIntervalsCapstone,
 ];
