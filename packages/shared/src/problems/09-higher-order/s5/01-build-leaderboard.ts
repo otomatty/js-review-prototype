@@ -289,7 +289,7 @@ function buildLeaderboard(players, n) {
   return takeTop(toRanking(onlyActive(players)), n);
 }
 `,
-      description: "takeTop で [...rankings] のコピーを取らずに sort しているため、 toRanking が返した中間配列を経由して元の players 配列の並び順が破壊される可能性がある (SpreadElement が AST required を満たさない / 「並び順を破壊しない」 テストが失敗するケースがある)",
+      description: "takeTop で [...rankings] のコピーを取らずに sort しているため、 引数として受け取った rankings 配列の並び順を破壊してしまう (SpreadElement が AST required を満たさない / 「takeTop: 元の配列の並び順を破壊しない」 テストが失敗する)",
     },
     {
       code: `function onlyActive(players) {
