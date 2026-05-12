@@ -7,6 +7,9 @@ import { s4Ch10Intersection } from "./s4/04-intersection.js";
 import { s4Ch10MostFrequent } from "./s4/05-most-frequent.js";
 import { s4Ch10FirstNonRepeating } from "./s4/06-first-non-repeating.js";
 import { s4Ch10TopSellersCapstone } from "./s4/07-top-sellers-capstone.js";
+import { s5Ch10TagCooccurrence } from "./s5/01-tag-cooccurrence.js";
+import { s5Ch10CategoryTreeAggregate } from "./s5/02-category-tree-aggregate.js";
+import { s5Ch10FriendsWithinHopsCapstone } from "./s5/03-friends-within-hops-capstone.js";
 
 export const ch10DataStructures: Assignment[] = [
   s4Ch10Unique,
@@ -16,4 +19,7 @@ export const ch10DataStructures: Assignment[] = [
   s4Ch10MostFrequent,
   s4Ch10FirstNonRepeating,
   s4Ch10TopSellersCapstone,
+  s5Ch10TagCooccurrence,
+  s5Ch10CategoryTreeAggregate,
+  s5Ch10FriendsWithinHopsCapstone,
 ];
