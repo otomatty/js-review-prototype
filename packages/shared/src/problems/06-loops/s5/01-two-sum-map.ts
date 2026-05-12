@@ -101,8 +101,8 @@ twoSumMap([], 0);               // → null
       code: `twoSumMap([5], 10) === null`,
     },
     {
-      name: "大きな配列でも O(n) で完走する (10000 要素、 末尾に解)",
-      code: `(() => { const arr = []; for (let k = 0; k < 9998; k++) { arr.push(k); } arr.push(1000000); arr.push(1000001); const r = twoSumMap(arr, 2000001); return r[0] === 9998 && r[1] === 9999; })()`,
+      name: "大きな配列でも O(n) で完走する (100000 要素、 末尾に解) — 二重ループ O(n²) はタイムアウトで弾く",
+      code: `(() => { const N = 100000; const arr = []; for (let k = 0; k < N - 2; k++) { arr.push(k); } arr.push(1000000); arr.push(1000001); const r = twoSumMap(arr, 2000001); return r[0] === N - 2 && r[1] === N - 1; })()`,
     },
   ],
   hints: [
