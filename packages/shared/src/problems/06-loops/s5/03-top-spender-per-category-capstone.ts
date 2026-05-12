@@ -152,6 +152,7 @@ result.size;        // → 2
         { kind: "method", name: "filter", label: "S5-Ch06 では .filter を使わない (Ch09 で導入)" },
         { kind: "method", name: "reduce", label: "S5-Ch06 では .reduce を使わない (Ch09 で導入)" },
         { kind: "method", name: "sort", label: "S5-Ch06 では .sort を使わない (ループ + 比較で最大を選ぶ)" },
+        { kind: "method", name: "indexOf", label: "indexOf による線形探索を使わない (計算量が増大するため)" },
       ],
     },
   },
