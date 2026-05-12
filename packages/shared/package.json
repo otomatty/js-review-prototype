@@ -7,7 +7,11 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./types": "./src/types.ts",
+    "./types": {
+      "bun": "./src/types.ts",
+      "node": "./dist/types.js",
+      "default": "./src/types.ts"
+    },
     "./assignments": "./src/assignments.ts",
     "./assignment-helpers": "./src/assignment-helpers.ts",
     "./curriculum/chapters": "./src/curriculum/chapters.ts",
@@ -15,12 +19,29 @@
     "./grading/ast": "./src/grading/ast.ts",
     "./grading/evaluate": "./src/grading/evaluate.ts",
     "./util/timeout": "./src/util/timeout.ts",
-    "./util/validate-run-tests-request": "./src/util/validate-run-tests-request.ts",
-    "./ai/types": "./src/ai/types.ts",
-    "./ai/prompt": "./src/ai/prompt.ts",
-    "./ai/validate-chat-request": "./src/ai/validate-chat-request.ts"
+    "./util/validate-run-tests-request": {
+      "bun": "./src/util/validate-run-tests-request.ts",
+      "node": "./dist/util/validate-run-tests-request.js",
+      "default": "./src/util/validate-run-tests-request.ts"
+    },
+    "./ai/types": {
+      "bun": "./src/ai/types.ts",
+      "node": "./dist/ai/types.js",
+      "default": "./src/ai/types.ts"
+    },
+    "./ai/prompt": {
+      "bun": "./src/ai/prompt.ts",
+      "node": "./dist/ai/prompt.js",
+      "default": "./src/ai/prompt.ts"
+    },
+    "./ai/validate-chat-request": {
+      "bun": "./src/ai/validate-chat-request.ts",
+      "node": "./dist/ai/validate-chat-request.js",
+      "default": "./src/ai/validate-chat-request.ts"
+    }
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "bun test test/problems.spec.ts",
     "check-integrity": "bun run scripts/check-integrity.ts",

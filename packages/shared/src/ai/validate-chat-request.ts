@@ -1,7 +1,7 @@
 /**
  * `POST /api/chat` の入力バリデータ。
  *
- * Vercel Edge ランタイムの API ハンドラから import される。
+ * Vercel Serverless ランタイムの API ハンドラから import される。
  * ランタイム依存を持たない純粋関数なので `@jsreview/shared` に置く。
  *
  * 検証内容:
