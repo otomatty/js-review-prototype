@@ -18,7 +18,7 @@ export const s5Ch09BuildLeaderboard: Assignment = {
 - \`onlyActive(players)\` — \`isActive === true\` のプレイヤーだけ残した **新しい配列** を返す (\`filter\`)
 - \`toRanking(players)\` — 各プレイヤーを \`{ name, score }\` に射影した **新しい配列** を返す (\`map\`)
 - \`takeTop(rankings, n)\` — \`score\` の **降順** に並べて先頭 \`n\` 件を切り出した **新しい配列** を返す (\`sort\` + \`slice\`)
-- \`buildLeaderboard(players, n)\` — 上の 3 関数を **メソッドチェーン (または順に呼び出し)** で組み合わせ、 アクティブな上位 \`n\` 名の \`[{ name, score }, ...]\` を返す
+- \`buildLeaderboard(players, n)\` — 上の 3 関数を **関数の合成 (または順に呼び出し)** で組み合わせ、 アクティブな上位 \`n\` 名の \`[{ name, score }, ...]\` を返す
 
 \`\`\`js
 const players = [
@@ -222,6 +222,29 @@ function buildLeaderboard(players, n) {
         return JSON.stringify(src) === before;
       })()`,
     },
+    {
+      name: "buildLeaderboard: onlyActive / toRanking / takeTop を合成して呼ぶ (二重実装の防止)",
+      code: `(() => {
+        const _onlyActive = globalThis.onlyActive;
+        const _toRanking = globalThis.toRanking;
+        const _takeTop = globalThis.takeTop;
+        let c1 = 0, c2 = 0, c3 = 0;
+        globalThis.onlyActive = (...args) => { c1 += 1; return _onlyActive(...args); };
+        globalThis.toRanking = (...args) => { c2 += 1; return _toRanking(...args); };
+        globalThis.takeTop = (...args) => { c3 += 1; return _takeTop(...args); };
+        try {
+          buildLeaderboard([
+            { name: "A", score: 1, isActive: true },
+            { name: "B", score: 2, isActive: false },
+          ], 1);
+          return c1 > 0 && c2 > 0 && c3 > 0;
+        } finally {
+          globalThis.onlyActive = _onlyActive;
+          globalThis.toRanking = _toRanking;
+          globalThis.takeTop = _takeTop;
+        }
+      })()`,
+    },
   ],
   hints: [
     "onlyActive は players.filter((p) => p.isActive) の 1 行で書けます。 戻り値を return することを忘れずに。",
@@ -357,6 +380,29 @@ function buildLeaderboard(players, n) {
 }
 `,
       description: "takeTop の比較関数を昇順 (a.score - b.score) にしてしまい、 上位 n 件のはずが下位 n 件を返している (テスト失敗: 期待される降順順序にならない)",
+    },
+    {
+      code: `function onlyActive(players) {
+  return players.filter((p) => p.isActive);
+}
+
+function toRanking(players) {
+  return players.map((p) => ({ name: p.name, score: p.score }));
+}
+
+function takeTop(rankings, n) {
+  return [...rankings].sort((a, b) => b.score - a.score).slice(0, n);
+}
+
+function buildLeaderboard(players, n) {
+  return [...players]
+    .filter((p) => p.isActive)
+    .map((p) => ({ name: p.name, score: p.score }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, n);
+}
+`,
+      description: "buildLeaderboard の中で onlyActive / toRanking / takeTop を呼ばずに filter / map / sort / slice を直接書いている。 ヘルパー関数を作った意味が消え、 ロジックが二重実装になっている (テスト失敗: 「onlyActive / toRanking / takeTop を合成して呼ぶ」 のスパイ検証で c1 / c2 / c3 が 0 のまま)",
     },
   ],
   mdnSections: [
