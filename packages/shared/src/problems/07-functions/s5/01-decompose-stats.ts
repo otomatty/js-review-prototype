@@ -181,6 +181,7 @@ function summarize(numbers) {
         { kind: "method", name: "push", label: ".push で入力配列を書き換えない (純粋関数の維持)" },
         { kind: "method", name: "sort", label: ".sort で入力配列を書き換えない (in-place mutation)" },
         { kind: "method", name: "splice", label: ".splice で入力配列を書き換えない (in-place mutation)" },
+        { kind: "method", name: "reverse", label: ".reverse で入力配列を書き換えない (in-place mutation)" },
       ],
     },
   },
