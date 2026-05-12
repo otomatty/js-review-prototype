@@ -5,9 +5,10 @@
  * - `/`                              … ステージ選択 (SelectPage)
  * - `/stages/:stage`                 … ステージ詳細・章セクション (StagePage)
  * - `/problems/:assignmentId`        … 問題演習画面 (PracticePage)
+ * - `/problems/:assignmentId/chat`   … AI 質問チャット画面 (ChatPage)
  * - その他                           … `/` へリダイレクト
  *
- * `progress-store` と `stage-unlock-store` の初期化はここで一度だけ行う。
+ * `progress-store` / `chat-store` / `stage-unlock-store` の初期化はここで一度だけ行う。
  */
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -15,12 +16,15 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { SelectPage } from "./pages/SelectPage.js";
 import { StagePage } from "./pages/StagePage.js";
 import { PracticePage } from "./pages/PracticePage.js";
+import { ChatPage } from "./pages/ChatPage.js";
 import { StageUnlockDialog } from "./components/StageUnlockDialog.js";
 import { ResetNoticeToast } from "./components/ResetNoticeToast.js";
 import { initProgressStore } from "./lib/progress-store.js";
+import { initChatStore } from "./lib/chat-store.js";
 import { startStageUnlockSync } from "./lib/stage-unlock-store.js";
 
 initProgressStore();
+initChatStore();
 startStageUnlockSync();
 
 export function App() {
@@ -32,6 +36,10 @@ export function App() {
         <Route
           path="/problems/:assignmentId"
           element={<PracticePage />}
+        />
+        <Route
+          path="/problems/:assignmentId/chat"
+          element={<ChatPage />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
