@@ -7,6 +7,9 @@ import { s4Ch11BubbleSort } from "./s4/04-bubble-sort.js";
 import { s4Ch11Factorial } from "./s4/05-factorial.js";
 import { s4Ch11Fibonacci } from "./s4/06-fibonacci.js";
 import { s4Ch11SumNestedCapstone } from "./s4/07-sum-nested-capstone.js";
+import { s5Ch11MemoFib } from "./s5/01-memo-fib.js";
+import { s5Ch11ClimbStairs } from "./s5/02-climb-stairs.js";
+import { s5Ch11CountInRangeCapstone } from "./s5/03-count-in-range-capstone.js";
 
 export const ch11Algorithms: Assignment[] = [
   s4Ch11LinearSearch,
@@ -16,4 +19,7 @@ export const ch11Algorithms: Assignment[] = [
   s4Ch11Factorial,
   s4Ch11Fibonacci,
   s4Ch11SumNestedCapstone,
+  s5Ch11MemoFib,
+  s5Ch11ClimbStairs,
+  s5Ch11CountInRangeCapstone,
 ];
