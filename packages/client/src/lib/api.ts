@@ -68,13 +68,22 @@ export async function* streamChat(
   });
 
   if (!res.ok) {
+    // 一度ボディを text として読み切ってから JSON.parse を試す。
+    // res.json() を先に呼ぶとボディストリームが消費され、 後続の res.text()
+    // が必ず失敗してサーバのエラー本文をユーザーに見せられなくなるため。
     let message = `サーバエラー (${res.status})`;
-    try {
-      const data = (await res.json()) as { error?: string };
-      if (data.error) {message = data.error;}
-    } catch {
-      const text = await res.text().catch(() => "");
-      if (text) {message = `${message}: ${text}`;}
+    const text = await res.text().catch(() => "");
+    if (text) {
+      try {
+        const data = JSON.parse(text) as { error?: string };
+        if (data.error) {
+          message = data.error;
+        } else {
+          message = `${message}: ${text}`;
+        }
+      } catch {
+        message = `${message}: ${text}`;
+      }
     }
     throw new Error(message);
   }
