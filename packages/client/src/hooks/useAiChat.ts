@@ -45,10 +45,21 @@ export function useAiChat({ assignmentId }: UseAiChatArgs): UseAiChatApi {
   const [streaming, setStreaming] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 課題が変わったら状態を入れ替える
+  // ref 群はトップにまとめておく (assignmentId 切替 effect から
+  // abortRef / bootstrappedRef を参照する必要があるため)
   const activeIdRef = useRef(assignmentId);
+  const abortRef = useRef<AbortController | null>(null);
+  const saveTimerRef = useRef<number | null>(null);
+  const bootstrappedRef = useRef(false);
+
+  // 課題が変わったら状態を入れ替える。
+  // 旧課題のストリームが遅延して新課題の state を汚染しないよう必ず abort し、
+  // bootstrappedRef もリセットして新課題の初回コンテキスト投稿を許可する。
   useEffect(() => {
     if (activeIdRef.current === assignmentId) {return;}
+    abortRef.current?.abort();
+    abortRef.current = null;
+    bootstrappedRef.current = false;
     activeIdRef.current = assignmentId;
     setMessages(loadHistory(assignmentId));
     setDraftAssistant("");
@@ -57,7 +68,6 @@ export function useAiChat({ assignmentId }: UseAiChatArgs): UseAiChatApi {
   }, [assignmentId]);
 
   // 履歴を debounce で保存
-  const saveTimerRef = useRef<number | null>(null);
   const scheduleSave = useCallback(
     (next: ChatMessage[]) => {
       if (saveTimerRef.current !== null) {
@@ -70,8 +80,6 @@ export function useAiChat({ assignmentId }: UseAiChatArgs): UseAiChatApi {
     },
     [assignmentId],
   );
-
-  const abortRef = useRef<AbortController | null>(null);
 
   // unmount で進行中ストリームを abort
   useEffect(() => {
@@ -143,13 +151,16 @@ export function useAiChat({ assignmentId }: UseAiChatArgs): UseAiChatApi {
         return;
       }
 
-      // 正常完了
-      const finalMessages: ChatMessage[] = [
-        ...initialMessages,
-        { role: "assistant", content: accumulated, ts: Date.now() },
-      ];
-      setMessages(finalMessages);
-      scheduleSave(finalMessages);
+      // 正常完了。 done だけ来てテキストが 0 件のケースは空 assistant を
+      // 履歴に積まない (空メッセージで履歴を汚さないため)。
+      if (accumulated.length > 0) {
+        const finalMessages: ChatMessage[] = [
+          ...initialMessages,
+          { role: "assistant", content: accumulated, ts: Date.now() },
+        ];
+        setMessages(finalMessages);
+        scheduleSave(finalMessages);
+      }
       setDraftAssistant("");
       setStreaming(false);
       abortRef.current = null;
@@ -172,8 +183,8 @@ export function useAiChat({ assignmentId }: UseAiChatArgs): UseAiChatApi {
     [messages, streaming, scheduleSave, startStream],
   );
 
-  // 連続再マウント (StrictMode 等) で重複ブート防止
-  const bootstrappedRef = useRef(false);
+  // 連続再マウント (StrictMode 等) で重複ブート防止。 ref はトップで宣言済み。
+  // 課題切替時には上の effect でリセットされる。
   const bootstrapIfEmpty = useCallback(
     (initialUserMessage: string) => {
       if (bootstrappedRef.current) {return;}

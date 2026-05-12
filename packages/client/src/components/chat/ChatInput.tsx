@@ -35,6 +35,7 @@ export function ChatInput({ onSubmit, disabled, placeholder }: Props) {
       }}
     >
       <textarea
+        aria-label="AI への質問入力"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => {

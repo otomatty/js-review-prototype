@@ -11,6 +11,8 @@ import type { ChatRole, ChatStreamEvent } from "@jsreview/shared/ai/types";
 
 const DEFAULT_MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 1024;
+/** 上流 (Anthropic) リクエストの最大時間。外部キャンセルと OR を取る。 */
+const REQUEST_TIMEOUT_MS = 60_000;
 
 export class MissingApiKeyError extends Error {
   constructor() {
@@ -36,6 +38,11 @@ export async function* streamChat(
   const client = new Anthropic({ apiKey });
   const model = process.env.ANTHROPIC_MODEL ?? DEFAULT_MODEL;
 
+  const timeoutSignal = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+  const signal = args.signal
+    ? AbortSignal.any([args.signal, timeoutSignal])
+    : timeoutSignal;
+
   const stream = await client.messages.create(
     {
       model,
@@ -44,7 +51,7 @@ export async function* streamChat(
       messages: args.messages.map((m) => ({ role: m.role, content: m.content })),
       stream: true,
     },
-    { signal: args.signal },
+    { signal },
   );
 
   for await (const event of stream) {

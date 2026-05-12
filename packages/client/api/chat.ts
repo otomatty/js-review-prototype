@@ -7,9 +7,9 @@
 
 import { buildSystemPrompt } from "@jsreview/shared/ai/prompt";
 import type { ChatStreamEvent } from "@jsreview/shared/ai/types";
+import { validateChatRequest } from "@jsreview/shared/ai/validate-chat-request";
 
 import { MissingApiKeyError, streamChat } from "./_lib/anthropic-client";
-import { validateChatRequest } from "./_lib/validate-chat-request";
 
 export const runtime = "edge";
 
@@ -41,11 +41,17 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   const encoder = new TextEncoder();
+  const SERVER_TIMEOUT_MS = 75_000;
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const upstreamAbort = new AbortController();
       const onClientAbort = () => upstreamAbort.abort();
       request.signal.addEventListener("abort", onClientAbort);
+      // 上流ハング時に Edge ストリームを確実に閉じる保険
+      const timeoutId = setTimeout(
+        () => upstreamAbort.abort(),
+        SERVER_TIMEOUT_MS,
+      );
 
       const send = (event: ChatStreamEvent) => {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
@@ -62,9 +68,14 @@ export default async function handler(request: Request): Promise<Response> {
           if (event.type === "done") {break;}
         }
       } catch (e) {
-        const message = e instanceof Error ? e.message : "Unknown error";
+        const message = upstreamAbort.signal.aborted
+          ? "AI 応答がタイムアウトしました"
+          : e instanceof Error
+            ? e.message
+            : "Unknown error";
         send({ type: "error", message });
       } finally {
+        clearTimeout(timeoutId);
         request.signal.removeEventListener("abort", onClientAbort);
         controller.close();
       }

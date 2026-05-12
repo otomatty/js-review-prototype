@@ -58,12 +58,13 @@ export function ChatMessageList({ messages, draftAssistant, streaming }: Props) 
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  // メッセージ更新時に末尾までスクロール (追従中のときだけ)
+  // メッセージ更新時に末尾までスクロール (追従中のときだけ)。
+  // streaming だけが切り替わるケース (「考え中…」表示開始時) でも追従させる。
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el || !stickToBottomRef.current) {return;}
     el.scrollTop = el.scrollHeight;
-  }, [messages, draftAssistant]);
+  }, [messages, draftAssistant, streaming]);
 
   const hasDraft = streaming && draftAssistant.length > 0;
   const isEmpty = messages.length === 0 && !hasDraft;

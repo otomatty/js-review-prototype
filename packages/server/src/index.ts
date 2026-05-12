@@ -17,11 +17,11 @@ import { streamSSE } from "hono/streaming";
 
 import { validateRunTestsBody } from "@jsreview/shared/util/validate-run-tests-request";
 import { buildSystemPrompt } from "@jsreview/shared/ai/prompt";
+import { validateChatRequest } from "@jsreview/shared/ai/validate-chat-request";
 import type { RunTestsResponse } from "./types.js";
 import { IsolatePool } from "./isolate-pool.js";
 import { TestRunner } from "./grading/runner.js";
 import { MissingApiKeyError, streamChat } from "./ai/anthropic-client.js";
-import { validateChatRequest } from "./ai/validate-chat-request.js";
 
 const PORT = Number(process.env.PORT ?? 3001);
 const POOL_SIZE = Number(process.env.ISOLATE_POOL_SIZE ?? 4);
@@ -106,6 +106,11 @@ app.post("/api/chat", async (c) => {
 
   return streamSSE(c, async (stream) => {
     const controller = new AbortController();
+    // 上流がハングしてもサーバ側で切るための保険。anthropic-client にも
+    // タイムアウトはあるが、Hono のストリームをここで明示的に閉じることで
+    // 配下のソケットを確実に解放する。
+    const SERVER_TIMEOUT_MS = 75_000;
+    const timeoutId = setTimeout(() => controller.abort(), SERVER_TIMEOUT_MS);
     // クライアントが切断したら Anthropic 呼び出しも abort
     stream.onAbort(() => controller.abort());
     try {
@@ -119,11 +124,16 @@ app.post("/api/chat", async (c) => {
         if (event.type === "done") {return;}
       }
     } catch (e) {
-      const message =
-        e instanceof Error ? e.message : "Unknown error from Anthropic";
+      const message = controller.signal.aborted
+        ? "AI 応答がタイムアウトしました"
+        : e instanceof Error
+          ? e.message
+          : "Unknown error from Anthropic";
       await stream.writeSSE({
         data: JSON.stringify({ type: "error", message }),
       });
+    } finally {
+      clearTimeout(timeoutId);
     }
   });
 });
