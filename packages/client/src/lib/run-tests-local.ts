@@ -54,7 +54,8 @@ export async function runTestsLocally(
     const onError = (event: ErrorEvent) => {
       worker.removeEventListener("message", onMessage);
       worker.removeEventListener("error", onError);
-      // ワーカ自体が落ちた可能性があるため、次回呼び出しで作り直す。
+      // ワーカ自体が落ちた可能性があるため、終了させて次回呼び出しで作り直す。
+      worker.terminate();
       workerInstance = null;
       reject(new Error(event.message || "QuickJS worker error"));
     };
