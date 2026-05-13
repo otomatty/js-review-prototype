@@ -37,12 +37,12 @@ export default async function handler(request: Request): Promise<Response> {
   stamp("validated");
 
   const body = validated.body;
-  let quickJS;
+  let quickJS: Awaited<ReturnType<typeof getQuickJSModule>>;
   try {
     quickJS = await getQuickJSModule();
   } catch (e) {
     stamp(`getQuickJSModule THREW: ${formatErr(e)}`);
-    return Response.json({ error: `quickjs load failed: ${formatErr(e)}` }, {
+    return Response.json({ error: "Internal server error" }, {
       status: 500,
     });
   }
@@ -50,9 +50,9 @@ export default async function handler(request: Request): Promise<Response> {
   const runner = new QuickJsRunner(quickJS, MEMORY_LIMIT_MB);
 
   const start = Date.now();
+  const isFreeRun = body.mode === "freerun";
   let results;
   try {
-    const isFreeRun = body.mode === "freerun";
     results = isFreeRun
       ? [runner.runFreeRun(body.code)]
       : runner.runAll(body.code, body.tests, {
@@ -60,7 +60,7 @@ export default async function handler(request: Request): Promise<Response> {
           entryPoints: body.entryPoints,
         });
   } catch (e) {
-    stamp(`runAll THREW: ${formatErr(e)}`);
+    stamp(`${isFreeRun ? "runFreeRun" : "runAll"} THREW: ${formatErr(e)}`);
     return Response.json(
       { error: formatErr(e) },
       { status: 500 },
