@@ -9,7 +9,7 @@ import { buildSystemPrompt } from "@jsreview/shared/ai/prompt";
 import type { ChatStreamEvent } from "@jsreview/shared/ai/types";
 import { validateChatRequest } from "@jsreview/shared/ai/validate-chat-request";
 
-import { MissingApiKeyError, streamChat } from "./_lib/anthropic-client";
+import { MissingApiKeyError, streamChat } from "./_lib/anthropic-client.js";
 
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== "POST") {

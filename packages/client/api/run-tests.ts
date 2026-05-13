@@ -5,7 +5,7 @@
 import type { RunTestsResponse } from "@jsreview/shared/types";
 import { validateRunTestsBody } from "@jsreview/shared/util/validate-run-tests-request";
 
-import { getQuickJSModule, QuickJsRunner } from "./_lib/quickjs-runner";
+import { getQuickJSModule, QuickJsRunner } from "./_lib/quickjs-runner.js";
 
 const MEMORY_LIMIT_MB = Number(process.env.ISOLATE_MEMORY_LIMIT ?? 32);
 
