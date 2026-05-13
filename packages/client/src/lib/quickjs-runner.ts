@@ -1,5 +1,7 @@
 /**
- * QuickJS-WASM によるテスト実行。
+ * ブラウザ向け QuickJS-WASM ランナー。
+ * 旧 `api/_lib/quickjs-runner.ts` から実行ロジックを移植し、
+ * WASM ヴァリアントだけブラウザ向け `@jitl/quickjs-singlefile-browser-release-sync` に差し替えている。
  */
 
 import {
@@ -19,16 +21,13 @@ import type {
   TestResult,
 } from "@jsreview/shared/types";
 
-const rawWallTimeoutMs = Number(process.env.TEST_TIMEOUT_MS ?? 3000);
-const PER_TEST_WALL_TIMEOUT_MS =
-  Number.isFinite(rawWallTimeoutMs) && rawWallTimeoutMs > 0
-    ? rawWallTimeoutMs
-    : 3000;
+export const MEMORY_LIMIT_MB = 32;
+export const PER_TEST_WALL_TIMEOUT_MS = 3000;
 
-/** WASM モジュールはコールドスタートごとに初回だけロードする */
+/** WASM モジュールはタブのライフタイムで初回だけロードする (動的 import で code-split) */
 export const getQuickJSModule = memoizePromiseFactory(() =>
   newQuickJSWASMModuleFromVariant(
-    import("@jitl/quickjs-singlefile-cjs-release-sync"),
+    import("@jitl/quickjs-singlefile-browser-release-sync"),
   ),
 );
 
