@@ -1,20 +1,31 @@
 /**
- * ブラウザ内で QuickJS を起動してテスト実行する `runTests` 等価関数。
- * 旧 `/api/run-tests` Vercel Function の I/O をそのまま再現する。
+ * Web Worker に QuickJS テスト実行を委譲する `runTests` 等価ラッパ。
+ * メインスレッドをブロックしないために実体はワーカ側 (`quickjs-worker.ts`) で動かす。
  */
 
 import type {
   RunTestsRequest,
   RunTestsResponse,
-  TestResult,
 } from "@jsreview/shared/types";
 import { validateRunTestsBody } from "@jsreview/shared/util/validate-run-tests-request";
 
-import {
-  getQuickJSModule,
-  MEMORY_LIMIT_MB,
-  QuickJsRunner,
-} from "./quickjs-runner.js";
+import type {
+  WorkerRequest,
+  WorkerResponse,
+} from "./quickjs-worker.js";
+
+let workerInstance: Worker | null = null;
+let nextRequestId = 1;
+
+function getWorker(): Worker {
+  if (workerInstance === null) {
+    workerInstance = new Worker(
+      new URL("./quickjs-worker.ts", import.meta.url),
+      { type: "module" },
+    );
+  }
+  return workerInstance;
+}
 
 export async function runTestsLocally(
   body: RunTestsRequest,
@@ -24,20 +35,33 @@ export async function runTestsLocally(
     throw new Error(validated.message);
   }
 
-  const quickJS = await getQuickJSModule();
-  const runner = new QuickJsRunner(quickJS, MEMORY_LIMIT_MB);
+  const worker = getWorker();
+  const requestId = nextRequestId++;
 
-  const start = Date.now();
-  const isFreeRun = validated.body.mode === "freerun";
-  const results: TestResult[] = isFreeRun
-    ? [runner.runFreeRun(validated.body.code)]
-    : runner.runAll(validated.body.code, validated.body.tests, {
-        testKind: validated.body.testKind,
-        entryPoints: validated.body.entryPoints,
-      });
+  return new Promise<RunTestsResponse>((resolve, reject) => {
+    const onMessage = (event: MessageEvent<WorkerResponse>) => {
+      if (event.data.id !== requestId) {
+        return;
+      }
+      worker.removeEventListener("message", onMessage);
+      worker.removeEventListener("error", onError);
+      if (event.data.ok) {
+        resolve(event.data.response);
+      } else {
+        reject(new Error(event.data.error));
+      }
+    };
+    const onError = (event: ErrorEvent) => {
+      worker.removeEventListener("message", onMessage);
+      worker.removeEventListener("error", onError);
+      // ワーカ自体が落ちた可能性があるため、次回呼び出しで作り直す。
+      workerInstance = null;
+      reject(new Error(event.message || "QuickJS worker error"));
+    };
+    worker.addEventListener("message", onMessage);
+    worker.addEventListener("error", onError);
 
-  return {
-    durationMs: Date.now() - start,
-    results,
-  };
+    const request: WorkerRequest = { id: requestId, body: validated.body };
+    worker.postMessage(request);
+  });
 }

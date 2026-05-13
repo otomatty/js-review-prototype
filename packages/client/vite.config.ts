@@ -44,6 +44,11 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  worker: {
+    // QuickJS WASM ローダが動的 import() で code-split されるため、
+    // ワーカも ES モジュール形式でビルドする必要がある (既定の iife は code-split 非対応)。
+    format: "es",
+  },
   optimizeDeps: {
     // eslint-linter-browserify は CJS を ESM ラップしているので明示
     include: ["eslint-linter-browserify"],
