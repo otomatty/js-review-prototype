@@ -251,7 +251,7 @@ function PracticePageInner({ assignment }: InnerProps) {
           <>
             <span
               className={cn(
-                "relative inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-sans text-[12px] font-semibold",
+                "relative inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-sans text-[12px] font-semibold max-md:gap-1 max-md:px-2 max-md:py-0.5 max-md:text-[11px]",
                 cleared
                   ? "border-success/25 bg-success-bg text-success before:size-1.5 before:rounded-full before:bg-success before:content-[''] dark:border-success/40 dark:bg-success/10"
                   : "border-border bg-card text-muted-foreground",
@@ -262,7 +262,7 @@ function PracticePageInner({ assignment }: InnerProps) {
             </span>
             <button
               type="button"
-              className="rounded-md border border-border bg-card px-3.5 py-1.5 font-sans text-[13px] font-medium text-foreground transition-colors hover:border-ink-300 hover:bg-card dark:hover:border-ink-600"
+              className="rounded-md border border-border bg-card px-3.5 py-1.5 font-sans text-[13px] font-medium text-foreground transition-colors hover:border-ink-300 hover:bg-card dark:hover:border-ink-600 max-md:px-2.5 max-md:py-1 max-md:text-[12px]"
               onClick={handleReset}
             >
               リセット
