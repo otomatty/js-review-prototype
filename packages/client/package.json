@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
-    "test:quickjs": "bun test api/_lib/quickjs-runner.test.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
@@ -16,7 +15,7 @@
     "@codemirror/lint": "^6.5.0",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.26.0",
-    "@jitl/quickjs-singlefile-cjs-release-sync": "^0.32.0",
+    "@jitl/quickjs-singlefile-browser-release-sync": "^0.32.0",
     "@jsreview/shared": "workspace:*",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.15",

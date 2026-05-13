@@ -1,5 +1,9 @@
 /**
- * Vercel Edge API (`/api/run-tests` と `/api/chat`) を叩く HTTP クライアント。
+ * `/api/chat` を叩く HTTP クライアントと、ブラウザ内 QuickJS によるテスト実行ラッパ。
+ *
+ * テスト実行はかつて Vercel Serverless Function (`/api/run-tests`) でも提供していたが、
+ * QuickJS WASM のバンドル/起動が Vercel 環境で安定しなかったため、現在はブラウザ内で実行する。
+ * テストケースは元々クライアントに同梱されており、サーバ実行に固有のセキュリティ上の利点はない。
  */
 import type {
   RunTestsRequest,
@@ -11,26 +15,15 @@ import type {
   ChatStreamEvent,
 } from "@jsreview/shared/ai/types";
 
-/** 空なら同一オリジン (Vercel の `/api/run-tests`)。デプロイ済み URL を別ホストから叩きたい場合に指定する。 */
+import { runTestsLocally } from "./run-tests-local.js";
+
+/** 空なら同一オリジン (Vercel の `/api/chat`)。デプロイ済み URL を別ホストから叩きたい場合に指定する。 */
 const SERVER_URL = (import.meta.env.VITE_SERVER_URL ?? "").replace(/\/+$/, "");
 
 export async function runTests(
   body: RunTestsRequest,
 ): Promise<RunTestsResponse> {
-  const res = await fetch(`${SERVER_URL}/api/run-tests`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(
-      `サーバエラー (${res.status}): ${text || res.statusText}`,
-    );
-  }
-
-  return (await res.json()) as RunTestsResponse;
+  return runTestsLocally(body);
 }
 
 /**

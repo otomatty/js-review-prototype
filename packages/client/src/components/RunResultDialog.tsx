@@ -128,12 +128,20 @@ export function RunResultDialog({
     return () => window.clearTimeout(timer);
   }, [open, phase, result, revealedTests]);
 
+  // result がまだ無い状態でも phase は時間経過で進むため、Lint/AST の判定は
+  // displayedLint/displayedAst から都度計算してフォールバックする。
+  // (`evaluate()` も同じ入力からこの値を導いているので、result 到着後と結果は一致する)
+  const localLintPassed = displayedLint.every((v) => v.severity !== 2);
+  const localAstPassed =
+    !displayedAst.parseError &&
+    displayedAst.required.every((r) => r.found) &&
+    displayedAst.forbidden.length === 0;
+
+  const lintPassed = result?.evaluation.checks.lintPassed ?? localLintPassed;
+  const astPassed = result?.evaluation.checks.astPassed ?? localAstPassed;
+
   const lintStatus: SectionStatus =
-    phase === "lint"
-      ? "evaluating"
-      : result?.evaluation.checks.lintPassed
-        ? "success"
-        : "failure";
+    phase === "lint" ? "evaluating" : lintPassed ? "success" : "failure";
 
   const astStatus: SectionStatus = (() => {
     if (phase === "lint") {
@@ -145,7 +153,7 @@ export function RunResultDialog({
     if (displayedAst.parseError) {
       return "error";
     }
-    return result?.evaluation.checks.astPassed ? "success" : "failure";
+    return astPassed ? "success" : "failure";
   })();
 
   const testsStatus: SectionStatus = (() => {
