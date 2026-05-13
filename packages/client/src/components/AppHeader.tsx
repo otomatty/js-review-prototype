@@ -37,8 +37,8 @@ export function AppHeader({ backLink, right, className }: Props) {
             <span className="brand-divider" aria-hidden />
           </>
         ) : null}
-        <BrandMark />
-        <span className="brand-divider" aria-hidden />
+        <BrandMark className="max-md:hidden" />
+        <span className="brand-divider max-md:hidden" aria-hidden />
         <h1 className="m-0 font-jp text-[14.5px] font-bold leading-none text-foreground">
           JS自動コードレビュー
           <span className="ml-2 inline-block rounded-full bg-muted px-2 py-[2px] font-sans text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
