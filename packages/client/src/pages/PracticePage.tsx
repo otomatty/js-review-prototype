@@ -22,7 +22,11 @@ import {
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
-import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
+import {
+  getEntryFile,
+  getStarterFiles,
+  getStaticAnalysisSettings,
+} from "@jsreview/shared/assignment-helpers";
 import type { GradingSummary } from "@jsreview/shared/ai/types";
 
 import { cn } from "@/lib/utils";
@@ -83,9 +87,12 @@ function PracticePageInner({ assignment }: InnerProps) {
   } | null>(null);
   const [freeRunPending, setFreeRunPending] = useState(false);
 
+  const starterFiles = useMemo(() => getStarterFiles(assignment), [assignment]);
+  const entryFile = useMemo(() => getEntryFile(assignment), [assignment]);
   const { code, setCode, cleared, recordResult, clear } = useProgress({
     assignmentId: assignment.id,
-    starterCode: assignment.starterCode,
+    starterFiles,
+    entryFile,
   });
 
   const staticAnalysis = useMemo(

@@ -1,14 +1,22 @@
 /**
- * 課題ごとの進捗 (編集中コード + クリア状態) を localStorage と同期する Hook。
+ * 課題ごとの進捗 (編集中ファイル群 + クリア状態) を localStorage と同期する Hook。
  *
- * - 課題が切り替わったら storage から読み込み、なければ `starterCode` を返す
- * - `setCode` を呼ぶと debounce してエントリを書き込む (lastCode のみ)
- * - 評価完了時は `recordResult` を呼ぶことで cleared を OR で更新する
- *   (一度クリアした課題は、その後の試行で失敗してもクリア状態を保持)
- * - `clear` でエントリを削除し、`starterCode` に戻す
+ * - 課題が切り替わったら storage から読み込み、なければ `starterFiles` を返す
+ * - `updateFile(path, content)` でファイル単位に書き換え、 debounce してエントリ全体を書き込む
+ * - `setActiveFile(path)` で現在のアクティブタブ (将来 #106 で UI に出る) を切り替える
+ * - `recordResult` で cleared を OR 更新する (一度クリアした課題は失敗しても外れない)
+ * - `clear` でエントリを削除し、`starterFiles` に戻す
+ *
+ * 互換 shim:
+ * - `code` / `setCode` は `files[activeFile]` / `updateFile(activeFile, ...)` の薄いラッパ。
+ *   #106 で UI が完全多ファイル化されたら呼び出し側で `files`/`updateFile` に置き換える。
+ * - `recordResult(passed, submittedCode)` は単一ファイル API も維持し、 内部で
+ *   `lastFiles[activeFile] = submittedCode` に詰め替える。
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+
+import type { AssignmentFile } from "@jsreview/shared/types";
 
 import {
   deleteEntry,
@@ -21,101 +29,191 @@ const SAVE_DEBOUNCE_MS = 400;
 
 interface Args {
   assignmentId: string;
-  starterCode: string;
+  starterFiles: AssignmentFile[];
+  entryFile: string;
 }
 
 interface ProgressApi {
-  code: string;
-  setCode: (code: string) => void;
+  /** path → 編集中コンテンツ。 */
+  files: Record<string, string>;
+  /** UI で現在表示中のファイル path。 単一ファイル課題では entryFile と等しい。 */
+  activeFile: string;
+  setActiveFile: (path: string) => void;
+  updateFile: (path: string, content: string) => void;
   cleared: boolean;
   /**
    * 評価完了直後に呼び出す。`passed === true` の場合に cleared を立てる。
-   * 採点対象だった `submittedCode` を `lastCode` として保存する。
-   * `submittedCode` は呼び出し側で run() 起動時に固定した値を渡すこと
-   * (await 中に課題切替があっても元の課題に紐付くようにするため)。
+   * `submittedCode` は entryFile (= 採点対象) の内容として `lastFiles` に保存される。
+   * 採点中に課題切替があっても元の課題に紐付くよう、 呼び出し側で run() 起動時に固定すること。
    */
   recordResult: (passed: boolean, submittedCode: string) => void;
-  /** storage の entry を消し、starterCode に戻す。 */
+  /** storage の entry を消し、starterFiles に戻す。 */
   clear: () => void;
+  // ─── 単一ファイル時代の互換 shim (#106 で除去予定) ───
+  /** `files[activeFile]` のショートカット。 */
+  code: string;
+  /** `updateFile(activeFile, next)` のショートカット。 */
+  setCode: (next: string) => void;
 }
 
-export function useProgress({ assignmentId, starterCode }: Args): ProgressApi {
-  const [code, setCodeState] = useState<string>(
-    () => readInitial(assignmentId, starterCode).code,
+interface InternalState {
+  files: Record<string, string>;
+  activeFile: string;
+  cleared: boolean;
+}
+
+function starterFilesToRecord(starter: AssignmentFile[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const f of starter) {
+    out[f.path] = f.content;
+  }
+  return out;
+}
+
+function readInitial(
+  assignmentId: string,
+  starter: AssignmentFile[],
+  entryFile: string,
+): InternalState {
+  const entry = loadEntry(assignmentId);
+  if (!entry) {
+    return {
+      files: starterFilesToRecord(starter),
+      activeFile: entryFile,
+      cleared: false,
+    };
+  }
+  // 保存済みエントリには starter に存在しないファイルが含まれる可能性は当面無いが、
+  // 課題側で starter が増えた場合に備えて starter をベースにマージする。
+  const baseline = starterFilesToRecord(starter);
+  const merged: Record<string, string> = { ...baseline, ...entry.lastFiles };
+  const validActive =
+    entry.activeFile && merged[entry.activeFile] !== undefined
+      ? entry.activeFile
+      : entryFile;
+  return {
+    files: merged,
+    activeFile: validActive,
+    cleared: entry.cleared,
+  };
+}
+
+export function useProgress({ assignmentId, starterFiles, entryFile }: Args): ProgressApi {
+  // 3 つの state を 1 つの構造で管理することで、 初回マウントの readInitial を 1 回に抑える。
+  const [state, setState] = useState<InternalState>(() =>
+    readInitial(assignmentId, starterFiles, entryFile),
   );
-  const [cleared, setCleared] = useState<boolean>(
-    () => readInitial(assignmentId, starterCode).cleared,
-  );
+  const { files, activeFile, cleared } = state;
 
   // 課題切替時、storage から再ロード
-  // 切替直後の useState は初回マウントの値しか反映しないため effect で更新する。
   const lastAssignmentRef = useRef<string>(assignmentId);
   useEffect(() => {
     if (lastAssignmentRef.current === assignmentId) {return;}
     lastAssignmentRef.current = assignmentId;
-    const next = readInitial(assignmentId, starterCode);
-    setCodeState(next.code);
-    setCleared(next.cleared);
-  }, [assignmentId, starterCode]);
+    setState(readInitial(assignmentId, starterFiles, entryFile));
+  }, [assignmentId, starterFiles, entryFile]);
 
-  // code 変更を debounce して localStorage に保存
+  // ファイル変更を debounce して localStorage に保存
   useEffect(() => {
     const timer = setTimeout(() => {
-      // starterCode と完全一致なら entry を作らない (新規ノイズを避ける)
       const existing = loadEntry(assignmentId);
-      if (!existing && code === starterCode) {return;}
+      const starterRecord = starterFilesToRecord(starterFiles);
+      // 完全に starter と一致 (新規ノイズ) + activeFile も既定 → entry を作らない
+      const isPristine =
+        !existing &&
+        sameRecord(files, starterRecord) &&
+        activeFile === entryFile;
+      if (isPristine) {return;}
       const nextCleared = existing?.cleared ?? cleared;
       saveEntry(
         assignmentId,
         {
           cleared: nextCleared,
-          lastCode: code,
+          lastFiles: files,
+          activeFile,
           lastSubmittedAt: existing?.lastSubmittedAt,
         },
         { previousCleared: existing?.cleared ?? null },
       );
     }, SAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [code, assignmentId, starterCode, cleared]);
+  }, [files, activeFile, assignmentId, entryFile, cleared, starterFiles]);
+
+  const setActiveFile = useCallback((path: string) => {
+    setState((s) => (s.activeFile === path ? s : { ...s, activeFile: path }));
+  }, []);
+
+  const updateFile = useCallback((path: string, content: string) => {
+    setState((s) => {
+      if (s.files[path] === content) {return s;}
+      return { ...s, files: { ...s.files, [path]: content } };
+    });
+  }, []);
 
   const setCode = useCallback((next: string) => {
-    setCodeState(next);
+    setState((s) => {
+      if (s.files[s.activeFile] === next) {return s;}
+      return { ...s, files: { ...s.files, [s.activeFile]: next } };
+    });
   }, []);
 
   const recordResult = useCallback(
     (passed: boolean, submittedCode: string) => {
       const existing = loadEntry(assignmentId);
       const prev = existing?.cleared ?? false;
-      // 一度クリア済みなら、その状態を保持する (失敗で取り消さない)。
       const nextCleared = prev || passed;
+      // 採点中の活動を反映するため、 保存値は (1) ストレージにあるならそれを基底、
+      // (2) 無ければ呼び出し時点の files、 のどちらかに submittedCode を上書き。
+      const baseFiles = existing?.lastFiles ?? state.files;
+      const nextFiles: Record<string, string> = {
+        ...baseFiles,
+        [entryFile]: submittedCode,
+      };
       const entry: ProgressEntry = {
         cleared: nextCleared,
-        lastCode: submittedCode,
+        lastFiles: nextFiles,
+        activeFile: existing?.activeFile ?? state.activeFile,
         lastSubmittedAt: Date.now(),
       };
       saveEntry(assignmentId, entry, {
         previousCleared: existing?.cleared ?? null,
       });
-      // 表示中の課題が切り替わっていれば cleared の state は触らない。
-      if (lastAssignmentRef.current === assignmentId) {setCleared(nextCleared);}
+      // 表示中の課題が切り替わっていれば cleared / files の state は触らない。
+      if (lastAssignmentRef.current === assignmentId) {
+        setState((s) => ({ ...s, cleared: nextCleared, files: nextFiles }));
+      }
     },
-    [assignmentId],
+    [assignmentId, entryFile, state.files, state.activeFile],
   );
 
   const clear = useCallback(() => {
     deleteEntry(assignmentId);
-    setCodeState(starterCode);
-    setCleared(false);
-  }, [assignmentId, starterCode]);
+    setState({
+      files: starterFilesToRecord(starterFiles),
+      activeFile: entryFile,
+      cleared: false,
+    });
+  }, [assignmentId, starterFiles, entryFile]);
 
-  return { code, setCode, cleared, recordResult, clear };
+  return {
+    files,
+    activeFile,
+    setActiveFile,
+    updateFile,
+    cleared,
+    recordResult,
+    clear,
+    code: files[activeFile] ?? "",
+    setCode,
+  };
 }
 
-function readInitial(
-  assignmentId: string,
-  starterCode: string,
-): { code: string; cleared: boolean } {
-  const entry = loadEntry(assignmentId);
-  if (!entry) {return { code: starterCode, cleared: false };}
-  return { code: entry.lastCode, cleared: entry.cleared };
+function sameRecord(a: Record<string, string>, b: Record<string, string>): boolean {
+  const ak = Object.keys(a);
+  const bk = Object.keys(b);
+  if (ak.length !== bk.length) {return false;}
+  for (const k of ak) {
+    if (a[k] !== b[k]) {return false;}
+  }
+  return true;
 }

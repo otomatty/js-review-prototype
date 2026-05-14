@@ -9,10 +9,26 @@
  *   が残っていれば削除し、 `sessionStorage` にリセット通知フラグを立てる
  */
 
-const VERSION = 2;
+const VERSION = 3;
 const PREFIX = "jsreview/progress/";
 const VERSION_KEY = "jsreview/progress/__version__";
 const RESET_NOTICE_FLAG = "jsreview/reset-notice-pending";
+
+/**
+ * JSON から復元したエントリの寛容な形。
+ *
+ * v2 (`v: 2`, `lastCode: string`) と v3 (`v: 3`, `lastFiles: Record`/`activeFile`) の
+ * フィールドを両方持つ可能性があるため、 いずれも optional として読み出してから個別に判定する。
+ * v2 → v3 の非破壊マイグレーションで両形式を扱う必要がある。
+ */
+interface RawParsedEntry {
+  v?: number;
+  cleared?: unknown;
+  lastCode?: unknown;
+  lastFiles?: unknown;
+  activeFile?: unknown;
+  lastSubmittedAt?: unknown;
+}
 
 /**
  * 本アプリの過去スキーマで使われた可能性のある localStorage キー。
@@ -26,7 +42,10 @@ const LEGACY_KEY_CANDIDATES = ["jsreview-progress"];
 export interface ProgressEntry {
   /** 一度でも全チェックを通過 (クリア) しているか */
   cleared: boolean;
-  lastCode: string;
+  /** 多ファイル対応 (v3 で導入)。 path → 編集中コンテンツ。 */
+  lastFiles: Record<string, string>;
+  /** UI で最後にアクティブだったファイル path (#106 でタブ復元に使う)。 */
+  activeFile?: string;
   lastSubmittedAt?: number;
 }
 
@@ -67,7 +86,15 @@ export function subscribeProgress(listener: Listener): () => void {
   };
 }
 
-/** 起動時に呼ぶ。バージョン不一致なら旧データを破棄する。 */
+/**
+ * 起動時に呼ぶ。
+ *
+ * - v3 (現行) なら何もしない
+ * - v2 (単一ファイル `lastCode`) なら **非破壊で** `lastFiles: { "main.js": lastCode }` へ書き換える
+ *   (#100 / #103: 既存ユーザの進捗を保つことが受け入れ条件)
+ * - パース失敗・形状不一致のエントリのみ削除し、 ResetNotice を立てる
+ * - バージョンキー自体が未設定で実エントリが残っている場合 (v1 等) は破棄
+ */
 export function initProgressStore(): void {
   const ls = safeStorage();
   if (!ls) {return;}
@@ -89,8 +116,17 @@ export function initProgressStore(): void {
   const stored = ls.getItem(VERSION_KEY);
   if (stored === String(VERSION)) {return;}
 
-  // バージョン不一致 (または未設定) → 旧データを掃除
-  // v1 → v2 (bestScore: number → cleared: boolean) は互換維持しないことに決定。
+  if (stored === "2") {
+    migrateV2ToV3(ls);
+    try {
+      ls.setItem(VERSION_KEY, String(VERSION));
+    } catch {
+      // ignore
+    }
+    return;
+  }
+
+  // バージョンキーが "3" でも "2" でもない (=v1 以前 / 未設定 / 想定外) → 旧データ破棄
   const obsolete: string[] = [];
   for (let i = 0; i < ls.length; i++) {
     const k = ls.key(i);
@@ -104,6 +140,51 @@ export function initProgressStore(): void {
     ls.setItem(VERSION_KEY, String(VERSION));
   } catch {
     // ignore
+  }
+}
+
+function migrateV2ToV3(ls: Storage): void {
+  let droppedAny = false;
+  const keys: string[] = [];
+  for (let i = 0; i < ls.length; i++) {
+    const k = ls.key(i);
+    if (k && k.startsWith(PREFIX) && k !== VERSION_KEY) {keys.push(k);}
+  }
+  for (const k of keys) {
+    const raw = ls.getItem(k);
+    if (!raw) {continue;}
+    try {
+      const parsed = JSON.parse(raw) as RawParsedEntry;
+      if (parsed.v === 3) {
+        // 既に v3 (混在状態) → 触らない
+        continue;
+      }
+      if (
+        parsed.v === 2 &&
+        typeof parsed.cleared === "boolean" &&
+        typeof parsed.lastCode === "string"
+      ) {
+        const migrated: StoredEntry = {
+          v: VERSION,
+          cleared: parsed.cleared,
+          lastFiles: { "main.js": parsed.lastCode },
+          activeFile: "main.js",
+          lastSubmittedAt:
+            typeof parsed.lastSubmittedAt === "number" ? parsed.lastSubmittedAt : undefined,
+        };
+        ls.setItem(k, JSON.stringify(migrated));
+      } else {
+        // 想定形状ではない → 個別削除 + 通知
+        ls.removeItem(k);
+        droppedAny = true;
+      }
+    } catch {
+      ls.removeItem(k);
+      droppedAny = true;
+    }
+  }
+  if (droppedAny) {
+    markResetNoticePending();
   }
 }
 
@@ -151,20 +232,46 @@ export function loadEntry(assignmentId: string): ProgressEntry | null {
   const raw = ls.getItem(entryKey(assignmentId));
   if (!raw) {return null;}
   try {
-    const parsed = JSON.parse(raw) as Partial<StoredEntry>;
-    if (parsed.v !== VERSION) {return null;}
-    if (typeof parsed.lastCode !== "string") {return null;}
+    const parsed = JSON.parse(raw) as RawParsedEntry;
     if (typeof parsed.cleared !== "boolean") {return null;}
-    return {
-      cleared: parsed.cleared,
-      lastCode: parsed.lastCode,
-      lastSubmittedAt: parsed.lastSubmittedAt,
-    };
+    const ts = typeof parsed.lastSubmittedAt === "number" ? parsed.lastSubmittedAt : undefined;
+
+    // v3: 正規パス
+    if (parsed.v === VERSION) {
+      if (!isStringRecord(parsed.lastFiles)) {return null;}
+      return {
+        cleared: parsed.cleared,
+        lastFiles: parsed.lastFiles,
+        activeFile: typeof parsed.activeFile === "string" ? parsed.activeFile : undefined,
+        lastSubmittedAt: ts,
+      };
+    }
+
+    // v2: 個別ロード時の遅延マイグレーション。 initProgressStore が走ってない場合や、
+    // 別タブ書き込みで一時的に v2 が残るケースの保険。
+    if (parsed.v === 2 && typeof parsed.lastCode === "string") {
+      return {
+        cleared: parsed.cleared,
+        lastFiles: { "main.js": parsed.lastCode },
+        activeFile: "main.js",
+        lastSubmittedAt: ts,
+      };
+    }
+
+    return null;
   } catch {
     // 壊れた JSON は黙って捨てる
     ls.removeItem(entryKey(assignmentId));
     return null;
   }
+}
+
+function isStringRecord(value: unknown): value is Record<string, string> {
+  if (value === null || typeof value !== "object") {return false;}
+  for (const v of Object.values(value)) {
+    if (typeof v !== "string") {return false;}
+  }
+  return true;
 }
 
 export interface SaveOptions {
@@ -246,8 +353,10 @@ export function getClearedSnapshot(): Set<string> {
     const raw = ls.getItem(k);
     if (!raw) {continue;}
     try {
-      const parsed = JSON.parse(raw) as Partial<StoredEntry>;
-      if (parsed.v !== VERSION) {continue;}
+      const parsed = JSON.parse(raw) as RawParsedEntry;
+      // v2 / v3 どちらでも cleared を読む (initProgressStore 完了後は v3 のみだが、
+      // ロードと書き戻しの間でクラッシュした場合等の保険)
+      if (parsed.v !== VERSION && parsed.v !== 2) {continue;}
       if (parsed.cleared === true) {
         set.add(k.slice(PREFIX.length));
       }
@@ -281,8 +390,8 @@ function pruneOldest(ls: Storage, currentAssignmentId: string): void {
     let ts = 0;
     if (raw) {
       try {
-        const parsed = JSON.parse(raw) as Partial<StoredEntry>;
-        ts = parsed.lastSubmittedAt ?? 0;
+        const parsed = JSON.parse(raw) as RawParsedEntry;
+        ts = typeof parsed.lastSubmittedAt === "number" ? parsed.lastSubmittedAt : 0;
       } catch {
         ts = 0;
       }
