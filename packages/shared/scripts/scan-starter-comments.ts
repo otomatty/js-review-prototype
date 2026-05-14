@@ -13,7 +13,7 @@
  *   bun run scripts/scan-starter-comments.ts --summary  # 章別件数のみ
  */
 
-import { getEntryFile, getLanguage } from "../src/assignment-helpers.js";
+import { getLanguage } from "../src/assignment-helpers.js";
 import type { Assignment } from "../src/types.js";
 
 const JS_KEYWORD_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
@@ -71,6 +71,7 @@ const JS_KEYWORD_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
 interface Violation {
   assignmentId: string;
   chapterId: string;
+  path: string;
   line: number;
   text: string;
   reasons: string[];
@@ -88,30 +89,28 @@ async function main(): Promise<void> {
     if (getLanguage(a) !== "javascript") {
       continue;
     }
-    const entryPath = getEntryFile(a);
-    const entry = a.starterFiles.find((f) => f.path === entryPath);
-    if (!entry) {
-      // entryFile タイポは check-integrity 側で弾かれる前提。 ここでは黙ってスキップする。
-      continue;
-    }
-    const lines = entry.content.split("\n");
-    lines.forEach((rawLine, idx) => {
-      const reasons: string[] = [];
-      for (const { pattern, label } of JS_KEYWORD_PATTERNS) {
-        if (pattern.test(rawLine)) {
-          reasons.push(label);
+    // 多ファイル課題でも全てのスターターファイルを走査する。
+    for (const file of a.starterFiles) {
+      const lines = file.content.split("\n");
+      lines.forEach((rawLine, idx) => {
+        const reasons: string[] = [];
+        for (const { pattern, label } of JS_KEYWORD_PATTERNS) {
+          if (pattern.test(rawLine)) {
+            reasons.push(label);
+          }
         }
-      }
-      if (reasons.length > 0) {
-        violations.push({
-          assignmentId: a.id,
-          chapterId: a.chapterId,
-          line: idx + 1,
-          text: rawLine,
-          reasons,
-        });
-      }
-    });
+        if (reasons.length > 0) {
+          violations.push({
+            assignmentId: a.id,
+            chapterId: a.chapterId,
+            path: file.path,
+            line: idx + 1,
+            text: rawLine,
+            reasons,
+          });
+        }
+      });
+    }
   }
 
   if (violations.length === 0) {
@@ -162,7 +161,9 @@ async function main(): Promise<void> {
   for (const [id, list] of grouped) {
     console.log(`\n# ${id}`);
     for (const v of list) {
-      console.log(`  L${v.line} [${v.reasons.join(", ")}]: ${v.text}`);
+      console.log(
+        `  ${v.path}:L${v.line} [${v.reasons.join(", ")}]: ${v.text}`,
+      );
     }
   }
 }
