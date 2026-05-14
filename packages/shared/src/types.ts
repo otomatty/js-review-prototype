@@ -136,11 +136,12 @@ export interface Assignment {
    */
   language?: Language;
   /**
-   * 多ファイル課題のスターターファイル群。
-   * 省略時は `starterCode` を `[{ path: "main.js" | "query.sql", content: starterCode }]` に詰め替える
-   * (`getStarterFiles(assignment)` ヘルパ参照)。 単一ファイル課題では未指定で良い。
+   * 課題のスターターファイル群。
+   * 単一ファイル課題では `starterFiles: singleFile(\`...\`)` (`problems/_common.ts`) で
+   * `[{ path: "main.js", content: ... }]` 1 件を生成する。
+   * 多ファイル課題はそのまま配列で記述する。 `getStarterFiles(assignment)` で取り出す。
    */
-  starterFiles?: AssignmentFile[];
+  starterFiles: AssignmentFile[];
   /**
    * 採点・実行の入口ファイルパス。 省略時は `starterFiles[0].path` または言語に応じた既定値。
    * `getEntryFile(assignment)` で解決する。
@@ -154,8 +155,6 @@ export interface Assignment {
    * 採点ランごとに新規 `Database` を生成してこの SQL を流してから、 学習者の `entryFile` を実行する。
    */
   sqlSeed?: string;
-  /** エディタ初期表示のスタータコード。 */
-  starterCode: string;
   /**
    * function 採点でコードから取り出す関数名・クラス名 (lint の「未使用とみなさない名前」)。
    *

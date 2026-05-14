@@ -5,8 +5,8 @@
  * 検査項目:
  *
  *  1. 重複した Assignment ID が存在しないこと
- *  2. 各 Assignment の `starterCode` が `staticAnalysis.ast.forbidden` を踏んでいないこと
- *     (starterCode がパースエラーにならないことも含む)
+ *  2. 各 Assignment の `starterFiles` のエントリファイル (`entryFile` or 最初のファイル) が
+ *     `staticAnalysis.ast.forbidden` を踏んでいないこと (パースエラーにならないことも含む)
  *  3. 全 Assignment の `chapterId` が `chapters` に存在すること
  *
  * 違反は最後にまとめて出力し、ひとつでもあれば exit code 1 で終了する。
@@ -17,7 +17,12 @@
  */
 
 import { analyzeAst } from "../src/grading/ast.js";
-import { getLanguage, getStaticAnalysisSettings } from "../src/assignment-helpers.js";
+import {
+  getEntryFile,
+  getLanguage,
+  getStarterFiles,
+  getStaticAnalysisSettings,
+} from "../src/assignment-helpers.js";
 import type { Assignment, Chapter } from "../src/types.js";
 
 interface IntegrityIssue {
@@ -55,10 +60,17 @@ async function main(): Promise<void> {
   }
 
   // 2. 課題定義の整合性検査。
-  //    - JS 課題: starterCode を Babel パースして ast.forbidden に違反していないか
+  //    - JS 課題: starterFiles のエントリを Babel パースして ast.forbidden に違反していないか
   //    - 非 JS 課題 (SQL 等): AST 検証は不可だが、 entryFile と tests の最低限の整合性は
   //      ここで CI に通す (coderabbit 対応)
   for (const a of assignments) {
+    if (a.starterFiles.length === 0) {
+      issues.push({
+        assignmentId: a.id,
+        message: "starterFiles must contain at least one file",
+      });
+      continue;
+    }
     if (getLanguage(a) !== "javascript") {
       // 言語非依存の最低限チェック
       if (a.tests.length === 0) {
@@ -72,10 +84,7 @@ async function main(): Promise<void> {
           assignmentId: a.id,
           message: "non-javascript assignment requires entryFile",
         });
-      } else if (
-        a.starterFiles &&
-        !a.starterFiles.some((f) => f.path === a.entryFile)
-      ) {
+      } else if (!a.starterFiles.some((f) => f.path === a.entryFile)) {
         issues.push({
           assignmentId: a.id,
           message: `entryFile "${a.entryFile}" is not found in starterFiles`,
@@ -83,11 +92,14 @@ async function main(): Promise<void> {
       }
       continue;
     }
-    const result = analyzeAst(a.starterCode, getStaticAnalysisSettings(a).ast);
+    const entryPath = getEntryFile(a);
+    const entry =
+      getStarterFiles(a).find((f) => f.path === entryPath) ?? getStarterFiles(a)[0];
+    const result = analyzeAst(entry.content, getStaticAnalysisSettings(a).ast);
     if (result.parseError) {
       issues.push({
         assignmentId: a.id,
-        message: `starterCode parse error: ${result.parseError}`,
+        message: `starter (${entry.path}) parse error: ${result.parseError}`,
       });
       continue;
     }
@@ -95,7 +107,7 @@ async function main(): Promise<void> {
       const labels = result.forbidden.map((v) => v.label).join(", ");
       issues.push({
         assignmentId: a.id,
-        message: `starterCode violates forbidden patterns: ${labels}`,
+        message: `starter (${entry.path}) violates forbidden patterns: ${labels}`,
       });
     }
   }

@@ -1,7 +1,7 @@
 /**
- * starterCode のコメント規約違反を検出する一時スクリプト。
+ * starter のコメント規約違反を検出する一時スクリプト。
  *
- * `packages/shared/src/problems/README.md` の「`starterCode` のコメント規約」
+ * `packages/shared/src/problems/README.md` の「スターターのコメント規約」
  * に照らし、 コメント行に JavaScript のリテラル断片が混入している課題を
  * 列挙する。
  *
@@ -13,6 +13,11 @@
  *   bun run scripts/scan-starter-comments.ts --summary  # 章別件数のみ
  */
 
+import {
+  getEntryFile,
+  getLanguage,
+  getStarterFiles,
+} from "../src/assignment-helpers.js";
 import type { Assignment } from "../src/types.js";
 
 const JS_KEYWORD_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
@@ -83,7 +88,18 @@ async function main(): Promise<void> {
   const violations: Violation[] = [];
 
   for (const a of assignments) {
-    const lines = a.starterCode.split("\n");
+    // JS 課題のみ走査 (コメント規約は JS スタイル前提)
+    if (getLanguage(a) !== "javascript") {
+      continue;
+    }
+    const entryPath = getEntryFile(a);
+    const entry =
+      getStarterFiles(a).find((f) => f.path === entryPath) ??
+      getStarterFiles(a)[0];
+    if (!entry) {
+      continue;
+    }
+    const lines = entry.content.split("\n");
     lines.forEach((rawLine, idx) => {
       const reasons: string[] = [];
       for (const { pattern, label } of JS_KEYWORD_PATTERNS) {
@@ -134,7 +150,9 @@ async function main(): Promise<void> {
     console.log(`  ${ch}: ${files.size} file(s), ${lines} line(s)`);
   }
 
-  if (summaryOnly) return;
+  if (summaryOnly) {
+    return;
+  }
 
   console.log("\n## 詳細");
   const grouped = new Map<string, Violation[]>();

@@ -92,7 +92,7 @@ XX-chapter/
 | `estimatedMinutes` / `difficulty` | 目安。 |
 | `testKind` | `stdout`（`console.log` 捕捉）か `function`（式評価）か。ステージの [`../curriculum/stages.ts`](../curriculum/stages.ts) と整合させる。 |
 | `description` | Markdown。**よく使う見出し**: `## やること` / `## 期待する出力` / `## ポイント`。 |
-| `starterCode` | エディタの初期表示コード。コメントの書き方は [`starterCode` のコメント規約](#startercode-のコメント規約) に従う。 |
+| `starterFiles` | エディタの初期表示ファイル群 (`AssignmentFile[]`)。 単一ファイル課題では [`_common.ts`](./_common.ts) の `singleFile(\`...\`)` ヘルパで生成する (`starterFiles: singleFile(\`...\`)` の形)。 コメントの書き方は [スターターのコメント規約](#スターターのコメント規約) に従う。 |
 | `tests` | `stdout` なら `expectedStdout`（末尾改行は比較時に無視）、`function` なら評価する `code` 式。 |
 | `entryPoints` | `function` 採点で抽出する名前。 |
 | `solution` | 模範解答。CI の回帰で「全チェック通過」に使う。 |
@@ -100,7 +100,7 @@ XX-chapter/
 | `staticAnalysis` | ESLint ルールや AST の `required` / `forbidden`。 |
 | `mdnSections` | 上記 MDN 方針に従い、**1 件以上** を目標にする。 |
 
-### `starterCode` のコメント規約
+### スターターのコメント規約
 
 エディタの初期表示は学習者が **最初に目にする情報** であり、 ここで答えそのものを露出させると課題として成立しない。 全章共通で次のルールに従う。
 
@@ -109,13 +109,13 @@ XX-chapter/
 3. **「何を」 を書き、 「どう書くか」 は書かない。** コメントは「教科名を `const` の変数に入れる」のように **やる操作** を書く。 「`const subject = "JavaScript";` と書く」のように **構文の見本** を書かない (それは `hints` 配列で段階開示する役目)。
 4. **罠の回避だけは括弧コメントで補足する。** `badSolutions` で潰したい誤答 (例: 計算結果を直接書く・1 回の `console.log` で `\n` を使う) があるなら、 該当する処理コメントの直下に `// (...のように書かないこと)` を 1 行だけ添える。 補足は最小限にする。
 5. **変数名・具体値はコメントから出さない。** AST で `staticAnalysis.ast.required` の `name` で固定している変数名や、 期待出力に対応するリテラル値 (`"Hello"` / `42` / `80 + 15` など) は **starter には書かず、 `description` に集める**。 starter のコメントは「教科名を `const` の変数に入れる」「2 つの数値を `+` で足し算してから `const` の変数に入れる」のように **抽象度を 1 段上げて** 書く。 学習者には説明文を読ませる前提にする (説明文には「期待する出力」「変数名」「値」をすべて明記しておく)。
-6. **ヒント (`hints`) と切り分ける。** `starterCode` は「最低限のスキャフォールド」、 `hints` は「段階的に開示する補助」、 `solution` は「最終的な答え」、 と役割を分ける。 コードの見本やリテラル断片は `hints` 以降にだけ置く。
+6. **ヒント (`hints`) と切り分ける。** `starterFiles` は「最低限のスキャフォールド」、 `hints` は「段階的に開示する補助」、 `solution` は「最終的な答え」、 と役割を分ける。 コードの見本やリテラル断片は `hints` 以降にだけ置く。
 
 #### スカフォールド強度の目安
 
 [`00-setup/README.md`](./00-setup/README.md) で定義済みの 4 段階を全章のデフォルトとする。 上に行くほど手厚い。
 
-| レベル | 用途 | starterCode の中身 |
+| レベル | 用途 | スターターの中身 |
 |---|---|---|
 | `L3` 穴埋め | 入門・初出概念 | `____` を含む不完全コードを置く。 学習者は `____` だけ埋める |
 | `L2` コメント誘導 | 標準 (大半の課題) | 上記 1〜6 の規約に沿って 1 処理 = 1 コメントを並べる |

@@ -42,27 +42,18 @@ function defaultEntryPathFor(lang: Language): string {
 
 /**
  * 多ファイル UI / 採点で使う starterFiles を取り出す。
- * `starterFiles` が定義されていなければ、 単一ファイル `starterCode` を
- * `[{ path: <entryFile or 既定>, content: starterCode }]` に詰め替えて返す。
  */
 export function getStarterFiles(assignment: Assignment): AssignmentFile[] {
-  if (assignment.starterFiles && assignment.starterFiles.length > 0) {
-    return assignment.starterFiles;
-  }
-  const path = assignment.entryFile ?? defaultEntryPathFor(getLanguage(assignment));
-  return [{ path, content: assignment.starterCode }];
+  return assignment.starterFiles;
 }
 
 /**
  * 採点・実行の入口ファイルパスを取り出す。
- * 明示の `entryFile` → `starterFiles[0].path` → 言語別既定 (`main.js` / `query.sql`) の順で解決する。
+ * 明示の `entryFile` → `starterFiles[0].path` の順で解決する。
  */
 export function getEntryFile(assignment: Assignment): string {
   if (assignment.entryFile) {
     return assignment.entryFile;
   }
-  if (assignment.starterFiles && assignment.starterFiles.length > 0) {
-    return assignment.starterFiles[0].path;
-  }
-  return defaultEntryPathFor(getLanguage(assignment));
+  return assignment.starterFiles[0]?.path ?? defaultEntryPathFor(getLanguage(assignment));
 }
