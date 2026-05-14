@@ -32,7 +32,11 @@ import type { GradingSummary } from "@jsreview/shared/ai/types";
 import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
 import { AssignmentView } from "../components/AssignmentView.js";
-import { OutputPane } from "../components/OutputPane.js";
+import {
+  BottomPanel,
+  type BottomPanelTab,
+} from "../components/BottomPanel/index.js";
+import { FileTabs } from "../components/FileTabs.js";
 import { RunResultDialog } from "../components/RunResultDialog.js";
 import { ThemeToggle } from "../components/ThemeToggle.js";
 import { AppHeader } from "../components/AppHeader.js";
@@ -86,14 +90,33 @@ function PracticePageInner({ assignment }: InnerProps) {
     error?: string;
   } | null>(null);
   const [freeRunPending, setFreeRunPending] = useState(false);
+  const [bottomTab, setBottomTab] = useState<BottomPanelTab>("output");
 
   const starterFiles = useMemo(() => getStarterFiles(assignment), [assignment]);
   const entryFile = useMemo(() => getEntryFile(assignment), [assignment]);
-  const { code, setCode, cleared, recordResult, clear } = useProgress({
+  const {
+    files,
+    activeFile,
+    setActiveFile,
+    updateFile,
+    cleared,
+    recordResult,
+    clear,
+  } = useProgress({
     assignmentId: assignment.id,
     starterFiles,
     entryFile,
   });
+  // 採点・自由実行は entryFile 単体を対象にする (Phase 3 ではモジュール解決は未対応)。
+  const code = files[entryFile] ?? "";
+  // エディタにはアクティブタブのファイル内容を渡す。
+  const editorCode = files[activeFile] ?? "";
+  const activeStarterFile = useMemo(
+    () => starterFiles.find((f) => f.path === activeFile),
+    [starterFiles, activeFile],
+  );
+  const activeFileReadOnly = activeStarterFile?.readonly === true;
+  const activeFileLanguage = activeStarterFile?.language ?? assignment.language ?? "javascript";
 
   const staticAnalysis = useMemo(
     () => getStaticAnalysisSettings(assignment),
@@ -165,7 +188,7 @@ function PracticePageInner({ assignment }: InnerProps) {
   }, [assignment.id, reset]);
 
   // `[` / `]` で前後の課題に移動 (両端は循環)。
-  // CodeMirror など編集可能要素にフォーカス中は通常の文字入力を優先する。
+  // CodeMirror など編集可能要素・タブ・下部パネル (将来 Terminal フォーカス) では暴発させない。
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.metaKey || e.ctrlKey || e.altKey) {return;}
@@ -174,7 +197,7 @@ function PracticePageInner({ assignment }: InnerProps) {
       if (
         t instanceof HTMLElement &&
         t.closest(
-          "input, textarea, select, [contenteditable=''], [contenteditable='true'], .cm-editor",
+          "input, textarea, select, [contenteditable=''], [contenteditable='true'], .cm-editor, [data-bottom-panel], [data-file-tabs], [role='tab']",
         )
       ) {
         return;
@@ -224,6 +247,7 @@ function PracticePageInner({ assignment }: InnerProps) {
   const handleFreeRun = useCallback(async () => {
     const submittedCode = code;
     const targetAssignmentId = assignment.id;
+    setBottomTab("output");
     setFreeRunPending(true);
     setFreeRun({ stdout: undefined, error: undefined });
     const codeToRun =
@@ -279,27 +303,42 @@ function PracticePageInner({ assignment }: InnerProps) {
         }
       />
 
-      <div className="grid grid-cols-[440px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
+      {/*
+        VSCode 風レイアウト (#106):
+        - 左サイドバー固定: 問題文 (380px、 旧 440px から縮め将来 file-explorer 220px を予約)
+        - 右セクション: [FileTabs][Editor][BottomPanel (出力/採点結果/ターミナル)][Run buttons][Dialog]
+        - 将来 #ML* で `[file-explorer 220px][editor 1fr]` の 3 カラム化を検討中。
+      */}
+      <div className="grid grid-cols-[380px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
         <aside className="flex min-h-0 flex-col overflow-hidden border-r border-border bg-card max-md:max-h-[40vh] max-md:border-b max-md:border-r-0">
           <AssignmentView assignment={assignment} />
         </aside>
 
-        <section className="grid grid-rows-[1fr_auto_auto] overflow-hidden bg-background">
+        <section className="grid grid-rows-[auto_1fr_auto_auto] overflow-hidden bg-background">
+          <FileTabs
+            files={starterFiles}
+            activeFile={activeFile}
+            onSelect={setActiveFile}
+          />
           <div className="flex min-h-0 flex-col overflow-hidden bg-background">
             <div className="flex-1 overflow-auto">
               <Editor
-                code={code}
-                onChange={setCode}
+                code={editorCode}
+                onChange={(next) => updateFile(activeFile, next)}
                 eslintRules={staticAnalysis.eslintRules}
                 entryPoints={staticAnalysis.ignoredUnusedNames}
+                language={activeFileLanguage}
+                readOnly={activeFileReadOnly}
               />
             </div>
           </div>
-          <OutputPane
-            stdout={freeRun?.stdout}
-            error={freeRun?.error}
-            running={freeRunPending}
-            onClear={() => setFreeRun(null)}
+          <BottomPanel
+            activeTab={bottomTab}
+            onTabChange={setBottomTab}
+            freeRun={freeRun}
+            freeRunPending={freeRunPending}
+            onClearOutput={() => setFreeRun(null)}
+            terminalEnabled={(assignment.language ?? "javascript") === "sql"}
           />
 
           <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border bg-card px-6 py-3">

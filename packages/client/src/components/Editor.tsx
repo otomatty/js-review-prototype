@@ -7,8 +7,9 @@ import { useMemo } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
+import type { Extension } from "@codemirror/state";
 
-import type { ESLintRuleConfig } from "@jsreview/shared/types";
+import type { ESLintRuleConfig, Language } from "@jsreview/shared/types";
 import { useTheme } from "../hooks/useTheme.js";
 import { lintCode } from "../lib/eslint-runner.js";
 
@@ -17,13 +18,29 @@ interface Props {
   onChange: (code: string) => void;
   eslintRules: Record<string, ESLintRuleConfig>;
   entryPoints: string[];
+  /**
+   * 現在表示中のファイルの言語。 省略時は "javascript" 扱い。
+   * "sql" のときは ESLint linter を無効化する。 言語拡張 (`@codemirror/lang-sql`) の
+   * 動的 import は Phase 5 (#109) で導入する。
+   */
+  language?: Language;
+  /** 編集を禁止する (readonly ファイル表示用)。 */
+  readOnly?: boolean;
 }
 
-export function Editor({ code, onChange, eslintRules, entryPoints }: Props) {
+export function Editor({
+  code,
+  onChange,
+  eslintRules,
+  entryPoints,
+  language = "javascript",
+  readOnly = false,
+}: Props) {
   const { theme } = useTheme();
-  const eslintExtension = useMemo(
-    () =>
-      linter((view) => {
+  const eslintExtension = useMemo<Extension | null>(
+    () => {
+      if (language !== "javascript") {return null;}
+      return linter((view) => {
         const text = view.state.doc.toString();
         const violations = lintCode(text, eslintRules, {
           ignoredUnusedNames: entryPoints,
@@ -50,22 +67,36 @@ export function Editor({ code, onChange, eslintRules, entryPoints }: Props) {
             };
           })
           .filter((d): d is Diagnostic => d !== null);
-      }),
-    [entryPoints, eslintRules],
+      });
+    },
+    [entryPoints, eslintRules, language],
   );
+
+  const extensions = useMemo<Extension[]>(() => {
+    const exts: Extension[] = [];
+    // 言語拡張: 現状 JS のみ実装。 SQL extension (`@codemirror/lang-sql`) は #109 で動的 import に切り替える。
+    if (language === "javascript") {
+      exts.push(javascript());
+    }
+    if (eslintExtension) {
+      exts.push(eslintExtension, lintGutter());
+    }
+    return exts;
+  }, [language, eslintExtension]);
 
   return (
     <CodeMirror
       value={code}
       onChange={onChange}
       height="100%"
+      readOnly={readOnly}
       basicSetup={{
         lineNumbers: true,
         highlightActiveLine: true,
         bracketMatching: true,
         autocompletion: true,
       }}
-      extensions={[javascript(), eslintExtension, lintGutter()]}
+      extensions={extensions}
       theme={theme}
     />
   );
