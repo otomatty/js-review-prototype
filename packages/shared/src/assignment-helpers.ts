@@ -37,7 +37,25 @@ export function getLanguage(assignment: Assignment): Language {
 }
 
 function defaultEntryPathFor(lang: Language): string {
-  return lang === "sql" ? "query.sql" : "main.js";
+  switch (lang) {
+    case "sql":
+      return "query.sql";
+    case "python":
+      return "main.py";
+    case "php":
+      return "main.php";
+    case "vitest":
+      return "main.test.js";
+    case "eslint":
+      return "eslint.config.js";
+    case "javascript":
+      return "main.js";
+    default: {
+      const _exhaustive: never = lang;
+      void _exhaustive;
+      return "main.js";
+    }
+  }
 }
 
 /**

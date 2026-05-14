@@ -1,15 +1,22 @@
 /**
- * SQL 採点ランナ (sql.js / SQLite, ブラウザ完結) (#109)。
+ * SQL 採点ランナ (sql.js / SQLite, ブラウザ完結) (#109 → #105 で `CodeRunner` 化)。
  *
  * - sql.js は dynamic import + memoize で初回のみロード (~250KB の JS + ~645KB の wasm)
  * - `sql-wasm.wasm` は Vite プラグイン (`copy-sqljs-wasm`) が `/sqljs/sql-wasm.wasm` に配置する
  * - **採点 DB の分離**: テスト毎に新規 `Database` を生成し、 `sqlSeed` を流してから
  *   学習者 SQL → アサーション SQL の順に実行。 終了時に `db.close()` で破棄する。
  *   これにより前のテストの副作用が次に伝播せず、 ターミナルとも独立 (#109 受け入れ条件)。
+ *
+ * `CodeRunner` 経由で呼ばれ、 `RunInput.files[entryFile]` が学習者 SQL、
+ * `RunInput.sqlSeed` が DDL + seed SQL に対応する。
  */
 
 import type {
-  RunTestsResponse,
+  CodeRunner,
+  RunInput,
+  RunOutput,
+} from "@jsreview/shared/runner/types";
+import type {
   SqlRow,
   SqlTestCase,
   TestResult,
@@ -36,11 +43,24 @@ const getSqlJs = memoizePromiseFactory(async () => {
   });
 });
 
-export async function runSqlTests(
+export const sqlRunner: CodeRunner = {
+  language: "sql",
+  async run(input: RunInput): Promise<RunOutput> {
+    if (input.mode === "freerun") {
+      // SQL 課題は UI 上で freerun ボタンを無効化している (PracticePage の freeRunDisabled)。
+      // ここに到達した場合は呼び出し側の不整合なので明示的にエラー化する。
+      throw new Error("SQL ランナは freerun モードに対応していません (採点モードでのみ利用可能)");
+    }
+    const code = input.files[input.entryFile] ?? "";
+    return runSqlTests(code, input.tests as SqlTestCase[], input.sqlSeed);
+  },
+};
+
+async function runSqlTests(
   code: string,
   tests: SqlTestCase[],
   seed: string | undefined,
-): Promise<RunTestsResponse> {
+): Promise<RunOutput> {
   const SQL = await getSqlJs();
   const startedAt = performance.now();
   const results: TestResult[] = tests.map((t) =>

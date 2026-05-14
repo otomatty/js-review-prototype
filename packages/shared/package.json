@@ -18,6 +18,11 @@
     "./curriculum/stages": "./src/curriculum/stages.ts",
     "./grading/ast": "./src/grading/ast.ts",
     "./grading/evaluate": "./src/grading/evaluate.ts",
+    "./runner/types": {
+      "bun": "./src/runner/types.ts",
+      "node": "./dist/runner/types.js",
+      "default": "./src/runner/types.ts"
+    },
     "./util/timeout": "./src/util/timeout.ts",
     "./util/validate-run-tests-request": {
       "bun": "./src/util/validate-run-tests-request.ts",

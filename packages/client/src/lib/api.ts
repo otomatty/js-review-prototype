@@ -1,45 +1,16 @@
 /**
- * `/api/chat` を叩く HTTP クライアントと、ブラウザ内 QuickJS によるテスト実行ラッパ。
+ * `/api/chat` を叩く HTTP クライアント (SSE ストリーミング)。
  *
- * テスト実行はかつて Vercel Serverless Function (`/api/run-tests`) でも提供していたが、
- * QuickJS WASM のバンドル/起動が Vercel 環境で安定しなかったため、現在はブラウザ内で実行する。
- * テストケースは元々クライアントに同梱されており、サーバ実行に固有のセキュリティ上の利点はない。
+ * テスト実行系は #105 で `CodeRunner` 抽象 (`lib/runners/*`) に集約された。
+ * このファイルは AI チャットの SSE クライアントだけを担当する。
  */
-import type {
-  RunTestsRequest,
-  RunTestsResponse,
-  TestResult,
-} from "@jsreview/shared/types";
 import type {
   ChatRequest,
   ChatStreamEvent,
 } from "@jsreview/shared/ai/types";
 
-import { runTestsLocally } from "./run-tests-local.js";
-
 /** 空なら同一オリジン (Vercel の `/api/chat`)。デプロイ済み URL を別ホストから叩きたい場合に指定する。 */
 const SERVER_URL = (import.meta.env.VITE_SERVER_URL ?? "").replace(/\/+$/, "");
-
-export async function runTests(
-  body: RunTestsRequest,
-): Promise<RunTestsResponse> {
-  return runTestsLocally(body);
-}
-
-/**
- * 採点せずにコードを実行し、stdout (とエラー) のみを取得する。
- * 学習者が「実行」ボタンで自由に動作確認するための薄いラッパ。
- */
-export async function runFreeRun(code: string): Promise<TestResult> {
-  const response = await runTests({
-    code,
-    testKind: "stdout",
-    tests: [],
-    mode: "freerun",
-  });
-  // freerun モードのサーバは必ず 1 件だけ返す。
-  return response.results[0];
-}
 
 /**
  * サーバの POST /api/chat に messages を投げ、SSE で流れてくる
