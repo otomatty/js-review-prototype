@@ -46,6 +46,10 @@ interface Props {
   onAskAi?: () => void;
   /** ターミナル機能が有効な課題かどうか (SQL 等)。 false なら disabled 表示。 */
   terminalEnabled?: boolean;
+  /** ターミナルセッションを (assignmentId, seedHash) でメモ化するためのキー。 */
+  terminalAssignmentId: string;
+  /** ターミナルセッション初期化時に流す DDL+seed (SQL 課題用)。 */
+  terminalSeed: string;
 }
 
 const TAB_HEADER_CLASS = cn(
@@ -73,6 +77,8 @@ export function BottomPanel({
   onGoToNext,
   onAskAi,
   terminalEnabled = false,
+  terminalAssignmentId,
+  terminalSeed,
 }: Props) {
   return (
     <div
@@ -142,7 +148,11 @@ export function BottomPanel({
           forceMount
           className="min-h-0 data-[state=inactive]:hidden"
         >
-          <TerminalTab enabled={terminalEnabled} />
+          <TerminalTab
+            enabled={terminalEnabled}
+            assignmentId={terminalAssignmentId}
+            seed={terminalSeed}
+          />
         </TabsPrimitive.Content>
       </TabsPrimitive.Root>
     </div>

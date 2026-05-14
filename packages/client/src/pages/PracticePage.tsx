@@ -242,19 +242,20 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   const handleRun = useCallback(async () => {
     // await 中に課題が切り替わっても元の課題に紐付ける必要があるため、
-    // 評価対象のコードはローカル変数に固定しておく。
-    const submittedCode = code;
+    // 評価対象のファイル群はスナップショットしてからランナに渡す。
+    const submittedFiles: Record<string, string> = { ...files };
+    const submittedCode = submittedFiles[entryFile] ?? "";
     reset();
     setGradingSession((n) => n + 1);
     setBottomTab("results");
     const res = await run({
-      code: submittedCode,
+      files: submittedFiles,
       assignment,
       lint,
       ast,
     });
     recordResult(res.evaluation.cleared, submittedCode);
-  }, [code, assignment, lint, ast, reset, run, recordResult]);
+  }, [files, entryFile, assignment, lint, ast, reset, run, recordResult]);
 
   // 「実行」 (採点せずコードを動かして stdout を取る)
   // function 採点では assignment.demoCall を末尾に追記し、 entryPoint を呼ばせる。
@@ -365,6 +366,8 @@ function PracticePageInner({ assignment }: InnerProps) {
             onGoToNext={handleGoToNext}
             onAskAi={handleAskAi}
             terminalEnabled={(assignment.language ?? "javascript") === "sql"}
+            terminalAssignmentId={assignment.id}
+            terminalSeed={assignment.sqlSeed ?? ""}
           />
 
           <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border bg-card px-6 py-3">

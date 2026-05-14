@@ -3,7 +3,7 @@
  * 編集中、ESLint の違反箇所が赤線/黄線でリアルタイム表示される。
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
@@ -72,17 +72,35 @@ export function Editor({
     [entryPoints, eslintRules, language],
   );
 
+  // SQL の場合は `@codemirror/lang-sql` を動的 import で取得して extension を差し替える (#109)。
+  // 初回ロード前は extension なし (plain text 相当) で描画し、 取得後に再 render する。
+  const [sqlExtension, setSqlExtension] = useState<Extension | null>(null);
+  useEffect(() => {
+    if (language !== "sql") {
+      setSqlExtension(null);
+      return;
+    }
+    let cancelled = false;
+    void import("@codemirror/lang-sql").then((mod) => {
+      if (!cancelled) {setSqlExtension(mod.sql());}
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
+
   const extensions = useMemo<Extension[]>(() => {
     const exts: Extension[] = [];
-    // 言語拡張: 現状 JS のみ実装。 SQL extension (`@codemirror/lang-sql`) は #109 で動的 import に切り替える。
     if (language === "javascript") {
       exts.push(javascript());
+    } else if (language === "sql" && sqlExtension) {
+      exts.push(sqlExtension);
     }
     if (eslintExtension) {
       exts.push(eslintExtension, lintGutter());
     }
     return exts;
-  }, [language, eslintExtension]);
+  }, [language, eslintExtension, sqlExtension]);
 
   return (
     <CodeMirror

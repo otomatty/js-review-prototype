@@ -4,12 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { copySqlJsWasm } from "./vite-plugins/copy-sqljs-wasm";
 import { stripDevFields } from "./vite-plugins/strip-dev-fields";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [stripDevFields(), react(), tailwindcss()],
+  plugins: [stripDevFields(), copySqlJsWasm(), react(), tailwindcss()],
   define: {
     "process.env": {},
   },

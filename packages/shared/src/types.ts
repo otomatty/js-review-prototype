@@ -240,15 +240,19 @@ export interface FunctionTestCase {
   query?: never;
 }
 
-/** SQL 採点用テストケース。学習者の SQL 実行後にこの `query` を流して結果を比較する。 */
+/**
+ * SQL 採点用テストケース。
+ *
+ * - `query` 未指定: 学習者の SQL を実行し、 その **最終結果セット** を `expectedRows` と比較する。
+ *   学習者が SELECT を書く問題で使う (もっとも一般的)。
+ * - `query` 指定: 学習者の SQL を実行 (副作用のため。 例: CREATE/INSERT) した後、 同じ Database 上で
+ *   `query` を実行して結果を比較する。 DDL/DML を学ぶ問題で使う。
+ */
 export interface SqlTestCase {
   name: string;
-  /**
-   * 採点用アサーション SQL。 学習者の `entryFile` 実行後に、 同じ Database 上で実行され、
-   * `expectedRows` (および任意で `expectedColumns`) と比較される。
-   */
-  query: string;
-  /** 期待される行 (列順は `expectedColumns` または query の SELECT 順)。 */
+  /** 採点用アサーション SQL。 省略時は学習者 SQL の最終結果を比較する。 */
+  query?: string;
+  /** 期待される行 (列順は `expectedColumns` または SELECT 順)。 */
   expectedRows: SqlRow[];
   expectedColumns?: string[];
   code?: never;
