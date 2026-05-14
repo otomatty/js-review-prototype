@@ -40,7 +40,15 @@ export interface DispatchResult {
 export async function runGrading(args: RunArgs): Promise<DispatchResult> {
   const language = getLanguage(args.assignment);
   const entry = getEntryFile(args.assignment);
-  const code = args.files[entry] ?? "";
+  // entryFile が files に無いのは課題定義不整合 (entryFile が starterFiles のどの path にも該当しない 等)。
+  // 無音で fallback すると採点が空コード扱いで通ってしまうので、 明示的にエラーにする (coderabbit 対応)。
+  if (!Object.prototype.hasOwnProperty.call(args.files, entry)) {
+    const known = Object.keys(args.files).join(", ");
+    throw new Error(
+      `entryFile "${entry}" not found in submitted files (known: ${known || "(none)"})`,
+    );
+  }
+  const code = args.files[entry];
 
   if (language === "sql") {
     const { runSqlTests } = await import("./sql-runner.js");

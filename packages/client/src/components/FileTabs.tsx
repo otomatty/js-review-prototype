@@ -5,11 +5,15 @@
  * - クリックで `activeFile` を切り替える
  * - `readonly` ファイルには小さなバッジを出す (例: `utils.js` (読取専用))
  * - 単一ファイルでも 1 タブだけ表示 (UI 回帰なし)
+ * - WAI-ARIA tablist パターン: ArrowLeft/Right で循環移動、 Home/End で先頭/末尾、
+ *   roving tabindex (`tabIndex={isActive ? 0 : -1}`) で支援技術ユーザを考慮 (coderabbit 対応)。
  *
  * `[` / `]` キーで前後の課題に飛ぶ既存ナビと衝突しないよう、 ルート要素には
  * `data-bottom-panel` … ではなく VSCode 風のタブを示す `data-file-tabs` を付与。
  * `PracticePage` の除外セレクタで参照する。
  */
+
+import { useRef, type KeyboardEvent } from "react";
 
 import { cn } from "@/lib/utils";
 import type { AssignmentFile } from "@jsreview/shared/types";
@@ -21,6 +25,44 @@ interface Props {
 }
 
 export function FileTabs({ files, activeFile, onSelect }: Props) {
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const moveFocus = (nextIndex: number) => {
+    if (files.length === 0) {return;}
+    const wrapped = ((nextIndex % files.length) + files.length) % files.length;
+    onSelect(files[wrapped].path);
+    // 次フォーカスは render 反映後に行う (現タブ要素から自然遷移)。
+    queueMicrotask(() => {
+      tabRefs.current[wrapped]?.focus();
+    });
+  };
+
+  const handleKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    switch (event.key) {
+      case "ArrowRight":
+        event.preventDefault();
+        moveFocus(index + 1);
+        break;
+      case "ArrowLeft":
+        event.preventDefault();
+        moveFocus(index - 1);
+        break;
+      case "Home":
+        event.preventDefault();
+        moveFocus(0);
+        break;
+      case "End":
+        event.preventDefault();
+        moveFocus(files.length - 1);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div
       data-file-tabs
@@ -28,15 +70,20 @@ export function FileTabs({ files, activeFile, onSelect }: Props) {
       aria-label="エディタファイルタブ"
       className="flex items-stretch gap-px overflow-x-auto border-b border-border bg-muted/30 px-2 pt-1.5 text-[12px] font-sans"
     >
-      {files.map((file) => {
+      {files.map((file, index) => {
         const isActive = file.path === activeFile;
         return (
           <button
             key={file.path}
+            ref={(el) => {
+              tabRefs.current[index] = el;
+            }}
             type="button"
             role="tab"
             aria-selected={isActive}
+            tabIndex={isActive ? 0 : -1}
             onClick={() => onSelect(file.path)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
             className={cn(
               "group relative inline-flex items-center gap-1.5 rounded-t-md border border-b-0 border-transparent px-3 py-1.5 transition-colors",
               "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring",

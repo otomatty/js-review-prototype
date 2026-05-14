@@ -104,8 +104,34 @@ export function TerminalTab({ enabled, assignmentId, seed }: Props) {
         let buffer = "";
         terminal.onData((data: string) => {
           if (!terminal || !session) {return;}
-          for (const ch of data) {
+          // 矢印キー (`\x1b[D`) などの ANSI エスケープシーケンスが buffer に紛れて
+          // SQL を壊さないよう、 ESC で始まる CSI シーケンスはスキップする (gemini medium 対応)。
+          let i = 0;
+          while (i < data.length) {
+            const ch = data[i];
             const code = ch.charCodeAt(0);
+            if (code === 0x1b /* ESC */) {
+              if (data[i + 1] === "[") {
+                // CSI: ESC '[' (parameter / intermediate bytes)* final-byte
+                let j = i + 2;
+                while (j < data.length) {
+                  const cj = data.charCodeAt(j);
+                  if ((cj >= 0x30 && cj <= 0x3f) || (cj >= 0x20 && cj <= 0x2f)) {
+                    j++;
+                    continue;
+                  }
+                  if (cj >= 0x40 && cj <= 0x7e) {
+                    j++;
+                  }
+                  break;
+                }
+                i = j;
+                continue;
+              }
+              // それ以外の ESC シーケンスは ESC + 次の 1 文字をまとめて捨てる。
+              i += 2;
+              continue;
+            }
             if (ch === "\r") {
               terminal.writeln("");
               const sql = buffer.trim();
@@ -128,6 +154,7 @@ export function TerminalTab({ enabled, assignmentId, seed }: Props) {
               buffer += ch;
               terminal.write(ch);
             }
+            i++;
           }
         });
 
@@ -225,20 +252,21 @@ function writeResults(
       continue;
     }
     const widths = r.columns.map((c, i) => {
-      let w = c.length;
+      let w = visualWidth(c);
       for (const row of r.rows) {
         const cell = formatCell(row[i]);
-        if (cell.length > w) {w = cell.length;}
+        const cw = visualWidth(cell);
+        if (cw > w) {w = cw;}
       }
       return Math.min(w, 32);
     });
     terminal.writeln(
-      r.columns.map((c, i) => c.padEnd(widths[i])).join(" | "),
+      r.columns.map((c, i) => padEndVisual(c, widths[i])).join(" | "),
     );
     terminal.writeln(widths.map((w) => "-".repeat(w)).join("-+-"));
     for (const row of r.rows) {
       terminal.writeln(
-        row.map((v, i) => formatCell(v).padEnd(widths[i])).join(" | "),
+        row.map((v, i) => padEndVisual(formatCell(v), widths[i])).join(" | "),
       );
     }
   }
@@ -255,4 +283,46 @@ function formatCell(v: unknown): string {
   } catch {
     return "(?)";
   }
+}
+
+/**
+ * ターミナル上での視覚幅 (cell 数) を返す。 ASCII = 1、 CJK / 全角 = 2 とみなす。
+ * SQL の seed に日本語などの全角文字が含まれる場合に表の列揃えが崩れないようにする
+ * (gemini medium 対応 / #109)。
+ */
+function visualWidth(s: string): number {
+  let w = 0;
+  for (const ch of s) {
+    const code = ch.codePointAt(0) ?? 0;
+    if (isWide(code)) {
+      w += 2;
+    } else {
+      w += 1;
+    }
+  }
+  return w;
+}
+
+function isWide(code: number): boolean {
+  return (
+    (code >= 0x1100 && code <= 0x115f) /* Hangul Jamo */ ||
+    (code >= 0x2e80 && code <= 0x303e) /* CJK Radicals / 記号 */ ||
+    (code >= 0x3041 && code <= 0x33ff) /* ひらがな / カタカナ / CJK 記号 */ ||
+    (code >= 0x3400 && code <= 0x4dbf) /* CJK Ext A */ ||
+    (code >= 0x4e00 && code <= 0x9fff) /* CJK 基本 */ ||
+    (code >= 0xa000 && code <= 0xa4cf) /* Yi */ ||
+    (code >= 0xac00 && code <= 0xd7a3) /* Hangul Syllables */ ||
+    (code >= 0xf900 && code <= 0xfaff) /* CJK 互換 */ ||
+    (code >= 0xfe30 && code <= 0xfe4f) /* CJK 互換 (記号) */ ||
+    (code >= 0xff00 && code <= 0xff60) /* 全角 */ ||
+    (code >= 0xffe0 && code <= 0xffe6) /* 全角 */ ||
+    (code >= 0x1f300 && code <= 0x1f6ff) /* Misc Symbols / Emoji */ ||
+    (code >= 0x1f900 && code <= 0x1f9ff) /* Supplemental Symbols */
+  );
+}
+
+function padEndVisual(s: string, width: number): string {
+  const w = visualWidth(s);
+  if (w >= width) {return s;}
+  return s + " ".repeat(width - w);
 }

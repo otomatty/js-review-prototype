@@ -159,31 +159,37 @@ export function useProgress({ assignmentId, starterFiles, entryFile }: Args): Pr
 
   const recordResult = useCallback(
     (passed: boolean, submittedCode: string) => {
+      // codex P1 対応: storage から `lastFiles` を読み戻すと、 400ms debounce 前の編集が消える
+      // ため、 必ず現在の in-memory state (`s.files`) を基底にする。
+      // functional setState で最新状態を atomic に読み、 `entryFile` だけ採点時のスナップショット
+      // (`submittedCode`) で上書きして保存する。
       const existing = loadEntry(assignmentId);
       const prev = existing?.cleared ?? false;
       const nextCleared = prev || passed;
-      // 採点中の活動を反映するため、 保存値は (1) ストレージにあるならそれを基底、
-      // (2) 無ければ呼び出し時点の files、 のどちらかに submittedCode を上書き。
-      const baseFiles = existing?.lastFiles ?? state.files;
-      const nextFiles: Record<string, string> = {
-        ...baseFiles,
-        [entryFile]: submittedCode,
-      };
-      const entry: ProgressEntry = {
-        cleared: nextCleared,
-        lastFiles: nextFiles,
-        activeFile: existing?.activeFile ?? state.activeFile,
-        lastSubmittedAt: Date.now(),
-      };
-      saveEntry(assignmentId, entry, {
-        previousCleared: existing?.cleared ?? null,
+      const isCurrentAssignment = lastAssignmentRef.current === assignmentId;
+      setState((s) => {
+        const nextFiles: Record<string, string> = {
+          ...s.files,
+          [entryFile]: submittedCode,
+        };
+        const entry: ProgressEntry = {
+          cleared: nextCleared,
+          lastFiles: nextFiles,
+          activeFile: s.activeFile,
+          lastSubmittedAt: Date.now(),
+        };
+        // 採点中に別課題へ切り替えた場合は state を触らず、 storage 書き込みも行わない
+        // (古い課題の storage に新しい課題の files を書き込むのを防ぐ)。
+        if (!isCurrentAssignment) {
+          return s;
+        }
+        saveEntry(assignmentId, entry, {
+          previousCleared: existing?.cleared ?? null,
+        });
+        return { ...s, cleared: nextCleared, files: nextFiles };
       });
-      // 表示中の課題が切り替わっていれば cleared / files の state は触らない。
-      if (lastAssignmentRef.current === assignmentId) {
-        setState((s) => ({ ...s, cleared: nextCleared, files: nextFiles }));
-      }
     },
-    [assignmentId, entryFile, state.files, state.activeFile],
+    [assignmentId, entryFile],
   );
 
   const clear = useCallback(() => {

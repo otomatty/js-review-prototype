@@ -23,7 +23,10 @@ import type {
   LintViolation,
   TestResult,
 } from "@jsreview/shared/types";
-import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
+import {
+  getLanguage,
+  getStaticAnalysisSettings,
+} from "@jsreview/shared/assignment-helpers";
 
 import { cn } from "@/lib/utils";
 import type { ExecutionResult } from "../hooks/useGradeRunner";
@@ -76,6 +79,11 @@ export function RunResultBody({
   const totalTests = testResults.length;
   const visibleTests = testResults.slice(0, revealedTests);
 
+  // SQL 等の非 JS 課題は採点が「テストのみ」 で、 Lint/AST は対象外。
+  // JS 用 ESLint/Babel を SQL に当てると無意味な構文エラーが出るため、 表示も含めて省略する
+  // (codex P2 対応 / #109)。
+  const isJavaScript = getLanguage(assignment) === "javascript";
+
   // result がまだ無い状態でも phase は時間経過で進むため、Lint/AST の判定は
   // displayedLint/displayedAst から都度計算してフォールバックする。
   const localLintPassed = displayedLint.every((v) => v.severity !== 2);
@@ -98,7 +106,12 @@ export function RunResultBody({
   })();
 
   const testsStatus: SectionStatus = (() => {
-    if (phase === "lint" || phase === "ast") {return "pending";}
+    if (!isJavaScript) {
+      // 非 JS は Lint/AST フェーズを飛ばすので、 phase に関わらず tests に直接入る。
+      if (phase === "lint" || phase === "ast") {return "evaluating";}
+    } else if (phase === "lint" || phase === "ast") {
+      return "pending";
+    }
     if (phase === "tests") {return "evaluating";}
     if (result?.errorMessage) {return "error";}
     if (!result) {return "evaluating";}
@@ -115,12 +128,16 @@ export function RunResultBody({
         />
       ) : null}
       <div className="overflow-hidden rounded-lg border bg-card">
-        <LintRow lint={displayedLint} status={lintStatus} />
-        <AstRow
-          ast={displayedAst}
-          assignment={assignment}
-          status={astStatus}
-        />
+        {isJavaScript ? (
+          <>
+            <LintRow lint={displayedLint} status={lintStatus} />
+            <AstRow
+              ast={displayedAst}
+              assignment={assignment}
+              status={astStatus}
+            />
+          </>
+        ) : null}
         <TestsRow
           status={testsStatus}
           running={running}

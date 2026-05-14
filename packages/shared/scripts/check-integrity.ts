@@ -54,9 +54,33 @@ async function main(): Promise<void> {
     }
   }
 
-  // 2. starterCode が ast.forbidden を踏んでいない (JS 課題のみ — 他言語は別途検証)
+  // 2. 課題定義の整合性検査。
+  //    - JS 課題: starterCode を Babel パースして ast.forbidden に違反していないか
+  //    - 非 JS 課題 (SQL 等): AST 検証は不可だが、 entryFile と tests の最低限の整合性は
+  //      ここで CI に通す (coderabbit 対応)
   for (const a of assignments) {
     if (getLanguage(a) !== "javascript") {
+      // 言語非依存の最低限チェック
+      if (a.tests.length === 0) {
+        issues.push({
+          assignmentId: a.id,
+          message: "non-javascript assignment must define at least one test",
+        });
+      }
+      if (!a.entryFile) {
+        issues.push({
+          assignmentId: a.id,
+          message: "non-javascript assignment requires entryFile",
+        });
+      } else if (
+        a.starterFiles &&
+        !a.starterFiles.some((f) => f.path === a.entryFile)
+      ) {
+        issues.push({
+          assignmentId: a.id,
+          message: `entryFile "${a.entryFile}" is not found in starterFiles`,
+        });
+      }
       continue;
     }
     const result = analyzeAst(a.starterCode, getStaticAnalysisSettings(a).ast);
