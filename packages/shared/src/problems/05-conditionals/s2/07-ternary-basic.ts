@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05TernaryBasic: Assignment = {
   id: "S2-Ch05-07-ternary-basic",
@@ -25,7 +26,7 @@ export const s2Ch05TernaryBasic: Assignment = {
 - \`条件 ? 真のときの値 : 偽のときの値\` で **値を選ぶ** 式が書けます。
 - \`if/else\` を文ではなく **式** として書けるので、 変数代入と相性が良いです。
 `,
-  starterCode: `// 年齢の数値を const の変数に入れる
+  starterFiles: singleFile(`// 年齢の数値を const の変数に入れる
 
 
 // 三項演算子 ( 条件 ? 真の値 : 偽の値 ) で対応する文字列を選び、 別の const の変数に入れる
@@ -33,7 +34,7 @@ export const s2Ch05TernaryBasic: Assignment = {
 
 // 結果の変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 大人 になる",

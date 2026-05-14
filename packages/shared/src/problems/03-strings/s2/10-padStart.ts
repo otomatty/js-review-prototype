@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03PadStart: Assignment = {
   id: "S2-Ch03-10-padStart",
@@ -28,7 +29,7 @@ export const s2Ch03PadStart: Assignment = {
 - 第 1 引数: 仕上げたい桁数。 第 2 引数: 埋める文字。
 - 数値を直接 \`.padStart\` できないので、 まず文字列に変換します。
 `,
-  starterCode: `// 数値を const の変数に入れる
+  starterFiles: singleFile(`// 数値を const の変数に入れる
 
 
 // String(数値) で文字列化してから padStart で 0 を埋めた結果を、
@@ -37,7 +38,7 @@ export const s2Ch03PadStart: Assignment = {
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 007 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch10CategoryTreeAggregate: Assignment = {
   id: "S5-Ch10-02-category-tree-aggregate",
@@ -76,7 +77,7 @@ totals.size               // → 6
   4. 最後に \`visit(rootCategory)\` を呼び、 \`return totals\`
 - AST で **\`new Map()\` / \`Map#set\` / \`for...of\` / \`return\` の使用** を必須にしています。 配列だけで書くアプローチや、 再帰せずに 1 階層だけ数える実装は通りません。
 `,
-  starterCode: `function aggregateProductsByCategory(rootCategory) {
+  starterFiles: singleFile(`function aggregateProductsByCategory(rootCategory) {
   // 集計用に new Map() を用意する
 
 
@@ -91,7 +92,7 @@ totals.size               // → 6
 
   // ルートに対して visit を呼んだら、 totals を return する
 }
-`,
+`),
   entryPoints: ["aggregateProductsByCategory"],
   demoCall: `(() => {
   const root = { name: "All", products: [], children: [

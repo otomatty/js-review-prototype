@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07Clamp: Assignment = {
   id: "S3-Ch07-05-clamp",
@@ -30,10 +31,10 @@ clamp(10, 0, 10);   // → 10
 
 - if 文の連続でも、 \`Math.max(min, Math.min(n, max))\` のテクニックでも書けます。
 `,
-  starterCode: `function clamp(n, min, max) {
+  starterFiles: singleFile(`function clamp(n, min, max) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["clamp"],
   demoCall: `console.log(clamp(15, 0, 10));`,
   tests: [

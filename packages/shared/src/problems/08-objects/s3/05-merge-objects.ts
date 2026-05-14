@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08MergeObjects: Assignment = {
   id: "S3-Ch08-05-merge-objects",
@@ -25,10 +26,10 @@ mergeObjects({ a: 1, b: 2 }, { b: 3 });   // → { a: 1, b: 3 }
 
 - \`{ ...a, ...b }\` で後に書いた方が優先される。
 `,
-  starterCode: `function mergeObjects(a, b) {
+  starterFiles: singleFile(`function mergeObjects(a, b) {
   // ここを実装してください (a, b は変更しない)
 }
-`,
+`),
   entryPoints: ["mergeObjects"],
   demoCall: `console.log(mergeObjects({ a: 1 }, { b: 2 }));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Exponent: Assignment = {
   id: "S1-Ch02-06-exponent",
@@ -22,9 +23,9 @@ export const s1Ch02Exponent: Assignment = {
 256
 \`\`\`
 `,
-  starterCode: `// console.log の中に 2 ** 8 の式を書く
+  starterFiles: singleFile(`// console.log の中に 2 ** 8 の式を書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が 256 になる",

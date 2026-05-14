@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch09Partition: Assignment = {
   id: "S4-Ch09-02-partition",
@@ -33,10 +34,10 @@ partition([1, 2], () => true);  // → [[1, 2], []]
 - 戻り値の **長さは常に 2** で、 入力が空でも \`[[], []]\` を返します。
 - 入力配列 \`arr\` を **書き換えない** こと (非破壊)。
 `,
-  starterCode: `function partition(arr, pred) {
+  starterFiles: singleFile(`function partition(arr, pred) {
   // reduce の初期値 [[], []] を使って 1 周で matched / others を組み立ててください
 }
-`,
+`),
   entryPoints: ["partition"],
   demoCall: `console.log(partition([1, 2, 3, 4, 5], (x) => x % 2 === 0));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03SelfIntroCapstone: Assignment = {
   id: "S1-Ch03-13-self-intro-capstone",
@@ -31,13 +32,13 @@ export const s1Ch03SelfIntroCapstone: Assignment = {
 - 1 回の console.log で 2 行を出すには、 バッククォートを使った **複数行のテンプレートリテラル** が便利です。
 - \`\${name}\` / \`\${age}\` / \`\${hobby}\` をそれぞれ埋め込みます。
 `,
-  starterCode: `// 名前・年齢・趣味の 3 つを、 それぞれ const の変数に入れる
+  starterFiles: singleFile(`// 名前・年齢・趣味の 3 つを、 それぞれ const の変数に入れる
 
 
 // バッククォートで囲んだ複数行テンプレートリテラルで自己紹介文を組み立て、
 // console.log で出力する (\${変数名} で値を埋め込む)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 自己紹介文 (2 行) になる",

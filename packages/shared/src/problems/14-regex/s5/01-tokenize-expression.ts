@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch14TokenizeExpression: Assignment = {
   id: "S5-Ch14-01-tokenize-expression",
@@ -95,7 +96,7 @@ for (const m of "abc 123".matchAll(re)) {
 - 名前付きキャプチャは \`undefined\` 比較ではなく **\`m.groups\` のキーの存在判定** でも書けます。 ただし JavaScript の \`m.groups\` は **すべての名前のキーを持ち、 マッチしない方は \`undefined\` が入っている** ので、 値の比較が一番素直です。
 - 配列に push してから最後に return する形は副作用を伴いますが、 字句解析の文脈では「ストリーム → 配列」 のテンプレとして自然な書き方です。 \`reduce\` でも書けますが今回は \`for...of\` を要件にしています。
 `,
-  starterCode: `function tokenize(s) {
+  starterFiles: singleFile(`function tokenize(s) {
   // 1) 3 種類の名前付きキャプチャを並べた正規表現 re を作る
   //    例: /(?<number>\\d+(?:\\.\\d+)?)|(?<operator>[+\\-*\\/])|(?<paren>[()])/g
 
@@ -107,7 +108,7 @@ for (const m of "abc 123".matchAll(re)) {
 
   // 4) tokens を return する
 }
-`,
+`),
   entryPoints: ["tokenize"],
   demoCall: `console.log(tokenize("(3.14 * 2) - 0.5"));`,
   tests: [

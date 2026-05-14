@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06FizzBuzzCapstone: Assignment = {
   id: "S2-Ch06-16-fizzbuzz-capstone",
@@ -46,14 +47,14 @@ FizzBuzz
 - if/else if/else で書きます。
 - **ハードコード禁止**: ループや if を使わず 15 行分の文字列を 1 つの \`console.log\` で出力するのは NG。 必ず for ループと条件分岐で計算してください。
 `,
-  starterCode: `// for ループでカウンタを 1 から上限まで回す
+  starterFiles: singleFile(`// for ループでカウンタを 1 から上限まで回す
 
 
 // 各回ごとに、 説明文の優先順 (両方の倍数 → 一方の倍数 → どちらでもない) で
 // if / else if / else に分岐し、 対応する文字列または数値を console.log で出力する
 // (両方の倍数を最初にチェックしないと判定が崩れる点に注意)
 
-`,
+`),
   tests: [
     {
       name: "stdout が FizzBuzz の 15 行になる",

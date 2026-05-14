@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TypeofUndefined: Assignment = {
   id: "S2-Ch01-05-typeof-undefined",
@@ -27,12 +28,12 @@ undefined
 - \`undefined\` は「まだ値が入っていない」 という意味の特別な値です。
 - 後で代入するつもりの変数を **先に名前だけ用意** したいときに \`let value;\` のように書きます。
 `,
-  starterCode: `// let で変数を宣言する (初期値は入れない)
+  starterFiles: singleFile(`// let で変数を宣言する (初期値は入れない)
 
 
 // その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が undefined になる",

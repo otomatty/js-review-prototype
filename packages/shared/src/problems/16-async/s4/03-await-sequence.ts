@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch16AwaitSequence: Assignment = {
   id: "S4-Ch16-03-await-sequence",
@@ -31,11 +32,11 @@ await addAwaited(Promise.resolve(-1), Promise.resolve(1));    // → 0
 - AST で **async 関数** と **AwaitExpression** を必須、 **\`Promise.all\` (\`method: "all"\`)** を禁止にしています。
 - await を 2 回明示的に書きましょう。
 `,
-  starterCode: `// async function を使い、 p1 を await してから p2 を await して合計を返す
+  starterFiles: singleFile(`// async function を使い、 p1 を await してから p2 を await して合計を返す
 function addAwaited(p1, p2) {
   // ここに実装する
 }
-`,
+`),
   entryPoints: ["addAwaited"],
   demoCall: `(async () => console.log(await addAwaited(Promise.resolve(2), Promise.resolve(3))))();`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch05BusinessHours: Assignment = {
   id: "S4-Ch05-04-business-hours",
@@ -43,11 +44,11 @@ isOpen(1, 24);   // → false  (hour が範囲外)
 - 平日判定は \`day >= 1 && day <= 5\` のように **&& で範囲を合成** します。 短絡評価により左が偽なら右は評価されません。
 - 「営業中の条件を式 1 つにまとめて return する」 形でも、 「曜日ごとに早期 return する」 形でも書けます。 どちらでも読みやすければ OK です。
 `,
-  starterCode: `function isOpen(day, hour) {
+  starterFiles: singleFile(`function isOpen(day, hour) {
   // 1. 入力検証 (day, hour が範囲外なら false)
   // 2. 曜日ごとに営業時間を判定して true / false を返す
 }
-`,
+`),
   entryPoints: ["isOpen"],
   demoCall: `console.log(isOpen(1, 12));`,
   tests: [

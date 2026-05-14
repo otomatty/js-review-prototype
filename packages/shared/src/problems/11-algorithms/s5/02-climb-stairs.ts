@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch11ClimbStairs: Assignment = {
   id: "S5-Ch11-02-climb-stairs",
@@ -66,7 +67,7 @@ climbStairs(1) = 1
 - 配列ではなく **「2 つの変数を使い回す」** 書き方 (O(N) 時間 / O(1) 空間) もありますが、 この問題では **配列を使う DP の典型形** をまず練習します (より高次元の DP へ自然に拡張できる)。
 - ベースケースを \`n === 0\` や \`n === 1\` のときに早期 return してから for に入っても問題ありません。 \`const dp = [1, 1];\` で長さ 2 の初期配列を作り、 \`n < 2\` のときは \`dp[n]\` を返せばよいです。
 `,
-  starterCode: `function climbStairs(n) {
+  starterFiles: singleFile(`function climbStairs(n) {
   // dp テーブルを [1, 1] で初期化する (dp[0] と dp[1])
 
 
@@ -75,7 +76,7 @@ climbStairs(1) = 1
 
   // dp[n] を return する
 }
-`,
+`),
   entryPoints: ["climbStairs"],
   demoCall: `console.log(climbStairs(10));`,
   tests: [

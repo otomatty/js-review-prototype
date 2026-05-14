@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05IfPositive: Assignment = {
   id: "S2-Ch05-01-if-positive",
@@ -31,12 +32,12 @@ positive
 - \`if (条件) { ... }\` の \`条件\` には **真偽値になる式** を書きます。
 - \`>\` は大小比較。 \`value > 0\` は \`true\` か \`false\` になります。
 `,
-  starterCode: `// 数値を const の変数に入れる
+  starterFiles: singleFile(`// 数値を const の変数に入れる
 
 
 // その変数が正のときだけ if で「positive」 を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が positive になる",

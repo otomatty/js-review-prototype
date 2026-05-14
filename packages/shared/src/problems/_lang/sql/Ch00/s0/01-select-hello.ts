@@ -50,8 +50,6 @@ INSERT INTO t VALUES (1), (2), (3);
 | 2 |
 | 3 |
 `,
-  // 互換のため: starterFiles を使うので採点には参照されない。
-  starterCode: "-- starter is in starterFiles\n",
   tests: [
     {
       name: "x を昇順で 3 件返す",

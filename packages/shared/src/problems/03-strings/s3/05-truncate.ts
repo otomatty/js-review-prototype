@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03Truncate: Assignment = {
   id: "S3-Ch03-05-truncate",
@@ -26,10 +27,10 @@ truncate("abcdefg", 3);        // → "abc..."
 - \`s.length <= max\` なら \`s\` をそのまま返す。
 - そうでなければ \`s.slice(0, max) + "..."\`。
 `,
-  starterCode: `function truncate(s, max) {
+  starterFiles: singleFile(`function truncate(s, max) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["truncate"],
   demoCall: `console.log(truncate("hello world", 5));`,
   tests: [

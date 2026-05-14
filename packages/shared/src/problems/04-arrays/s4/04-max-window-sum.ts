@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch04MaxWindowSum: Assignment = {
   id: "S4-Ch04-04-max-window-sum",
@@ -33,7 +34,7 @@ maxWindowSum([-1, -2, -3, -4], 2);         // → -3  (-1 + -2)
 - \`slice\` と \`reduce\` は **禁止** しています (ナイーブ解を防ぐため)。
 - \`best\` の初期値を \`0\` にしてしまうと、 全要素が負のときに 0 を返してしまいます。 必ず **最初のウィンドウの合計** で初期化してください。
 `,
-  starterCode: `function maxWindowSum(arr, k) {
+  starterFiles: singleFile(`function maxWindowSum(arr, k) {
   // 最初の k 個の合計を計算し、 現在のウィンドウ合計と最大合計をそれぞれの変数に入れる
 
 
@@ -43,7 +44,7 @@ maxWindowSum([-1, -2, -3, -4], 2);         // → -3  (-1 + -2)
 
   // 最大合計を return する
 }
-`,
+`),
   entryPoints: ["maxWindowSum"],
   demoCall: `console.log(maxWindowSum([1, 2, 3, 4, 5], 3));`,
   tests: [

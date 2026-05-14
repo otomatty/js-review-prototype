@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch14ParseLogLines: Assignment = {
   id: "S5-Ch14-02-parse-log-lines",
@@ -80,7 +81,7 @@ parseLogLines("only invalid lines here");             // → []
 - 正規表現は **アンカー (\`^\`/\`$\`)** を必ず付ける。 アンカー無しだと \`"prefix 12:34:56 [INFO] hi suffix"\` のような行が誤って通る。
 - \`var\` は使わない。 \`==\` / \`!=\` も使わない。 マッチ判定は \`m === null\` / \`m !== null\` で書く。
 `,
-  starterCode: `function parseLogLine(line) {
+  starterFiles: singleFile(`function parseLogLine(line) {
   // 1) /^(?<time>\\d{2}:\\d{2}:\\d{2})\\s+\\[(?<level>INFO|WARN|ERROR)\\]\\s+(?<message>.+)$/ を line.match に渡す
   // 2) マッチしなかった (= null) なら null を返す
   // 3) m.groups から { time, level, message } を組み立てて返す
@@ -92,7 +93,7 @@ function parseLogLines(text) {
   // 3) null でない結果だけを残した配列を return する
   //    (for...of + push でも、 map + filter でも、 どちらでも良い)
 }
-`,
+`),
   entryPoints: ["parseLogLine", "parseLogLines"],
   demoCall: `console.log(parseLogLines("12:34:56 [INFO] hello\\nbroken\\n12:34:57 [ERROR] oops"));`,
   tests: [

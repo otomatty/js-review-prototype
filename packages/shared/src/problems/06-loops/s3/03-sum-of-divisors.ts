@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch06SumOfDivisors: Assignment = {
   id: "S3-Ch06-03-sum-of-divisors",
@@ -26,10 +27,10 @@ sumOfDivisors(7);    // → 8           (1+7)
 - \`i\` を 1 から \`n\` まで動かし、 \`n % i === 0\` のとき \`sum\` に足します。
 - \`i * i <= n\` の最適化は S4 で扱うので、 ここでは素直に書きます。
 `,
-  starterCode: `function sumOfDivisors(n) {
+  starterFiles: singleFile(`function sumOfDivisors(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["sumOfDivisors"],
   demoCall: `console.log(sumOfDivisors(12));`,
   tests: [

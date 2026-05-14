@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch16MakePromise: Assignment = {
   id: "S4-Ch16-01-make-promise",
@@ -31,12 +32,12 @@ await safeDivide(1, 0);         // → throws Error("division by zero")
 - AST で **\`new\` 式 (NewExpression)** を必須にしています。 \`Promise.resolve(...)\` で済ませると required を満たせません。
 - reject には **Error オブジェクト** を渡しましょう (\`reject(new Error("..."))\`)。 文字列を直接渡すとスタックトレースが取れません。
 `,
-  starterCode: `function safeDivide(a, b) {
+  starterFiles: singleFile(`function safeDivide(a, b) {
   // resolve / reject を引数に取るコールバックを渡した new Promise を返す
   // 分母が 0 のときは Error オブジェクトで reject する
   // それ以外のときは a / b の結果で resolve する
 }
-`,
+`),
   entryPoints: ["safeDivide"],
   demoCall: `(async () => console.log(await safeDivide(10, 2)))();`,
   tests: [

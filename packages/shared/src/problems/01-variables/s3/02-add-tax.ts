@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch01AddTax: Assignment = {
   id: "S3-Ch01-02-add-tax",
@@ -25,10 +26,10 @@ addTax(0);    // → 0
 - 計算結果に \`const total = ...\` のように **意味のある名前** を付けてから return すると読みやすくなります。
 - \`price * 1.1\` は浮動小数点誤差で \`110.00000000000001\` のような値になるため、 \`Math.round\` で整数に丸めます。
 `,
-  starterCode: `function addTax(price) {
+  starterFiles: singleFile(`function addTax(price) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["addTax"],
   demoCall: `console.log(addTax(100));`,
   tests: [

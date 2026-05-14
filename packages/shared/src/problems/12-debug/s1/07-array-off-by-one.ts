@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch12ArrayOffByOne: Assignment = {
   id: "S1-Ch12-07-array-off-by-one",
@@ -27,12 +28,12 @@ export const s1Ch12ArrayOffByOne: Assignment = {
 - 配列の最初は **0 番目**。 つまり 「3 番目」 を取り出したいときは \`fruits[2]\` です。
 - これは Off-by-One (1 ずれ) と呼ばれる定番のバグです。
 `,
-  starterCode: `// バグ: fruits[3] は配列の範囲外で undefined になる
+  starterFiles: singleFile(`// バグ: fruits[3] は配列の範囲外で undefined になる
 // 3 番目 ("ぶどう") を取り出すには添字を 2 にする
 
 const fruits = ["りんご", "みかん", "ぶどう"];
 console.log(fruits[3]);
-`,
+`),
   tests: [
     {
       name: "stdout が ぶどう になる",

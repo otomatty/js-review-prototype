@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09DoubleAll: Assignment = {
   id: "S3-Ch09-01-double-all",
@@ -26,10 +27,10 @@ doubleAll([0, 0, 0]);     // → [0, 0, 0]
 - \`arr.map((n) => n * 2)\` で一発。
 - \`map\` は元配列を変更しません。
 `,
-  starterCode: `function doubleAll(arr) {
+  starterFiles: singleFile(`function doubleAll(arr) {
   // ここを実装してください (map を使う)
 }
-`,
+`),
   entryPoints: ["doubleAll"],
   demoCall: `console.log(doubleAll([1, 2, 3]));`,
   tests: [

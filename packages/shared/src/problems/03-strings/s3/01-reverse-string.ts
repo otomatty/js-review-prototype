@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03ReverseString: Assignment = {
   id: "S3-Ch03-01-reverse-string",
@@ -25,10 +26,10 @@ reverseString("");       // → ""
 - 文字列を \`.split("")\` で 1 文字ずつの配列にし、 \`.reverse()\` で逆順、 \`.join("")\` で結合できます。
 - for ループで末尾から 1 文字ずつ連結しても OK です。
 `,
-  starterCode: `function reverseString(s) {
+  starterFiles: singleFile(`function reverseString(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["reverseString"],
   demoCall: `console.log(reverseString("hello"));`,
   tests: [

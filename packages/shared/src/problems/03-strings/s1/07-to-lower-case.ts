@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03ToLowerCase: Assignment = {
   id: "S1-Ch03-07-to-lower-case",
@@ -22,9 +23,9 @@ export const s1Ch03ToLowerCase: Assignment = {
 world
 \`\`\`
 `,
-  starterCode: `// console.log で "WORLD".toLowerCase() を呼ぶ
+  starterFiles: singleFile(`// console.log で "WORLD".toLowerCase() を呼ぶ
 
-`,
+`),
   tests: [
     {
       name: "stdout が world になる",

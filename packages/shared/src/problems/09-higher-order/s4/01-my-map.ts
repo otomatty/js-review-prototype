@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch09MyMap: Assignment = {
   id: "S4-Ch09-01-my-map",
@@ -34,13 +35,13 @@ myMap([], (x) => x);                       // → []
 - AST で **\`map\` の使用は禁止** しています (自作問題なので \`arr.map(fn)\` で済ませることはできません)。
 - 入力配列 \`arr\` を **書き換えない** こと (非破壊)。
 `,
-  starterCode: `function myMap(arr, fn) {
+  starterFiles: singleFile(`function myMap(arr, fn) {
   // reduce で arr を走査し、 初期値に空配列を渡して、 各要素に fn を適用した結果を蓄積用配列の末尾へ push する
 
 
   // 蓄積用配列を return する (= reduce の最終結果を return する)
 }
-`,
+`),
   entryPoints: ["myMap"],
   demoCall: `console.log(myMap([1, 2, 3], (x) => x * 2));`,
   tests: [

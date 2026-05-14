@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08GetName: Assignment = {
   id: "S3-Ch08-01-get-name",
@@ -25,10 +26,10 @@ getName({ name: "" });                // → ""
 - \`obj.プロパティ名\` でプロパティを取り出します。
 - \`obj["プロパティ名"]\` でも同じです。
 `,
-  starterCode: `function getName(user) {
+  starterFiles: singleFile(`function getName(user) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["getName"],
   demoCall: `console.log(getName({ name: "Alice", age: 30 }));`,
   tests: [

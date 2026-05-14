@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch09GroupBy: Assignment = {
   id: "S4-Ch09-03-group-by",
@@ -33,10 +34,10 @@ groupBy([], (x) => x).size;   // → 0
 - AST で **\`reduce\`** と **\`new Map()\`** と **\`Map#set\`** を必須にしているので、 オブジェクトで返したり \`for\` ループで組み立てたりすると通りません。
 - 入力配列 \`arr\` を **書き換えない** こと (非破壊)。
 `,
-  starterCode: `function groupBy(arr, keyFn) {
+  starterFiles: singleFile(`function groupBy(arr, keyFn) {
   // reduce の初期値 new Map() に対して set/push でグループ化してください
 }
-`,
+`),
   entryPoints: ["groupBy"],
   demoCall: `console.log(groupBy([1, 2, 3, 4], (n) => n % 2 === 0 ? "even" : "odd"));`,
   tests: [

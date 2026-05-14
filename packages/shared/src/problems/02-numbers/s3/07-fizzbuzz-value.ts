@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02FizzBuzzValue: Assignment = {
   id: "S3-Ch02-07-fizzbuzz-value",
@@ -32,10 +33,10 @@ fizzBuzzValue(30);  // → "FizzBuzz"
 - **15 の倍数 (= 3 と 5 の両方の倍数)** を最初に判定するのが定石です。
 - 数値を文字列にするには \`String(n)\` を使います。
 `,
-  starterCode: `function fizzBuzzValue(n) {
+  starterFiles: singleFile(`function fizzBuzzValue(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["fizzBuzzValue"],
   demoCall: `console.log(fizzBuzzValue(15));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06ContinueSkip: Assignment = {
   id: "S2-Ch06-09-continue-skip",
@@ -27,10 +28,10 @@ export const s2Ch06ContinueSkip: Assignment = {
 - \`continue;\` で今の反復を **スキップして次へ** 進みます。
 - 「除外する条件を満たしたら continue」 のパターンが定番です。
 `,
-  starterCode: `// for ループでカウンタを 1 から上限まで回し、
+  starterFiles: singleFile(`// for ループでカウンタを 1 から上限まで回し、
 // 偶数のときは continue で次の繰り返しへスキップし、 奇数だけ console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1/3/5 の 3 行になる",

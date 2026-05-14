@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05OrOperator: Assignment = {
   id: "S2-Ch05-05-or-operator",
@@ -25,12 +26,12 @@ export const s2Ch05OrOperator: Assignment = {
 - \`A || B\` は **A か B のどちらかが真** なら真になります (両方真でも OK)。
 - \`if (isWeekend || isHoliday)\` のように使います。
 `,
-  starterCode: `// 2 つの boolean 値を、 それぞれ const の変数に入れる
+  starterFiles: singleFile(`// 2 つの boolean 値を、 それぞれ const の変数に入れる
 
 
 // || で 2 つの条件を OR 結合した if で文字列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 休み になる",

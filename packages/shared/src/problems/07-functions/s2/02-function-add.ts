@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07FunctionAdd: Assignment = {
   id: "S2-Ch07-02-function-add",
@@ -25,12 +26,12 @@ export const s2Ch07FunctionAdd: Assignment = {
 - 引数は \`function add(a, b) { ... }\` のように **括弧の中** に並べます。
 - \`return\` で値を返すと、 呼び出し側で受け取って使えます。
 `,
-  starterCode: `// 2 つの引数を取る function 文の関数を宣言し、 引数同士を + で足した結果を return する
+  starterFiles: singleFile(`// 2 つの引数を取る function 文の関数を宣言し、 引数同士を + で足した結果を return する
 
 
 // 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 7 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01CopyValue: Assignment = {
   id: "S1-Ch01-10-copy-value",
@@ -29,7 +30,7 @@ export const s1Ch01CopyValue: Assignment = {
 - \`=\` の右側には別の変数を書けます。
 - \`const copy = original;\` と書くと、 \`original\` の中身が \`copy\` にコピーされます。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // もう 1 つ const の変数を作り、 = の右辺に最初の変数名を書いて値をコピーする
@@ -37,7 +38,7 @@ export const s1Ch01CopyValue: Assignment = {
 
 // コピー先の変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 宝物 になる",

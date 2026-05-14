@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch04PopularProductsCapstone: Assignment = {
   id: "S5-Ch04-03-popular-products-capstone",
@@ -60,7 +61,7 @@ popularProductsRanking([{ userId: "u1", productId: "x" }], 0); // → []
   - **集計データを「最終形」 に整形してから検索 (sort + slice)** という、 ステップを分けた設計
   - AST で **\`map\` / \`includes\` / \`sort\` / \`slice\` の使用** を必須にしています
 `,
-  starterCode: `function popularProductsRanking(transactions, topN) {
+  starterFiles: singleFile(`function popularProductsRanking(transactions, topN) {
   // 商品 ID をキーにする集計用オブジェクトを 1 つ用意する
 
 
@@ -81,7 +82,7 @@ popularProductsRanking([{ userId: "u1", productId: "x" }], 0); // → []
 
   // slice で上位 topN 件 (負値は 0 件扱い) に切り出して return する
 }
-`,
+`),
   entryPoints: ["popularProductsRanking"],
   demoCall: `console.log(popularProductsRanking([
   { userId: "u1", productId: "p1" },

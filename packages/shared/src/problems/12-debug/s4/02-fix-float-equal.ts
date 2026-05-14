@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch12FixFloatEqual: Assignment = {
   id: "S4-Ch12-02-fix-float-equal",
@@ -31,14 +32,14 @@ sumEquals([0.1, 0.2], 0.4);          // → false
 - 許容誤差 (\`1e-9\` 程度) を **イプシロン** と呼ぶ。 ここでは整数だけのケースも併せて通る安全な値として \`1e-9\` で十分。
 - \`==\` に変えても直らない (S4 の lint プリセットでは \`eqeqeq\` で \`==\` 自体がエラー)。 必ず **差の判定** に置き換える。
 `,
-  starterCode: `function sumEquals(numbers, target) {
+  starterFiles: singleFile(`function sumEquals(numbers, target) {
   let sum = 0;
   for (const n of numbers) {
     sum += n;
   }
   return sum === target;
 }
-`,
+`),
   entryPoints: ["sumEquals"],
   demoCall: `console.log(sumEquals([0.1, 0.2], 0.3));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch13ChainResult: Assignment = {
   id: "S5-Ch13-01-chain-result",
@@ -62,7 +63,7 @@ withDefault(err("x"), 0);                // → 0
 - \`withDefault\` は **チェーンの終端**。 「失敗時は既定値で穴埋めして、 ふつうの値に戻す」 ためのコンビネータ。 次の問題で \`validateUser\` のような多段チェーンの最後に使えます。
 - AST で **TryStatement / ThrowStatement / CatchClause を禁止** しています。 例外機構に頼らず、 Result の分岐 (\`if (result.ok)\`) だけで設計してください。
 `,
-  starterCode: `// 1) コンストラクタ
+  starterFiles: singleFile(`// 1) コンストラクタ
 function ok(value) {
   // { ok: true, value } を返す
 }
@@ -87,7 +88,7 @@ function mapResult(result, fn) {
 function withDefault(result, defaultValue) {
   // result.ok なら result.value、 そうでなければ defaultValue
 }
-`,
+`),
   entryPoints: ["ok", "err", "chainResult", "mapResult", "withDefault"],
   demoCall: `console.log(withDefault(chainResult(ok(3), (n) => ok(n * 2)), 0));`,
   tests: [

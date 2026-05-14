@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch06RepeatJoin: Assignment = {
   id: "S3-Ch06-04-repeat-join",
@@ -27,10 +28,10 @@ repeatJoin("hi", 0, "-");   // → ""
 - \`String.prototype.repeat\` で空 join するのは \`sep === ""\` のときだけ使えます。
 - \`n === 0\` のとき空文字列を返すのを忘れずに。
 `,
-  starterCode: `function repeatJoin(text, n, sep) {
+  starterFiles: singleFile(`function repeatJoin(text, n, sep) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["repeatJoin"],
   demoCall: `console.log(repeatJoin("ab", 3, "-"));`,
   tests: [

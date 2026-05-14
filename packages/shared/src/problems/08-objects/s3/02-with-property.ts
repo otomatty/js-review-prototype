@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08WithProperty: Assignment = {
   id: "S3-Ch08-02-with-property",
@@ -26,10 +27,10 @@ withProperty({ a: 1 }, "a", 99);          // → { a: 99 }   (上書き)
 - スプレッド構文 \`{ ...obj, [key]: value }\` で新しいオブジェクトを作れます。
 - \`[key]\` のようにブラケットを付けると、 動的なキー名でプロパティを定義できます (計算済みプロパティ名)。
 `,
-  starterCode: `function withProperty(obj, key, value) {
+  starterFiles: singleFile(`function withProperty(obj, key, value) {
   // ここを実装してください (obj を変更しない)
 }
-`,
+`),
   entryPoints: ["withProperty"],
   demoCall: `console.log(withProperty({ a: 1 }, "b", 2));`,
   tests: [

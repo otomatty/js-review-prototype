@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03ReplaceAll: Assignment = {
   id: "S2-Ch03-04-replaceAll",
@@ -25,12 +26,12 @@ a:b:c:d
 - \`"a-b-c-d".replaceAll("-", ":")\` → \`"a:b:c:d"\`
 - \`replace\` だと最初の 1 箇所しか置き換わりません。 全置換するなら \`replaceAll\`。
 `,
-  starterCode: `// 区切り文字付きの文字列を const の変数に入れる
+  starterFiles: singleFile(`// 区切り文字付きの文字列を const の変数に入れる
 
 
 // その変数に対して replaceAll で全ての区切り文字を別の文字に置換した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が a:b:c:d になる",

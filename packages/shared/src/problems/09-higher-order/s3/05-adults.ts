@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09Adults: Assignment = {
   id: "S3-Ch09-05-adults",
@@ -27,10 +28,10 @@ adults([
 
 - \`users.filter((u) => u.age >= 18)\` で 1 行。
 `,
-  starterCode: `function adults(users) {
+  starterFiles: singleFile(`function adults(users) {
   // ここを実装してください (filter を使う)
 }
-`,
+`),
   entryPoints: ["adults"],
   demoCall: `console.log(adults([{ name: "Alice", age: 30 }, { name: "Bob", age: 15 }]));`,
   tests: [

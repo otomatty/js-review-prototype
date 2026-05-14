@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch07Once: Assignment = {
   id: "S4-Ch07-01-once",
@@ -32,10 +33,10 @@ calls;            // → 1   (実際に走ったのは 1 回だけ)
 - 返す関数は **残余パラメータ** \`(...args)\` で受けて \`fn(...args)\` のように渡すと、 元の関数の引数個数に依存しません。
 - 2 回目以降は \`fn\` を呼ばないことが本質。 引数を渡しても再評価してはいけません。
 `,
-  starterCode: `function once(fn) {
+  starterFiles: singleFile(`function once(fn) {
   // 初回だけ fn を呼び、 結果をキャッシュして返す関数を return してください
 }
-`,
+`),
   entryPoints: ["once"],
   demoCall: `console.log(once((n) => n * 2)(5));`,
   tests: [

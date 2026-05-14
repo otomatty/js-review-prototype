@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch12FixCounterFactoryCapstone: Assignment = {
   id: "S4-Ch12-04-fix-counter-factory-capstone",
@@ -39,7 +40,7 @@ counters[2]();   // → 0   (現状は 4)
 - 各カウンタは呼び出すごとに **その時点での値** を返してから内部で 1 加算する (ポストインクリメントと同じ挙動)。
 - カウンタ間で状態が共有されてはいけない。
 `,
-  starterCode: `function makeCounters(n) {
+  starterFiles: singleFile(`function makeCounters(n) {
   const counters = [];
   let count = 0;
   for (let i = 0; i < n; i++) {
@@ -51,7 +52,7 @@ counters[2]();   // → 0   (現状は 4)
   }
   return counters;
 }
-`,
+`),
   entryPoints: ["makeCounters"],
   demoCall: `console.log(makeCounters(2).map((c) => [c(), c(), c()]));`,
   tests: [

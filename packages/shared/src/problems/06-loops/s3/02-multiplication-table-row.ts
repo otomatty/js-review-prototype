@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch06MultiplicationTableRow: Assignment = {
   id: "S3-Ch06-02-multiplication-table-row",
@@ -26,10 +27,10 @@ multiplicationTableRow(1);
 
 - 空配列 \`const row = []\` に for ループで \`row.push(n * i)\` を 9 回行います。
 `,
-  starterCode: `function multiplicationTableRow(n) {
+  starterFiles: singleFile(`function multiplicationTableRow(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["multiplicationTableRow"],
   demoCall: `console.log(multiplicationTableRow(7));`,
   tests: [

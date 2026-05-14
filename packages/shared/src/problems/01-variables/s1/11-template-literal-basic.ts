@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 const description = [
   "## やること",
@@ -31,7 +32,7 @@ export const s1Ch01TemplateLiteralBasic: Assignment = {
   difficulty: 1,
   testKind: "stdout",
   description,
-  starterCode: `// 名前の文字列を const の変数に入れる
+  starterFiles: singleFile(`// 名前の文字列を const の変数に入れる
 
 
 // バッククォートで囲んだテンプレートリテラルで挨拶文を組み立て、
@@ -40,7 +41,7 @@ export const s1Ch01TemplateLiteralBasic: Assignment = {
 
 // 組み立てた文の変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が テンプレートで組み立てた文になる",

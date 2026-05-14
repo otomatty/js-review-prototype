@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07CallNTimes: Assignment = {
   id: "S3-Ch07-06-call-n-times",
@@ -25,10 +26,10 @@ callNTimes((i) => i + 10, 3);    // → [10, 11, 12]
 
 - \`const result = []; for (let i = 0; i < n; i++) result.push(fn(i));\` の定型。
 `,
-  starterCode: `function callNTimes(fn, n) {
+  starterFiles: singleFile(`function callNTimes(fn, n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["callNTimes"],
   demoCall: `console.log(callNTimes((i) => i * 2, 4));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch14ParseQueryStringCapstone: Assignment = {
   id: "S4-Ch14-05-parse-query-string-capstone",
@@ -47,10 +48,10 @@ parseQueryString("a&b=2");               // → { b: "2" }
 
 - AST で **\`matchAll\`** と **\`reduce\`** を必須にしています。 配列 + for ループの実装では通りません。
 `,
-  starterCode: `function parseQueryString(s) {
+  starterFiles: singleFile(`function parseQueryString(s) {
   // matchAll + キャプチャ + reduce でオブジェクトを組み立ててください
 }
-`,
+`),
   entryPoints: ["parseQueryString"],
   demoCall: `console.log(parseQueryString("name=alice&age=30"));`,
   tests: [

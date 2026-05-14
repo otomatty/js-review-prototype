@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02MathAbs: Assignment = {
   id: "S1-Ch02-10-math-abs",
@@ -22,9 +23,9 @@ export const s1Ch02MathAbs: Assignment = {
 7
 \`\`\`
 `,
-  starterCode: `// console.log の中で Math.abs(-7) を呼ぶ
+  starterFiles: singleFile(`// console.log の中で Math.abs(-7) を呼ぶ
 
-`,
+`),
   tests: [
     {
       name: "stdout が 7 になる",

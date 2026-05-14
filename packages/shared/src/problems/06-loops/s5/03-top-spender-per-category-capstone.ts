@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch06TopSpenderPerCategoryCapstone: Assignment = {
   id: "S5-Ch06-03-top-spender-per-category-capstone",
@@ -46,7 +47,7 @@ result.size;        // → 2
 - タイブレークの判定は \`total > best.total || (total === best.total && userId < best.userId)\` の 1 行で書けるのが定番。 ただし 最初のループ前の \`best\` が無い (= まだ何も見ていない) 場合の判定を忘れないこと
 - AST で **\`new Map()\`**、 **\`for...of\`** (複数)、 **\`.set\` / \`.get\` / \`.has\`**、 **\`if\`**、 **\`return\`** をすべて必須にしています
 `,
-  starterCode: `function topSpenderPerCategory(logs) {
+  starterFiles: singleFile(`function topSpenderPerCategory(logs) {
   // 1 周目: category -> (userId -> 合計金額) という入れ子の Map を組み立てる
   // ヒント: const totals = new Map();
   //        - 未登場 category なら totals.set(category, new Map())
@@ -62,7 +63,7 @@ result.size;        // → 2
 
   // 結果の Map を返す
 }
-`,
+`),
   entryPoints: ["topSpenderPerCategory"],
   demoCall: `(() => {
   const r = topSpenderPerCategory([

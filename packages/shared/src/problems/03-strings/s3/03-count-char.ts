@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03CountChar: Assignment = {
   id: "S3-Ch03-03-count-char",
@@ -27,10 +28,10 @@ countChar("", "a");             // → 0
 - 文字の取り出しは \`s[i]\` または \`s.charAt(i)\` です。
 - \`s.split(ch).length - 1\` という手もあります。
 `,
-  starterCode: `function countChar(s, ch) {
+  starterFiles: singleFile(`function countChar(s, ch) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["countChar"],
   demoCall: `console.log(countChar("banana", "a"));`,
   tests: [

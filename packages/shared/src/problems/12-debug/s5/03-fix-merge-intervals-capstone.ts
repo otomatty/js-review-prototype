@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch12FixMergeIntervalsCapstone: Assignment = {
   id: "S5-Ch12-03-fix-merge-intervals-capstone",
@@ -65,7 +66,7 @@ mergeIntervals([[1, 10], [2, 3]]);
 - 計算量は \`O(n log n)\` (ソートが支配)。 二重ループは不要。
 - 戻り値は **新しい配列** (元の入力を返さない)。
 `,
-  starterCode: `function mergeIntervals(intervals) {
+  starterFiles: singleFile(`function mergeIntervals(intervals) {
   const sorted = intervals;
   const result = [[sorted[0][0], sorted[0][1]]];
   for (let i = 1; i < sorted.length; i++) {
@@ -79,7 +80,7 @@ mergeIntervals([[1, 10], [2, 3]]);
   }
   return result;
 }
-`,
+`),
   entryPoints: ["mergeIntervals"],
   demoCall: `console.log(JSON.stringify(mergeIntervals([[1, 3], [2, 6], [8, 10], [15, 18]])));`,
   tests: [

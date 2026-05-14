@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02MathFloorDivide: Assignment = {
   id: "S2-Ch02-08-math-floor-divide",
@@ -27,12 +28,12 @@ export const s2Ch02MathFloorDivide: Assignment = {
 - \`17 / 5\` は \`3.4\`。 \`Math.floor(3.4)\` は \`3\`。
 - 「人数を 5 人ずつ何チームに分けられるか」 のような **整数の割り算** で使います。
 `,
-  starterCode: `// 説明文の割り算を Math.floor で切り捨てた結果を、 const の変数に入れる
+  starterFiles: singleFile(`// 説明文の割り算を Math.floor で切り捨てた結果を、 const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 3 になる",

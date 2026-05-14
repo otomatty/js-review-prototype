@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch15BankAccountCapstone: Assignment = {
   id: "S4-Ch15-06-bank-account-capstone",
@@ -56,12 +57,12 @@ BankAccount.fromYen(500) instanceof BankAccount;   // → true
 - \`static fromYen\` のような **static ファクトリ** は、 「同じ class でも引数の意味が違う複数の入り口」 を整理するのに使えます (ここでは円を意識した別名)。
 - AST で **\`ClassDeclaration\`** **\`NewExpression\`** **\`ClassPrivateProperty\`** **\`ThrowStatement\`** **\`ReturnStatement\`** を必須にしています。 これは S4 卒業課題のひとつなので、 これまでに登場した道具を 1 つの class にすべて使い切る練習です。
 `,
-  starterCode: `class BankAccount {
+  starterFiles: singleFile(`class BankAccount {
   // #balance を private フィールドとして宣言する
   // constructor(initialBalance = 0) で 0 未満なら throw new Error(...)
   // deposit / withdraw / getBalance / static fromYen を実装する
 }
-`,
+`),
   entryPoints: ["BankAccount"],
   demoCall: `const a = new BankAccount(100); a.deposit(50); console.log(a.getBalance());`,
   tests: [

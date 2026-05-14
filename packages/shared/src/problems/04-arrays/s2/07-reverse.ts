@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04Reverse: Assignment = {
   id: "S2-Ch04-07-reverse",
@@ -25,7 +26,7 @@ export const s2Ch04Reverse: Assignment = {
 - \`arr.reverse()\` は **元の配列を書き換えます** (破壊的)。
 - 元配列を残したいときは \`arr.slice().reverse()\` のようにコピーしてから呼びます。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // その配列に対して reverse を呼び、 順序を反転させる (元の配列が書き換わる)
@@ -33,7 +34,7 @@ export const s2Ch04Reverse: Assignment = {
 
 // 反転後の配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [5,4,3,2,1] になる",

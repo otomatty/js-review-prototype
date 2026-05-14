@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch12TypoVariable: Assignment = {
   id: "S1-Ch12-05-typo-variable",
@@ -25,12 +26,12 @@ Taro
 - 宣言していない変数を使うと \`ReferenceError: usre is not defined\` のようなエラーが出ます。
 - まず宣言した名前と参照名が **完全に一致** しているかを確認するのがデバッグの第一歩。
 `,
-  starterCode: `// バグ: 下の console.log は宣言していない名前を参照して ReferenceError になる
+  starterFiles: singleFile(`// バグ: 下の console.log は宣言していない名前を参照して ReferenceError になる
 // 宣言した変数と綴りを一致させて直す
 
 const user = "Taro";
 console.log(usre);
-`,
+`),
   tests: [
     {
       name: "stdout が Taro になる",

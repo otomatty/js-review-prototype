@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04Join: Assignment = {
   id: "S2-Ch04-06-join",
@@ -25,12 +26,12 @@ apple / banana / cherry
 - \`arr.join(" / ")\` で \`"apple / banana / cherry"\` が得られます。
 - 引数を省略するとカンマ区切りになります (\`arr.join()\` = \`"apple,banana,cherry"\`)。
 `,
-  starterCode: `// 文字列の配列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列の配列を const の変数に入れる
 
 
 // その配列に対して join で指定の区切り文字で連結した文字列を、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が apple / banana / cherry になる",

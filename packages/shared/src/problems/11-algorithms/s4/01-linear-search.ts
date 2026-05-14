@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11LinearSearch: Assignment = {
   id: "S4-Ch11-01-linear-search",
@@ -34,11 +35,11 @@ linearSearch([], 5);                // → -1
 - 一致したら **その場で \`return i\`** すれば、 残りはスキャンしません (早期 return)。
 - ループを最後まで抜けたら 「見つからなかった」 ので \`-1\` を返します。
 `,
-  starterCode: `function linearSearch(arr, target) {
+  starterFiles: singleFile(`function linearSearch(arr, target) {
   // for で添字を 0 から順に回し、 arr[i] が target と一致したらその添字を return する
   // ループを抜けても見つからなければ -1 を return する
 }
-`,
+`),
   entryPoints: ["linearSearch"],
   demoCall: `console.log(linearSearch([10, 20, 30], 20));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02ParseIntRadix: Assignment = {
   id: "S2-Ch02-03-parseInt-radix",
@@ -29,7 +30,7 @@ const hex = "ff";
 - \`parseInt("ff", 16)\` → \`255\` (16 進数 \`ff\` = 10 進数 255)
 - 基数を変えれば 2 進数 (\`2\`) や 8 進数 (\`8\`) も読み取れます。
 `,
-  starterCode: `// 16 進数を表す文字列を const の変数に入れる
+  starterFiles: singleFile(`// 16 進数を表す文字列を const の変数に入れる
 
 
 // parseInt の第 2 引数に基数を指定して整数に変換し、 別の const の変数に入れる
@@ -37,7 +38,7 @@ const hex = "ff";
 
 // 変換後の値を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 255 になる",

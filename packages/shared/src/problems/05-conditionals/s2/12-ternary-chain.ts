@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05TernaryChain: Assignment = {
   id: "S2-Ch05-12-ternary-chain",
@@ -29,7 +30,7 @@ export const s2Ch05TernaryChain: Assignment = {
 - \`n > 0 ? "+" : n < 0 ? "-" : "0"\` のように **連結** できますが、 3 段以上ネストすると読みにくくなるので、 通常は 2 段までに留めます。
 - それ以上は \`if/else if\` を使う方が読みやすいです。
 `,
-  starterCode: `// 数値を const の変数に入れる
+  starterFiles: singleFile(`// 数値を const の変数に入れる
 
 
 // 三項演算子をネストして 3 通りに分岐させ、 結果の文字列を別の const の変数に入れる
@@ -37,7 +38,7 @@ export const s2Ch05TernaryChain: Assignment = {
 
 // 結果の変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 0 になる",

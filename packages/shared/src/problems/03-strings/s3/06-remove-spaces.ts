@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03RemoveSpaces: Assignment = {
   id: "S3-Ch03-06-remove-spaces",
@@ -26,10 +27,10 @@ removeSpaces("");              // → ""
 - \`s.split(" ").join("")\` で全スペースを削除できます。
 - \`s.replaceAll(" ", "")\` でも同じ結果です。
 `,
-  starterCode: `function removeSpaces(s) {
+  starterFiles: singleFile(`function removeSpaces(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["removeSpaces"],
   demoCall: `console.log(removeSpaces("  a b c  "));`,
   tests: [

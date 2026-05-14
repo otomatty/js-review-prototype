@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch09BuildLeaderboard: Assignment = {
   id: "S5-Ch09-01-build-leaderboard",
@@ -60,7 +61,7 @@ buildLeaderboard(players, 3);
 - \`buildLeaderboard\` は \`takeTop(toRanking(onlyActive(players)), n)\` のように **関数の合成** で書けるはずです。 ここで再度 \`filter\` を呼んでしまうと 「関数を分けた意味」 が消えてしまいます。
 - \`onlyActive\` を呼んだ結果は **元の配列とは別インスタンス** であるべきです (\`Array.filter\` が新配列を返すのでこの条件は自動的に満たされます)。
 `,
-  starterCode: `function onlyActive(players) {
+  starterFiles: singleFile(`function onlyActive(players) {
   // isActive === true のプレイヤーだけを Array.filter で残す。
 }
 
@@ -77,7 +78,7 @@ function buildLeaderboard(players, n) {
   // 上の 3 関数を順に呼んで合成する。
   // takeTop(toRanking(onlyActive(players)), n) のように書ける。
 }
-`,
+`),
   entryPoints: ["onlyActive", "toRanking", "takeTop", "buildLeaderboard"],
   demoCall: `console.log(buildLeaderboard([
   { name: "Alice", score: 90, isActive: true },

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08PickFields: Assignment = {
   id: "S3-Ch08-07-pick-fields",
@@ -33,10 +34,10 @@ pickFields({ a: 1 }, []);
 - 空オブジェクト \`const result = {}\` を作り、 各キーが存在すれば \`result[key] = obj[key]\` で追加します。
 - 存在チェックは \`Object.hasOwn(obj, key)\` を使います (継承プロパティは含めない)。
 `,
-  starterCode: `function pickFields(obj, keys) {
+  starterFiles: singleFile(`function pickFields(obj, keys) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["pickFields"],
   demoCall: `console.log(pickFields({ a: 1, b: 2, c: 3 }, ["a", "c"]));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s0Ch00ScoreChallenge: Assignment = {
   id: "S0-Ch00-07-score-challenge",
@@ -39,7 +40,7 @@ JavaScript
 - \`const total = 80 + 15;\` のように、 計算結果も変数に入れられます。
 - \`console.log\` を 2 回呼ぶと、 2 行に分かれて出力されます。
 `,
-  starterCode: `// 教科名を const の変数に入れる
+  starterFiles: singleFile(`// 教科名を const の変数に入れる
 
 
 // 2 つのテストの点数を + で足し算して、 計算結果を const の変数に入れる
@@ -51,7 +52,7 @@ JavaScript
 
 // 2 つ目の変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が JavaScript と 95 の 2 行になる",

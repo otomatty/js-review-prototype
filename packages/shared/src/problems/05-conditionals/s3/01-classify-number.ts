@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch05ClassifyNumber: Assignment = {
   id: "S3-Ch05-01-classify-number",
@@ -30,10 +31,10 @@ classifyNumber(0.1);  // → "正"
 - 3 分岐は \`if / else if / else\` で書きます。
 - 早期 return パターンも使えます (\`if (n > 0) return "正";\`)。
 `,
-  starterCode: `function classifyNumber(n) {
+  starterFiles: singleFile(`function classifyNumber(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["classifyNumber"],
   demoCall: `console.log(classifyNumber(-3));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01ConstString: Assignment = {
   id: "S1-Ch01-01-const-string",
@@ -25,12 +26,12 @@ export const s1Ch01ConstString: Assignment = {
 - \`const\` で作った変数の中身は **後から書き換えられません**。 一度入れた値をそのまま使うときに使います。
 - 変数名は \`greeting\` (英単語) を使います。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が おはよう になる",

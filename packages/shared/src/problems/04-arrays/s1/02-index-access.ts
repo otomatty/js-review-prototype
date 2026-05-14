@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04IndexAccess: Assignment = {
   id: "S1-Ch04-02-index-access",
@@ -24,13 +25,13 @@ export const s1Ch04IndexAccess: Assignment = {
 
 - 配列の **最初の要素は 0 番目** です。 2 番目は \`fruits[1]\`。
 `,
-  starterCode: `// 文字列の配列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列の配列を const の変数に入れる
 
 
 // 添字で 2 番目の要素 ([1]) を取り出して console.log で出力する
 // (添字は 0 から数える)
 
-`,
+`),
   tests: [
     {
       name: "stdout が みかん になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01LetReassign: Assignment = {
   id: "S1-Ch01-03-let-reassign",
@@ -26,7 +27,7 @@ export const s1Ch01LetReassign: Assignment = {
 - \`let\` で作った変数は **後から値を入れ直せます** (= 再代入)。
 - 入れ直すときは \`let\` を **2 回目には書きません**。 \`count = 1;\` のように変数名と値だけを書きます。
 `,
-  starterCode: `// let で変数を宣言し、 初期値を入れる
+  starterFiles: singleFile(`// let で変数を宣言し、 初期値を入れる
 
 
 // その変数の値を console.log で出力する
@@ -37,7 +38,7 @@ export const s1Ch01LetReassign: Assignment = {
 
 // もう一度 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 0 と 1 の 2 行になる",

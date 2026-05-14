@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09FindByName: Assignment = {
   id: "S3-Ch09-07-find-by-name",
@@ -33,10 +34,10 @@ findByName([], "anything");
 - \`users.find((u) => u.name === target)\` で 1 行。
 - 見つからないとき \`find\` は自動で \`undefined\` を返します。
 `,
-  starterCode: `function findByName(users, target) {
+  starterFiles: singleFile(`function findByName(users, target) {
   // ここを実装してください (find を使う)
 }
-`,
+`),
   entryPoints: ["findByName"],
   demoCall: `console.log(findByName([{ name: "Alice", age: 30 }, { name: "Bob", age: 25 }], "Bob"));`,
   tests: [

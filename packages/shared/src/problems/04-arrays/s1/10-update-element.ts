@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04UpdateElement: Assignment = {
   id: "S1-Ch04-10-update-element",
@@ -25,7 +26,7 @@ export const s1Ch04UpdateElement: Assignment = {
 - \`letters[1] = "X";\` のように添字に代入することで、 その位置の値を上書きできます。
 - const で宣言した配列の **中身は書き換え可能** です (再代入と中身の変更は別物)。
 `,
-  starterCode: `// 配列を const の変数に入れる
+  starterFiles: singleFile(`// 配列を const の変数に入れる
 
 
 // 添字に直接代入して、 指定位置の要素を別の値に書き換える
@@ -33,7 +34,7 @@ export const s1Ch04UpdateElement: Assignment = {
 
 // 書き換えたあとの配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [\"A\",\"X\",\"C\"] になる",

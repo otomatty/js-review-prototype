@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch12TemplateCurly: Assignment = {
   id: "S1-Ch12-06-template-curly",
@@ -27,12 +28,12 @@ Hello, Taro
 - テンプレートで変数を埋め込むには \`\$\` だけでは足りず、 **\`\${変数名}\`** の形にする必要があります。
 - \`\${ }\` の波カッコを忘れると、 ただの文字として出力されてしまいます。
 `,
-  starterCode: `// バグ: $name は変数として展開されず、 そのまま "$name" と出てしまう
+  starterFiles: singleFile(`// バグ: $name は変数として展開されず、 そのまま "$name" と出てしまう
 // \${name} の形に修正する
 
 const name = "Taro";
 console.log(\`Hello, $name\`);
-`,
+`),
   tests: [
     {
       name: "stdout が Hello, Taro になる",

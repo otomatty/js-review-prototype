@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch10CountOccurrences: Assignment = {
   id: "S4-Ch10-02-count-occurrences",
@@ -28,10 +29,10 @@ m.size;       // → 3
 - カウンタの初期値は \`map.get(key) ?? 0\` で書くと簡潔です。
 - Map は **任意の値 (数値・オブジェクトなど) を key にできる** ため、 オブジェクトリテラルより汎用的です。
 `,
-  starterCode: `function countOccurrences(arr) {
+  starterFiles: singleFile(`function countOccurrences(arr) {
   // Map を作って、 各要素の出現回数を数えてください
 }
-`,
+`),
   entryPoints: ["countOccurrences"],
   demoCall: `console.log(countOccurrences(["a", "b", "a"]));`,
   tests: [

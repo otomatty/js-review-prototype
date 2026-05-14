@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07GradingCapstone: Assignment = {
   id: "S2-Ch07-16-grading-capstone",
@@ -38,7 +39,7 @@ export const s2Ch07GradingCapstone: Assignment = {
 - \`reportAll\` の中で for ループと \`gradeOf\` 呼び出しを組み合わせます。
 - 出力はテンプレートリテラルを使います。
 `,
-  starterCode: `// 1 つ目の関数: 点数を引数に取り、 説明文の閾値に応じた評価ラベルを return する
+  starterFiles: singleFile(`// 1 つ目の関数: 点数を引数に取り、 説明文の閾値に応じた評価ラベルを return する
 // (3 段階を if で 2 回早期 return → 残りはそのまま return)
 
 
@@ -48,7 +49,7 @@ export const s2Ch07GradingCapstone: Assignment = {
 
 // 2 つ目の関数に説明文の配列を渡して呼び出す
 
-`,
+`),
   tests: [
     {
       name: "stdout が 3 行の成績判定になる",

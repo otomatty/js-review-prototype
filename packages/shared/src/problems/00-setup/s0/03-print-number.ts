@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s0Ch00PrintNumber: Assignment = {
   id: "S0-Ch00-03-print-number",
@@ -27,9 +28,9 @@ export const s0Ch00PrintNumber: Assignment = {
 - 文字列と数値は別の種類の値です。
 - \`console.log(42)\` と \`console.log("42")\` はどちらも画面には \`42\` と出ますが、ここでは **数値として** 渡せていれば OK です。
 `,
-  starterCode: `// console.log で数字の 42 を出力してください
+  starterFiles: singleFile(`// console.log で数字の 42 を出力してください
 // 文字列とは違って、数字は "" で囲まなくても渡せます
-`,
+`),
   tests: [
     {
       name: "stdout が 42 になる",

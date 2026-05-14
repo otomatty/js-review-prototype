@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch05CompareCount: Assignment = {
   id: "S3-Ch05-04-compare-count",
@@ -28,10 +29,10 @@ compareCount(4, 4);   // → "同じ"
 
 - 3 つの分岐は \`if / else if / else\`、 または早期 return で書きます。
 `,
-  starterCode: `function compareCount(a, b) {
+  starterFiles: singleFile(`function compareCount(a, b) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["compareCount"],
   demoCall: `console.log(compareCount(3, 1));`,
   tests: [

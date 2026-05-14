@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02ToFixed: Assignment = {
   id: "S2-Ch02-10-tofixed",
@@ -25,12 +26,12 @@ export const s2Ch02ToFixed: Assignment = {
 - \`(値).toFixed(桁数)\` の形で呼び出します。
 - 戻り値は **文字列** です (見た目は数値ですが、 加算したい場合は再度 \`Number()\` で変換します)。
 `,
-  starterCode: `// 説明文の小数を const の変数に入れる
+  starterFiles: singleFile(`// 説明文の小数を const の変数に入れる
 
 
 // その変数に対して toFixed を呼んで小数第 2 位までに丸めた結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1.23 になる",

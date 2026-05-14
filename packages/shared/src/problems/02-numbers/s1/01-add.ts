@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Add: Assignment = {
   id: "S1-Ch02-01-add",
@@ -22,9 +23,9 @@ export const s1Ch02Add: Assignment = {
 201
 \`\`\`
 `,
-  starterCode: `// console.log の中に 125 + 76 の式をそのまま書く
+  starterFiles: singleFile(`// console.log の中に 125 + 76 の式をそのまま書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が 201 になる",

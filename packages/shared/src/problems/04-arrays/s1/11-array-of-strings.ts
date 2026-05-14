@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04ArrayOfStrings: Assignment = {
   id: "S1-Ch04-11-array-of-strings",
@@ -27,13 +28,13 @@ export const s1Ch04ArrayOfStrings: Assignment = {
 - 配列の最後の要素は **要素数 - 1** 番目です。 \`meals.length\` が 3 なら、 最後は \`meals[2]\` (= 3 - 1)。
 - \`meals[meals.length - 1]\` は配列の長さに依存せず常に最後を取れる書き方です。
 `,
-  starterCode: `// 文字列の配列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列の配列を const の変数に入れる
 
 
 // テンプレートリテラルで「最初: ...、 最後: ...」 形式の文字列を組み立て、 console.log で出力する
 // (最初の要素は添字 0、 最後の要素は添字 length - 1 で取り出す)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 最初: 朝、 最後: 晩 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09SumWithReduce: Assignment = {
   id: "S3-Ch09-03-sum-with-reduce",
@@ -26,10 +27,10 @@ sumWithReduce([100]);         // → 100
 - \`arr.reduce((acc, n) => acc + n, 0)\` の形が定型。
 - 初期値 \`0\` を **必ず指定** しましょう (空配列で例外を防ぐ)。
 `,
-  starterCode: `function sumWithReduce(arr) {
+  starterFiles: singleFile(`function sumWithReduce(arr) {
   // ここを実装してください (reduce を使う)
 }
-`,
+`),
   entryPoints: ["sumWithReduce"],
   demoCall: `console.log(sumWithReduce([1, 2, 3, 4]));`,
   tests: [

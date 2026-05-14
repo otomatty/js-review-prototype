@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch10FirstNonRepeating: Assignment = {
   id: "S4-Ch10-06-first-non-repeating",
@@ -27,11 +28,11 @@ firstNonRepeating([]);                            // → null
 - 2 周目で **元の配列を順に走査** し、 出現回数が 1 の要素を最初に見つけたら返します。
 - この「前計算 → 線形走査」 は頻出パターンです。
 `,
-  starterCode: `function firstNonRepeating(arr) {
+  starterFiles: singleFile(`function firstNonRepeating(arr) {
   // 1 周目: Map に出現回数を貯める
   // 2 周目: 出現回数が 1 の要素を最初に見つけたら返す
 }
-`,
+`),
   entryPoints: ["firstNonRepeating"],
   demoCall: `console.log(firstNonRepeating(["a", "b", "a", "c", "b"]));`,
   tests: [

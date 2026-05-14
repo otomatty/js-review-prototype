@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03TemplateLiteral: Assignment = {
   id: "S1-Ch03-03-template-literal",
@@ -24,13 +25,13 @@ export const s1Ch03TemplateLiteral: Assignment = {
 
 - バッククォートで囲んだ文字列の中で \`\${変数}\` と書くと、 変数の値が埋め込まれます。
 `,
-  starterCode: `// 名前の文字列を const の変数に入れる
+  starterFiles: singleFile(`// 名前の文字列を const の変数に入れる
 
 
 // バッククォートで囲んだテンプレートリテラルで挨拶文を組み立て、 console.log で出力する
 // (\${変数名} で値を埋め込む)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 花子さん、 こんにちは! になる",

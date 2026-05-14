@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch16TryCatchAsync: Assignment = {
   id: "S4-Ch16-05-try-catch-async",
@@ -31,11 +32,11 @@ await safeAwait(Promise.reject("oops"), "fallback");              // → "fallba
 - AST で **async 関数** / **AwaitExpression** / **TryStatement** を必須、 **\`.catch(...)\`** を禁止にしています。
 - catch ブロックでは reject の中身を **無視して** OK です (\`catch (_)\`)。
 `,
-  starterCode: `// async function を使い、 try / catch で reject を捕捉して fallback を返す
+  starterFiles: singleFile(`// async function を使い、 try / catch で reject を捕捉して fallback を返す
 function safeAwait(p, fallback) {
   // ここに実装する
 }
-`,
+`),
   entryPoints: ["safeAwait"],
   demoCall: `(async () => console.log(await safeAwait(Promise.reject(new Error("boom")), -1)))();`,
   tests: [

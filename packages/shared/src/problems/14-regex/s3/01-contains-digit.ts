@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch14ContainsDigit: Assignment = {
   id: "S3-Ch14-01-contains-digit",
@@ -27,10 +28,10 @@ containsDigit("hello!");     // → false
 - 正規表現リテラル \`/\\\\d/\` で「数字 1 文字」 を表現します。
 - \`/\\\\d/.test(s)\` で「含むか」 の真偽が取れます。
 `,
-  starterCode: `function containsDigit(s) {
+  starterFiles: singleFile(`function containsDigit(s) {
   // ここを実装してください (RegExp.test を使う)
 }
-`,
+`),
   entryPoints: ["containsDigit"],
   demoCall: `console.log(containsDigit("abc123"));`,
   tests: [

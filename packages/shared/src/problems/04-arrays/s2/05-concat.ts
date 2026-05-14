@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04Concat: Assignment = {
   id: "S2-Ch04-05-concat",
@@ -25,12 +26,12 @@ export const s2Ch04Concat: Assignment = {
 - \`a.concat(b)\` で配列 a の後ろに b をつなげた **新しい配列** が返ります。
 - 元の \`a\` と \`b\` は変更されません。
 `,
-  starterCode: `// 2 つの配列を、 それぞれ const の変数に入れる
+  starterFiles: singleFile(`// 2 つの配列を、 それぞれ const の変数に入れる
 
 
 // 1 つ目の配列に対して concat を呼び、 2 つ目の配列を結合した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [1,2,3,4] になる",

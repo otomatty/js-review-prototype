@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02MathPow: Assignment = {
   id: "S2-Ch02-05-math-pow",
@@ -25,12 +26,12 @@ export const s2Ch02MathPow: Assignment = {
 - \`Math.pow(2, 10)\` は \`2 ** 10\` と同じ意味です。
 - 一方を使えればもう一方も読めるようになりますが、 ライブラリ系コードでは \`Math.pow\` がよく出てきます。
 `,
-  starterCode: `// Math.pow(底, 指数) の結果を const の変数に入れる
+  starterFiles: singleFile(`// Math.pow(底, 指数) の結果を const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1024 になる",

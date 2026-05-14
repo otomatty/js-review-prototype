@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch01Greet: Assignment = {
   id: "S3-Ch01-03-greet",
@@ -25,10 +26,10 @@ greet("");       // → "Hello, !"
 - テンプレートリテラル (\`\` \` \`\`) を使うと \`\\\`Hello, \${name}!\\\`\` のように直接埋め込めます。
 - 文字列連結 \`"Hello, " + name + "!"\` でも構いません。
 `,
-  starterCode: `function greet(name) {
+  starterFiles: singleFile(`function greet(name) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["greet"],
   demoCall: `console.log(greet("World"));`,
   tests: [

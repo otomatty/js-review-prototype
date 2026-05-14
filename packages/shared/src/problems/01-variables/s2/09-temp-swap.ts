@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TempSwap: Assignment = {
   id: "S2-Ch01-09-temp-swap",
@@ -32,7 +33,7 @@ a=2 b=1
 - だから一時変数 \`temp\` に元の値を取っておく必要があります。
 - 出力にはテンプレートリテラル \`a=\${a} b=\${b}\` を使います。
 `,
-  starterCode: `// 入れ替え対象の 2 つの値を、 それぞれ let の変数に入れる
+  starterFiles: singleFile(`// 入れ替え対象の 2 つの値を、 それぞれ let の変数に入れる
 
 
 // 一時保管用の const の変数に 1 つ目の値を退避する
@@ -43,7 +44,7 @@ a=2 b=1
 
 // テンプレートリテラルで「a=... b=...」 形式の文字列を組み立てて console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が a=2 b=1 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04SumCapstone: Assignment = {
   id: "S2-Ch04-13-sum-capstone",
@@ -36,7 +37,7 @@ for (let i = 0; i < nums.length; i++) {
 - ループ条件は \`i < nums.length\` (添字が長さ未満の間)。
 - 最後にテンプレートリテラルで \`合計: \${total}\` を出力します。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // 合計を入れる let の変数を 0 で初期化する
@@ -47,7 +48,7 @@ for (let i = 0; i < nums.length; i++) {
 
 // テンプレートリテラルで「合計: ...」 形式の文字列を組み立て、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 合計: 120 になる",

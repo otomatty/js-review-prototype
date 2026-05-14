@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch12FixSumRange: Assignment = {
   id: "S3-Ch12-01-fix-sum-range",
@@ -24,14 +25,14 @@ sumRange(3, 3);   // → 3
 
 - ループの条件式 \`i < to\` は **to を含まない**。 \`i <= to\` にすると含まれます。
 `,
-  starterCode: `function sumRange(from, to) {
+  starterFiles: singleFile(`function sumRange(from, to) {
   let sum = 0;
   for (let i = from; i < to; i++) {
     sum += i;
   }
   return sum;
 }
-`,
+`),
   entryPoints: ["sumRange"],
   demoCall: `console.log(sumRange(1, 5));`,
   tests: [

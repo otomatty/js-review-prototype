@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch13ValidateAge: Assignment = {
   id: "S3-Ch13-03-validate-age",
@@ -34,10 +35,10 @@ validateAge(200);   // throws RangeError
 - \`typeof NaN === "number"\` なので、 NaN を弾くには **\`Number.isFinite\`** を併用します。
 - AST で **ThrowStatement** を必須にしています。
 `,
-  starterCode: `function validateAge(age) {
+  starterFiles: singleFile(`function validateAge(age) {
   // 不正なら throw、 正しければそのまま return
 }
-`,
+`),
   entryPoints: ["validateAge"],
   demoCall: `console.log(validateAge(30));`,
   tests: [

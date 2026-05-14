@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02ParseFloat: Assignment = {
   id: "S2-Ch02-04-parseFloat",
@@ -29,7 +30,7 @@ const text = "3.14kg";
 - \`parseFloat\` は小数点を含む数字を読み取ります。 \`parseInt\` だと小数点以下が落ちます。
 - \`parseFloat\` には基数の引数はありません (常に 10 進数)。
 `,
-  starterCode: `// 小数+単位の文字列を const の変数に入れる
+  starterFiles: singleFile(`// 小数+単位の文字列を const の変数に入れる
 
 
 // その変数を parseFloat で小数として読み取り、 別の const の変数に入れる
@@ -37,7 +38,7 @@ const text = "3.14kg";
 
 // 変換後の値を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 3.14 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07SumRest: Assignment = {
   id: "S3-Ch07-04-sum-rest",
@@ -26,10 +27,10 @@ sumAll(10, 20, 30, 40); // → 100
 - 残余パラメータは \`function f(...nums) { ... }\` のように書きます。
 - \`nums\` は **配列** として受け取れるので、 for...of で合計できます。
 `,
-  starterCode: `function sumAll() {
+  starterFiles: singleFile(`function sumAll() {
   // 残余パラメータ ...nums で受け取って合計してください
 }
-`,
+`),
   entryPoints: ["sumAll"],
   demoCall: `console.log(sumAll(1, 2, 3, 4));`,
   tests: [

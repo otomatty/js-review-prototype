@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch16PipelineRetryCapstone: Assignment = {
   id: "S5-Ch16-03-pipeline-retry-capstone",
@@ -68,13 +69,13 @@ await runPipeline(
 - 外側ループは \`for (let i = 0; i < steps.length; i++)\`、 内側ループはステップごとのリトライ。 内側を **ヘルパ関数** に切り出すと両方が浅く保てます。
 - \`failedAt\` は **ステップの 0 始まり index**。 reason は **最後の reject 理由** (それまでの失敗は捨ててよい)。
 `,
-  starterCode: `// async function を使い、 各ステップを maxAttemptsPerStep 回までリトライしながら
+  starterFiles: singleFile(`// async function を使い、 各ステップを maxAttemptsPerStep 回までリトライしながら
 // 順番に await し、 成功時は { ok: true, value } を、 失敗時は { ok: false, failedAt, reason } を返す
 function runPipeline(input, steps, maxAttemptsPerStep) {
   // ここに実装する
   // ヒント: リトライ部分は内部の async 関数に切り出すと書きやすい
 }
-`,
+`),
   entryPoints: ["runPipeline"],
   demoCall: `(async () => {
   const r = await runPipeline(1, [async (v) => v + 10, async (v) => v * 2], 3);

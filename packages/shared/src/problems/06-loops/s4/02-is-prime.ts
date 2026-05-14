@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch06IsPrime: Assignment = {
   id: "S4-Ch06-02-is-prime",
@@ -33,7 +34,7 @@ isPrime(25);  // → false  (5 で割り切れる)
 - \`break\` でフラグを立てて最後に判定する書き方もありますが、 関数の中なら \`return\` で抜けるのが最もシンプルです。
 - ループ範囲は \`i = 2; i < n; i++\` で十分通ります (高速化として \`i * i <= n\` まででも OK)。
 `,
-  starterCode: `function isPrime(n) {
+  starterFiles: singleFile(`function isPrime(n) {
   // 2 未満は素数ではないので即 false を return する
 
 
@@ -42,7 +43,7 @@ isPrime(25);  // → false  (5 で割り切れる)
 
   // ループを抜けたら素数なので true を return する
 }
-`,
+`),
   entryPoints: ["isPrime"],
   demoCall: `console.log(isPrime(17));`,
   tests: [

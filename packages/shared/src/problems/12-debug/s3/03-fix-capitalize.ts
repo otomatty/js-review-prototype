@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch12FixCapitalize: Assignment = {
   id: "S3-Ch12-03-fix-capitalize",
@@ -25,11 +26,11 @@ capitalize("");       // → ""
 
 - 残りの部分 \`s.slice(1)\` に **\`.toLowerCase()\`** を付ければ OK。
 `,
-  starterCode: `function capitalize(s) {
+  starterFiles: singleFile(`function capitalize(s) {
   if (s.length === 0) return "";
   return s[0].toUpperCase() + s.slice(1);
 }
-`,
+`),
   entryPoints: ["capitalize"],
   demoCall: `console.log(capitalize("WORLD"));`,
   tests: [

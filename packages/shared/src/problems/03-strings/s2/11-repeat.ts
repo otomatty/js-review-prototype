@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03Repeat: Assignment = {
   id: "S2-Ch03-11-repeat",
@@ -25,12 +26,12 @@ ababababab
 - \`"ab".repeat(5)\` → \`"ababababab"\`
 - 区切り線 (\`"-".repeat(20)\`) などで便利です。
 `,
-  starterCode: `// 元になる文字列を const の変数に入れる
+  starterFiles: singleFile(`// 元になる文字列を const の変数に入れる
 
 
 // その変数に対して repeat を呼んで指定回数くり返した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が ababababab になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03ConcatPlus: Assignment = {
   id: "S1-Ch03-02-concat-plus",
@@ -22,9 +23,9 @@ export const s1Ch03ConcatPlus: Assignment = {
 Hello, World
 \`\`\`
 `,
-  starterCode: `// console.log の中で 2 つの文字列を + でつなぐ
+  starterFiles: singleFile(`// console.log の中で 2 つの文字列を + でつなぐ
 
-`,
+`),
   tests: [
     {
       name: "stdout が Hello, World になる",

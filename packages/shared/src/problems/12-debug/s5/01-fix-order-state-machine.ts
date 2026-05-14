@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch12FixOrderStateMachine: Assignment = {
   id: "S5-Ch12-01-fix-order-state-machine",
@@ -53,7 +54,7 @@ transition({ id: 1, status: "paid" }, "pending");
 - 5 状態以外の文字列が \`from\` に渡されたら \`canTransition\` は \`false\` を返す。
 - \`TRANSITIONS\` というモジュール変数の形は壊さない (オブジェクトリテラルのままにしておく)。 中身の遷移先配列だけ仕様に合わせて直す。
 `,
-  starterCode: `const TRANSITIONS = {
+  starterFiles: singleFile(`const TRANSITIONS = {
   pending: ["paid", "cancelled"],
   paid: ["shipped", "cancelled", "pending"],
   shipped: ["delivered", "cancelled"],
@@ -82,7 +83,7 @@ function transition(order, next) {
   }
   return { ...order, status: next };
 }
-`,
+`),
   entryPoints: ["canTransition", "isFinal", "transition"],
   demoCall: `console.log(transition({ id: 1, status: "pending" }, "paid"));`,
   tests: [

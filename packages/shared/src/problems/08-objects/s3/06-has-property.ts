@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08HasProperty: Assignment = {
   id: "S3-Ch08-06-has-property",
@@ -26,10 +27,10 @@ hasProperty({}, "a");                      // → false
 - \`Object.hasOwn(obj, key)\` がもっとも安全な書き方。
 - \`obj[key] !== undefined\` だと、 値が \`undefined\` のときに誤判定します。
 `,
-  starterCode: `function hasProperty(obj, key) {
+  starterFiles: singleFile(`function hasProperty(obj, key) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["hasProperty"],
   demoCall: `console.log(hasProperty({ a: 1 }, "a"));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch16PromiseAll: Assignment = {
   id: "S4-Ch16-04-promise-all",
@@ -31,11 +32,11 @@ await sumAll([]);                                                              /
 - AST で **\`async-fn\`** / **\`await\`** / **\`Promise.all\` (\`method: "all"\`)** を必須にしています。
 - **\`for\` / \`for-of\` ループは禁止** にしてあるため、 \`Promise.all\` 後の合計は \`reduce\` などで書きましょう。
 `,
-  starterCode: `// async function を使い、 Promise.all で全件を並列に待って合計を返す
+  starterFiles: singleFile(`// async function を使い、 Promise.all で全件を並列に待って合計を返す
 function sumAll(promises) {
   // ここに実装する
 }
-`,
+`),
   entryPoints: ["sumAll"],
   demoCall: `(async () => console.log(await sumAll([Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)])))();`,
   tests: [

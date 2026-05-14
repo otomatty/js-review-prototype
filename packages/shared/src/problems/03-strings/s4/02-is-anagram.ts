@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch03IsAnagram: Assignment = {
   id: "S4-Ch03-02-is-anagram",
@@ -31,10 +32,10 @@ isAnagram("aabb", "abab");       // → true
 - もっとも素直な実装は **両方を小文字化 → 1 文字ずつバラす → 並べ替える (\`sort\`) → \`join\` で文字列に戻す** → \`===\` 比較。
 - 1 行で書くと: \`a.toLowerCase().split("").sort().join("") === b.toLowerCase().split("").sort().join("")\`。
 `,
-  starterCode: `function isAnagram(a, b) {
+  starterFiles: singleFile(`function isAnagram(a, b) {
   // 大文字小文字を無視して、 並べ替えると同じ文字列になるかを返してください
 }
-`,
+`),
   entryPoints: ["isAnagram"],
   demoCall: `console.log(isAnagram("listen", "silent"));`,
   tests: [

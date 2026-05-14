@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch08FindMaxBy: Assignment = {
   id: "S4-Ch08-02-find-max-by",
@@ -47,12 +48,12 @@ findMaxBy([], "price");   // → undefined
 - 空配列のときは return する best が存在しないので、 **最初に空配列ガード** を入れて \`undefined\` を返してください。
 - S4 では \`sort\` などで全件並べ替えてから先頭を取る、 のような手段は \`AST forbidden\` でブロックしています。
 `,
-  starterCode: `function findMaxBy(items, field) {
+  starterFiles: singleFile(`function findMaxBy(items, field) {
   // 1) 空配列なら undefined を返す
   // 2) best = items[0] から始めて、 ループで item[field] > best[field] なら best を更新
   // 3) ループ後に best を返す
 }
-`,
+`),
   entryPoints: ["findMaxBy"],
   demoCall: `console.log(findMaxBy([{ price: 100 }, { price: 300 }, { price: 200 }], "price"));`,
   tests: [

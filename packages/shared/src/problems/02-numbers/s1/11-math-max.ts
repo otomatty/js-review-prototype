@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02MathMax: Assignment = {
   id: "S1-Ch02-11-math-max",
@@ -22,9 +23,9 @@ export const s1Ch02MathMax: Assignment = {
 45
 \`\`\`
 `,
-  starterCode: `// 説明文の 3 つの数値を Math.max に渡して最大値を求め、 結果を console.log で出力する
+  starterFiles: singleFile(`// 説明文の 3 つの数値を Math.max に渡して最大値を求め、 結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 45 になる",

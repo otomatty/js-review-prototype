@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03IndexOfString: Assignment = {
   id: "S2-Ch03-09-indexOf-string",
@@ -25,12 +26,12 @@ export const s2Ch03IndexOfString: Assignment = {
 - \`"Hello, World!".indexOf("World")\` → \`7\` (W が 7 番目)
 - 見つからないときは \`-1\` を返します。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // その変数に対して indexOf で部分文字列の出現位置を取得した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 7 になる",

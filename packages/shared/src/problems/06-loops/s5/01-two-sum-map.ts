@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch06TwoSumMap: Assignment = {
   id: "S5-Ch06-01-two-sum-map",
@@ -40,7 +41,7 @@ twoSumMap([], 0);               // → null
 - \`seen.has(...)\` で「過去に見たか」 を **平均 O(1) で判定** できるのが Map の強み。 これが \`indexOf\` や内側 for ループでの線形探索に比べて **計算量を 1 段下げる** カギです。
 - **二重ループでも正解は出ますが、 設計演習の目的を満たさない** ため、 AST で **Map のメソッド呼び出し (\`.set\` / \`.has\` または \`.get\`)** を必須にしています。 内側の for / while を増やす実装は通りません。
 `,
-  starterCode: `function twoSumMap(nums, target) {
+  starterFiles: singleFile(`function twoSumMap(nums, target) {
   // 値 → そのインデックス を覚えておく Map を用意する
   // ヒント: const seen = new Map();
 
@@ -56,7 +57,7 @@ twoSumMap([], 0);               // → null
 
   // 最後まで見つからなければ null を返す
 }
-`,
+`),
   entryPoints: ["twoSumMap"],
   demoCall: `console.log(twoSumMap([2, 7, 11, 15], 9));`,
   tests: [

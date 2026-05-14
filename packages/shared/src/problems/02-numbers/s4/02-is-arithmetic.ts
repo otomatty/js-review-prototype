@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch02IsArithmetic: Assignment = {
   id: "S4-Ch02-02-is-arithmetic",
@@ -30,11 +31,11 @@ isArithmetic([]);               // → true   (空配列も空虚に等差)
 - そのあと \`i = 2\` から末尾まで \`for\` で回り、 \`arr[i] - arr[i - 1]\` が公差と一致しない要素があれば \`false\` を返します。
 - 最後まで一致したまま抜けたら \`true\` を返します。
 `,
-  starterCode: `function isArithmetic(arr) {
+  starterFiles: singleFile(`function isArithmetic(arr) {
   // 隣り合う差がすべて同じかをループでチェックしてください
   // 長さ <= 1 のときは true を返す
 }
-`,
+`),
   entryPoints: ["isArithmetic"],
   demoCall: `console.log(isArithmetic([3, 5, 7, 9]));`,
   tests: [

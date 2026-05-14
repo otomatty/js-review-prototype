@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01MultipleVars: Assignment = {
   id: "S1-Ch01-07-multiple-vars",
@@ -26,12 +27,12 @@ export const s1Ch01MultipleVars: Assignment = {
 25
 \`\`\`
 `,
-  starterCode: `// const で 3 つの変数を順に宣言する (1 つ目・2 つ目は文字列、 3 つ目は数値)
+  starterFiles: singleFile(`// const で 3 つの変数を順に宣言する (1 つ目・2 つ目は文字列、 3 つ目は数値)
 
 
 // 宣言した順に console.log でそれぞれを出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 花子 / 山田 / 25 の 3 行になる",

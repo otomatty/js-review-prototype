@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch13DivideOrZero: Assignment = {
   id: "S3-Ch13-02-divide-or-zero",
@@ -29,14 +30,14 @@ divideOrZero(-6, 3);   // → -2
 - 呼び出し側で **\`try { ... } catch (e) { return 0; }\`** で握ります。
 - AST で **TryStatement と ThrowStatement の両方** を必須にしています。
 `,
-  starterCode: `function divide(a, b) {
+  starterFiles: singleFile(`function divide(a, b) {
   // b === 0 のときは throw、 それ以外は a / b
 }
 
 function divideOrZero(a, b) {
   // divide を try/catch で呼ぶ
 }
-`,
+`),
   entryPoints: ["divide", "divideOrZero"],
   demoCall: `console.log(divideOrZero(10, 0));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11SumNestedCapstone: Assignment = {
   id: "S4-Ch11-07-sum-nested-capstone",
@@ -47,7 +48,7 @@ sumNested([1, [2, 3], 4, [[5, 6]]]);  // → 21
 - ベースケースは 「\`arr\` が空配列 \`[]\` のとき」 で、 \`for\` ループが回らずに \`return 0\` になるので、 **自然と** 終了します。 明示的に \`if (arr.length === 0)\` と書く必要はありません。
 - 再帰呼び出しの結果は **数値が返る** ので、 そのまま \`total\` に足せばよいです。
 `,
-  starterCode: `function sumNested(arr) {
+  starterFiles: singleFile(`function sumNested(arr) {
   // 合計を貯めるための数値変数を 0 で用意する
 
 
@@ -65,7 +66,7 @@ sumNested([1, [2, 3], 4, [[5, 6]]]);  // → 21
 
   // ループを抜けたら合計を return する
 }
-`,
+`),
   entryPoints: ["sumNested"],
   demoCall: `console.log(sumNested([1, [2, [3, [4]]]]));`,
   tests: [

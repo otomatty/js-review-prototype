@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s0Ch00PrintName: Assignment = {
   id: "S0-Ch00-02-print-name",
@@ -27,9 +28,9 @@ Taro
 - 1 問目の \`Hello, World!\` を出したコードを思い出してみましょう。
 - \`console.log\` に渡す文字列を変えるだけです。
 `,
-  starterCode: `// console.log で「Taro」を出力してください
+  starterFiles: singleFile(`// console.log で「Taro」を出力してください
 // 1 問目と同じ書き方で、文字列だけ差し替えれば OK です
-`,
+`),
   tests: [
     {
       name: "stdout が Taro になる",

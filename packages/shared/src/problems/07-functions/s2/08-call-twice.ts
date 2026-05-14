@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07CallTwice: Assignment = {
   id: "S2-Ch07-08-call-twice",
@@ -26,7 +27,7 @@ export const s2Ch07CallTwice: Assignment = {
 - 同じ関数を引数を変えて呼べば、 違う結果が返ります。
 - これが「処理を関数にまとめる」 ことのメリットです。
 `,
-  starterCode: `// 引数を 2 倍にして return する function 文の関数を宣言する
+  starterFiles: singleFile(`// 引数を 2 倍にして return する function 文の関数を宣言する
 
 
 // 関数に説明文の 1 つ目の値を渡して呼び出した結果を console.log で出力する
@@ -34,7 +35,7 @@ export const s2Ch07CallTwice: Assignment = {
 
 // 関数に説明文の 2 つ目の値を渡して呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 6/14 の 2 行になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch01RectangleArea: Assignment = {
   id: "S3-Ch01-04-rectangle-area",
@@ -25,10 +26,10 @@ rectangleArea(10, 0);  // → 0
 - 引数を 2 つ取って組み合わせる関数です。 順番は \`(height, width)\` です。
 - 面積は \`height * width\` です。
 `,
-  starterCode: `function rectangleArea(height, width) {
+  starterFiles: singleFile(`function rectangleArea(height, width) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["rectangleArea"],
   demoCall: `console.log(rectangleArea(3, 4));`,
   tests: [

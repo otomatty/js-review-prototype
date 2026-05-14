@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch02PrimeFactors: Assignment = {
   id: "S4-Ch02-03-prime-factors",
@@ -30,11 +31,11 @@ primeFactors(360);  // → [2, 2, 2, 3, 3, 5]
 - 効率化として \`i * i <= n\` まで回せば十分です (それより大きい素因数は最後にせいぜい 1 つ残るだけ)。
 - ループ後に \`n > 1\` ならその \`n\` 自体が残った素因数なので push します。
 `,
-  starterCode: `function primeFactors(n) {
+  starterFiles: singleFile(`function primeFactors(n) {
   // i = 2 から始めて、 i で割れる限り i を push して n を割り続けてください
   // ループ後に残った n が 1 より大きければそれも push
 }
-`,
+`),
   entryPoints: ["primeFactors"],
   demoCall: `console.log(primeFactors(12));`,
   tests: [

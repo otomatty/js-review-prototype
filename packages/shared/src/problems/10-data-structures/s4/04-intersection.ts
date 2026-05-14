@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch10Intersection: Assignment = {
   id: "S4-Ch10-04-intersection",
@@ -27,10 +28,10 @@ intersection([], [1, 2]);                        // → []
 - **\`b\` を Set にする** ことで \`has\` を \`O(1)\` にでき、 全体が \`O(a.length + b.length)\` になります。
 - 同時に重複を除くため、 既に追加した要素を覚えておく Set も用意します。
 `,
-  starterCode: `function intersection(a, b) {
+  starterFiles: singleFile(`function intersection(a, b) {
   // b を Set にして、 a を走査しながら共通要素を集めてください
 }
-`,
+`),
   entryPoints: ["intersection"],
   demoCall: `console.log(intersection([1, 2, 3, 4], [2, 4, 6]));`,
   tests: [

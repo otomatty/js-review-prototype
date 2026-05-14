@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch08TagContactsCapstone: Assignment = {
   id: "S5-Ch08-03-tag-contacts-capstone",
@@ -77,7 +78,7 @@ s = removeContact(s, 1);
 - 「該当 id が無くても 新しい state を返す」 のは、 この課題で更新関数の返却規約を単純化するため。 Redux/React の reducer 慣行では 「未変更なら元の参照を返して === で変化検知させる」 のが一般的だが、 ここでは学習のブレを無くす目的で あえて 「変更があってもなくても常に新インスタンス」 に統一する。
 - **影響を受けない contact は元の参照のまま** 入れること。 全件を \`{ ...c }\` で複製してしまうと、 React 等で 「全部変わった」 と誤検知されて再レンダリングが起きる。 これも設計判断。
 `,
-  starterCode: `function addContact(state, contact) {
+  starterFiles: singleFile(`function addContact(state, contact) {
   // 1) const id = state.nextId; を採番する。
   // 2) const newContact = { ...contact, id, tags: [...(contact.tags ?? [])] };
   // 3) return { ...state, nextId: id + 1, contacts: [...state.contacts, newContact] };
@@ -103,7 +104,7 @@ function findByTag(state, tag) {
   // 2) for...of で state.contacts を 1 周し、 c.tags.includes(tag) なら push する。
   // 3) result を return する (state は触らない)。
 }
-`,
+`),
   entryPoints: ["addContact", "removeContact", "tagContact", "findByTag"],
   demoCall: `(() => {
   let s = { nextId: 1, contacts: [] };

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch06FindPairSum: Assignment = {
   id: "S4-Ch06-04-find-pair-sum",
@@ -30,11 +31,11 @@ findPairSum([], 0);              // → null
 - 見つかった瞬間に \`return [i, j]\` で関数ごと抜けるのが早期脱出パターン。 残りのペアはチェック不要です。
 - 全部回しても見つからなければ最後に \`return null\`。
 `,
-  starterCode: `function findPairSum(nums, target) {
+  starterFiles: singleFile(`function findPairSum(nums, target) {
   // 二重ループでペアを試し、 見つかったら即 return [i, j]
   // 最後まで見つからなければ null
 }
-`,
+`),
   entryPoints: ["findPairSum"],
   demoCall: `console.log(findPairSum([2, 7, 11, 15], 9));`,
   tests: [

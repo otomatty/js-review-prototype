@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch07RunSteps: Assignment = {
   id: "S5-Ch07-02-run-steps",
@@ -59,7 +60,7 @@ calls;                                        // → 0
 - 「失敗時にエラーメッセージを書き換えて返す」 ような工夫は不要。 ステップから返ってきた **失敗結果をそのまま** 透過することで、 誰がどう失敗したかが呼び出し側に正しく伝わります。
 - AST で **\`RestElement\`** (\`...steps\`)、 **\`ArrowFunctionExpression\`** (内側の関数)、 **\`ForOfStatement\`** (\`for...of steps\`)、 **\`ReturnStatement\`** を必須にしています。
 `,
-  starterCode: `function runSteps() {
+  starterFiles: singleFile(`function runSteps() {
   // 残余引数 ...steps で任意個数の関数を受ける。
   //
   // 返すのは アロー関数 (input) => { ... }。
@@ -69,7 +70,7 @@ calls;                                        // → 0
   //   - { ok: true, value } なら current = result.value で更新して次へ
   //   - ループを抜けたら { ok: true, value: current } を返す
 }
-`,
+`),
   entryPoints: ["runSteps"],
   demoCall: `console.log(runSteps((n) => ({ ok: true, value: n + 1 }), (n) => ({ ok: true, value: n * 2 }))(5));`,
   tests: [

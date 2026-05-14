@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04ArrayAverage: Assignment = {
   id: "S3-Ch04-07-array-average",
@@ -26,10 +27,10 @@ arrayAverage([5]);          // → 5
 - 合計 \`sum\` を計算し、 \`sum / arr.length\` を返します。
 - 空配列はテストに含まれません (前提として 1 要素以上)。
 `,
-  starterCode: `function arrayAverage(arr) {
+  starterFiles: singleFile(`function arrayAverage(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["arrayAverage"],
   demoCall: `console.log(arrayAverage([1, 2, 3]));`,
   tests: [

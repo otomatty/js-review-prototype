@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07NegatePredicate: Assignment = {
   id: "S3-Ch07-07-negate-predicate",
@@ -31,10 +32,10 @@ isNotEmpty("x");     // → true
 
 - 関数を返す関数。 \`return (x) => !predicate(x);\` で 1 行。
 `,
-  starterCode: `function negatePredicate(predicate) {
+  starterFiles: singleFile(`function negatePredicate(predicate) {
   // 反転した関数を return してください
 }
-`,
+`),
   entryPoints: ["negatePredicate"],
   demoCall: `console.log(negatePredicate((n) => n > 0)(-3));`,
   tests: [

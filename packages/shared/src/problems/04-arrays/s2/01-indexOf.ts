@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04IndexOf: Assignment = {
   id: "S2-Ch04-01-indexOf",
@@ -25,12 +26,12 @@ export const s2Ch04IndexOf: Assignment = {
 - \`arr.indexOf(値)\` で添字 (0 始まり) が返ります。
 - 見つからないときは \`-1\`。
 `,
-  starterCode: `// 文字列の配列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列の配列を const の変数に入れる
 
 
 // その配列に対して indexOf で対象要素の添字を取得した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 2 になる",

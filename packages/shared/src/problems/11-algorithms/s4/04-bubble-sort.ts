@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11BubbleSort: Assignment = {
   id: "S4-Ch11-04-bubble-sort",
@@ -42,7 +43,7 @@ bubbleSort([]);               // → []
 - swap は 3 つの代入で書けます: \`const tmp = a[j]; a[j] = a[j+1]; a[j+1] = tmp;\`
 - 内側ループの上限を \`length - 1 - i\` にすると、 既に確定した末尾を再走査せずに済んで少し速くなります。
 `,
-  starterCode: `function bubbleSort(arr) {
+  starterFiles: singleFile(`function bubbleSort(arr) {
   // 入力配列を破壊しないようにコピーした配列を作る
 
 
@@ -51,7 +52,7 @@ bubbleSort([]);               // → []
 
   // 並べ替え終わった配列を return する
 }
-`,
+`),
   entryPoints: ["bubbleSort"],
   demoCall: `console.log(bubbleSort([3, 1, 2]));`,
   tests: [

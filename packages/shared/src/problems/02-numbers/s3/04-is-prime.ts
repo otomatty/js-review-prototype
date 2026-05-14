@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02IsPrime: Assignment = {
   id: "S3-Ch02-04-is-prime",
@@ -29,10 +30,10 @@ isPrime(13);  // → true
 - 2 以上のとき、 \`i\` を 2 から \`Math.sqrt(n)\` まで動かして、 \`n % i === 0\` のものがあれば素数ではない (\`return false\`)。
 - ループが終わるまで割り切れなければ素数 (\`return true\`)。
 `,
-  starterCode: `function isPrime(n) {
+  starterFiles: singleFile(`function isPrime(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["isPrime"],
   demoCall: `console.log(isPrime(7));`,
   tests: [

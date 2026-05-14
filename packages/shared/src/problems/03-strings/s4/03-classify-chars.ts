@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch03ClassifyChars: Assignment = {
   id: "S4-Ch03-03-classify-chars",
@@ -38,7 +39,7 @@ classifyChars("!@# ");
 - 文字の比較は **文字列の比較** として書けます: \`ch >= "A" && ch <= "Z"\`。 文字コードを意識しなくても範囲判定できます。
 - 集計の合計 (\`upper + lower + digit + other\`) は **必ず元の文字列長と一致する** はずです。 自分でも検算しましょう。
 `,
-  starterCode: `function classifyChars(s) {
+  starterFiles: singleFile(`function classifyChars(s) {
   // 説明文の 4 カテゴリを 0 で初期化した集計用オブジェクトを用意する
 
 
@@ -50,7 +51,7 @@ classifyChars("!@# ");
 
   // ループを抜けたら集計用オブジェクトを return する
 }
-`,
+`),
   entryPoints: ["classifyChars"],
   demoCall: `console.log(classifyChars("Hello123!"));`,
   tests: [

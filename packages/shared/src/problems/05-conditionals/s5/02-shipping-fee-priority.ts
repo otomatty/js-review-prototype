@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch05ShippingFeePriority: Assignment = {
   id: "S5-Ch05-02-shipping-fee-priority",
@@ -66,7 +67,7 @@ calculateShippingFee({ totalAmount: -100, weight: 2, distance: 50, isPremium: tr
 - **早期 return で平坦に書く** のがコツです。 if/else を入れ子にすると S5 の \`max-depth\` 警告 (3 階層まで) や \`no-else-return\` 警告に触れます。
 - 仕様順序を逆にすると、 「プレミアムなのに壊れ物加算がかかる」 「負の入力で正の運賃が出てしまう」 などのバグになります。 \`badSolutions\` で具体例を確認してください。
 `,
-  starterCode: `function calculateShippingFee(order) {
+  starterFiles: singleFile(`function calculateShippingFee(order) {
   // 1. 入力検証ガード
   //    totalAmount, weight, distance のいずれかが数値でない、 NaN、 または負の数なら -1 を返す
 
@@ -86,7 +87,7 @@ calculateShippingFee({ totalAmount: -100, weight: 2, distance: 50, isPremium: tr
 
   // 8. 合計を return する
 }
-`,
+`),
   entryPoints: ["calculateShippingFee"],
   demoCall: `console.log(calculateShippingFee({ totalAmount: 1000, weight: 7, distance: 200, isPremium: false, isFragile: true }));`,
   tests: [

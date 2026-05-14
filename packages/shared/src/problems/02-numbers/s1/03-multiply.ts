@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Multiply: Assignment = {
   id: "S1-Ch02-03-multiply",
@@ -22,9 +23,9 @@ export const s1Ch02Multiply: Assignment = {
 96
 \`\`\`
 `,
-  starterCode: `// console.log の中に 12 * 8 の式を書く
+  starterFiles: singleFile(`// console.log の中に 12 * 8 の式を書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が 96 になる",

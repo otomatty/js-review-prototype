@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch14MaskNumbers: Assignment = {
   id: "S3-Ch14-04-mask-numbers",
@@ -26,10 +27,10 @@ maskNumbers("0");             // → "#"
 - \`s.replace(/\\d/g, "#")\` で「すべての数字を # に」 置換できます。
 - \`g\` フラグが無いと最初の 1 文字しか置換されません。
 `,
-  starterCode: `function maskNumbers(s) {
+  starterFiles: singleFile(`function maskNumbers(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["maskNumbers"],
   demoCall: `console.log(maskNumbers("phone: 080-1234-5678"));`,
   tests: [

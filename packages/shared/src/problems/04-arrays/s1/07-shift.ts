@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04Shift: Assignment = {
   id: "S1-Ch04-07-shift",
@@ -24,7 +25,7 @@ export const s1Ch04Shift: Assignment = {
 
 - \`shift()\` は **先頭** の要素を取り除きます。 pop の逆 (末尾ではなく先頭)。
 `,
-  starterCode: `// 配列を const の変数に入れる
+  starterFiles: singleFile(`// 配列を const の変数に入れる
 
 
 // 先頭の要素を shift で取り除く
@@ -32,7 +33,7 @@ export const s1Ch04Shift: Assignment = {
 
 // 取り除いたあとの配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [20,30] になる",

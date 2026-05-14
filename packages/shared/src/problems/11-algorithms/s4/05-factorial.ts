@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11Factorial: Assignment = {
   id: "S4-Ch11-05-factorial",
@@ -39,11 +40,11 @@ factorial(10);  // → 3628800
 - 「\`n\` が小さくなり続け、 いつかベースケースに到達するか?」 を意識してください。 各呼び出しで \`n - 1\` のように **小さくして** 渡すのが鉄則です。
 - \`factorial\` は \`n\` がそこそこ大きいと \`Number\` の精度を超えますが、 このテストでは \`n = 10\` までしか確認しません。
 `,
-  starterCode: `function factorial(n) {
+  starterFiles: singleFile(`function factorial(n) {
   // ベースケース: n <= 1 なら 1
   // 再帰ステップ: それ以外なら n * factorial(n - 1)
 }
-`,
+`),
   entryPoints: ["factorial"],
   demoCall: `console.log(factorial(5));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch16DependentChain: Assignment = {
   id: "S5-Ch16-01-dependent-chain",
@@ -46,12 +47,12 @@ await loadUserProfile("u1", fetchUser, fetchTeam, fetchTeamLead);
 - AST で **async 関数** / **AwaitExpression** / **ReturnStatement** を必須。 **\`Promise.all\` / \`Promise.allSettled\` / \`.then(...)\` は forbidden** にしています (依存チェーンでは使い道がないため)。
 - 3 つの await を順番に書き、 それぞれの返り値を変数に受けてから次に渡します。
 `,
-  starterCode: `// async function を使い、 fetchUser → fetchTeam → fetchTeamLead の順に
+  starterFiles: singleFile(`// async function を使い、 fetchUser → fetchTeam → fetchTeamLead の順に
 // 前の結果の id を次の引数に渡して await する
 function loadUserProfile(userId, fetchUser, fetchTeam, fetchTeamLead) {
   // ここに実装する
 }
-`,
+`),
   entryPoints: ["loadUserProfile"],
   demoCall: `(async () => {
   const fetchUser = (id) => Promise.resolve({ id, teamId: "t1" });

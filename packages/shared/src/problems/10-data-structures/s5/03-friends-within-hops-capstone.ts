@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch10FriendsWithinHopsCapstone: Assignment = {
   id: "S5-Ch10-03-friends-within-hops-capstone",
@@ -84,7 +85,7 @@ friendsWithinHops([{ from: "u1", to: "u2" }], "u1", 0);          // → []
 - AST で **\`new Map()\` / \`new Set()\` / \`Map#set\` / \`has\` / \`get\` / \`sort\` / \`while\` の使用** を必須にしています。 隣接リストを作らない実装や、 再帰だけで書いた DFS では通りません。
 - **(補足) パフォーマンス**: ここでは可読性を優先して \`queue.shift()\` を使っていますが、 \`shift()\` は配列要素を 1 つずつ前にずらすため **O(N)** のコストがかかり、 頂点数が数千以上の大きなグラフでは BFS 全体が O(V²) に膨らみます。 大規模グラフでは \`let head = 0; while (head < queue.length) { const next = queue[head++]; ... }\` のように **読み取り位置をポインタで進める** 形にすると \`shift()\` の O(N) を避けられます。 計算量の本格的な話は Ch11 (アルゴリズム) で扱います。
 `,
-  starterCode: `function friendsWithinHops(follows, startUser, maxHops) {
+  starterFiles: singleFile(`function friendsWithinHops(follows, startUser, maxHops) {
   // maxHops <= 0 のときは早期 return []
 
 
@@ -102,7 +103,7 @@ friendsWithinHops([{ from: "u1", to: "u2" }], "u1", 0);          // → []
 
   // distance を [...entries()] で配列化し、 hop 昇順 + user 昇順で sort して return する
 }
-`,
+`),
   entryPoints: ["friendsWithinHops"],
   demoCall: `console.log(friendsWithinHops([
   { from: "u1", to: "u2" },

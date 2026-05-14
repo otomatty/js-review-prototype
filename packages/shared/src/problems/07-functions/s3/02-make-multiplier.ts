@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07MakeMultiplier: Assignment = {
   id: "S3-Ch07-02-make-multiplier",
@@ -28,10 +29,10 @@ triple(5);   // → 15
 - 「関数を返す」 ので \`return\` の値が **関数** です。
 - 内側の関数は外側のパラメータ \`factor\` を覚えています (これがクロージャ)。
 `,
-  starterCode: `function makeMultiplier(factor) {
+  starterFiles: singleFile(`function makeMultiplier(factor) {
   // 関数を return してください
 }
-`,
+`),
   entryPoints: ["makeMultiplier"],
   demoCall: `console.log(makeMultiplier(3)(5));`,
   tests: [

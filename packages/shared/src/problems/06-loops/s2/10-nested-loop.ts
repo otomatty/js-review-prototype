@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06NestedLoop: Assignment = {
   id: "S2-Ch06-10-nested-loop",
@@ -29,10 +30,10 @@ export const s2Ch06NestedLoop: Assignment = {
 - 単純な 1 重ループでもよいですが、 後の応用 (九九全体) を意識した形で書きます。
 - テンプレートリテラルで埋め込みます。
 `,
-  starterCode: `// for ループでカウンタを 1 から上限まで回し、
+  starterFiles: singleFile(`// for ループでカウンタを 1 から上限まで回し、
 // テンプレートリテラルで「2x...=...」 形式の文字列を組み立てて console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 2x1=2 / 2x2=4 / 2x3=6 の 3 行になる",

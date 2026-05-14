@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TypeofArray: Assignment = {
   id: "S2-Ch01-08-typeof-array",
@@ -31,12 +32,12 @@ object
 - JavaScript では配列は内部的に **オブジェクト** の一種なので、 \`typeof\` では \`"object"\` としか分かりません。
 - 「配列かどうか」 を判定したいときは \`Array.isArray(...)\` を使います (Ch04 で学習)。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が object になる",

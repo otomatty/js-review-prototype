@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06BreakFirstMatch: Assignment = {
   id: "S2-Ch06-08-break-first-match",
@@ -25,13 +26,13 @@ export const s2Ch06BreakFirstMatch: Assignment = {
 - \`break;\` はそのループを即座に終了します。
 - 「探索して最初の 1 つだけ欲しい」 ときに使います。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // for ループで先頭から走査し、 条件を満たす要素を見つけたら
 // その値を console.log で出力して break でループを抜ける
 
-`,
+`),
   tests: [
     {
       name: "stdout が 4 になる",

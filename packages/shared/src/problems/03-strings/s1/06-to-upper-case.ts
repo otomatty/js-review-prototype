@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03ToUpperCase: Assignment = {
   id: "S1-Ch03-06-to-upper-case",
@@ -22,9 +23,9 @@ export const s1Ch03ToUpperCase: Assignment = {
 HELLO
 \`\`\`
 `,
-  starterCode: `// console.log で "hello".toUpperCase() を呼ぶ
+  starterFiles: singleFile(`// console.log で "hello".toUpperCase() を呼ぶ
 
-`,
+`),
   tests: [
     {
       name: "stdout が HELLO になる",

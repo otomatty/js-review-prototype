@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch01Double: Assignment = {
   id: "S3-Ch01-01-double",
@@ -26,10 +27,10 @@ double(-5); // → -10
 - 引数 \`n\` はそのまま変数として使えます。 ローカル変数に入れ直す必要はありません。
 - テストは関数を直接呼び出して戻り値を確認します。
 `,
-  starterCode: `function double(n) {
+  starterFiles: singleFile(`function double(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["double"],
   demoCall: `console.log(double(3));`,
   tests: [

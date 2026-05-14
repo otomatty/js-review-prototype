@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch13SafeParseJson: Assignment = {
   id: "S3-Ch13-01-safe-parse-json",
@@ -26,10 +27,10 @@ safeParseJson("{");           // → null
 - \`try { ... } catch (e) { return null; }\` の形で失敗時の値を決めます。
 - \`catch (e)\` は **例外オブジェクト** を受け取れますが、 ここでは使わなくても OK です。
 `,
-  starterCode: `function safeParseJson(text) {
+  starterFiles: singleFile(`function safeParseJson(text) {
   // try/catch で実装してください
 }
-`,
+`),
   entryPoints: ["safeParseJson"],
   demoCall: `console.log(safeParseJson('{"a":1}'));`,
   tests: [

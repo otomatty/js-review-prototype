@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11SortByLength: Assignment = {
   id: "S4-Ch11-03-sort-by-length",
@@ -36,10 +37,10 @@ sortByLength([]);                          // → []
 - 文字列の比較関数の戻り値は 「\`a\` が前なら負、 \`b\` が前なら正」 と覚えると間違えにくいです。
 - 計算量はおおむね \`O(N log N)\` (組込み \`sort\` の典型値)。
 `,
-  starterCode: `function sortByLength(words) {
+  starterFiles: singleFile(`function sortByLength(words) {
   // [...words].sort((a, b) => a.length - b.length) で並べ替える
 }
-`,
+`),
   entryPoints: ["sortByLength"],
   demoCall: `console.log(sortByLength(["ccc", "a", "bb"]));`,
   tests: [

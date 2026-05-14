@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch04PrefixSum: Assignment = {
   id: "S4-Ch04-01-prefix-sum",
@@ -31,10 +32,10 @@ prefixSum([-1, -2, -3]);   // → [0, -1, -3, -6]
 - ループ変数 \`i\` で添字をたどり、 \`prefix[i + 1] = prefix[i] + arr[i]\` で 1 つ前の累積に足し込みます。
 - S4 では \`reduce\` や \`map\` は **まだ使いません** (Ch09 で導入)。 古典的な \`for (let i = 0; ...)\` ループで書いてください。
 `,
-  starterCode: `function prefixSum(arr) {
+  starterFiles: singleFile(`function prefixSum(arr) {
   // prefix[0] = 0 から始め、 prefix[i + 1] = prefix[i] + arr[i] で埋める
 }
-`,
+`),
   entryPoints: ["prefixSum"],
   demoCall: `console.log(prefixSum([1, 2, 3, 4]));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch08AverageByField: Assignment = {
   id: "S4-Ch08-03-average-by-field",
@@ -37,12 +38,12 @@ averageByField([], "rating");   // → 0
 - 戻り値は整数とは限りません (例: 平均が \`1.5\`)。
 - S4 では \`reduce\` を使わず **手書きのループ** で合計を組み立てる練習をします。
 `,
-  starterCode: `function averageByField(items, field) {
+  starterFiles: singleFile(`function averageByField(items, field) {
   // 1) 空配列なら 0 を返す (NaN 回避)
   // 2) for...of で合計を作る
   // 3) sum / items.length を返す
 }
-`,
+`),
   entryPoints: ["averageByField"],
   demoCall: `console.log(averageByField([{ x: 1 }, { x: 2 }, { x: 3 }], "x"));`,
   tests: [

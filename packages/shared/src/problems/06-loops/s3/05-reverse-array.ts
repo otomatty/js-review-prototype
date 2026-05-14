@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch06ReverseArray: Assignment = {
   id: "S3-Ch06-05-reverse-array",
@@ -25,10 +26,10 @@ reverseArray([42]);        // → [42]
 
 - 末尾から先頭まで添字を回して \`result.push(arr[i])\` するのが定石。
 `,
-  starterCode: `function reverseArray(arr) {
+  starterFiles: singleFile(`function reverseArray(arr) {
   // ここを実装してください (reverse は使わない)
 }
-`,
+`),
   entryPoints: ["reverseArray"],
   demoCall: `console.log(reverseArray([1, 2, 3]));`,
   tests: [

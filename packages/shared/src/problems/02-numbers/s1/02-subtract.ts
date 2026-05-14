@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Subtract: Assignment = {
   id: "S1-Ch02-02-subtract",
@@ -20,9 +21,9 @@ export const s1Ch02Subtract: Assignment = {
 63
 \`\`\`
 `,
-  starterCode: `// console.log の中に 100 - 37 の式を書く
+  starterFiles: singleFile(`// console.log の中に 100 - 37 の式を書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が 63 になる",

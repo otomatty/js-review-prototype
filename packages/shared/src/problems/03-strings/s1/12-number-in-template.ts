@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03NumberInTemplate: Assignment = {
   id: "S1-Ch03-12-number-in-template",
@@ -22,13 +23,13 @@ export const s1Ch03NumberInTemplate: Assignment = {
 あなたは 25 歳です
 \`\`\`
 `,
-  starterCode: `// 年齢を表す数値を const の変数に入れる
+  starterFiles: singleFile(`// 年齢を表す数値を const の変数に入れる
 
 
 // バッククォートで囲んだテンプレートリテラルに \${変数名} で値を埋め込み、
 // console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が あなたは 25 歳です になる",

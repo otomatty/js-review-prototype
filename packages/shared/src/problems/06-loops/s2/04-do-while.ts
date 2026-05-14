@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06DoWhile: Assignment = {
   id: "S2-Ch06-04-do-while",
@@ -36,10 +37,10 @@ do {
 - そのため **条件が最初から偽** でもブロックは 1 回実行されます。
 - 最後にセミコロン \`;\` を忘れない。
 `,
-  starterCode: `// do { ... } while (条件) の形で、 中で計算結果を console.log で出力してからカウンタを更新する
+  starterFiles: singleFile(`// do { ... } while (条件) の形で、 中で計算結果を console.log で出力してからカウンタを更新する
 // (カウンタは事前に let で初期化しておく)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 10/20/30 の 3 行になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07EarlyReturn: Assignment = {
   id: "S2-Ch07-06-early-return",
@@ -30,13 +31,13 @@ export const s2Ch07EarlyReturn: Assignment = {
 - 早期 return は「条件を満たしたらすぐ抜ける」 書き方で、 ネストが浅くなり読みやすいです。
 - \`if (n < 0) { return -n; }\` で書いて、 その後ろに \`return n;\` を置きます。
 `,
-  starterCode: `// function 文の関数を宣言する
+  starterFiles: singleFile(`// function 文の関数を宣言する
 // 中で「負の入力は符号反転して return」 → 「それ以外は入力をそのまま return」 の早期 return を書く
 
 
 // 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 7 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch12FixAverage: Assignment = {
   id: "S3-Ch12-04-fix-average",
@@ -25,14 +26,14 @@ average([1, 2]);       // → 1.5
 
 - ループの後、 \`sum / arr.length\` を return してください。
 `,
-  starterCode: `function average(arr) {
+  starterFiles: singleFile(`function average(arr) {
   let sum = 0;
   for (const n of arr) {
     sum += n;
   }
   return sum;
 }
-`,
+`),
   entryPoints: ["average"],
   demoCall: `console.log(average([1, 2, 3]));`,
   tests: [

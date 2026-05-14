@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch15GreeterExtends: Assignment = {
   id: "S4-Ch15-04-greeter-extends",
@@ -43,14 +44,14 @@ new FormalGreeter("Bob", "Dr.") instanceof Greeter;  // → true
 - \`instanceof\` は親クラスでも \`true\` を返します (\`new FormalGreeter(...) instanceof Greeter\` は \`true\`)。 「FormalGreeter は Greeter の一種」 という関係を機械的に確認できる仕組みです。
 - AST で **\`ClassDeclaration\`** を必須にしています。 親と子で **合計 2 つ** の class 宣言が必要です。
 `,
-  starterCode: `class Greeter {
+  starterFiles: singleFile(`class Greeter {
   // constructor(name) で this.name をセット、 greet() を定義する
 }
 
 class FormalGreeter extends Greeter {
   // constructor(name, title) で super(name) → this.title をセット、 greet() を上書きする
 }
-`,
+`),
   entryPoints: ["Greeter", "FormalGreeter"],
   demoCall: `console.log(new FormalGreeter("Bob", "Dr.").greet());`,
   tests: [

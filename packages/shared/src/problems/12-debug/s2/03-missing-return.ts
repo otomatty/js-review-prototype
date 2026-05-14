@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12MissingReturn: Assignment = {
   id: "S2-Ch12-03-missing-return",
@@ -32,11 +33,11 @@ console.log(double(7));
 - \`n * 2\` は計算するだけで **戻り値にはなりません**。 \`return n * 2;\` と書く必要があります。
 - console.log で undefined が出てきたら「return 抜け」 を疑います。
 `,
-  starterCode: `function double(n) {
+  starterFiles: singleFile(`function double(n) {
   n * 2;
 }
 console.log(double(7));
-`,
+`),
   tests: [
     {
       name: "stdout が 14 になる",

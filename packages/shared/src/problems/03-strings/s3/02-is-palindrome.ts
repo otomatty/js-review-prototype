@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03IsPalindrome: Assignment = {
   id: "S3-Ch03-02-is-palindrome",
@@ -27,10 +28,10 @@ isPalindrome("");       // → true   (空文字列は回文扱い)
 - 反転した文字列が元と同じかを比較するのが一番素直です。
 - \`s.split("").reverse().join("") === s\` でほぼ 1 行。
 `,
-  starterCode: `function isPalindrome(s) {
+  starterFiles: singleFile(`function isPalindrome(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["isPalindrome"],
   demoCall: `console.log(isPalindrome("racecar"));`,
   tests: [

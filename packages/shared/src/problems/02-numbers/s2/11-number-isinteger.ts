@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02NumberIsInteger: Assignment = {
   id: "S2-Ch02-11-number-isinteger",
@@ -26,9 +27,9 @@ false
 - \`Number.isInteger(小数)\` → \`false\`
 - 「人数」 や「個数」 など整数で扱うべき値の検証に使います。
 `,
-  starterCode: `// Number.isInteger に説明文の数値を渡した結果を console.log で出力する
+  starterFiles: singleFile(`// Number.isInteger に説明文の数値を渡した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が false になる",

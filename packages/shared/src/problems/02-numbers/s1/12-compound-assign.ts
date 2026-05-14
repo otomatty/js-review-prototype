@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02CompoundAssign: Assignment = {
   id: "S1-Ch02-12-compound-assign",
@@ -29,7 +30,7 @@ export const s1Ch02CompoundAssign: Assignment = {
 - \`x += n\` は \`x = x + n\` の **省略形** です。 同じ意味になります。
 - 同様に \`-=\`、 \`*=\`、 \`/=\` もあります。
 `,
-  starterCode: `// let で変数を宣言し、 初期値を入れる
+  starterFiles: singleFile(`// let で変数を宣言し、 初期値を入れる
 
 
 // += を使ってその変数に値を加算する
@@ -37,7 +38,7 @@ export const s1Ch02CompoundAssign: Assignment = {
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 150 になる",

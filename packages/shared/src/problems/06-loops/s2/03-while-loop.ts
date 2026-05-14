@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06WhileLoop: Assignment = {
   id: "S2-Ch06-03-while-loop",
@@ -35,12 +36,12 @@ while (i <= 3) {
 - \`while (条件) { ... }\` は条件が真の間ずっと繰り返します。
 - ループ内で **値を更新しないと無限ループ** になります。
 `,
-  starterCode: `// while の外で let のカウンタ変数を初期化する
+  starterFiles: singleFile(`// while の外で let のカウンタ変数を初期化する
 
 
 // while で条件を満たす間ループし、 中で console.log で出力してからカウンタを 1 増やす
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1-3 の 3 行になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07NestedCall: Assignment = {
   id: "S2-Ch07-11-nested-call",
@@ -31,7 +32,7 @@ export const s2Ch07NestedCall: Assignment = {
 - 「小さい関数 × 組み合わせ」 が関数型の基本です。
 - \`squareThenAdd\` の中で \`a * a + b * b\` のように式を直書きすると、 \`square\` を再利用していないので **関数合成の学習意図から外れます**。 必ず \`square(a) + square(b)\` の形にしてください。
 `,
-  starterCode: `// 引数を 2 乗して return する function 文の関数を 1 つ宣言する
+  starterFiles: singleFile(`// 引数を 2 乗して return する function 文の関数を 1 つ宣言する
 
 
 // もう 1 つの function 文の関数を宣言し、 中で上の関数を 2 回呼び出して結果を + で足し合わせて return する
@@ -39,7 +40,7 @@ export const s2Ch07NestedCall: Assignment = {
 
 // 後者の関数に説明文の 2 つの値を渡して呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 25 になる",

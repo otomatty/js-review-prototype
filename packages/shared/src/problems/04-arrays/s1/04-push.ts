@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04Push: Assignment = {
   id: "S1-Ch04-04-push",
@@ -25,7 +26,7 @@ export const s1Ch04Push: Assignment = {
 - \`配列.push(値)\` は配列の末尾に値を追加します。
 - 元の配列が **変更されます** (push は新しい配列を返さない)。 const で宣言していても push できます (中身を入れ替えるだけなので)。
 `,
-  starterCode: `// 配列を const の変数に入れる
+  starterFiles: singleFile(`// 配列を const の変数に入れる
 
 
 // 末尾に新しい要素を push で追加する
@@ -33,7 +34,7 @@ export const s1Ch04Push: Assignment = {
 
 // 追加後の配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [\"a\",\"b\",\"c\"] になる",

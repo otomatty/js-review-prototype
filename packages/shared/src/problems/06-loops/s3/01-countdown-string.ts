@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch06CountdownString: Assignment = {
   id: "S3-Ch06-01-countdown-string",
@@ -25,10 +26,10 @@ countdownString(5);  // → "5,4,3,2,1,0"
 - \`for (let i = n; i >= 0; i--)\` のカウントダウンループ。
 - 結果を **配列に push してから join(",")** する方が、 区切り文字の処理を考えずに済みます。
 `,
-  starterCode: `function countdownString(n) {
+  starterFiles: singleFile(`function countdownString(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["countdownString"],
   demoCall: `console.log(countdownString(5));`,
   tests: [

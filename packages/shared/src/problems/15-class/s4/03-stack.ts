@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch15Stack: Assignment = {
   id: "S4-Ch15-03-stack",
@@ -42,7 +43,7 @@ s.pop();    // → undefined (空)
 - \`peek()\` は \`this.items[this.items.length - 1]\` で末尾要素を **読むだけ**。 配列の中身は変えてはいけません。
 - AST で **\`ClassDeclaration\`** と **\`ReturnStatement\`** を必須にしています。
 `,
-  starterCode: `class Stack {
+  starterFiles: singleFile(`class Stack {
   // constructor を定義し、 内部用の配列フィールドを空配列で初期化する
 
 
@@ -57,7 +58,7 @@ s.pop();    // → undefined (空)
 
   // size メソッド: 内部配列の要素数を return する
 }
-`,
+`),
   entryPoints: ["Stack"],
   demoCall: `const s = new Stack(); s.push(1); s.push(2); console.log(s.pop());`,
   tests: [

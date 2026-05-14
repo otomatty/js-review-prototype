@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch14SnakeToCamel: Assignment = {
   id: "S4-Ch14-03-snake-to-camel",
@@ -40,10 +41,10 @@ snakeToCamel("user_id_2");        // → "userId2"  (数字の場合はアンダ
 - AST で **\`ArrowFunctionExpression\`** と **\`replace\` メソッド** を必須にしています。
   \`replace\` の第 2 引数にアロー関数を渡す書き方が要求されます。
 `,
-  starterCode: `function snakeToCamel(s) {
+  starterFiles: singleFile(`function snakeToCamel(s) {
   // s.replace の第 2 引数にアロー関数を渡し、 キャプチャを大文字化してください
 }
-`,
+`),
   entryPoints: ["snakeToCamel"],
   demoCall: `console.log(snakeToCamel("hello_world_foo"));`,
   tests: [

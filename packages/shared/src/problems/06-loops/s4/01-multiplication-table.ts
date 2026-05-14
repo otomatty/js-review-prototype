@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch06MultiplicationTable: Assignment = {
   id: "S4-Ch06-01-multiplication-table",
@@ -28,10 +29,10 @@ t.length; // → 9
 - 行ごとに \`const row = []\` を作り、 内側ループで \`row.push((i + 1) * (j + 1))\` してから外側で \`table.push(row)\` する 2 段構成にすると読みやすいです。
 - \`i\` と \`j\` を 0 から始めるか 1 から始めるかは設計次第。 配列の添字に合わせるなら 0 開始 + 中で +1 が安全です。
 `,
-  starterCode: `function multiplicationTable() {
+  starterFiles: singleFile(`function multiplicationTable() {
   // 二重ループで 9x9 の二次元配列を組み立ててください
 }
-`,
+`),
   entryPoints: ["multiplicationTable"],
   demoCall: `console.log(multiplicationTable());`,
   tests: [

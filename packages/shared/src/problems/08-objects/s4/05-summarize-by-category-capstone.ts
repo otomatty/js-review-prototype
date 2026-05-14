@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch08SummarizeByCategoryCapstone: Assignment = {
   id: "S4-Ch08-05-summarize-by-category-capstone",
@@ -40,7 +41,7 @@ summarizeByCategory([]);
 - 戻り値は **プレーンオブジェクト** (\`Map\` ではない)。 \`Map\` は Ch10 で導入されるため、 ここでは使いません。
 - カテゴリの **登場順** はそのままキーの挿入順になります (オブジェクトの挿入順は ES2015 以降保たれます)。
 `,
-  starterCode: `function summarizeByCategory(items) {
+  starterFiles: singleFile(`function summarizeByCategory(items) {
   // 集計結果を入れるための空オブジェクトを用意する
 
 
@@ -58,7 +59,7 @@ summarizeByCategory([]);
 
   // ループを抜けたら集計結果を return する
 }
-`,
+`),
   entryPoints: ["summarizeByCategory"],
   demoCall: `console.log(summarizeByCategory([{ category: "fruit", price: 100, sold: 3 }, { category: "drink", price: 150, sold: 4 }]));`,
   tests: [

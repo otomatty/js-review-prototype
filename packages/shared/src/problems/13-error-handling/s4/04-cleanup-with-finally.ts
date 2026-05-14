@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch13CleanupWithFinally: Assignment = {
   id: "S4-Ch13-04-cleanup-with-finally",
@@ -34,10 +35,10 @@ withCleanup(() => { throw new Error("oops"); }, () => { closed++; });
 - \`cleanup()\` の中でさらに例外が起きるケースは扱わなくて OK です (テストでは安全な cleanup のみ渡されます)。
 - AST で **TryStatement** を必須にしています。
 `,
-  starterCode: `function withCleanup(work, cleanup) {
+  starterFiles: singleFile(`function withCleanup(work, cleanup) {
   // work() の成功/失敗を結果オブジェクトに変換し、 finally で cleanup を呼ぶ
 }
-`,
+`),
   entryPoints: ["withCleanup"],
   demoCall: `console.log(withCleanup(() => 42, () => {}));`,
   tests: [

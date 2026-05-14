@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04CopyViaSlice: Assignment = {
   id: "S2-Ch04-09-copy-via-slice",
@@ -31,7 +32,7 @@ original: [1,2,3]
 - \`arr.slice()\` (引数なし) は配列を **複製** します。
 - コピー側を変更しても、 元配列には影響しません。
 `,
-  starterCode: `// 元になる数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 元になる数値の配列を const の変数に入れる
 
 
 // その配列に slice() を呼んでコピーを作り、 別の const の変数に入れる
@@ -43,7 +44,7 @@ original: [1,2,3]
 // テンプレートリテラルで「copy: ...」「original: ...」 の 2 行を console.log で出力する
 // (配列の中身を埋め込むには JSON.stringify を使うとよい)
 
-`,
+`),
   tests: [
     {
       name: "stdout が copy: [1,2,3,4]→original: [1,2,3] の 2 行になる",

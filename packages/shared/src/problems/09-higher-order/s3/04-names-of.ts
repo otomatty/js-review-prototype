@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09NamesOf: Assignment = {
   id: "S3-Ch09-04-names-of",
@@ -28,10 +29,10 @@ namesOf([]);  // → []
 
 - \`users.map((u) => u.name)\` で 1 行。
 `,
-  starterCode: `function namesOf(users) {
+  starterFiles: singleFile(`function namesOf(users) {
   // ここを実装してください (map を使う)
 }
-`,
+`),
   entryPoints: ["namesOf"],
   demoCall: `console.log(namesOf([{ name: "Alice", age: 30 }, { name: "Bob", age: 25 }]));`,
   tests: [

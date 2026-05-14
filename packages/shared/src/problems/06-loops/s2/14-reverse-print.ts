@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06ReversePrint: Assignment = {
   id: "S2-Ch06-14-reverse-print",
@@ -27,12 +28,12 @@ one
 - 末尾の添字 \`arr.length - 1\` から開始し、 \`i >= 0\` の間、 \`i--\` で減らします。
 - 配列自体は **変更しません**。
 `,
-  starterCode: `// 文字列の配列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列の配列を const の変数に入れる
 
 
 // for ループで添字 length - 1 から 0 まで 1 ずつ減らしながら、 各要素を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が three/two/one の 3 行になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03SliceRange: Assignment = {
   id: "S1-Ch03-09-slice-range",
@@ -22,10 +23,10 @@ export const s1Ch03SliceRange: Assignment = {
 Java
 \`\`\`
 `,
-  starterCode: `// 説明文の文字列に slice を使い、 開始位置と終了位置を指定して範囲を取り出して console.log で出力する
+  starterFiles: singleFile(`// 説明文の文字列に slice を使い、 開始位置と終了位置を指定して範囲を取り出して console.log で出力する
 // (終了位置の文字は含まれない点に注意)
 
-`,
+`),
   tests: [
     {
       name: "stdout が Java になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch15ShoppingCart: Assignment = {
   id: "S5-Ch15-02-shopping-cart",
@@ -74,7 +75,7 @@ new Product("free", -1);     // throws Error
 - 価格が負のときは \`throw new Error(...)\` で弾く。
 - \`var\` / \`==\` / \`!=\` は使わない。
 `,
-  starterCode: `// Product と Cart の 2 つのクラスを定義してください
+  starterFiles: singleFile(`// Product と Cart の 2 つのクラスを定義してください
 class Product {
   // #name / #price を private で持つ
   // price < 0 なら throw new Error(...)
@@ -86,7 +87,7 @@ class Cart {
   // add(product, qty), remove(product), total(), size() を実装する
   // 注意: Cart は Product を extends しない (集約で組む)
 }
-`,
+`),
   entryPoints: ["Product", "Cart"],
   demoCall: `const apple = new Product("apple", 100); const cart = new Cart(); cart.add(apple, 2); console.log(cart.total());`,
   tests: [

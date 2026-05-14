@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch12PrecedenceBug: Assignment = {
   id: "S1-Ch12-04-precedence-bug",
@@ -27,11 +28,11 @@ export const s1Ch12PrecedenceBug: Assignment = {
 - \`*\` と \`/\` は \`+\` と \`-\` より **先に** 計算されます (= 優先順位が高い)。
 - 順序を変えたいときは **括弧** で先にしたい部分を囲みます。
 `,
-  starterCode: `// バグ: * が + より先に計算されるため 2 + 3 * 4 = 2 + 12 = 14 になる
+  starterFiles: singleFile(`// バグ: * が + より先に計算されるため 2 + 3 * 4 = 2 + 12 = 14 になる
 // (2 + 3) * 4 になるよう括弧を追加する
 
 console.log(2 + 3 * 4);
-`,
+`),
   tests: [
     {
       name: "stdout が 20 になる",

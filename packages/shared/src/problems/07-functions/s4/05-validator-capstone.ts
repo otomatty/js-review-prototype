@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch07ValidatorCapstone: Assignment = {
   id: "S4-Ch07-05-validator-capstone",
@@ -45,11 +46,11 @@ combineChecks()("anything");   // → null
 - **順序が重要**: combineChecks に渡した順に試され、 最初に失敗したエラーだけが返ります。
 - 1 つの大きな関数で全部判定するのではなく、 **小さなチェック関数を組み合わせる** ことで読みやすくなる、 という S4 のテーマを実感する課題です。
 `,
-  starterCode: `function combineChecks() {
+  starterFiles: singleFile(`function combineChecks() {
   // ...checks を残余引数で受け、 value を順番に各 check に渡して
   // 最初に非 null を返したものを返し、 全部通ったら null を返す関数を return してください
 }
-`,
+`),
   entryPoints: ["combineChecks"],
   demoCall: `console.log(combineChecks((s) => s.length === 0 ? "empty" : null)("hi"));`,
   tests: [

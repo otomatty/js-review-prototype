@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch13SafeRunnerCapstone: Assignment = {
   id: "S4-Ch13-05-safe-runner-capstone",
@@ -48,14 +49,14 @@ stats.attempts;   // → 4   (4 回ぶんカウントされる)
 - AST で **ClassDeclaration / TryStatement / ReturnStatement** を必須にしています。
 - これは S4 卒業課題のひとつなので、 ここまで学んできた **try/catch / カスタム Error / 振り分け / finally** を 1 つの関数にまとめて使い切る練習です。
 `,
-  starterCode: `class TimeoutError extends Error {
+  starterFiles: singleFile(`class TimeoutError extends Error {
   // constructor で super を呼び、 name をセット
 }
 
 function safeRun(fn, stats) {
   // try { ... } catch (e) { ... } finally { ... } で結果と統計を返す
 }
-`,
+`),
   entryPoints: ["TimeoutError", "safeRun"],
   demoCall: `console.log(safeRun(() => 42, { attempts: 0 }));`,
   tests: [
