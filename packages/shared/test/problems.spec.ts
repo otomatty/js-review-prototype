@@ -16,7 +16,6 @@ import { analyzeAst } from "../src/grading/ast.js";
 import {
   getEntryFile,
   getLanguage,
-  getStarterFiles,
   getStaticAnalysisSettings,
 } from "../src/assignment-helpers.js";
 import { assignments } from "../src/problems/index.js";
@@ -40,17 +39,19 @@ describe("problems metadata", () => {
       }
       const settings = getStaticAnalysisSettings(a);
       const entryPath = getEntryFile(a);
-      const entry =
-        getStarterFiles(a).find((f) => f.path === entryPath) ??
-        getStarterFiles(a)[0];
-      const result = analyzeAst(entry.content, settings.ast);
+      const entry = a.starterFiles.find((f) => f.path === entryPath);
+      expect(
+        entry,
+        `assignment "${a.id}" entryFile "${entryPath}" not found in starterFiles`,
+      ).toBeDefined();
+      const result = analyzeAst(entry!.content, settings.ast);
       expect(
         result.parseError,
-        `assignment "${a.id}" starter (${entry.path}) parse error: ${result.parseError ?? ""}`,
+        `assignment "${a.id}" starter (${entry!.path}) parse error: ${result.parseError ?? ""}`,
       ).toBeUndefined();
       expect(
         result.forbidden.map((v) => v.label),
-        `assignment "${a.id}" starter (${entry.path}) forbidden`,
+        `assignment "${a.id}" starter (${entry!.path}) forbidden`,
       ).toEqual([]);
     }
   });

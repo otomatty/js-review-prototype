@@ -13,11 +13,7 @@
  *   bun run scripts/scan-starter-comments.ts --summary  # 章別件数のみ
  */
 
-import {
-  getEntryFile,
-  getLanguage,
-  getStarterFiles,
-} from "../src/assignment-helpers.js";
+import { getEntryFile, getLanguage } from "../src/assignment-helpers.js";
 import type { Assignment } from "../src/types.js";
 
 const JS_KEYWORD_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
@@ -93,10 +89,9 @@ async function main(): Promise<void> {
       continue;
     }
     const entryPath = getEntryFile(a);
-    const entry =
-      getStarterFiles(a).find((f) => f.path === entryPath) ??
-      getStarterFiles(a)[0];
+    const entry = a.starterFiles.find((f) => f.path === entryPath);
     if (!entry) {
+      // entryFile タイポは check-integrity 側で弾かれる前提。 ここでは黙ってスキップする。
       continue;
     }
     const lines = entry.content.split("\n");

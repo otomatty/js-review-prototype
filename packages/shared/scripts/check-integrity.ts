@@ -20,7 +20,6 @@ import { analyzeAst } from "../src/grading/ast.js";
 import {
   getEntryFile,
   getLanguage,
-  getStarterFiles,
   getStaticAnalysisSettings,
 } from "../src/assignment-helpers.js";
 import type { Assignment, Chapter } from "../src/types.js";
@@ -71,6 +70,15 @@ async function main(): Promise<void> {
       });
       continue;
     }
+    // 言語に依らず、 明示の entryFile は starterFiles に存在しなければならない。
+    // (ここで弾かないと、 タイポした entryFile が CI を素通りして実行時に runGrading で落ちる)
+    if (a.entryFile && !a.starterFiles.some((f) => f.path === a.entryFile)) {
+      issues.push({
+        assignmentId: a.id,
+        message: `entryFile "${a.entryFile}" is not found in starterFiles`,
+      });
+      continue;
+    }
     if (getLanguage(a) !== "javascript") {
       // 言語非依存の最低限チェック
       if (a.tests.length === 0) {
@@ -84,17 +92,20 @@ async function main(): Promise<void> {
           assignmentId: a.id,
           message: "non-javascript assignment requires entryFile",
         });
-      } else if (!a.starterFiles.some((f) => f.path === a.entryFile)) {
-        issues.push({
-          assignmentId: a.id,
-          message: `entryFile "${a.entryFile}" is not found in starterFiles`,
-        });
       }
       continue;
     }
     const entryPath = getEntryFile(a);
-    const entry =
-      getStarterFiles(a).find((f) => f.path === entryPath) ?? getStarterFiles(a)[0];
+    const entry = a.starterFiles.find((f) => f.path === entryPath);
+    if (!entry) {
+      // ここに到達するのは a.starterFiles.length > 0 かつ entryFile 検証も通った後なので想定外。
+      // 防御的に整合性違反として明示する。
+      issues.push({
+        assignmentId: a.id,
+        message: `entry file "${entryPath}" is not found in starterFiles`,
+      });
+      continue;
+    }
     const result = analyzeAst(entry.content, getStaticAnalysisSettings(a).ast);
     if (result.parseError) {
       issues.push({
