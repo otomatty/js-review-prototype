@@ -45,6 +45,7 @@ import { Button } from "../components/ui/button.js";
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "../hooks/useGradeRunner.js";
 import { useProgress } from "../hooks/useProgress.js";
+import { useRunResultReveal } from "../hooks/useRunResultReveal.js";
 import { useStageUnlocks } from "../hooks/useStageUnlocks.js";
 import { runFreeRun } from "../lib/api.js";
 
@@ -91,6 +92,11 @@ function PracticePageInner({ assignment }: InnerProps) {
   } | null>(null);
   const [freeRunPending, setFreeRunPending] = useState(false);
   const [bottomTab, setBottomTab] = useState<BottomPanelTab>("output");
+  /**
+   * 採点セッション識別子。 `handleRun` のたびにインクリメントする。
+   * `useRunResultReveal` がこれを見て reveal アニメを最初から再生する。
+   */
+  const [gradingSession, setGradingSession] = useState(0);
 
   const starterFiles = useMemo(() => getStarterFiles(assignment), [assignment]);
   const entryFile = useMemo(() => getEntryFile(assignment), [assignment]);
@@ -124,6 +130,15 @@ function PracticePageInner({ assignment }: InnerProps) {
   );
   const { lint, ast } = useStaticAnalysis(code, assignment);
   const { running, result, run, reset } = useGradeRunner();
+  const { phase, revealedTests } = useRunResultReveal(gradingSession, result);
+
+  // 採点完了でクリアになった瞬間に celebration ダイアログを自動オープン。
+  // 通常結果 (未クリア) は下部パネルの「採点結果」タブに表示する。
+  useEffect(() => {
+    if (phase === "done" && result?.evaluation.cleared) {
+      setResultDialogOpen(true);
+    }
+  }, [phase, result]);
 
   // 一覧での順序に従う「次の課題」。最終問題なら null。
   // ダイアログでクリア時に「次の問題へ」リンクを出すために使う。
@@ -230,7 +245,8 @@ function PracticePageInner({ assignment }: InnerProps) {
     // 評価対象のコードはローカル変数に固定しておく。
     const submittedCode = code;
     reset();
-    setResultDialogOpen(true);
+    setGradingSession((n) => n + 1);
+    setBottomTab("results");
     const res = await run({
       code: submittedCode,
       assignment,
@@ -338,6 +354,16 @@ function PracticePageInner({ assignment }: InnerProps) {
             freeRun={freeRun}
             freeRunPending={freeRunPending}
             onClearOutput={() => setFreeRun(null)}
+            result={result}
+            running={running}
+            assignment={assignment}
+            lint={lint}
+            ast={ast}
+            phase={phase}
+            revealedTests={revealedTests}
+            nextAssignment={nextAssignment}
+            onGoToNext={handleGoToNext}
+            onAskAi={handleAskAi}
             terminalEnabled={(assignment.language ?? "javascript") === "sql"}
           />
 
@@ -379,6 +405,8 @@ function PracticePageInner({ assignment }: InnerProps) {
             assignment={assignment}
             lint={lint}
             ast={ast}
+            phase={phase}
+            revealedTests={revealedTests}
             nextAssignment={nextAssignment}
             onGoToNext={handleGoToNext}
             onAskAi={handleAskAi}
