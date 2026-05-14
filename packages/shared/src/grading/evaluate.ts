@@ -35,6 +35,7 @@ export function evaluate(
     switch (testKind) {
       case "stdout":
       case "function":
+      case "sql":
         return testResults.length > 0 && testResults.every((t) => t.passed);
       default: {
         const exhaustive: never = testKind;

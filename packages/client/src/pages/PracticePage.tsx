@@ -22,13 +22,21 @@ import {
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { assignments, findAssignment } from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
-import { getStaticAnalysisSettings } from "@jsreview/shared/assignment-helpers";
+import {
+  getEntryFile,
+  getStarterFiles,
+  getStaticAnalysisSettings,
+} from "@jsreview/shared/assignment-helpers";
 import type { GradingSummary } from "@jsreview/shared/ai/types";
 
 import { cn } from "@/lib/utils";
 import { Editor } from "../components/Editor.js";
 import { AssignmentView } from "../components/AssignmentView.js";
-import { OutputPane } from "../components/OutputPane.js";
+import {
+  BottomPanel,
+  type BottomPanelTab,
+} from "../components/BottomPanel/index.js";
+import { FileTabs } from "../components/FileTabs.js";
 import { RunResultDialog } from "../components/RunResultDialog.js";
 import { ThemeToggle } from "../components/ThemeToggle.js";
 import { AppHeader } from "../components/AppHeader.js";
@@ -37,6 +45,7 @@ import { Button } from "../components/ui/button.js";
 import { useStaticAnalysis } from "../hooks/useStaticAnalysis.js";
 import { useGradeRunner } from "../hooks/useGradeRunner.js";
 import { useProgress } from "../hooks/useProgress.js";
+import { useRunResultReveal } from "../hooks/useRunResultReveal.js";
 import { useStageUnlocks } from "../hooks/useStageUnlocks.js";
 import { runFreeRun } from "../lib/api.js";
 
@@ -82,11 +91,38 @@ function PracticePageInner({ assignment }: InnerProps) {
     error?: string;
   } | null>(null);
   const [freeRunPending, setFreeRunPending] = useState(false);
+  const [bottomTab, setBottomTab] = useState<BottomPanelTab>("output");
+  /**
+   * 採点セッション識別子。 `handleRun` のたびにインクリメントする。
+   * `useRunResultReveal` がこれを見て reveal アニメを最初から再生する。
+   */
+  const [gradingSession, setGradingSession] = useState(0);
 
-  const { code, setCode, cleared, recordResult, clear } = useProgress({
+  const starterFiles = useMemo(() => getStarterFiles(assignment), [assignment]);
+  const entryFile = useMemo(() => getEntryFile(assignment), [assignment]);
+  const {
+    files,
+    activeFile,
+    setActiveFile,
+    updateFile,
+    cleared,
+    recordResult,
+    clear,
+  } = useProgress({
     assignmentId: assignment.id,
-    starterCode: assignment.starterCode,
+    starterFiles,
+    entryFile,
   });
+  // 採点・自由実行は entryFile 単体を対象にする (Phase 3 ではモジュール解決は未対応)。
+  const code = files[entryFile] ?? "";
+  // エディタにはアクティブタブのファイル内容を渡す。
+  const editorCode = files[activeFile] ?? "";
+  const activeStarterFile = useMemo(
+    () => starterFiles.find((f) => f.path === activeFile),
+    [starterFiles, activeFile],
+  );
+  const activeFileReadOnly = activeStarterFile?.readonly === true;
+  const activeFileLanguage = activeStarterFile?.language ?? assignment.language ?? "javascript";
 
   const staticAnalysis = useMemo(
     () => getStaticAnalysisSettings(assignment),
@@ -94,6 +130,15 @@ function PracticePageInner({ assignment }: InnerProps) {
   );
   const { lint, ast } = useStaticAnalysis(code, assignment);
   const { running, result, run, reset } = useGradeRunner();
+  const { phase, revealedTests } = useRunResultReveal(gradingSession, result);
+
+  // 採点完了でクリアになった瞬間に celebration ダイアログを自動オープン。
+  // 通常結果 (未クリア) は下部パネルの「採点結果」タブに表示する。
+  useEffect(() => {
+    if (phase === "done" && result?.evaluation.cleared) {
+      setResultDialogOpen(true);
+    }
+  }, [phase, result]);
 
   // 一覧での順序に従う「次の課題」。最終問題なら null。
   // ダイアログでクリア時に「次の問題へ」リンクを出すために使う。
@@ -158,7 +203,7 @@ function PracticePageInner({ assignment }: InnerProps) {
   }, [assignment.id, reset]);
 
   // `[` / `]` で前後の課題に移動 (両端は循環)。
-  // CodeMirror など編集可能要素にフォーカス中は通常の文字入力を優先する。
+  // CodeMirror など編集可能要素・タブ・下部パネル (将来 Terminal フォーカス) では暴発させない。
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.metaKey || e.ctrlKey || e.altKey) {return;}
@@ -167,7 +212,7 @@ function PracticePageInner({ assignment }: InnerProps) {
       if (
         t instanceof HTMLElement &&
         t.closest(
-          "input, textarea, select, [contenteditable=''], [contenteditable='true'], .cm-editor",
+          "input, textarea, select, [contenteditable=''], [contenteditable='true'], .cm-editor, [data-bottom-panel], [data-file-tabs], [role='tab']",
         )
       ) {
         return;
@@ -197,26 +242,33 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   const handleRun = useCallback(async () => {
     // await 中に課題が切り替わっても元の課題に紐付ける必要があるため、
-    // 評価対象のコードはローカル変数に固定しておく。
-    const submittedCode = code;
+    // 評価対象のファイル群はスナップショットしてからランナに渡す。
+    const submittedFiles: Record<string, string> = { ...files };
+    const submittedCode = submittedFiles[entryFile] ?? "";
     reset();
-    setResultDialogOpen(true);
+    setGradingSession((n) => n + 1);
+    setBottomTab("results");
     const res = await run({
-      code: submittedCode,
+      files: submittedFiles,
       assignment,
       lint,
       ast,
     });
     recordResult(res.evaluation.cleared, submittedCode);
-  }, [code, assignment, lint, ast, reset, run, recordResult]);
+  }, [files, entryFile, assignment, lint, ast, reset, run, recordResult]);
 
   // 「実行」 (採点せずコードを動かして stdout を取る)
   // function 採点では assignment.demoCall を末尾に追記し、 entryPoint を呼ばせる。
+  // SQL 等の非 JS 課題は QuickJS で実行できないため無効化し、 ターミナルタブに誘導する
+  // (codex P2 対応)。
+  const isSqlAssignment = (assignment.language ?? "javascript") === "sql";
   const freeRunDisabled =
-    assignment.testKind === "function" && !assignment.demoCall;
+    isSqlAssignment ||
+    (assignment.testKind === "function" && !assignment.demoCall);
   const handleFreeRun = useCallback(async () => {
     const submittedCode = code;
     const targetAssignmentId = assignment.id;
+    setBottomTab("output");
     setFreeRunPending(true);
     setFreeRun({ stdout: undefined, error: undefined });
     const codeToRun =
@@ -272,27 +324,54 @@ function PracticePageInner({ assignment }: InnerProps) {
         }
       />
 
-      <div className="grid grid-cols-[440px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
+      {/*
+        VSCode 風レイアウト (#106):
+        - 左サイドバー固定: 問題文 (380px、 旧 440px から縮め将来 file-explorer 220px を予約)
+        - 右セクション: [FileTabs][Editor][BottomPanel (出力/採点結果/ターミナル)][Run buttons][Dialog]
+        - 将来 #ML* で `[file-explorer 220px][editor 1fr]` の 3 カラム化を検討中。
+      */}
+      <div className="grid grid-cols-[380px_1fr] overflow-hidden max-md:grid-cols-1 max-md:grid-rows-[auto_1fr]">
         <aside className="flex min-h-0 flex-col overflow-hidden border-r border-border bg-card max-md:max-h-[40vh] max-md:border-b max-md:border-r-0">
           <AssignmentView assignment={assignment} />
         </aside>
 
-        <section className="grid grid-rows-[1fr_auto_auto] overflow-hidden bg-background">
+        <section className="grid grid-rows-[auto_1fr_auto_auto] overflow-hidden bg-background">
+          <FileTabs
+            files={starterFiles}
+            activeFile={activeFile}
+            onSelect={setActiveFile}
+          />
           <div className="flex min-h-0 flex-col overflow-hidden bg-background">
             <div className="flex-1 overflow-auto">
               <Editor
-                code={code}
-                onChange={setCode}
+                code={editorCode}
+                onChange={(next) => updateFile(activeFile, next)}
                 eslintRules={staticAnalysis.eslintRules}
                 entryPoints={staticAnalysis.ignoredUnusedNames}
+                language={activeFileLanguage}
+                readOnly={activeFileReadOnly}
               />
             </div>
           </div>
-          <OutputPane
-            stdout={freeRun?.stdout}
-            error={freeRun?.error}
-            running={freeRunPending}
-            onClear={() => setFreeRun(null)}
+          <BottomPanel
+            activeTab={bottomTab}
+            onTabChange={setBottomTab}
+            freeRun={freeRun}
+            freeRunPending={freeRunPending}
+            onClearOutput={() => setFreeRun(null)}
+            result={result}
+            running={running}
+            assignment={assignment}
+            lint={lint}
+            ast={ast}
+            phase={phase}
+            revealedTests={revealedTests}
+            nextAssignment={nextAssignment}
+            onGoToNext={handleGoToNext}
+            onAskAi={handleAskAi}
+            terminalEnabled={(assignment.language ?? "javascript") === "sql"}
+            terminalAssignmentId={assignment.id}
+            terminalSeed={assignment.sqlSeed ?? ""}
           />
 
           <div className="flex flex-wrap items-center justify-end gap-3 border-t border-border bg-card px-6 py-3">
@@ -333,6 +412,8 @@ function PracticePageInner({ assignment }: InnerProps) {
             assignment={assignment}
             lint={lint}
             ast={ast}
+            phase={phase}
+            revealedTests={revealedTests}
             nextAssignment={nextAssignment}
             onGoToNext={handleGoToNext}
             onAskAi={handleAskAi}

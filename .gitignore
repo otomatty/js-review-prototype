@@ -11,3 +11,7 @@ bun.lockb
 package-lock.json
 yarn.lock
 *.tsbuildinfo
+
+# sql.js wasm はビルド時に Vite プラグイン (copy-sqljs-wasm) で node_modules から配置するため、
+# リポジトリには持たない (#109)。
+packages/client/public/sqljs/

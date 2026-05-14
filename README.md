@@ -96,6 +96,17 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 Edge API は `packages/shared` から `types.ts` とバリデーション用ユーティリティを共有する。
 
+## SQL 課題のランナ構成 (#100 / #109)
+
+SQL 課題は **sql.js (SQLite)** をブラウザで動かして採点する。 サーバ側で SQL を評価しないため、 既存の JS 採点パス (Edge Function) には触らずに済む。
+
+| 用途 | DB のライフサイクル | 用途内訳 |
+|---|---|---|
+| **採点 DB** | テストごとに新規 `Database` を生成して破棄 | `sqlSeed` を流す → 学習者 SQL を実行 → アサーション query (省略時は学習者 SQL の最終結果) を比較 |
+| **ターミナル DB** | `(assignmentId, sqlSeed)` でメモ化、 課題切替で dispose | 下部パネル「ターミナル」 タブで `xterm.js` 経由の対話実行。 学習者が `DROP TABLE` 等を打っても採点 DB には影響しない |
+
+`sql-wasm.wasm` はビルド時に Vite プラグイン (`vite-plugins/copy-sqljs-wasm.ts`) が `node_modules/sql.js/dist/` から `packages/client/public/sqljs/` に同期する。 ランタイムは `locateFile: f => "/sqljs/" + f` で参照する。
+
 ## スタイリング方針
 
 クライアントは **Tailwind CSS v4 + shadcn/ui** をベースに構築している。

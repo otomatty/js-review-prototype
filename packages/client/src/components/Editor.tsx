@@ -3,12 +3,13 @@
  * 編集中、ESLint の違反箇所が赤線/黄線でリアルタイム表示される。
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
+import type { Extension } from "@codemirror/state";
 
-import type { ESLintRuleConfig } from "@jsreview/shared/types";
+import type { ESLintRuleConfig, Language } from "@jsreview/shared/types";
 import { useTheme } from "../hooks/useTheme.js";
 import { lintCode } from "../lib/eslint-runner.js";
 
@@ -17,13 +18,29 @@ interface Props {
   onChange: (code: string) => void;
   eslintRules: Record<string, ESLintRuleConfig>;
   entryPoints: string[];
+  /**
+   * 現在表示中のファイルの言語。 省略時は "javascript" 扱い。
+   * "sql" のときは ESLint linter を無効化する。 言語拡張 (`@codemirror/lang-sql`) の
+   * 動的 import は Phase 5 (#109) で導入する。
+   */
+  language?: Language;
+  /** 編集を禁止する (readonly ファイル表示用)。 */
+  readOnly?: boolean;
 }
 
-export function Editor({ code, onChange, eslintRules, entryPoints }: Props) {
+export function Editor({
+  code,
+  onChange,
+  eslintRules,
+  entryPoints,
+  language = "javascript",
+  readOnly = false,
+}: Props) {
   const { theme } = useTheme();
-  const eslintExtension = useMemo(
-    () =>
-      linter((view) => {
+  const eslintExtension = useMemo<Extension | null>(
+    () => {
+      if (language !== "javascript") {return null;}
+      return linter((view) => {
         const text = view.state.doc.toString();
         const violations = lintCode(text, eslintRules, {
           ignoredUnusedNames: entryPoints,
@@ -50,22 +67,54 @@ export function Editor({ code, onChange, eslintRules, entryPoints }: Props) {
             };
           })
           .filter((d): d is Diagnostic => d !== null);
-      }),
-    [entryPoints, eslintRules],
+      });
+    },
+    [entryPoints, eslintRules, language],
   );
+
+  // SQL の場合は `@codemirror/lang-sql` を動的 import で取得して extension を差し替える (#109)。
+  // 初回ロード前は extension なし (plain text 相当) で描画し、 取得後に再 render する。
+  const [sqlExtension, setSqlExtension] = useState<Extension | null>(null);
+  useEffect(() => {
+    if (language !== "sql") {
+      setSqlExtension(null);
+      return;
+    }
+    let cancelled = false;
+    void import("@codemirror/lang-sql").then((mod) => {
+      if (!cancelled) {setSqlExtension(mod.sql());}
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
+
+  const extensions = useMemo<Extension[]>(() => {
+    const exts: Extension[] = [];
+    if (language === "javascript") {
+      exts.push(javascript());
+    } else if (language === "sql" && sqlExtension) {
+      exts.push(sqlExtension);
+    }
+    if (eslintExtension) {
+      exts.push(eslintExtension, lintGutter());
+    }
+    return exts;
+  }, [language, eslintExtension, sqlExtension]);
 
   return (
     <CodeMirror
       value={code}
       onChange={onChange}
       height="100%"
+      readOnly={readOnly}
       basicSetup={{
         lineNumbers: true,
         highlightActiveLine: true,
         bracketMatching: true,
         autocompletion: true,
       }}
-      extensions={[javascript(), eslintExtension, lintGutter()]}
+      extensions={extensions}
       theme={theme}
     />
   );

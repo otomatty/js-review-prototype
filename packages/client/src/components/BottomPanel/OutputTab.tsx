@@ -1,31 +1,29 @@
+/**
+ * 下部パネル「出力」タブ。
+ *
+ * 旧 `OutputPane` のレイアウトを踏襲しつつ、 上部のタブヘッダで状態を切り替える前提で
+ * 自前のヘッダは削除した薄いバージョン。 自由実行 (`▶ 実行` / `▶ 関数を試す`) の
+ * stdout / error をそのまま表示する。
+ */
+
 import { cn } from "@/lib/utils";
 
 interface Props {
-  /** 直近の自由実行で得られた stdout。未実行時は undefined。 */
   stdout?: string;
-  /** ランタイムエラー / TIMEOUT / COMPILE_ERROR。 */
   error?: string;
-  /** 実行リクエスト中。 */
   running: boolean;
-  /** 実行履歴をクリア (未実行状態に戻す)。 */
   onClear: () => void;
 }
 
-/**
- * 「実行」ボタンで起動した自由実行の出力を表示するペイン。
- *
- * 採点 (RunResultDialog) とは独立で、エディタ下に常駐する。
- * 1 度も実行していない / クリア済みのときは折りたたんだ案内のみ表示。
- */
-export function OutputPane({ stdout, error, running, onClear }: Props) {
+export function OutputTab({ stdout, error, running, onClear }: Props) {
   const hasResult = stdout !== undefined || error !== undefined;
 
   return (
-    <div className="border-t border-border bg-card">
-      <div className="flex items-center justify-between px-6 py-2">
+    <div className="flex flex-col">
+      <div className="flex items-center justify-between border-b border-border bg-card/60 px-6 py-1.5">
         <div className="flex items-center gap-2">
           <span className="font-sans text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            出力 (stdout)
+            stdout
           </span>
           {running ? (
             <span className="font-sans text-[11px] text-muted-foreground">
@@ -50,7 +48,7 @@ export function OutputPane({ stdout, error, running, onClear }: Props) {
       </div>
       <div
         className={cn(
-          "max-h-[28vh] overflow-auto border-t border-border bg-background px-6 py-2.5 font-mono text-[12.5px] leading-[1.55]",
+          "max-h-[28vh] overflow-auto bg-background px-6 py-2.5 font-mono text-[12.5px] leading-[1.55]",
           error ? "text-destructive" : "text-foreground",
         )}
       >

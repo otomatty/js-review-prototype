@@ -1,6 +1,8 @@
 /**
- * 「実行」ボタン押下時にサーバへテスト実行を依頼し、
+ * 「採点を実行」ボタン押下時に言語別ランナへディスパッチし、
  * 返ってきた結果と手元の Lint/AST 結果を合算してクリア判定を返す Hook。
+ *
+ * #109 で `runners/index.ts` を介して JS / SQL を振り分けるよう変更。
  */
 
 import { useCallback, useState } from "react";
@@ -13,7 +15,7 @@ import type {
   TestResult,
 } from "@jsreview/shared/types";
 
-import { runTests } from "../lib/api.js";
+import { runGrading } from "../lib/runners/index.js";
 
 export interface ExecutionResult {
   testResults: TestResult[];
@@ -27,7 +29,11 @@ export interface ExecutionResult {
 }
 
 interface RunArgs {
-  code: string;
+  /**
+   * 学習者の編集中ファイル群 (path → content)。
+   * 内部で `getEntryFile(assignment)` のキー値だけが採点対象として渡される。
+   */
+  files: Record<string, string>;
   assignment: Assignment;
   lint: LintViolation[];
   ast: ASTResult;
@@ -45,23 +51,11 @@ export function useGradeRunner() {
       const startedAt = performance.now();
 
       try {
-        const data = await runTests({
-          code: args.code,
-          testKind: args.assignment.testKind,
-          tests: args.assignment.tests,
-          entryPoints: args.assignment.entryPoints,
-        });
-
-        const evaluation = evaluate(
-          args.assignment.testKind,
-          data.results,
-          args.lint,
-          args.ast,
-        );
+        const { response, evaluation } = await runGrading(args);
 
         const finalResult: ExecutionResult = {
-          testResults: data.results,
-          serverDurationMs: data.durationMs,
+          testResults: response.results,
+          serverDurationMs: response.durationMs,
           totalDurationMs: Math.round(performance.now() - startedAt),
           evaluation,
           lintAtRun: args.lint,
@@ -75,7 +69,7 @@ export function useGradeRunner() {
         const failedResults: TestResult[] = args.assignment.tests.map((t) => ({
           name: t.name,
           passed: false,
-          error: `SERVER_ERROR: ${msg}`,
+          error: `RUNNER_ERROR: ${msg}`,
         }));
         const evaluation = evaluate(
           args.assignment.testKind,

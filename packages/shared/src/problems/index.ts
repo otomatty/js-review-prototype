@@ -29,6 +29,7 @@ import { ch13ErrorHandling } from "./13-error-handling/_index.js";
 import { ch14Regex } from "./14-regex/_index.js";
 import { ch15Class } from "./15-class/_index.js";
 import { ch16Async } from "./16-async/_index.js";
+import { langSqlAssignments } from "./_lang/sql/_index.js";
 
 export { chapters };
 
@@ -50,6 +51,8 @@ export const assignments: Assignment[] = [
   ...ch14Regex,
   ...ch15Class,
   ...ch16Async,
+  // 多言語化 roadmap (#100): SQL 課題は `_lang/sql/` 配下にまとめて末尾に連結する。
+  ...langSqlAssignments,
 ];
 
 export function findAssignment(id: string): Assignment | undefined {
