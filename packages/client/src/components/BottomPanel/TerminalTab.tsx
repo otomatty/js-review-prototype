@@ -180,16 +180,13 @@ export function TerminalTab({ enabled, assignmentId, seed }: Props) {
       cancelled = true;
       resizeObserver?.disconnect();
       terminal?.dispose();
+      // sessionId 切替 / コンポーネントアンマウント時にも前の DB セッションを破棄。
+      // これがないと assignmentId / seed だけ変わったときに古い in-memory DB が残り続ける
+      // (coderabbit major 対応)。
+      disposeTerminalSession();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, sessionId]);
-
-  // アンマウント時にセッション破棄 (タブ閉じや課題遷移)。
-  useEffect(() => {
-    return () => {
-      disposeTerminalSession();
-    };
-  }, []);
 
   if (!enabled) {
     return (
@@ -261,12 +258,18 @@ function writeResults(
       return Math.min(w, 32);
     });
     terminal.writeln(
-      r.columns.map((c, i) => padEndVisual(c, widths[i])).join(" | "),
+      r.columns
+        .map((c, i) => padEndVisual(truncateVisual(c, widths[i]), widths[i]))
+        .join(" | "),
     );
     terminal.writeln(widths.map((w) => "-".repeat(w)).join("-+-"));
     for (const row of r.rows) {
       terminal.writeln(
-        row.map((v, i) => padEndVisual(formatCell(v), widths[i])).join(" | "),
+        row
+          .map((v, i) =>
+            padEndVisual(truncateVisual(formatCell(v), widths[i]), widths[i]),
+          )
+          .join(" | "),
       );
     }
   }
@@ -325,4 +328,20 @@ function padEndVisual(s: string, width: number): string {
   const w = visualWidth(s);
   if (w >= width) {return s;}
   return s + " ".repeat(width - w);
+}
+
+/**
+ * 視覚幅 `width` を超える場合は末尾を `…` に置き換えて切り詰める。
+ * セル幅キャップ (32) が実際に列揃えに効くようにするための補助 (coderabbit minor 対応)。
+ */
+function truncateVisual(s: string, width: number): string {
+  if (visualWidth(s) <= width) {return s;}
+  if (width <= 1) {return "…";}
+  const cap = width - 1; // "…" 用に 1 セル確保
+  let out = "";
+  for (const ch of s) {
+    if (visualWidth(out + ch) > cap) {break;}
+    out += ch;
+  }
+  return out + "…";
 }

@@ -104,6 +104,13 @@ export function useProgress({ assignmentId, starterFiles, entryFile }: Args): Pr
     readInitial(assignmentId, starterFiles, entryFile),
   );
   const { files, activeFile, cleared } = state;
+  // recordResult から最新の files / activeFile を closure に頼らず参照するための ref。
+  // useCallback の依存に state.* を入れると毎レンダ recordResult が作り直されるのを避けつつ、
+  // saveEntry を setState 外で 1 回だけ呼ぶための補助 (coderabbit nitpick 対応)。
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  });
 
   // 課題切替時、storage から再ロード
   const lastAssignmentRef = useRef<string>(assignmentId);
@@ -161,33 +168,34 @@ export function useProgress({ assignmentId, starterFiles, entryFile }: Args): Pr
     (passed: boolean, submittedCode: string) => {
       // codex P1 対応: storage から `lastFiles` を読み戻すと、 400ms debounce 前の編集が消える
       // ため、 必ず現在の in-memory state (`s.files`) を基底にする。
-      // functional setState で最新状態を atomic に読み、 `entryFile` だけ採点時のスナップショット
-      // (`submittedCode`) で上書きして保存する。
+      // setState の更新関数は StrictMode で 2 回呼ばれることがあるため副作用 (saveEntry) を
+      // 入れず、 nextFiles を計算した直後に saveEntry → setState の順で呼ぶ
+      // (coderabbit nitpick 対応)。
       const existing = loadEntry(assignmentId);
       const prev = existing?.cleared ?? false;
       const nextCleared = prev || passed;
       const isCurrentAssignment = lastAssignmentRef.current === assignmentId;
-      setState((s) => {
-        const nextFiles: Record<string, string> = {
-          ...s.files,
-          [entryFile]: submittedCode,
-        };
-        const entry: ProgressEntry = {
-          cleared: nextCleared,
-          lastFiles: nextFiles,
-          activeFile: s.activeFile,
-          lastSubmittedAt: Date.now(),
-        };
-        // 採点中に別課題へ切り替えた場合は state を触らず、 storage 書き込みも行わない
-        // (古い課題の storage に新しい課題の files を書き込むのを防ぐ)。
-        if (!isCurrentAssignment) {
-          return s;
-        }
-        saveEntry(assignmentId, entry, {
-          previousCleared: existing?.cleared ?? null,
-        });
-        return { ...s, cleared: nextCleared, files: nextFiles };
+      // 採点中に別課題へ切り替えていれば storage も state も触らない
+      // (古い課題の storage に新しい課題の files を書き込むのを防ぐ)。
+      if (!isCurrentAssignment) {
+        return;
+      }
+      // ref で latest state を読む — closure 経由だと dep を増やすかスタイル違反になる。
+      const latest = stateRef.current;
+      const nextFiles: Record<string, string> = {
+        ...latest.files,
+        [entryFile]: submittedCode,
+      };
+      const entry: ProgressEntry = {
+        cleared: nextCleared,
+        lastFiles: nextFiles,
+        activeFile: latest.activeFile,
+        lastSubmittedAt: Date.now(),
+      };
+      saveEntry(assignmentId, entry, {
+        previousCleared: existing?.cleared ?? null,
       });
+      setState((s) => ({ ...s, cleared: nextCleared, files: nextFiles }));
     },
     [assignmentId, entryFile],
   );

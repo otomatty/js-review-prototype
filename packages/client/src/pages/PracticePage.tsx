@@ -259,8 +259,12 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   // 「実行」 (採点せずコードを動かして stdout を取る)
   // function 採点では assignment.demoCall を末尾に追記し、 entryPoint を呼ばせる。
+  // SQL 等の非 JS 課題は QuickJS で実行できないため無効化し、 ターミナルタブに誘導する
+  // (codex P2 対応)。
+  const isSqlAssignment = (assignment.language ?? "javascript") === "sql";
   const freeRunDisabled =
-    assignment.testKind === "function" && !assignment.demoCall;
+    isSqlAssignment ||
+    (assignment.testKind === "function" && !assignment.demoCall);
   const handleFreeRun = useCallback(async () => {
     const submittedCode = code;
     const targetAssignmentId = assignment.id;

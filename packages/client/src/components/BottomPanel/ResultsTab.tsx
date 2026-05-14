@@ -82,7 +82,7 @@ export function ResultsTab({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto bg-background px-6 py-4">
-        {!running && !result && phase === "lint" ? (
+        {phase === "idle" ? (
           <p className="font-sans text-[12px] text-muted-foreground">
             「採点を実行」 を押すと、 ここに採点結果が表示されます。
           </p>

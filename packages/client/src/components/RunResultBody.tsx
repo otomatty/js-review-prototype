@@ -7,7 +7,7 @@
  * から props として渡される (= 共有 state)。
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Circle,
   CircleAlert,
@@ -567,7 +567,7 @@ function CheckRow({
   status: SectionStatus;
   meta: string;
   isLast: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const autoOpen = shouldAutoOpen(status);
   const [open, setOpen] = useAutoControlledOpen(status, autoOpen);

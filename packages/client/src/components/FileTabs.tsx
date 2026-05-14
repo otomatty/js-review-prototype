@@ -26,6 +26,10 @@ interface Props {
 
 export function FileTabs({ files, activeFile, onSelect }: Props) {
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  // activeFile が files に無い (= 想定外の path) 場合、 全タブが tabIndex=-1 になって
+  // Tab キーで誰も到達できなくなる。 最低 1 つはフォーカス可能にするためのフォールバック index
+  // を計算する (coderabbit minor 対応)。
+  const hasActiveFile = files.some((f) => f.path === activeFile);
 
   const moveFocus = (nextIndex: number) => {
     if (files.length === 0) {return;}
@@ -72,6 +76,8 @@ export function FileTabs({ files, activeFile, onSelect }: Props) {
     >
       {files.map((file, index) => {
         const isActive = file.path === activeFile;
+        // activeFile が存在しないときは先頭タブをフォーカス可能にする (aria-selected は false のまま)。
+        const isFocusable = isActive || (!hasActiveFile && index === 0);
         return (
           <button
             key={file.path}
@@ -81,7 +87,7 @@ export function FileTabs({ files, activeFile, onSelect }: Props) {
             type="button"
             role="tab"
             aria-selected={isActive}
-            tabIndex={isActive ? 0 : -1}
+            tabIndex={isFocusable ? 0 : -1}
             onClick={() => onSelect(file.path)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             className={cn(
