@@ -96,22 +96,13 @@ export async function runGrading(args: RunArgs): Promise<DispatchResult> {
     sqlSeed: args.assignment.sqlSeed,
   });
 
-  if (language === "javascript") {
-    const evaluation = evaluate(
-      args.assignment.testKind,
-      response.results,
-      args.lint,
-      args.ast,
-    );
-    return { response, evaluation };
-  }
-
   // 非 JS 課題 (SQL / Python / ...) では Lint / AST は採点対象外。 tests のみで判定する。
+  const isJs = language === "javascript";
   const evaluation = evaluate(
     args.assignment.testKind,
     response.results,
-    [],
-    { required: [], forbidden: [] },
+    isJs ? args.lint : [],
+    isJs ? args.ast : { required: [], forbidden: [] },
   );
   return { response, evaluation };
 }
