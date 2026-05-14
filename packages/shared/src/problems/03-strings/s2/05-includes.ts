@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03Includes: Assignment = {
   id: "S2-Ch03-05-includes",
@@ -26,12 +27,12 @@ true
 - \`"Hello".includes("xy")\` → \`false\`
 - 大文字小文字は区別されます。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // その変数に対して includes で部分文字列を含むかを判定した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が true になる",

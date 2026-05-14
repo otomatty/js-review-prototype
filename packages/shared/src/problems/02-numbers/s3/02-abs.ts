@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02Abs: Assignment = {
   id: "S3-Ch02-02-abs",
@@ -26,10 +27,10 @@ abs(-3.5); // → 3.5
 - 負の数は \`-1\` を掛ければ正の数になります。
 - 三項演算子 \`n >= 0 ? n : -n\` で 1 行で書けます。
 `,
-  starterCode: `function abs(n) {
+  starterFiles: singleFile(`function abs(n) {
   // ここを実装してください (Math.abs は使わない)
 }
-`,
+`),
   entryPoints: ["abs"],
   demoCall: `console.log(abs(-5));`,
   tests: [

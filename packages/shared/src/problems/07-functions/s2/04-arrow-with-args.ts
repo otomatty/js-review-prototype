@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07ArrowWithArgs: Assignment = {
   id: "S2-Ch07-04-arrow-with-args",
@@ -29,13 +30,13 @@ const multiply = (a, b) => a * b;
 - 引数が 2 つ以上のときは **括弧が必須**: \`(a, b) => a * b\`
 - 引数が 1 つだけなら括弧を省略できます: \`x => x * 2\`
 `,
-  starterCode: `// 2 つの引数を取るアロー関数を const の変数に入れる
+  starterFiles: singleFile(`// 2 つの引数を取るアロー関数を const の変数に入れる
 // (式形式 (a, b) => 式 で、 引数同士の積をそのまま返すようにする)
 
 
 // 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 42 になる",

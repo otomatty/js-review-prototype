@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02MathMinMulti: Assignment = {
   id: "S2-Ch02-07-math-min-multi",
@@ -25,12 +26,12 @@ export const s2Ch02MathMinMulti: Assignment = {
 - \`Math.min(5, 2, 8, 1, 9)\` のように **値を並べる** だけで最小値が得られます。
 - \`Math.max\` と対になります。
 `,
-  starterCode: `// Math.min の引数に説明文の数値をカンマ区切りで並べ、 結果を const の変数に入れる
+  starterFiles: singleFile(`// Math.min の引数に説明文の数値をカンマ区切りで並べ、 結果を const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1 になる",

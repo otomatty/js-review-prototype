@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06ArrayIterate: Assignment = {
   id: "S2-Ch06-07-array-iterate",
@@ -27,12 +28,12 @@ cherry
 - \`for (let i = 0; i < arr.length; i++) { console.log(arr[i]); }\` の形が基本。
 - \`arr.length\` は配列の長さ。
 `,
-  starterCode: `// 文字列の配列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列の配列を const の変数に入れる
 
 
 // for ループで添字 0 から length 未満まで回し、 各要素を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が apple/banana/cherry の 3 行になる",

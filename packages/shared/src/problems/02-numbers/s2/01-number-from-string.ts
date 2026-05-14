@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02NumberFromString: Assignment = {
   id: "S2-Ch02-01-number-from-string",
@@ -29,7 +30,7 @@ const text = "42";
 - ユーザー入力など **文字列として届く数値** はそのままでは計算できません (\`"42" + 8\` は \`"428"\` という文字列連結になる)。
 - \`Number(値)\` で数値に変換できます。
 `,
-  starterCode: `// 数字を表す文字列を const の変数に入れる
+  starterFiles: singleFile(`// 数字を表す文字列を const の変数に入れる
 
 
 // その変数を Number() で数値に変換し、 別の const の変数に入れる
@@ -37,7 +38,7 @@ const text = "42";
 
 // 変換後の値に説明文の数値を + で足した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 50 になる",

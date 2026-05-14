@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s0Ch00PrintHello: Assignment = {
   id: "S0-Ch00-01-print-hello",
@@ -27,9 +28,9 @@ Hello, World!
 - 関数呼び出しは \`関数名(引数)\` の形で書きます
 - 文字列の中身は **大文字・小文字・記号もそのまま** 一致させる必要があります
 `,
-  starterCode: `// 文字列を console.log で出力する
+  starterFiles: singleFile(`// 文字列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が Hello, World! になる",

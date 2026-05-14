@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Modulo: Assignment = {
   id: "S1-Ch02-05-modulo",
@@ -27,9 +28,9 @@ export const s1Ch02Modulo: Assignment = {
 - \`%\` は割り算の結果ではなく、 **あまり** を返します。
 - 「偶数か奇数か」 を判定するときによく使います (例: \`n % 2\` が 0 なら偶数)。
 `,
-  starterCode: `// console.log の中に 10 % 3 の式を書く
+  starterFiles: singleFile(`// console.log の中に 10 % 3 の式を書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1 になる",

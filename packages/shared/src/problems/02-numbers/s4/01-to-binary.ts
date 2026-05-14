@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch02ToBinary: Assignment = {
   id: "S4-Ch02-01-to-binary",
@@ -33,11 +34,11 @@ toBinary(255);  // → "11111111"
 
 - 組み込みの \`Number.prototype.toString(2)\` (基数指定) は使わずに、 自分のループで構築してください (AST で \`toString\` の呼び出しを禁止しています)。
 `,
-  starterCode: `function toBinary(n) {
+  starterFiles: singleFile(`function toBinary(n) {
   // n を 2 で割る剰余を取り出しながら 2 進数の文字列を組み立ててください
   // n === 0 のときは "0" を返す
 }
-`,
+`),
   entryPoints: ["toBinary"],
   demoCall: `console.log(toBinary(13));`,
   tests: [

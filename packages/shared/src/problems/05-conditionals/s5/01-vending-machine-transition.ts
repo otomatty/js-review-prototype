@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch05VendingMachineTransition: Assignment = {
   id: "S5-Ch05-01-vending-machine-transition",
@@ -74,7 +75,7 @@ const s3 = applyVendingAction(s2, { type: "dispense" });
 - **必ずスプレッド構文 \`{ ...state, ... }\`** で新しいオブジェクトを返してください。 \`state.foo = ...\` のように元のオブジェクトを書き換えると、 履歴が壊れ Redux や React の state とも噛み合いません。
 - AST で **\`SwitchStatement\` と \`SpreadElement\` の使用** を必須にしています。 if 連鎖や Object.assign では通りません。
 `,
-  starterCode: `const PRICES = { cola: 150, water: 100, tea: 120 };
+  starterFiles: singleFile(`const PRICES = { cola: 150, water: 100, tea: 120 };
 
 function applyVendingAction(state, action) {
   // 外側の switch で state.status ごとに 3 状態を並べて分岐する
@@ -96,7 +97,7 @@ function applyVendingAction(state, action) {
 
   // どの分岐でも、 必ずスプレッド構文で **新しい state オブジェクト** を返す
 }
-`,
+`),
   entryPoints: ["applyVendingAction"],
   demoCall: `console.log(applyVendingAction({ status: "idle", balance: 0, selectedItem: null, message: "" }, { type: "insert", amount: 100 }));`,
   tests: [

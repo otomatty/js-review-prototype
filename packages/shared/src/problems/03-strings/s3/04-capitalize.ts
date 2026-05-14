@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03Capitalize: Assignment = {
   id: "S3-Ch03-04-capitalize",
@@ -27,10 +28,10 @@ capitalize("");       // → ""
 - 残りは \`s.slice(1).toLowerCase()\`。
 - 連結して return。
 `,
-  starterCode: `function capitalize(s) {
+  starterFiles: singleFile(`function capitalize(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["capitalize"],
   demoCall: `console.log(capitalize("hello"));`,
   tests: [

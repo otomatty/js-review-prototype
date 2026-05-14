@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TypeofNumber: Assignment = {
   id: "S2-Ch01-02-typeof-number",
@@ -25,12 +26,12 @@ number
 - \`typeof 値\` は **値の型を文字列で返す** 演算子です。
 - 数値の型は \`"number"\` という文字列で返されます。
 `,
-  starterCode: `// 数値を const の変数に入れる
+  starterFiles: singleFile(`// 数値を const の変数に入れる
 
 
 // その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が number になる",

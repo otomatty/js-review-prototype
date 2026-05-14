@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05NotOperator: Assignment = {
   id: "S2-Ch05-06-not-operator",
@@ -25,12 +26,12 @@ export const s2Ch05NotOperator: Assignment = {
 - \`!\` は **真偽値の反転** を行う演算子です。 \`!true\` は \`false\`、 \`!false\` は \`true\`。
 - 「○○ ではない」 という条件を素直に書けます。
 `,
-  starterCode: `// boolean 値を const の変数に入れる
+  starterFiles: singleFile(`// boolean 値を const の変数に入れる
 
 
 // その変数の前に ! を付けた条件の if で文字列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が ログインしてください になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02SumToN: Assignment = {
   id: "S3-Ch02-05-sum-to-n",
@@ -26,10 +27,10 @@ sumToN(10);  // → 55
 - \`let sum = 0\` で初期化し、 \`for\` で \`1\` から \`n\` まで足します。
 - 公式 \`n * (n + 1) / 2\` を使っても構いません。
 `,
-  starterCode: `function sumToN(n) {
+  starterFiles: singleFile(`function sumToN(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["sumToN"],
   demoCall: `console.log(sumToN(5));`,
   tests: [

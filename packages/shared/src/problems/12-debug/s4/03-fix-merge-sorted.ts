@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch12FixMergeSorted: Assignment = {
   id: "S4-Ch12-03-fix-merge-sorted",
@@ -28,7 +29,7 @@ mergeSorted([1, 2], []);              // → [1, 2]                (現状は []
 - 「\`a\` または \`b\` のどちらかしか残らない」 ので 2 本の while を並べても両方を実行することはなく、 計算量は \`O(a.length + b.length)\` のまま。
 - 配列のスライス + concat (\`result.concat(a.slice(i), b.slice(j))\`) でも書ける。 ただし \`concat\` は **元の配列を変更せず新しい配列を返す** ので、 戻り値を受け取らないと結果が捨てられる点に注意 (\`push\` のような破壊的メソッドと混同しやすい)。 計算量・可読性は好みで選ぶ。
 `,
-  starterCode: `function mergeSorted(a, b) {
+  starterFiles: singleFile(`function mergeSorted(a, b) {
   const result = [];
   let i = 0;
   let j = 0;
@@ -43,7 +44,7 @@ mergeSorted([1, 2], []);              // → [1, 2]                (現状は []
   }
   return result;
 }
-`,
+`),
   entryPoints: ["mergeSorted"],
   demoCall: `console.log(mergeSorted([1, 3, 5], [2, 4, 6]));`,
   tests: [

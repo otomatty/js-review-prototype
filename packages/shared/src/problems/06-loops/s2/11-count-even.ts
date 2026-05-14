@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06CountEven: Assignment = {
   id: "S2-Ch06-11-count-even",
@@ -26,7 +27,7 @@ export const s2Ch06CountEven: Assignment = {
 - ループの中で \`if (nums[i] % 2 === 0) { count++; }\`。
 - 最後に \`console.log(count);\`。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // 件数を入れる let の変数を 0 で初期化する
@@ -37,7 +38,7 @@ export const s2Ch06CountEven: Assignment = {
 
 // 件数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 4 になる",

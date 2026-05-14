@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07DefaultGreet: Assignment = {
   id: "S3-Ch07-01-default-greet",
@@ -25,10 +26,10 @@ defaultGreet(undefined);   // → "こんにちは、 ゲスト さん!"
 - 関数パラメータに \`= デフォルト値\` を書くと、 引数省略時の値を設定できます。
 - \`function defaultGreet(name = "ゲスト") { ... }\`
 `,
-  starterCode: `function defaultGreet(name) {
+  starterFiles: singleFile(`function defaultGreet(name) {
   // ここを実装してください (パラメータにデフォルト値を設定)
 }
-`,
+`),
   entryPoints: ["defaultGreet"],
   demoCall: `console.log(defaultGreet());`,
   tests: [

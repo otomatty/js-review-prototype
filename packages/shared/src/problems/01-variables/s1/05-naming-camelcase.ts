@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01NamingCamelCase: Assignment = {
   id: "S1-Ch01-05-naming-camelcase",
@@ -26,10 +27,10 @@ Taro
   - 例: \`userName\` / \`firstName\` / \`isAdmin\`
 - スネークケース (\`user_name\`) や全部小文字 (\`username\`) は JavaScript では一般的ではありません。
 `,
-  starterCode: `// const で userName という変数を宣言し、 "Taro" を入れる
+  starterFiles: singleFile(`// const で userName という変数を宣言し、 "Taro" を入れる
 // userName の N が大文字になっているか確認
 
-`,
+`),
   tests: [
     {
       name: "stdout が Taro になる",

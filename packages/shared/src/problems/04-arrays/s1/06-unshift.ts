@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04Unshift: Assignment = {
   id: "S1-Ch04-06-unshift",
@@ -24,7 +25,7 @@ export const s1Ch04Unshift: Assignment = {
 
 - \`unshift(値)\` は配列の **先頭** に値を追加します。 push の逆 (末尾ではなく先頭)。
 `,
-  starterCode: `// 配列を const の変数に入れる
+  starterFiles: singleFile(`// 配列を const の変数に入れる
 
 
 // 先頭に新しい要素を unshift で追加する
@@ -32,7 +33,7 @@ export const s1Ch04Unshift: Assignment = {
 
 // 追加後の配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [1,2,3] になる",

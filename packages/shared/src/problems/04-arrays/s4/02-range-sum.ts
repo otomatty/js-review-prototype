@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch04RangeSum: Assignment = {
   id: "S4-Ch04-02-range-sum",
@@ -32,13 +33,13 @@ rangeSum([-1, -2, -3, -4], 1, 3);  // → -5
 - \`prefix[0] = 0\`, \`prefix[i + 1] = prefix[i] + arr[i]\` を作っておけば、 区間 \`[l, r)\` の合計は **\`prefix[r] - prefix[l]\`** で求まります。
 - \`slice\` で部分配列を切り出す書き方は **禁止** しています (\`O(r - l)\` のコピーが走るため累積和の意義が薄れる)。
 `,
-  starterCode: `function rangeSum(arr, l, r) {
+  starterFiles: singleFile(`function rangeSum(arr, l, r) {
   // 先頭が 0 で、 各位置までの累積和を順に持つ配列を作る (長さは入力配列より 1 大きい)
 
 
   // 累積和の右端と左端の差を return する
 }
-`,
+`),
   entryPoints: ["rangeSum"],
   demoCall: `console.log(rangeSum([1, 2, 3, 4, 5], 1, 4));`,
   tests: [

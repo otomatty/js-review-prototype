@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch15ShopCapstone: Assignment = {
   id: "S5-Ch15-03-shop-capstone",
@@ -97,7 +98,7 @@ S5 卒業課題として、 ここまでの 2 問で学んだ 「値オブジェ
 - \`Shop#buy\` は **例外を投げず** \`{ ok, total }\` の値を返す。
 - \`var\` / \`==\` / \`!=\` は使わない。
 `,
-  starterCode: `// Product / Inventory / Shop の 3 つのクラスを定義してください
+  starterFiles: singleFile(`// Product / Inventory / Shop の 3 つのクラスを定義してください
 class Product {
   // #sku / #name / #price を private で持つ
   // price < 0 なら throw new Error(...)
@@ -116,7 +117,7 @@ class Shop {
   // buy(sku, qty) → { ok, total }
   // stockOf(sku) → number
 }
-`,
+`),
   entryPoints: ["Product", "Inventory", "Shop"],
   demoCall: `const p = new Product("APL", "apple", 100); const shop = new Shop(); shop.register(p, 10); console.log(shop.buy("APL", 3));`,
   tests: [

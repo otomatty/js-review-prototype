@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12MutationBug: Assignment = {
   id: "S2-Ch12-08-mutation-bug",
@@ -35,11 +36,11 @@ original: [1,2,3]
 - \`reverse\` と \`sort\` は **破壊的メソッド** (元の配列を変更する)。
 - 元を残したいときは \`arr.slice().reverse()\` のように **コピーしてから** 呼びます。
 `,
-  starterCode: `const original = [1, 2, 3];
+  starterFiles: singleFile(`const original = [1, 2, 3];
 const reversed = original.reverse();
 console.log(\`reversed: \${JSON.stringify(reversed)}\`);
 console.log(\`original: \${JSON.stringify(original)}\`);
-`,
+`),
   tests: [
     {
       name: "stdout が reversed/original の 2 行になる",

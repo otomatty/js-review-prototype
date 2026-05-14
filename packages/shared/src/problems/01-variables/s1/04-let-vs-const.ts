@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01LetVsConst: Assignment = {
   id: "S1-Ch01-04-let-vs-const",
@@ -31,12 +32,12 @@ export const s1Ch01LetVsConst: Assignment = {
 - 値を変えない変数 → \`const\`
 - 値を変える変数 → \`let\`
 `,
-  starterCode: `// 1. taxRate を 0.1 で宣言 (再代入しないので const)
+  starterFiles: singleFile(`// 1. taxRate を 0.1 で宣言 (再代入しないので const)
 // 2. total を 100 で宣言 (後で再代入するので let)
 // 3. total = 200 に書き換える
 // 4. taxRate と total をそれぞれ console.log で出力
 
-`,
+`),
   tests: [
     {
       name: "stdout が 0.1 と 200 の 2 行になる",

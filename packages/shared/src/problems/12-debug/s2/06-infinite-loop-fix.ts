@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12InfiniteLoopFix: Assignment = {
   id: "S2-Ch12-06-infinite-loop-fix",
@@ -34,11 +35,11 @@ while (i <= 3) {
 - while で **ループ変数を更新しない** と条件が永遠に真のままで無限ループになります。
 - 修正は \`console.log(i);\` の **直後** に \`i++;\` を入れるだけです。
 `,
-  starterCode: `let i = 1;
+  starterFiles: singleFile(`let i = 1;
 while (i <= 3) {
   console.log(i);
 }
-`,
+`),
   tests: [
     {
       name: "stdout が 1/2/3 の 3 行になる",

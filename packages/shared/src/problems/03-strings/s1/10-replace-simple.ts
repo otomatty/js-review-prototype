@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03ReplaceSimple: Assignment = {
   id: "S1-Ch03-10-replace-simple",
@@ -22,9 +23,9 @@ export const s1Ch03ReplaceSimple: Assignment = {
 I like dogs
 \`\`\`
 `,
-  starterCode: `// 説明文の元文字列に replace を使い、 説明文で指定された旧文字列を新文字列に置き換えて console.log で出力する
+  starterFiles: singleFile(`// 説明文の元文字列に replace を使い、 説明文で指定された旧文字列を新文字列に置き換えて console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が I like dogs になる",

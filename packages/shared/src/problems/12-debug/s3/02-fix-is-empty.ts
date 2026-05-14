@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch12FixIsEmpty: Assignment = {
   id: "S3-Ch12-02-fix-is-empty",
@@ -25,10 +26,10 @@ isEmpty([0]);         // → false
 - 「長さが 0 か」 を判定するなら \`arr.length === 0\` を使います。
 - \`arr.length\` 単独だと真偽値ではなく数値が返り、 さらに \`> 0\` だと逆の判定になります。
 `,
-  starterCode: `function isEmpty(arr) {
+  starterFiles: singleFile(`function isEmpty(arr) {
   return arr.length > 0;
 }
-`,
+`),
   entryPoints: ["isEmpty"],
   demoCall: `console.log(isEmpty([]), isEmpty([1,2]));`,
   tests: [

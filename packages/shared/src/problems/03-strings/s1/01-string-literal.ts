@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03StringLiteral: Assignment = {
   id: "S1-Ch03-01-string-literal",
@@ -20,9 +21,9 @@ export const s1Ch03StringLiteral: Assignment = {
 こんにちは
 \`\`\`
 `,
-  starterCode: `// 説明文の文字列を "" または '' で囲んで console.log で出力する
+  starterFiles: singleFile(`// 説明文の文字列を "" または '' で囲んで console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が こんにちは になる",

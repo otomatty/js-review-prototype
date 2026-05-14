@@ -48,7 +48,6 @@ INSERT INTO orders(customer, amount) VALUES
 | bob      | 2   |
 | carol    | 1   |
 `,
-  starterCode: "-- starter is in starterFiles\n",
   tests: [
     {
       name: "customer ごとの件数を昇順で返す",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch07Pipe: Assignment = {
   id: "S4-Ch07-03-pipe",
@@ -31,10 +32,10 @@ pipe()(42);                       // → 42    (関数なしならそのまま)
 - \`fns.reduce((acc, f) => f(acc), x)\` で **左から順に** 適用できます。
 - S3 の \`compose(f, g)\` は \`f(g(x))\` (右→左)。 \`pipe\` は逆で **左→右** に流れていきます。
 `,
-  starterCode: `function pipe() {
+  starterFiles: singleFile(`function pipe() {
   // 残余引数で関数列を受けて、 値を左から右に流す関数を return してください
 }
-`,
+`),
   entryPoints: ["pipe"],
   demoCall: `console.log(pipe((n) => n + 1, (n) => n * 2)(3));`,
   tests: [

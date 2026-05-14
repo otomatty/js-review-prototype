@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch04RunningMax: Assignment = {
   id: "S4-Ch04-03-running-max",
@@ -31,7 +32,7 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
 - 更新したあとに \`out.push(m)\` で各位置の累積最大を記録します。
 - AST で **添字 \`for\`** と **\`if 文\`** を必須にしているので、 \`for...of\` や \`m = Math.max(m, arr[i])\` の 1 行更新では通りません。 自分の手で **添字 for + 条件分岐** を書いてください。
 `,
-  starterCode: `function runningMax(arr) {
+  starterFiles: singleFile(`function runningMax(arr) {
   // 結果を入れる空の配列と、 これまでの最大値を入れる変数を用意する
 
 
@@ -41,7 +42,7 @@ runningMax([1, 2, 3, 4]);                // → [1, 2, 3, 4]
 
   // 結果配列を return する
 }
-`,
+`),
   entryPoints: ["runningMax"],
   demoCall: `console.log(runningMax([3, 1, 4, 1, 5, 9, 2, 6]));`,
   tests: [

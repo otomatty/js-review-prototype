@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05RangeCheck: Assignment = {
   id: "S2-Ch05-13-range-check",
@@ -27,13 +28,13 @@ export const s2Ch05RangeCheck: Assignment = {
 - JavaScript は \`a <= x <= b\` の書き方をサポートしません。
 - 2 つの条件を \`&&\` で結びます。
 `,
-  starterCode: `// スコアの数値を const の変数に入れる
+  starterFiles: singleFile(`// スコアの数値を const の変数に入れる
 
 
 // 0 以上 100 以下を && で AND 結合した条件の if / else で、
 // 範囲内 / 範囲外それぞれの文字列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 範囲内 になる",

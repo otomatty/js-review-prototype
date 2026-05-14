@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02MathRound: Assignment = {
   id: "S1-Ch02-09-math-round",
@@ -22,9 +23,9 @@ export const s1Ch02MathRound: Assignment = {
 3
 \`\`\`
 `,
-  starterCode: `// 説明文の小数を Math.round で四捨五入して、 結果を console.log で出力する
+  starterFiles: singleFile(`// 説明文の小数を Math.round で四捨五入して、 結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 3 になる",

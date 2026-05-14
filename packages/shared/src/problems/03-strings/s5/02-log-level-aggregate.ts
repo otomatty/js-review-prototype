@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch03LogLevelAggregate: Assignment = {
   id: "S5-Ch03-02-log-level-aggregate",
@@ -41,10 +42,10 @@ aggregateLogs("");
 - AST で **\`split\` の使用** と **\`return\` 文** を必須にしています。
 - メッセージ側に \`": "\` が含まれる可能性も想定し、 「最初の \`": "\` で区切って **左側だけ取る**」 が安全な実装になります (\`split(": ")[0]\` で十分)。
 `,
-  starterCode: `function aggregateLogs(logText) {
+  starterFiles: singleFile(`function aggregateLogs(logText) {
   // 各行を分割し、 ラベル別の件数を集計したオブジェクトを返してください
 }
-`,
+`),
   entryPoints: ["aggregateLogs"],
   demoCall: `console.log(aggregateLogs("INFO: started\\nERROR: oops\\nINFO: done\\nWARN: slow"));`,
   tests: [

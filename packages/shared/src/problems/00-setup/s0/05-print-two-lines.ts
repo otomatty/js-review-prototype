@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s0Ch00PrintTwoLines: Assignment = {
   id: "S0-Ch00-05-print-two-lines",
@@ -28,10 +29,10 @@ World
 - \`console.log\` を 1 回だけ書くのでは、 1 行しか出ません。
 - 命令を 2 つ並べたいときは、 1 行ずつ書いて末尾に \`;\` を付けます。
 `,
-  starterCode: `// 1 行目に Hello、2 行目に World を出力してください
+  starterFiles: singleFile(`// 1 行目に Hello、2 行目に World を出力してください
 // console.log を 2 回書くのがポイント
 
-`,
+`),
   tests: [
     {
       name: "1 行目に Hello、2 行目に World が出る",

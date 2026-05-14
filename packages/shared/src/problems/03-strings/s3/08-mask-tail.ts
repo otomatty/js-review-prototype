@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03MaskTail: Assignment = {
   id: "S3-Ch03-08-mask-tail",
@@ -28,10 +29,10 @@ maskTail("");                  // → ""
 - そうでなければ、 \`"*"\` を \`(s.length - 4)\` 回繰り返したものに \`s.slice(-4)\` を連結。
 - \`"*".repeat(n)\` でアスタリスクを n 個並べられます。
 `,
-  starterCode: `function maskTail(s) {
+  starterFiles: singleFile(`function maskTail(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["maskTail"],
   demoCall: `console.log(maskTail("1234567890123456"));`,
   tests: [

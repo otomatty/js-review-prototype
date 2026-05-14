@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09PipelineCapstone: Assignment = {
   id: "S3-Ch09-08-pipeline-capstone",
@@ -38,10 +39,10 @@ totalPaidAmount([{ price: 100, quantity: 1, isPaid: false }]);   // → 0
 - メソッドチェーンで 1 行に書ける: \`orders.filter(...).map(...).reduce(...)\`
 - AST で **3 つすべて** の使用を必須にしているので、 for ループでは通りません。
 `,
-  starterCode: `function totalPaidAmount(orders) {
+  starterFiles: singleFile(`function totalPaidAmount(orders) {
   // filter → map → reduce のパイプラインで実装してください
 }
-`,
+`),
   entryPoints: ["totalPaidAmount"],
   demoCall: `console.log(totalPaidAmount([{ price: 100, quantity: 2, isPaid: true }, { price: 200, quantity: 1, isPaid: true }]));`,
   tests: [

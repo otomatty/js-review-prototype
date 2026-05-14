@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04MaxValue: Assignment = {
   id: "S3-Ch04-02-max-value",
@@ -26,10 +27,10 @@ maxValue([1, 1, 1]);      // → 1
 - 最初の要素を \`max\` の初期値とし、 残りを走査して更新します。
 - \`if (n > max) max = n;\` の形が定石です。
 `,
-  starterCode: `function maxValue(arr) {
+  starterFiles: singleFile(`function maxValue(arr) {
   // ここを実装してください (Math.max(...arr) は使わない)
 }
-`,
+`),
   entryPoints: ["maxValue"],
   demoCall: `console.log(maxValue([3, 1, 4]));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch09Scan: Assignment = {
   id: "S4-Ch09-04-scan",
@@ -37,10 +38,10 @@ scan([], (a, b) => a + b, 0);              // → [0]   (init 1 件だけ)
 - AST で **\`reduce\` 必須**、 **\`forEach\` 禁止** なので、 副作用ループでは通りません。
 - 入力配列 \`arr\` を **書き換えない** こと (非破壊)。
 `,
-  starterCode: `function scan(arr, fn, init) {
+  starterFiles: singleFile(`function scan(arr, fn, init) {
   // reduce の初期値 [init] に対して、 各ステップの累積値を push してください
 }
-`,
+`),
   entryPoints: ["scan"],
   demoCall: `console.log(scan([1, 2, 3, 4], (a, b) => a + b, 0));`,
   tests: [

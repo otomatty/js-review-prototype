@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07MultipleReturns: Assignment = {
   id: "S2-Ch07-12-multiple-returns",
@@ -31,13 +32,13 @@ export const s2Ch07MultipleReturns: Assignment = {
 - 各 if ブロックで \`return\` すると、 そこで関数の実行は終わります。
 - \`else if\` でも書けますが、 ここでは早期 return で 3 通りの結果を返します。
 `,
-  starterCode: `// function 文の関数を宣言する
+  starterFiles: singleFile(`// function 文の関数を宣言する
 // 中で「正のとき → return」「負のとき → return」「それ以外 → return」 を if で順に書き分ける
 
 
 // 関数に説明文の値を渡して呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 0 になる",

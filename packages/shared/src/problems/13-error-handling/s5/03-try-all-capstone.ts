@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch13TryAllCapstone: Assignment = {
   id: "S5-Ch13-03-try-all-capstone",
@@ -105,7 +106,7 @@ loadConfig([], "default");
 - AST で **TryStatement / ReturnStatement / FunctionDeclaration** を必須にしています (\`attempt\` で 1 個 \`try\` が必要)。 \`tryAll\` の早期離脱用に for ループも前提です。
 - \`tryAll\` / \`loadConfig\` で **\`try\` / \`catch\` を使わない** ことは厳密にはチェックしませんが、 設計指針として 「例外処理は \`attempt\` の中だけ」 を守ってください。 「失敗を値として持ち回る」 のが Result 設計の利点です。
 `,
-  starterCode: `// 1) 例外を Result に変換する境界
+  starterFiles: singleFile(`// 1) 例外を Result に変換する境界
 function attempt(fn) {
   // try { return { ok: true, value: fn() }; }
   // catch (e) { return { ok: false, error: e?.message ?? String(e) }; }
@@ -123,7 +124,7 @@ function loadConfig(sources, fallback) {
   // sources の各 fn を attempt でラップし、 tryAll に渡す
   // 結果が ok なら value を、 そうでなければ fallback を返す
 }
-`,
+`),
   entryPoints: ["attempt", "tryAll", "loadConfig"],
   demoCall: `console.log(loadConfig([
   () => { throw new Error("env missing"); },

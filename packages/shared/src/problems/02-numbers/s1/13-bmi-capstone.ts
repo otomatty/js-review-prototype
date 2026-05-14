@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02BmiCapstone: Assignment = {
   id: "S1-Ch02-13-bmi-capstone",
@@ -40,7 +41,7 @@ BMI: 22
 - 計算結果はそのままだと小数になるので、 \`Math.round(...)\` で整数に丸めます。
 - テンプレートリテラルで \`\` \`BMI: \${bmi}\` \`\` のように埋め込みます。
 `,
-  starterCode: `// 身長 (m) と体重 (kg) を const の変数に入れる
+  starterFiles: singleFile(`// 身長 (m) と体重 (kg) を const の変数に入れる
 
 
 // 体重 ÷ 身長の 2 乗 で BMI を計算し、 Math.round で整数に丸めた結果を const の変数に入れる
@@ -48,7 +49,7 @@ BMI: 22
 
 // テンプレートリテラルで「BMI: ...」 形式の文字列を組み立てて console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が BMI: 22 になる",

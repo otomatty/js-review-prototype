@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06Sum1ToN: Assignment = {
   id: "S2-Ch06-05-sum-1-to-n",
@@ -26,7 +27,7 @@ export const s2Ch06Sum1ToN: Assignment = {
 - ループの中で \`total += i\` を繰り返します。
 - 最後にループの外で \`total\` を出力します。
 `,
-  starterCode: `// 合計を入れる let の変数を 0 で初期化する
+  starterFiles: singleFile(`// 合計を入れる let の変数を 0 で初期化する
 
 
 // for ループで 1 から上限まで回し、 += で値を足し込む
@@ -34,7 +35,7 @@ export const s2Ch06Sum1ToN: Assignment = {
 
 // 合計を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 55 になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch13ValidateUserResult: Assignment = {
   id: "S5-Ch13-02-validate-user-result",
@@ -85,7 +86,7 @@ validateUser({ name: "Bob", age: 200, email: "x" });
 - 成功時の \`value\` は **各ステップの \`value\`** を使う点に注意。 例えば \`parseName(" Alice ")\` は \`value: "Alice"\` を返すので、 上位関数では \`input.name\` をそのまま使ってはいけません (\`name: n.value\` のように受け取る)。
 - AST で **TryStatement / ThrowStatement を禁止** しています。 例外機構を使わずに、 Result の if 分岐だけで失敗を伝播してください。
 `,
-  starterCode: `function parseName(input) {
+  starterFiles: singleFile(`function parseName(input) {
   // typeof input === "string" && input.trim() !== "" なら ok({ value: trim 済み })
   // そうでなければ err("name required")
 }
@@ -107,7 +108,7 @@ function validateUser(input) {
   // 4) 全部成功なら { ok: true, value: { name, age, email } } を返す
   //    name / age / email は 各 parseXxx の value を使うこと
 }
-`,
+`),
   entryPoints: ["parseName", "parseAge", "parseEmail", "validateUser"],
   demoCall: `console.log(validateUser({ name: "  Alice  ", age: 30, email: "a@example.com" }));`,
   tests: [

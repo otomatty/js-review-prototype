@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch03CsvWithHeaderParseCapstone: Assignment = {
   id: "S5-Ch03-03-csv-with-header-parse-capstone",
@@ -45,10 +46,10 @@ parseCsvWithHeader("");                // → []
 - AST で **\`split\` の使用** と **\`return\` 文** を必須にしています。 設計面では、 ヘッダの取り扱いを **データ行とは分ける** 構造化が要点です。
 - 学習目標: 文字列処理のパイプライン (\`split → filter → map → return\`) を **設計レベルで** 組み立てられること。
 `,
-  starterCode: `function parseCsvWithHeader(csv) {
+  starterFiles: singleFile(`function parseCsvWithHeader(csv) {
   // 1 行目をヘッダとして、 残りの行をオブジェクトの配列に変換して返してください
 }
-`,
+`),
   entryPoints: ["parseCsvWithHeader"],
   demoCall: `console.log(parseCsvWithHeader("name,age,city\\nAlice,30,Tokyo\\nBob,25,Osaka"));`,
   tests: [

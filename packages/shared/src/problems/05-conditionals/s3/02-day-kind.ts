@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch05DayKind: Assignment = {
   id: "S3-Ch05-02-day-kind",
@@ -26,10 +27,10 @@ dayKind(6);   // → "休日"   (土)
 - 「0 か 6 ならば」 は \`day === 0 || day === 6\` で表現します。
 - \`||\` (OR) で複数条件をまとめます。
 `,
-  starterCode: `function dayKind(day) {
+  starterFiles: singleFile(`function dayKind(day) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["dayKind"],
   demoCall: `console.log(dayKind(0));`,
   tests: [

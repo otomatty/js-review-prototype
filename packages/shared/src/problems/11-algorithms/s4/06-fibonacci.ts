@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11Fibonacci: Assignment = {
   id: "S4-Ch11-06-fibonacci",
@@ -39,11 +40,11 @@ fib(10);  // → 55
 - AST で **ループ系を禁止**、 **\`function fib\` の宣言と \`return\` を必須** にしています。
 - テストは \`fib(10)\` までで十分です (それ以上は遅くなる)。
 `,
-  starterCode: `function fib(n) {
+  starterFiles: singleFile(`function fib(n) {
   // ベースケース: n < 2 なら n を返す
   // 再帰ステップ: fib(n - 1) + fib(n - 2)
 }
-`,
+`),
   entryPoints: ["fib"],
   demoCall: `console.log(fib(7));`,
   tests: [

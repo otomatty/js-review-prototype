@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07Compose: Assignment = {
   id: "S3-Ch07-08-compose",
@@ -31,10 +32,10 @@ compose(exclaim, toUp)("hi");  // → "HI!"
 - 順序に注意。 \`compose(f, g)(x)\` は \`f(g(x))\` で、 **g が先** に呼ばれます。
 - \`return (x) => f(g(x));\`
 `,
-  starterCode: `function compose(f, g) {
+  starterFiles: singleFile(`function compose(f, g) {
   // 合成関数を return してください
 }
-`,
+`),
   entryPoints: ["compose"],
   demoCall: `console.log(compose((n) => n * 2, (n) => n + 1)(3));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07DefaultArgs: Assignment = {
   id: "S2-Ch07-05-default-args",
@@ -29,7 +30,7 @@ export const s2Ch07DefaultArgs: Assignment = {
 - デフォルト引数は \`function f(x = 既定値)\` のように書きます。
 - 引数を渡さない呼び出しで既定値が使われます。
 `,
-  starterCode: `// function 文の関数を宣言し、 引数にデフォルト値を = で指定する
+  starterFiles: singleFile(`// function 文の関数を宣言し、 引数にデフォルト値を = で指定する
 // 中ではテンプレートリテラルで挨拶文を組み立てて console.log で出力する
 
 
@@ -38,7 +39,7 @@ export const s2Ch07DefaultArgs: Assignment = {
 
 // 説明文の名前を引数で渡して呼び出す
 
-`,
+`),
   tests: [
     {
       name: "stdout がゲスト→花子 の 2 行になる",

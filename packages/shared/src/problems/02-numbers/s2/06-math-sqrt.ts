@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02MathSqrt: Assignment = {
   id: "S2-Ch02-06-math-sqrt",
@@ -25,12 +26,12 @@ export const s2Ch02MathSqrt: Assignment = {
 - \`Math.sqrt(144)\` は \`12\` を返します (12 × 12 = 144)。
 - 距離計算 (三平方の定理) などで使います。
 `,
-  starterCode: `// Math.sqrt で平方根を計算した結果を const の変数に入れる
+  starterFiles: singleFile(`// Math.sqrt で平方根を計算した結果を const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 12 になる",

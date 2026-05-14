@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03SplitComma: Assignment = {
   id: "S2-Ch03-01-split-comma",
@@ -25,7 +26,7 @@ export const s2Ch03SplitComma: Assignment = {
 - \`"a,b,c".split(",")\` → \`["a","b","c"]\`
 - 区切り文字を変えれば改行や空白でも分割できます。
 `,
-  starterCode: `// カンマ区切りの文字列を const の変数に入れる
+  starterFiles: singleFile(`// カンマ区切りの文字列を const の変数に入れる
 
 
 // その変数に対して split を呼んで配列に分解し、 別の const の変数に入れる
@@ -33,7 +34,7 @@ export const s2Ch03SplitComma: Assignment = {
 
 // 分解した配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が配列表現になる",

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TypeofBoolean: Assignment = {
   id: "S2-Ch01-04-typeof-boolean",
@@ -25,12 +26,12 @@ boolean
 - \`true\` / \`false\` の型は \`"boolean"\` です。
 - 後の章で出てくる条件分岐 (\`if\`) では boolean 値を使います。
 `,
-  starterCode: `// boolean 値 (true / false) を const の変数に入れる
+  starterFiles: singleFile(`// boolean 値 (true / false) を const の変数に入れる
 
 
 // その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が boolean になる",

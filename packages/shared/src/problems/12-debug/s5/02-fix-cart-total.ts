@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch12FixCartTotal: Assignment = {
   id: "S5-Ch12-02-fix-cart-total",
@@ -69,7 +70,7 @@ calcTotal({ items: [{ productId: "A", name: "A", price: 1000, quantity: 1 }], di
 - 税率は **0.1 (10%)** で固定。
 - \`calcTotal\` の戻り値は **数値**。 \`Math.round(x * 100) / 100\` で小数 2 桁に丸める。
 `,
-  starterCode: `const TAX_RATE = 0.1;
+  starterFiles: singleFile(`const TAX_RATE = 0.1;
 
 function addItem(cart, item) {
   cart.items.push({ ...item });
@@ -87,7 +88,7 @@ function calcTotal(cart) {
   const total = afterDiscount * (1 + TAX_RATE);
   return Math.round(total * 100) / 100;
 }
-`,
+`),
   entryPoints: ["addItem", "applyDiscount", "calcTotal"],
   demoCall: `(() => {
   const cart = { items: [], discountPercent: 0 };

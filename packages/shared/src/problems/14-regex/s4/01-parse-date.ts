@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch14ParseDate: Assignment = {
   id: "S4-Ch14-01-parse-date",
@@ -32,11 +33,11 @@ parseDate("");             // → null
 - \`s.match(re)\` は配列を返し、 \`[0]\` が全体、 \`[1]\` \`[2]\` \`[3]\` がキャプチャです。 マッチしなかった場合は \`null\`。
 - 数値化は \`Number(...)\` で。 \`parseInt\` でも可ですが、 ここでは \`Number\` を推奨します。
 `,
-  starterCode: `function parseDate(s) {
+  starterFiles: singleFile(`function parseDate(s) {
   // キャプチャグループで YYYY-MM-DD を取り出してください
   // マッチしなければ null を返します
 }
-`,
+`),
   entryPoints: ["parseDate"],
   demoCall: `console.log(parseDate("2024-03-15"));`,
   tests: [

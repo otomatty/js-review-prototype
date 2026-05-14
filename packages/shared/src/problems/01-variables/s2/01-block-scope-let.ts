@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01BlockScopeLet: Assignment = {
   id: "S2-Ch01-01-block-scope-let",
@@ -30,7 +31,7 @@ export const s2Ch01BlockScopeLet: Assignment = {
 - \`{ }\` で囲まれた範囲を **ブロック** と呼びます。 \`const\` / \`let\` で作った変数は **そのブロックの中だけ** で有効です。
 - 中で同じ名前を使っても外には影響しません。 これを「ブロックスコープ」 と呼びます。
 `,
-  starterCode: `// ブロックの外側で const の変数に文字列を入れる
+  starterFiles: singleFile(`// ブロックの外側で const の変数に文字列を入れる
 
 
 // { } のブロックを開き、 その中でも同じ名前の const の変数に別の文字列を入れて
@@ -39,7 +40,7 @@ export const s2Ch01BlockScopeLet: Assignment = {
 
 // ブロックを閉じたあと、 もう一度 console.log で同じ変数を出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 内側→外側 の 2 行になる",

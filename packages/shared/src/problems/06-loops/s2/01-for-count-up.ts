@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06ForCountUp: Assignment = {
   id: "S2-Ch06-01-for-count-up",
@@ -29,9 +30,9 @@ export const s2Ch06ForCountUp: Assignment = {
 - \`for (let i = 0; i < 5; i++) { console.log(i); }\` の形が基本。
 - \`let i = 0\`: 初期化 / \`i < 5\`: 続行条件 / \`i++\`: 毎回末尾で実行。
 `,
-  starterCode: `// for ループでカウンタ変数を 0 から始めて、 説明文の上限まで 1 ずつ増やしながら毎回 console.log で出力する
+  starterFiles: singleFile(`// for ループでカウンタ変数を 0 から始めて、 説明文の上限まで 1 ずつ増やしながら毎回 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 0-4 の 5 行になる",

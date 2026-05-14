@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04SumArray: Assignment = {
   id: "S3-Ch04-01-sum-array",
@@ -27,10 +28,10 @@ sumArray([-1, -2, -3]); // → -6
 - \`for...of\` を使うと添字が要らず読みやすいです。
 - \`reduce\` は Ch09 で導入するので、 ここでは普通のループで書きます。
 `,
-  starterCode: `function sumArray(arr) {
+  starterFiles: singleFile(`function sumArray(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["sumArray"],
   demoCall: `console.log(sumArray([1, 2, 3]));`,
   tests: [

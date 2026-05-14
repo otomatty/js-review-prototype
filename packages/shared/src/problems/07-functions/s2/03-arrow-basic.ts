@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07ArrowBasic: Assignment = {
   id: "S2-Ch07-03-arrow-basic",
@@ -29,13 +30,13 @@ Hello
 - アロー関数: \`() => 値\` の形は **その値を return する** という意味。
 - \`{ }\` を書くと中身は通常の関数本体になり、 \`return\` が必要になります。
 `,
-  starterCode: `// 引数を取らないアロー関数を const の変数に入れる
+  starterFiles: singleFile(`// 引数を取らないアロー関数を const の変数に入れる
 // (式形式 () => 値 で、 値をそのまま返すようにする)
 
 
 // 関数を呼び出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が Hello になる",

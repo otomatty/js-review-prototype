@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch05MaxOfThree: Assignment = {
   id: "S3-Ch05-05-max-of-three",
@@ -25,10 +26,10 @@ maxOfThree(7, 7, 7);    // → 7
 
 - 「一番大きい候補を 1 つずつ更新する」 と書きやすいです: \`let m = a; if (b > m) m = b; if (c > m) m = c;\`
 `,
-  starterCode: `function maxOfThree(a, b, c) {
+  starterFiles: singleFile(`function maxOfThree(a, b, c) {
   // ここを実装してください (Math.max は使わない)
 }
-`,
+`),
   entryPoints: ["maxOfThree"],
   demoCall: `console.log(maxOfThree(1, 2, 3));`,
   tests: [

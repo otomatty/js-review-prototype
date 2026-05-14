@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04FilterEven: Assignment = {
   id: "S3-Ch04-04-filter-even",
@@ -26,10 +27,10 @@ filterEven([0, 2, 4]);        // → [0, 2, 4]   (0 も偶数)
 - 空配列 \`const result = []\` を作り、 偶数のときだけ \`push\` します。
 - 配列 \`filter\` メソッドは Ch09 で導入するので、 ここでは for ループで書きます。
 `,
-  starterCode: `function filterEven(arr) {
+  starterFiles: singleFile(`function filterEven(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["filterEven"],
   demoCall: `console.log(filterEven([1, 2, 3, 4, 5, 6]));`,
   tests: [

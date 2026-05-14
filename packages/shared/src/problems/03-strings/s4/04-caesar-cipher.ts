@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch03CaesarCipher: Assignment = {
   id: "S4-Ch03-04-caesar-cipher",
@@ -34,10 +35,10 @@ caesarCipher("a1!Z", 1);                // → "b1!A"  (英字以外はそのま
 - ずらした後にアルファベットの範囲をはみ出さないように、 **\`(code - base + shift) % 26 + base\`** という定型式が使えます (base は \`a\` なら 97、 \`A\` なら 65)。
 - 英字以外は \`s[i]\` をそのまま結果文字列に足せば OK。
 `,
-  starterCode: `function caesarCipher(s, shift) {
+  starterFiles: singleFile(`function caesarCipher(s, shift) {
   // 英字だけを shift 文字ぶん後ろにずらして、 それ以外はそのまま返してください
 }
-`,
+`),
   entryPoints: ["caesarCipher"],
   demoCall: `console.log(caesarCipher("Hello, World!", 13));`,
   tests: [

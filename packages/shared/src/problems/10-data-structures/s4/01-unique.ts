@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch10Unique: Assignment = {
   id: "S4-Ch10-01-unique",
@@ -30,10 +31,10 @@ unique([]);                          // → []
 
 - AST で **\`new\` 式 (NewExpression)** を必須にしています。 \`new Set(...)\` を使わない \`for\` ループ + \`includes\` のような実装では通りません。
 `,
-  starterCode: `function unique(arr) {
+  starterFiles: singleFile(`function unique(arr) {
   // Set を使って重複を取り除いてください
 }
-`,
+`),
   entryPoints: ["unique"],
   demoCall: `console.log(unique([1, 2, 2, 3, 1]));`,
   tests: [

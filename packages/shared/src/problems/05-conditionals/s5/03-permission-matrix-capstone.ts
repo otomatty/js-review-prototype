@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch05PermissionMatrixCapstone: Assignment = {
   id: "S5-Ch05-03-permission-matrix-capstone",
@@ -90,7 +91,7 @@ canPerformAction("", "posts", "read");
   4. ループを抜けたら、 見つかったリスト or 未発見で分岐
   5. リストがあるなら \`"*"\` または \`action\` を \`.includes()\` で判定
 `,
-  starterCode: `const PERMISSIONS = {
+  starterFiles: singleFile(`const PERMISSIONS = {
   admin:  { inherits: "editor", users: ["*"] },
   editor: { inherits: "viewer", posts: ["read", "write", "delete"], comments: ["read", "write"] },
   viewer: { posts: ["read"], comments: ["read"] },
@@ -116,7 +117,7 @@ function canPerformAction(role, resource, action) {
 
   // どの分岐でも、 戻り値は許可フラグと拒否理由を持つオブジェクト形に揃える
 }
-`,
+`),
   entryPoints: ["canPerformAction", "PERMISSIONS"],
   demoCall: `console.log(canPerformAction("admin", "posts", "delete"));`,
   tests: [

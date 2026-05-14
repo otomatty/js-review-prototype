@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05AndOperator: Assignment = {
   id: "S2-Ch05-04-and-operator",
@@ -28,12 +29,12 @@ OK
 - \`A && B\` は **A と B の両方が真** のときだけ真になります。
 - \`if (age >= 18 && hasTicket) { ... }\` のように 1 つの条件式にまとめます。
 `,
-  starterCode: `// 年齢 (数値) とチケット有無 (boolean) を、 それぞれ const の変数に入れる
+  starterFiles: singleFile(`// 年齢 (数値) とチケット有無 (boolean) を、 それぞれ const の変数に入れる
 
 
 // && で 2 つの条件を AND 結合した if で文字列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が OK になる",

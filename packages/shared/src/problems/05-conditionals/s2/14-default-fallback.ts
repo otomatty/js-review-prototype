@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05DefaultFallback: Assignment = {
   id: "S2-Ch05-14-default-fallback",
@@ -25,7 +26,7 @@ export const s2Ch05DefaultFallback: Assignment = {
 - \`A || B\` の評価結果は **A が truthy なら A、 それ以外なら B**。
 - 「値が無ければデフォルト」 を 1 行で書ける定番イディオムです。
 `,
-  starterCode: `// ユーザー名の文字列 (空かもしれない) を const の変数に入れる
+  starterFiles: singleFile(`// ユーザー名の文字列 (空かもしれない) を const の変数に入れる
 
 
 // || 演算子でデフォルト値にフォールバックさせた結果を、 別の const の変数に入れる
@@ -33,7 +34,7 @@ export const s2Ch05DefaultFallback: Assignment = {
 
 // 結果の変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が ゲスト になる",

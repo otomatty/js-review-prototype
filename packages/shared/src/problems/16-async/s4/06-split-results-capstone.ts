@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch16SplitResultsCapstone: Assignment = {
   id: "S4-Ch16-06-split-results-capstone",
@@ -48,12 +49,12 @@ await splitResults([]);
 - **\`Promise.all\` は forbidden**。 reject 1 件で全体落ちを避けるためです。
 - 振り分けは \`reduce\` でも \`for-of\` + 2 つの配列でも OK。
 `,
-  starterCode: `// async function を使い、 Promise.allSettled で全件待ち
+  starterFiles: singleFile(`// async function を使い、 Promise.allSettled で全件待ち
 // status を見て fulfilled / rejected に振り分けて返す
 function splitResults(promises) {
   // ここに実装する
 }
-`,
+`),
   entryPoints: ["splitResults"],
   demoCall: `(async () => console.log(JSON.stringify(await splitResults([Promise.resolve(1), Promise.reject("oops"), Promise.resolve(2)]))))();`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01ConcatViaVars: Assignment = {
   id: "S1-Ch01-09-concat-via-vars",
@@ -30,7 +31,7 @@ export const s1Ch01ConcatViaVars: Assignment = {
 - 文字列同士は \`+\` でつなげられます。 これを **連結** と言います。
 - \`"a" + "b"\` は \`"ab"\` になります。
 `,
-  starterCode: `// 2 つの文字列を、 それぞれ const の変数に入れる
+  starterFiles: singleFile(`// 2 つの文字列を、 それぞれ const の変数に入れる
 
 
 // 上の 2 変数を + で連結した結果を、 さらに別の const の変数に入れる
@@ -38,7 +39,7 @@ export const s1Ch01ConcatViaVars: Assignment = {
 
 // 連結結果を入れた変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が連結された挨拶文になる",

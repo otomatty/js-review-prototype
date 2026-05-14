@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09CountTrue: Assignment = {
   id: "S3-Ch09-06-count-true",
@@ -26,10 +27,10 @@ countTrue([true, true, true]);         // → 3
 - \`bools.reduce((count, b) => b ? count + 1 : count, 0)\` で書ける。
 - \`count + (b ? 1 : 0)\` の方が分かりやすい場合も。
 `,
-  starterCode: `function countTrue(bools) {
+  starterFiles: singleFile(`function countTrue(bools) {
   // ここを実装してください (reduce を使う)
 }
-`,
+`),
   entryPoints: ["countTrue"],
   demoCall: `console.log(countTrue([true, false, true]));`,
   tests: [

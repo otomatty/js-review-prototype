@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04NestedAccess: Assignment = {
   id: "S1-Ch04-09-nested-access",
@@ -22,13 +23,13 @@ export const s1Ch04NestedAccess: Assignment = {
 4
 \`\`\`
 `,
-  starterCode: `// 入れ子の配列 (要素が配列) を const の変数に入れる
+  starterFiles: singleFile(`// 入れ子の配列 (要素が配列) を const の変数に入れる
 
 
 // 添字を 2 つ並べて内側の要素を取り出し、 console.log で出力する
 // (まず外側の添字で内側の配列、 次にその添字で値を取り出す)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 4 になる",

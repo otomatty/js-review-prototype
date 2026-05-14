@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch09PipeReports: Assignment = {
   id: "S5-Ch09-02-pipe-reports",
@@ -57,7 +58,7 @@ pipe((x) => x + 1, (x) => x * 2)(3);     // → (3 + 1) * 2 = 8
 - \`withLineTotal\` が **新しいオブジェクトを返す** (元を破壊しない) ことで、 \`paidRevenue\` を 2 回呼んでも同じ結果になります。 これが純粋関数の利点 (テストしやすさ・並列化しやすさ)。
 - AST で \`filter\` / \`map\` / \`reduce\` の **3 つすべて** を必須にしているので、 \`for\` ループでは通りません。
 `,
-  starterCode: `function pipe(...fns) {
+  starterFiles: singleFile(`function pipe(...fns) {
   // 関数を 0 個以上受け取り、 新しい関数を返す。
   // 戻り値の関数は、 初期値 x に対して fns を 順に適用した結果を返す。
   // ヒント: return (x) => fns.reduce((acc, fn) => fn(acc), x);
@@ -78,7 +79,7 @@ function sumLineTotals(orders) {
 // pipe を使って 2 つのパイプラインを合成する。 const で関数を保持して使う。
 const paidRevenue = pipe(paidOnly, withLineTotal, sumLineTotals);
 const paidOrderCount = pipe(paidOnly, (orders) => orders.length);
-`,
+`),
   entryPoints: [
     "pipe",
     "paidOnly",

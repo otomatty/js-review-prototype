@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02IsEven: Assignment = {
   id: "S3-Ch02-01-is-even",
@@ -26,10 +27,10 @@ isEven(-4);  // → true
 - \`n % 2\` が 0 なら偶数、 そうでなければ奇数です。
 - \`return n % 2 === 0;\` のように比較式をそのまま return できます。
 `,
-  starterCode: `function isEven(n) {
+  starterFiles: singleFile(`function isEven(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["isEven"],
   demoCall: `console.log(isEven(4), isEven(7));`,
   tests: [

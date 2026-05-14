@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch06FirstDuplicateAction: Assignment = {
   id: "S5-Ch06-02-first-duplicate-action",
@@ -52,7 +53,7 @@ firstDuplicateAction([{ userId: "u1", action: "click" }]);           // → null
 - 早期 \`return\` を **\`break\` + フラグ + 後処理** で書くと無駄に行が増え、 「return の場所」 を見失います。 ループ内で答えが出たら関数ごと抜けるのが S4 から続く 「ループの早期脱出」 の王道です。
 - AST で **\`new ...()\`** (Map / Set のコンストラクタ呼び出し) と **\`for...of\`**、 **\`.has\`** と **\`.add\`** の使用を必須にしています。
 `,
-  starterCode: `function firstDuplicateAction(logs) {
+  starterFiles: singleFile(`function firstDuplicateAction(logs) {
   // userId -> Set<action> を保持するための Map を用意する
   // ヒント: const userActions = new Map();
 
@@ -72,7 +73,7 @@ firstDuplicateAction([{ userId: "u1", action: "click" }]);           // → null
 
   // 全件処理しても重複が無ければ null
 }
-`,
+`),
   entryPoints: ["firstDuplicateAction"],
   demoCall: `console.log(firstDuplicateAction([
   { userId: "u1", action: "click" },

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08CountProperties: Assignment = {
   id: "S3-Ch08-03-count-properties",
@@ -25,10 +26,10 @@ countProperties({ a: 1, b: 2, c: 3 }); // → 3
 
 - \`Object.keys(obj)\` でキーの配列が取れます。 その \`.length\` がプロパティ数。
 `,
-  starterCode: `function countProperties(obj) {
+  starterFiles: singleFile(`function countProperties(obj) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["countProperties"],
   demoCall: `console.log(countProperties({ a: 1, b: 2, c: 3 }));`,
   tests: [

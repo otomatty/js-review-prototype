@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06FindMax: Assignment = {
   id: "S2-Ch06-13-find-max",
@@ -27,7 +28,7 @@ export const s2Ch06FindMax: Assignment = {
 - 最大値用の変数を 1 要素目で初期化: \`let max = nums[0];\`
 - ループの中で「現在の max より大きければ更新」 を繰り返します。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // 最大値を入れる let の変数を、 配列の先頭要素で初期化する
@@ -39,7 +40,7 @@ export const s2Ch06FindMax: Assignment = {
 
 // 最大値を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 8 になる",

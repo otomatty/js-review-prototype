@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05SwitchDefault: Assignment = {
   id: "S2-Ch05-15-switch-default",
@@ -29,13 +30,13 @@ export const s2Ch05SwitchDefault: Assignment = {
 - いずれの \`case\` にも該当しないときは \`default:\` のブロックが実行されます。
 - 全ケースに \`break;\` を入れます。
 `,
-  starterCode: `// 権限を表す文字列を const の変数に入れる
+  starterFiles: singleFile(`// 権限を表す文字列を const の変数に入れる
 
 
 // switch でその変数を分岐し、 case でメッセージを console.log で出力する
 // (どの case にも当てはまらない場合は default 節で処理する)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 権限がありません になる",

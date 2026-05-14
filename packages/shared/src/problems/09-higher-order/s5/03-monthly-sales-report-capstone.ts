@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch09MonthlySalesReportCapstone: Assignment = {
   id: "S5-Ch09-03-monthly-sales-report-capstone",
@@ -84,7 +85,7 @@ monthlySalesReport(orders);
 - \`monthlySalesReport\` の最後の \`sort\` は **\`[...arr].sort(...)\`** で必ずコピーすること。 \`Array.from(map.entries())\` の戻り値を直接 \`sort\` すると、 ローカルの配列なので問題は起きないが、 「sort はコピーしてから」 の規律を S5 全体で守るためあえて統一する。
 - AST で \`filter\` / \`map\` / \`reduce\` の **3 つすべて** を必須にしているので、 単純な \`for\` ループでは通りません。
 `,
-  starterCode: `function excludeRefunded(orders) {
+  starterFiles: singleFile(`function excludeRefunded(orders) {
   // refunded === false の注文だけ Array.filter で残す。
 }
 
@@ -114,7 +115,7 @@ function monthlySalesReport(orders) {
   // const summaries = [...byMonth.entries()].map(([m, list]) => summarizeMonth(m, list));
   // return [...summaries].sort((a, b) => a.month < b.month ? -1 : a.month > b.month ? 1 : 0);
 }
-`,
+`),
   entryPoints: [
     "excludeRefunded",
     "withRevenue",

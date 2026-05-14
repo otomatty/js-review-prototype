@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04FindFirstIndex: Assignment = {
   id: "S3-Ch04-08-find-first-index",
@@ -27,10 +28,10 @@ findFirstIndex([1, 2, 1, 2], 2);    // → 1   (最初の 2)
 - for で添字を回し、 \`arr[i] === target\` で見つけたら **その時点で \`return i\`**。
 - ループを抜けるまで見つからなければ \`return -1\`。
 `,
-  starterCode: `function findFirstIndex(arr, target) {
+  starterFiles: singleFile(`function findFirstIndex(arr, target) {
   // ここを実装してください (indexOf は使わない)
 }
-`,
+`),
   entryPoints: ["findFirstIndex"],
   demoCall: `console.log(findFirstIndex([10, 20, 30], 20));`,
   tests: [

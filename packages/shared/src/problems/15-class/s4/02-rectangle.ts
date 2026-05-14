@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch15Rectangle: Assignment = {
   id: "S4-Ch15-02-rectangle",
@@ -36,11 +37,11 @@ new Rectangle(5, 5).isSquare();  // → true
 - \`isSquare()\` は \`width === height\` の真偽をそのまま \`return\` で返せます (\`if (...) return true; else return false;\` と書く必要はありません)。
 - AST で **\`ClassDeclaration\`** を必須にしています。
 `,
-  starterCode: `class Rectangle {
+  starterFiles: singleFile(`class Rectangle {
   // constructor(width, height) で this.width / this.height をセットする
   // area / perimeter / isSquare を定義する
 }
-`,
+`),
   entryPoints: ["Rectangle"],
   demoCall: `console.log(new Rectangle(3, 4).area());`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch07Curry2: Assignment = {
   id: "S4-Ch07-04-curry2",
@@ -32,10 +33,10 @@ curry((a, b) => a + " & " + b)("apple")("banana");  // → "apple & banana"
 - 1 段目の結果を変数に保存しておけば 「片方を固定した関数」 (部分適用) として使い回せます。 \`const addTen = curry(add)(10)\`。
 - ここでは 2 引数固定。 任意引数のカリー化は S5 以降で扱います。
 `,
-  starterCode: `function curry(fn) {
+  starterFiles: singleFile(`function curry(fn) {
   // (a) => (b) => fn(a, b) の形を return してください
 }
-`,
+`),
   entryPoints: ["curry"],
   demoCall: `console.log(curry((a, b) => a + b)(2)(3));`,
   tests: [

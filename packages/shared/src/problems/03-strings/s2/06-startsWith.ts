@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03StartsWith: Assignment = {
   id: "S2-Ch03-06-startsWith",
@@ -25,12 +26,12 @@ true
 - \`url.startsWith("https://")\` で「先頭一致」 を確認できます。
 - 似た仲間に \`endsWith\` があります (Ch03-07 で扱います)。
 `,
-  starterCode: `// URL の文字列を const の変数に入れる
+  starterFiles: singleFile(`// URL の文字列を const の変数に入れる
 
 
 // その変数に対して startsWith でプレフィックスを判定した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が true になる",

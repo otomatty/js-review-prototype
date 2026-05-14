@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12UndefinedTrace: Assignment = {
   id: "S2-Ch12-04-undefined-trace",
@@ -32,11 +33,11 @@ console.log(total);
 - 宣言した変数名 (\`totl\`) と参照している変数名 (\`total\`) が違うと参照エラーになります。
 - 名前の打ち間違いに気付くために **エディタの補完** を頼るのが有効です。
 `,
-  starterCode: `const a = 10;
+  starterFiles: singleFile(`const a = 10;
 const b = 20;
 const totl = a + b;
 console.log(total);
-`,
+`),
   tests: [
     {
       name: "stdout が 30 になる",

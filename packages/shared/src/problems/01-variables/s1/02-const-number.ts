@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01ConstNumber: Assignment = {
   id: "S1-Ch01-02-const-number",
@@ -22,12 +23,12 @@ export const s1Ch01ConstNumber: Assignment = {
 1980
 \`\`\`
 `,
-  starterCode: `// 数値を const の変数に入れる
+  starterFiles: singleFile(`// 数値を const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 1980 になる",

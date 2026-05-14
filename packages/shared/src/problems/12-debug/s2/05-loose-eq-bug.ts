@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12LooseEqBug: Assignment = {
   id: "S2-Ch12-05-loose-eq-bug",
@@ -36,14 +37,14 @@ if (a == b) {
 - \`===\` は型もチェックします。 \`0 === "0"\` は \`false\`。
 - S2 の lint プリセットでは \`==\` がエラーになります (\`eqeqeq\`)。
 `,
-  starterCode: `const a = 0;
+  starterFiles: singleFile(`const a = 0;
 const b = "0";
 if (a == b) {
   console.log("同じ");
 } else {
   console.log("異なる");
 }
-`,
+`),
   tests: [
     {
       name: "stdout が 異なる になる",

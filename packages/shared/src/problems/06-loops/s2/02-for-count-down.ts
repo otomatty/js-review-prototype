@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06ForCountDown: Assignment = {
   id: "S2-Ch06-02-for-count-down",
@@ -29,9 +30,9 @@ export const s2Ch06ForCountDown: Assignment = {
 - \`for (let i = 5; i >= 1; i--) { ... }\` のように初期値・条件・更新を逆向きにします。
 - \`i--\` は \`i = i - 1\` の省略形。
 `,
-  starterCode: `// for ループでカウンタ変数を上限から始めて、 1 まで 1 ずつ減らしながら毎回 console.log で出力する
+  starterFiles: singleFile(`// for ループでカウンタ変数を上限から始めて、 1 まで 1 ずつ減らしながら毎回 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 5-1 の 5 行になる",

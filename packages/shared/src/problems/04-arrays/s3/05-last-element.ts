@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04LastElement: Assignment = {
   id: "S3-Ch04-05-last-element",
@@ -27,10 +28,10 @@ lastElement([null]);     // → null
 - 空配列の場合 \`arr[-1]\` ではなく単に \`arr[0]\` を返すと \`undefined\` になります (空のときは \`length === 0\` で \`-1\` 番目はそもそも存在しません)。
 - \`arr.at(-1)\` を使う方法もあります (S2 で導入済み)。
 `,
-  starterCode: `function lastElement(arr) {
+  starterFiles: singleFile(`function lastElement(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["lastElement"],
   demoCall: `console.log(lastElement([1, 2, 3]));`,
   tests: [

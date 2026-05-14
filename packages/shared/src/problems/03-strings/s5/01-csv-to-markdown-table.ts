@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch03CsvToMarkdownTable: Assignment = {
   id: "S5-Ch03-01-csv-to-markdown-table",
@@ -49,11 +50,11 @@ csvToMarkdownTable("a,b,c\\n1,2,3");
 - ヘッダだけの 1 行入力 (例: \`"name,age"\`) の場合は、 セパレータ行まで含めた **2 行** の出力になります。
 - 空文字列 \`""\` を渡されたときは **空文字列を返す** ことにします。
 `,
-  starterCode: `function csvToMarkdownTable(csv) {
+  starterFiles: singleFile(`function csvToMarkdownTable(csv) {
   // CSV を Markdown 表に変換して返してください
   // ヒント: split で行・列に分解 → 加工 → join で結合
 }
-`,
+`),
   entryPoints: ["csvToMarkdownTable"],
   demoCall: `console.log(csvToMarkdownTable("name,age\\nAlice,30\\nBob,25"));`,
   tests: [

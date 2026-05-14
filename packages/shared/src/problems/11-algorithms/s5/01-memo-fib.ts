@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch11MemoFib: Assignment = {
   id: "S5-Ch11-01-memo-fib",
@@ -59,7 +60,7 @@ S4 の \`fib\` は \`fib(n - 1)\` と \`fib(n - 2)\` を呼ぶたびに **同じ
 - 内側のヘルパは **アロー関数** で書いてもよいし、 デフォルト引数で cache を受け渡してもよい (例: \`function fibMemo(n, cache = new Map()) {...}\`)。
 - \`cache.has(k)\` と \`cache.get(k)\` をセットで使うのが定石。 \`cache.get(k)\` だけだと未登録のとき \`undefined\` が返るので分岐が複雑になります。
 `,
-  starterCode: `function fibMemo(n) {
+  starterFiles: singleFile(`function fibMemo(n) {
   // new Map() でキャッシュを用意する
 
 
@@ -72,7 +73,7 @@ S4 の \`fib\` は \`fib(n - 1)\` と \`fib(n - 2)\` を呼ぶたびに **同じ
 
   // ヘルパに n を渡して return する
 }
-`,
+`),
   entryPoints: ["fibMemo"],
   demoCall: `console.log(fibMemo(50));`,
   tests: [

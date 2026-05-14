@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04ArrayLiteral: Assignment = {
   id: "S1-Ch04-01-array-literal",
@@ -26,12 +27,12 @@ export const s1Ch04ArrayLiteral: Assignment = {
 
 - console.log に配列を渡すと、 そのまま \`[10,20,30]\` のように表示されます (環境によって少し見え方が違う場合があります)。
 `,
-  starterCode: `// 数値を [ ] で並べた配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値を [ ] で並べた配列を const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [10,20,30] になる",

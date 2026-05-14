@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06PowerLoop: Assignment = {
   id: "S2-Ch06-15-power-loop",
@@ -25,7 +26,7 @@ export const s2Ch06PowerLoop: Assignment = {
 - \`let result = 1;\` で初期化し、 8 回 \`result *= 2;\` を繰り返します。
 - ループの仕組みを理解するための練習なので Math.pow は禁止です。
 `,
-  starterCode: `// 結果を入れる let の変数を 1 で初期化する
+  starterFiles: singleFile(`// 結果を入れる let の変数を 1 で初期化する
 
 
 // for ループで指定回数だけ回し、 *= で底の値を掛け込む
@@ -33,7 +34,7 @@ export const s2Ch06PowerLoop: Assignment = {
 
 // 結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 256 になる",

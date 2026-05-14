@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08GroupByCapstone: Assignment = {
   id: "S3-Ch08-08-group-by-capstone",
@@ -35,10 +36,10 @@ groupByCategory([{ category: "x", name: "a" }]);
 - これは **S3 卒業課題** のひとつ。 「配列を走査して、 オブジェクトの中の配列を伸ばす」 という、 オブジェクトと配列の入れ子操作です。
 - 各アイテム \`item\` について、 \`result[item.category]\` が **未定義なら空配列を作る** → \`push(item.name)\`。
 `,
-  starterCode: `function groupByCategory(items) {
+  starterFiles: singleFile(`function groupByCategory(items) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["groupByCategory"],
   demoCall: `console.log(groupByCategory([{ category: "fruit", name: "apple" }, { category: "veg", name: "carrot" }]));`,
   tests: [

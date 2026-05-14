@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04SliceBasic: Assignment = {
   id: "S2-Ch04-03-slice-basic",
@@ -25,13 +26,13 @@ export const s2Ch04SliceBasic: Assignment = {
 - \`arr.slice(1, 4)\` → 添字 1, 2, 3 を取り出す ( **添字 4 は含まれない** )。
 - \`slice\` は元の配列を **書き換えません**。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // その配列に対して slice(start, end) で部分配列を取り出した結果を console.log で出力する
 // (end は含まれない)
 
-`,
+`),
   tests: [
     {
       name: "stdout が [20,30,40] になる",

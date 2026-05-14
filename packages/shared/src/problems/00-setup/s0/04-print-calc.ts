@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s0Ch00PrintCalc: Assignment = {
   id: "S0-Ch00-04-print-calc",
@@ -27,9 +28,9 @@ export const s0Ch00PrintCalc: Assignment = {
 - 期待値は \`15\` です。
 - 答えだけ書くのではなく、 **\`+\` を使って計算式を書く** のが今回のポイントです。 計算式は JavaScript が実行時に \`15\` に変換してくれます。
 `,
-  starterCode: `// console.log で「5 + 10 の計算結果」を出力してください
+  starterFiles: singleFile(`// console.log で「5 + 10 の計算結果」を出力してください
 // 答え (15) を直接書くのではなく、+ を使って計算式を書くのがポイント
-`,
+`),
   tests: [
     {
       name: "stdout が 15 になる",

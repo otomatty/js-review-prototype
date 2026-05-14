@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02Factorial: Assignment = {
   id: "S3-Ch02-03-factorial",
@@ -26,10 +27,10 @@ factorial(7);  // → 5040
 - \`let result = 1\` で初期化し、 \`for\` ループで \`result *= i\` を繰り返します。
 - \`n === 0\` のときも結果が \`1\` になるよう、 初期値の選び方に注意します (掛け算の単位元は 1)。
 `,
-  starterCode: `function factorial(n) {
+  starterFiles: singleFile(`function factorial(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["factorial"],
   demoCall: `console.log(factorial(5));`,
   tests: [

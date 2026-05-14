@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch05ScoreBand: Assignment = {
   id: "S4-Ch05-03-score-band",
@@ -48,11 +49,11 @@ scoreBand(80.5, 80); // → "Invalid"  (整数のみ)
 - 境界は \`>=\` で書きます。 \`(avg >= 90)\` の順に書いていけば、 上の条件が偽だったときは「89 以下」 が確定するので二重にチェックする必要はありません。
 - 「整数か」 は \`Number.isInteger\` で判定します。 \`typeof x === "number"\` だけだと小数や \`NaN\` も通ってしまいます。
 `,
-  starterCode: `function scoreBand(math, english) {
+  starterFiles: singleFile(`function scoreBand(math, english) {
   // 1. 異常値 (整数でない / 範囲外) なら "Invalid"
   // 2. avg = (math + english) / 2 の範囲で S / A / B / C / D / F を返す
 }
-`,
+`),
   entryPoints: ["scoreBand"],
   demoCall: `console.log(scoreBand(85, 75));`,
   tests: [

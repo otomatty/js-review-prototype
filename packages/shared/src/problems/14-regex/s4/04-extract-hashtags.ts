@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch14ExtractHashtags: Assignment = {
   id: "S4-Ch14-04-extract-hashtags",
@@ -32,10 +33,10 @@ extractHashtags("");                            // → []
 - パターン: \`/#(\\\\w+)/g\` で 「# のあとに英数字 (\`[A-Za-z0-9_]\`) が 1 文字以上」 をキャプチャ。
 - \`map((m) => m[1])\` でキャプチャ部分だけを抜き出して配列にします。
 `,
-  starterCode: `function extractHashtags(s) {
+  starterFiles: singleFile(`function extractHashtags(s) {
   // matchAll + キャプチャグループで # の後の文字列を集めてください
 }
-`,
+`),
   entryPoints: ["extractHashtags"],
   demoCall: `console.log(extractHashtags("tweet about #js and #regex"));`,
   tests: [

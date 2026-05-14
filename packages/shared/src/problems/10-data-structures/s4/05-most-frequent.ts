@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch10MostFrequent: Assignment = {
   id: "S4-Ch10-05-most-frequent",
@@ -29,11 +30,11 @@ mostFrequent([]);                                 // → null
 - Map に出現回数を貯めながら、 同時に **「現状の最大」 を更新** すれば 1 周で終わります。
 - 「先にその回数に達した方を残す」 ためには **\`>\` で更新し \`>=\` では更新しない** のがコツです。
 `,
-  starterCode: `function mostFrequent(arr) {
+  starterFiles: singleFile(`function mostFrequent(arr) {
   // Map に出現回数を貯めつつ、 現状の最頻出を更新してください
   // 空配列なら null を返す
 }
-`,
+`),
   entryPoints: ["mostFrequent"],
   demoCall: `console.log(mostFrequent(["a", "b", "a", "c", "a", "b"]));`,
   tests: [

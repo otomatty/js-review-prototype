@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch16RetryAsync: Assignment = {
   id: "S5-Ch16-02-retry-async",
@@ -46,12 +47,12 @@ await retryAsync(() => Promise.reject("nope"), 3);
 - AST で **async 関数** / **AwaitExpression** / **TryStatement** を必須にしています。 **\`.catch(...)\` メソッド** と **\`.then(...)\`** は forbidden です。
 - catch ブロックで受け取った例外を \`lastError\` のような変数に覚えておき、 ループを抜けた後に \`throw lastError;\` します。
 `,
-  starterCode: `// async function を使い、 factory() を最大 maxAttempts 回まで await する
+  starterFiles: singleFile(`// async function を使い、 factory() を最大 maxAttempts 回まで await する
 // 成功時はその値を return、 全失敗時は最後の reject 理由を throw
 function retryAsync(factory, maxAttempts) {
   // ここに実装する
 }
-`,
+`),
   entryPoints: ["retryAsync"],
   demoCall: `(async () => {
   let count = 0;

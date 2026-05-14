@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TypeofString: Assignment = {
   id: "S2-Ch01-03-typeof-string",
@@ -25,12 +26,12 @@ string
 - 文字列の \`typeof\` は \`"string"\` です。
 - \`typeof\` は直接値にも使えますが、 この問題では \`const name\` を宣言して \`typeof name\` を使います。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が string になる",

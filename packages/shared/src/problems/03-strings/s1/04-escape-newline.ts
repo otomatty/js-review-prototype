@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03EscapeNewline: Assignment = {
   id: "S1-Ch03-04-escape-newline",
@@ -26,9 +27,9 @@ line2
 - \`\\n\` は **改行を表す特別な文字列** (エスケープシーケンス) です。
 - \`console.log\` を 2 回呼ばなくても、 \`\\n\` を間に挟めば 2 行になります。
 `,
-  starterCode: `// console.log の中で "line1\\nline2" と書く
+  starterFiles: singleFile(`// console.log の中で "line1\\nline2" と書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が line1 と line2 の 2 行になる",

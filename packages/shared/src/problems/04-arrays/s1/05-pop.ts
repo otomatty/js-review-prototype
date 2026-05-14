@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04Pop: Assignment = {
   id: "S1-Ch04-05-pop",
@@ -20,7 +21,7 @@ export const s1Ch04Pop: Assignment = {
 ["x","y"]
 \`\`\`
 `,
-  starterCode: `// 配列を const の変数に入れる
+  starterFiles: singleFile(`// 配列を const の変数に入れる
 
 
 // 末尾の要素を pop で取り除く
@@ -28,7 +29,7 @@ export const s1Ch04Pop: Assignment = {
 
 // 取り除いたあとの配列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [\"x\",\"y\"] になる",

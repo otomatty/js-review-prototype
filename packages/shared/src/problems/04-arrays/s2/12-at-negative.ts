@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04AtNegative: Assignment = {
   id: "S2-Ch04-12-at-negative",
@@ -25,12 +26,12 @@ export const s2Ch04AtNegative: Assignment = {
 - \`arr[arr.length - 1]\` でも末尾は取れますが、 \`arr.at(-1)\` の方が **意図が明確** です。
 - 同様に \`at(-2)\` で末尾から 2 番目を取れます。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // その配列に対して at に負の添字を渡し、 末尾から数えた要素を取り出した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 40 になる",

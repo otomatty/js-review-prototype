@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01ShadowingBlock: Assignment = {
   id: "S2-Ch01-06-shadowing-block",
@@ -29,7 +30,7 @@ export const s2Ch01ShadowingBlock: Assignment = {
 - 内側ブロックで同じ名前を再宣言することを **シャドーイング** と呼びます。
 - 内側の \`price\` がブロック内だけで有効になり、 外側の \`price\` は **書き換わりません**。
 `,
-  starterCode: `// ブロックの外側で const の変数に数値を入れる
+  starterFiles: singleFile(`// ブロックの外側で const の変数に数値を入れる
 
 
 // { } のブロックを開き、 同じ名前の const の変数に別の数値を入れて
@@ -38,7 +39,7 @@ export const s2Ch01ShadowingBlock: Assignment = {
 
 // ブロックを閉じたあと、 もう一度 console.log で同じ名前の変数を出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 200→100 の 2 行になる",

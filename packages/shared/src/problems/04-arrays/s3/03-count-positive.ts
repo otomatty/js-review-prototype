@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04CountPositive: Assignment = {
   id: "S3-Ch04-03-count-positive",
@@ -25,10 +26,10 @@ countPositive([]);               // → 0
 
 - カウンタを 0 で初期化し、 \`n > 0\` のときだけ加算します。
 `,
-  starterCode: `function countPositive(arr) {
+  starterFiles: singleFile(`function countPositive(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["countPositive"],
   demoCall: `console.log(countPositive([1, -2, 3, -4]));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03Length: Assignment = {
   id: "S1-Ch03-05-length",
@@ -22,10 +23,10 @@ export const s1Ch03Length: Assignment = {
 10
 \`\`\`
 `,
-  starterCode: `// console.log で "JavaScript".length を出力する
+  starterFiles: singleFile(`// console.log で "JavaScript".length を出力する
 // .length にカッコは付かない
 
-`,
+`),
   tests: [
     {
       name: "stdout が 10 になる",

@@ -40,7 +40,6 @@ INSERT INTO users(name, age) VALUES ('alice', 17), ('bob', 21), ('carol', 30), (
 | bob   |
 | carol |
 `,
-  starterCode: "-- starter is in starterFiles\n",
   tests: [
     {
       name: "age >= 18 の name を昇順で返す",

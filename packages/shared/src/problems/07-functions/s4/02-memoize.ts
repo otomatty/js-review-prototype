@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch07Memoize: Assignment = {
   id: "S4-Ch07-02-memoize",
@@ -33,10 +34,10 @@ calls;     // → 2   ("hi" と "yo" の 2 回だけ)
 - 同じ引数で 2 回目以降は \`map.has(arg)\` で判定し、 \`map.get(arg)\` を返します。
 - 引数はプリミティブ前提なので、 \`Map\` のキーとして直接使えます。
 `,
-  starterCode: `function memoize(fn) {
+  starterFiles: singleFile(`function memoize(fn) {
   // Map をキャッシュとして使い、 同じ引数なら fn を再実行しない関数を return してください
 }
-`,
+`),
   entryPoints: ["memoize"],
   demoCall: `console.log(memoize((n) => n * n)(7));`,
   tests: [

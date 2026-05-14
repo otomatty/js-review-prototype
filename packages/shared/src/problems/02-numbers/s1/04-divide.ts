@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Divide: Assignment = {
   id: "S1-Ch02-04-divide",
@@ -22,9 +23,9 @@ export const s1Ch02Divide: Assignment = {
 21
 \`\`\`
 `,
-  starterCode: `// console.log の中に 84 / 4 の式を書く
+  starterFiles: singleFile(`// console.log の中に 84 / 4 の式を書く
 
-`,
+`),
   tests: [
     {
       name: "stdout が 21 になる",

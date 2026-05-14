@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch14IsEmailShape: Assignment = {
   id: "S3-Ch14-03-is-email-shape",
@@ -29,10 +30,10 @@ isEmailShape(" a@b.c");                 // → false  (空白)
 - 「@ 以外の文字 1 文字以上」 は \`[^@\\\\s]+\` で書けます (\`@\` と空白を除外)。
 - 構成: \`^[^@\\\\s]+@[^@\\\\s]+\\\\.[^@\\\\s]+$\`
 `,
-  starterCode: `function isEmailShape(s) {
+  starterFiles: singleFile(`function isEmailShape(s) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["isEmailShape"],
   demoCall: `console.log(isEmailShape("alice@example.com"));`,
   tests: [

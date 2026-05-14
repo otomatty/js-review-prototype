@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch15TemperatureStatic: Assignment = {
   id: "S4-Ch15-05-temperature-static",
@@ -39,12 +40,12 @@ t instanceof Temperature;            // → true
 - 温度変換: 摂氏 → 華氏は \`c * 9 / 5 + 32\`、 華氏 → 摂氏は \`(f - 32) * 5 / 9\`。
 - AST で **\`ClassDeclaration\`** と **\`NewExpression\`** を必須にしています (\`static fromFahrenheit\` で \`new\` を使うため)。
 `,
-  starterCode: `class Temperature {
+  starterFiles: singleFile(`class Temperature {
   // constructor(celsius)
   // toCelsius / toFahrenheit
   // static fromFahrenheit(f) で new Temperature(...) を返す
 }
-`,
+`),
   entryPoints: ["Temperature"],
   demoCall: `console.log(new Temperature(0).toFahrenheit());`,
   tests: [

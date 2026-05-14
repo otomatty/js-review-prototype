@@ -55,12 +55,6 @@ export const demoNote = "multi-file scaffold";
 Hello multi-file
 \`\`\`
 `,
-  // 互換のため: starterFiles 未使用 (=旧 UI) のときに表示する値。
-  // 多ファイル UI が有効な場合は starterFiles[entryFile] が代わりに使われる。
-  starterCode: `// 採点対象は main.js だけです。
-// console.log で "Hello multi-file" を出してみましょう。
-
-`,
   tests: [
     {
       name: "stdout が Hello multi-file になる",

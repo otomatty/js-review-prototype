@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch04TopTagsRanking: Assignment = {
   id: "S5-Ch04-01-top-tags-ranking",
@@ -49,7 +50,7 @@ topTagsRanking(["x", "x"], 0);    // → []
 - S4 までと違って、 S5 では **\`map\` / \`filter\` / \`sort\` / \`slice\`** などの配列メソッドを **積極的に使う** ことが目的です (チェーンで読みやすく書く設計演習)。
 - AST で **\`map\` の使用** と **\`sort\` の使用** と **\`slice\` の使用** を必須にしています。
 `,
-  starterCode: `function topTagsRanking(tags, topN) {
+  starterFiles: singleFile(`function topTagsRanking(tags, topN) {
   // for...of で tags を 1 周し、 タグごとの出現回数を集計用オブジェクトに貯める
 
 
@@ -61,7 +62,7 @@ topTagsRanking(["x", "x"], 0);    // → []
 
   // slice で上位 topN 件に切り出して return する
 }
-`,
+`),
   entryPoints: ["topTagsRanking"],
   demoCall: `console.log(topTagsRanking(["js", "ts", "js", "py", "js", "ts"], 2));`,
   tests: [

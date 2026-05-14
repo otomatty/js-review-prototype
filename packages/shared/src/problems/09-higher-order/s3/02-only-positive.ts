@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch09OnlyPositive: Assignment = {
   id: "S3-Ch09-02-only-positive",
@@ -25,10 +26,10 @@ onlyPositive([5, 10, 15]);      // → [5, 10, 15]
 
 - \`arr.filter((n) => n > 0)\`。
 `,
-  starterCode: `function onlyPositive(arr) {
+  starterFiles: singleFile(`function onlyPositive(arr) {
   // ここを実装してください (filter を使う)
 }
-`,
+`),
   entryPoints: ["onlyPositive"],
   demoCall: `console.log(onlyPositive([1, -2, 3, -4]));`,
   tests: [

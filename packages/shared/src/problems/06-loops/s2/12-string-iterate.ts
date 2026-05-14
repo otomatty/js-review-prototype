@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06StringIterate: Assignment = {
   id: "S2-Ch06-12-string-iterate",
@@ -28,12 +29,12 @@ d
 - 文字列も \`text.length\` と \`text[i]\` でアクセスできます。
 - \`charAt(i)\` でも同じです。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // for ループで添字 0 から length 未満まで回し、 文字列[i] で 1 文字ずつ console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が a/b/c/d の 4 行になる",

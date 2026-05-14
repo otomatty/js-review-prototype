@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch12TypoMethod: Assignment = {
   id: "S1-Ch12-03-typo-method",
@@ -25,11 +26,11 @@ hello
 - メソッド名の綴り間違いは実行時 (= コードを動かしたとき) にエラーになります。 「\`...is not a function\`」 のようなエラーが出たら、 まず綴りを疑います。
 - JavaScript のメソッド名は **大文字小文字を区別** します。
 `,
-  starterCode: `// バグ: 下のメソッド名は綴り間違いで、 実行時 TypeError になる
+  starterFiles: singleFile(`// バグ: 下のメソッド名は綴り間違いで、 実行時 TypeError になる
 // 大文字小文字を意識して正しい綴りに直す
 
 console.log("HELLO".tolwerCase());
-`,
+`),
   tests: [
     {
       name: "stdout が hello になる",

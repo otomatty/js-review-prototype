@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch04Length: Assignment = {
   id: "S1-Ch04-03-length",
@@ -22,12 +23,12 @@ export const s1Ch04Length: Assignment = {
 4
 \`\`\`
 `,
-  starterCode: `// 配列を const の変数に入れる
+  starterFiles: singleFile(`// 配列を const の変数に入れる
 
 
 // その変数の length プロパティを console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 4 になる",

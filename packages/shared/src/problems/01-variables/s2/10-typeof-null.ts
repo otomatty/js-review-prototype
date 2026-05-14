@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01TypeofNull: Assignment = {
   id: "S2-Ch01-10-typeof-null",
@@ -25,12 +26,12 @@ object
 - \`null\` は「**値が存在しないこと** を明示するための値」 ですが、 \`typeof null\` は歴史的なバグで \`"object"\` を返します。
 - これは仕様の有名な不具合として知られています。 「null かどうか」 を判定したいときは \`value === null\` と書きます。
 `,
-  starterCode: `// null を const の変数に入れる
+  starterFiles: singleFile(`// null を const の変数に入れる
 
 
 // その変数の型を typeof 演算子で取り出し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が object になる",

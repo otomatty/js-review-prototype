@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch06TransposeCapstone: Assignment = {
   id: "S4-Ch06-05-transpose-capstone",
@@ -43,11 +44,11 @@ transpose([]);      // → []
 - 空配列 \`[]\` は空配列を返すこと。 最初に弾いておくと添字エラーを避けられます。
 - AST で **二次元の \`for\` 文** と **\`return\`** を必須にしているため、 \`map\` ベースの実装では通りません。
 `,
-  starterCode: `function transpose(matrix) {
+  starterFiles: singleFile(`function transpose(matrix) {
   // matrix.length === 0 のときは [] を返す
   // 外側で j = 0..cols、 内側で i = 0..rows を回し、 out[j][i] = matrix[i][j] を組み立てる
 }
-`,
+`),
   entryPoints: ["transpose"],
   demoCall: `console.log(transpose([[1, 2, 3], [4, 5, 6]]));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01PrintVariable: Assignment = {
   id: "S1-Ch01-06-print-variable",
@@ -26,12 +27,12 @@ Hello, JavaScript!
 - 一度変数に入れた値は、 何度でも使い回せます。
 - 同じ文字列を 2 回書く必要はなく、 \`console.log(message)\` を 2 回呼ぶだけで OK。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // その変数を console.log で 2 回続けて出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が同じ行を 2 回出力する",

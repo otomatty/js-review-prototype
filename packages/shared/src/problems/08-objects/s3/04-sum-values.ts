@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch08SumValues: Assignment = {
   id: "S3-Ch08-04-sum-values",
@@ -26,10 +27,10 @@ sumValues({ a: -1, b: 1 });         // → 0
 - \`Object.values(obj)\` で値だけの配列が取れます。
 - そこから for...of で合計します。
 `,
-  starterCode: `function sumValues(scores) {
+  starterFiles: singleFile(`function sumValues(scores) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["sumValues"],
   demoCall: `console.log(sumValues({ a: 1, b: 2, c: 3 }));`,
   tests: [

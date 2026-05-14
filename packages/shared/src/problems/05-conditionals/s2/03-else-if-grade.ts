@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch05ElseIfGrade: Assignment = {
   id: "S2-Ch05-03-else-if-grade",
@@ -29,12 +30,12 @@ B
 - \`if (条件1) { ... } else if (条件2) { ... } else { ... }\` の形で 3 つ以上の分岐を書けます。
 - 条件は **上から順に評価** され、 最初に真になったブロックだけが実行されます。
 `,
-  starterCode: `// スコアの数値を const の変数に入れる
+  starterFiles: singleFile(`// スコアの数値を const の変数に入れる
 
 
 // if / else if / else で 3 段階に分岐し、 各範囲に対応する文字列を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が B になる",

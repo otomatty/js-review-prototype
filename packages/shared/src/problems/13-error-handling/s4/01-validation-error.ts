@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch13ValidationError: Assignment = {
   id: "S4-Ch13-01-validation-error",
@@ -34,14 +35,14 @@ validateUserName("a".repeat(30));     // throws ValidationError
 - \`this.field\` のような **追加プロパティ** を持たせると、 catch 側で「どのフィールドが原因か」 を判定しやすくなります。 これがカスタム Error クラスを定義する一番のうれしさです。
 - AST で **ClassDeclaration / ThrowStatement / ReturnStatement** を必須にしています。
 `,
-  starterCode: `class ValidationError extends Error {
+  starterFiles: singleFile(`class ValidationError extends Error {
   // constructor で super(message) を呼び、 name と field をセット
 }
 
 function validateUserName(name) {
   // 不正な入力で ValidationError を投げる
 }
-`,
+`),
   entryPoints: ["ValidationError", "validateUserName"],
   demoCall: `console.log(validateUserName("Alice"));`,
   tests: [

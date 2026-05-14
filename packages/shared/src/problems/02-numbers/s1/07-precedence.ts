@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch02Precedence: Assignment = {
   id: "S1-Ch02-07-precedence",
@@ -28,10 +29,10 @@ export const s1Ch02Precedence: Assignment = {
 - 数学と同じく、 掛け算 (\`*\`) や割り算 (\`/\`) は足し算 (\`+\`) より **先に** 計算されます。
 - 順序を変えたいときは **括弧 \`( )\`** で囲みます。
 `,
-  starterCode: `// console.log の中に (2 + 3) * 4 と書く
+  starterFiles: singleFile(`// console.log の中に (2 + 3) * 4 と書く
 // 括弧を忘れると 14 になってしまう
 
-`,
+`),
   tests: [
     {
       name: "stdout が 20 になる",

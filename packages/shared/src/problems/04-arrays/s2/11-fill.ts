@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04Fill: Assignment = {
   id: "S2-Ch04-11-fill",
@@ -26,12 +27,12 @@ export const s2Ch04Fill: Assignment = {
 - \`fill(値)\` で中身を一気に書き換えます。
 - 「ゼロで初期化された長さ N の配列」 を作る定番イディオムです。
 `,
-  starterCode: `// new Array(長さ).fill(値) で同じ値を埋めた配列を作り、 const の変数に入れる
+  starterFiles: singleFile(`// new Array(長さ).fill(値) で同じ値を埋めた配列を作り、 const の変数に入れる
 
 
 // その変数を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が [0,0,0,0,0] になる",

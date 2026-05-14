@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch14ExtractNumbers: Assignment = {
   id: "S3-Ch14-02-extract-numbers",
@@ -26,10 +27,10 @@ extractNumbers("a1b2c3");        // → ["1", "2", "3"]
 - \`/\\\\d+/g\` で「1 文字以上の数字の連続」 を **すべて** マッチします。
 - \`s.match(/\\\\d+/g)\` は配列または \`null\` を返すので、 null のときは空配列にします。
 `,
-  starterCode: `function extractNumbers(s) {
+  starterFiles: singleFile(`function extractNumbers(s) {
   // ここを実装してください (match を使う)
 }
-`,
+`),
   entryPoints: ["extractNumbers"],
   demoCall: `console.log(extractNumbers("abc123def45"));`,
   tests: [

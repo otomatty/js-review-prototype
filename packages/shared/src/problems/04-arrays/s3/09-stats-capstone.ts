@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04StatsCapstone: Assignment = {
   id: "S3-Ch04-09-stats-capstone",
@@ -38,10 +39,10 @@ stats([-3, -1, -2]);
 - \`min\` / \`max\` の初期値は \`arr[0]\` から始めるのが安全 (Infinity を使う手もある)。
 - \`avg\` は最後に \`sum / count\` で出します。
 `,
-  starterCode: `function stats(arr) {
+  starterFiles: singleFile(`function stats(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["stats"],
   demoCall: `console.log(stats([1, 2, 3, 4, 5]));`,
   tests: [

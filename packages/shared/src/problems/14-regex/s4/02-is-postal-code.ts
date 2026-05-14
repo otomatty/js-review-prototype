@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch14IsPostalCode: Assignment = {
   id: "S4-Ch14-02-is-postal-code",
@@ -32,10 +33,10 @@ isPostalCode("");            // → false
 - 完全一致 (前後の空白も許さない) なので \`^\` \`$\` でアンカーを付けます。
 - 正規表現の全体像: \`^\\\\d{3}-\\\\d{4}$\`
 `,
-  starterCode: `function isPostalCode(s) {
+  starterFiles: singleFile(`function isPostalCode(s) {
   // 正規表現で「数字 3 桁 + ハイフン + 数字 4 桁」を完全一致で判定してください
 }
-`,
+`),
   entryPoints: ["isPostalCode"],
   demoCall: `console.log(isPostalCode("123-4567"));`,
   tests: [

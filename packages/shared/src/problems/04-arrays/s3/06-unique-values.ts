@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch04UniqueValues: Assignment = {
   id: "S3-Ch04-06-unique-values",
@@ -26,10 +27,10 @@ uniqueValues([5]);                // → [5]
 - 結果配列 \`const result = []\` を作り、 各要素について **\`result.includes(n)\` が \`false\` なら push** する形が定番。
 - \`new Set(arr)\` を使う方法もありますが、 ここでは \`includes\` の練習として手書きします。
 `,
-  starterCode: `function uniqueValues(arr) {
+  starterFiles: singleFile(`function uniqueValues(arr) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["uniqueValues"],
   demoCall: `console.log(uniqueValues([1, 2, 2, 3, 1]));`,
   tests: [

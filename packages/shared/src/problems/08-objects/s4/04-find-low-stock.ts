@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch08FindLowStock: Assignment = {
   id: "S4-Ch08-04-find-low-stock",
@@ -40,7 +41,7 @@ findLowStock([], 5);                  // → []
 - 条件は **\`item.stock < threshold\`** (未満)。 等しい (\`===\`) は含めません。
 - 元の \`items\` 配列に手を加えてはいけません。 例えば \`items.splice(...)\` で取り出すのは NG (非破壊テストで失敗します)。
 `,
-  starterCode: `function findLowStock(items, threshold) {
+  starterFiles: singleFile(`function findLowStock(items, threshold) {
   // 結果を入れる空の配列を用意する
 
 
@@ -49,7 +50,7 @@ findLowStock([], 5);                  // → []
 
   // 結果配列を return する
 }
-`,
+`),
   entryPoints: ["findLowStock"],
   demoCall: `console.log(findLowStock([{ name: "A", stock: 3 }, { name: "B", stock: 10 }], 5));`,
   tests: [

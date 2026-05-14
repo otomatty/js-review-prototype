@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch13ClassifyError: Assignment = {
   id: "S4-Ch13-02-classify-error",
@@ -36,10 +37,10 @@ classifyError(() => { throw "boom"; });                // → "other"
 - \`if (...) { return ... }\` を並べる「ガード節」 で書くとネストを浅く保てます (S4 では \`no-else-return\` がついています)。
 - AST で **TryStatement** を必須にしています。
 `,
-  starterCode: `function classifyError(fn) {
+  starterFiles: singleFile(`function classifyError(fn) {
   // try/catch で fn() を呼び、 catch 側で instanceof により分岐する
 }
-`,
+`),
   entryPoints: ["classifyError"],
   demoCall: `console.log(classifyError(() => { throw new TypeError("bad"); }));`,
   tests: [

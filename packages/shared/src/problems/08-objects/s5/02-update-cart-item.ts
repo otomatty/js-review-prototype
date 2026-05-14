@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch08UpdateCartItem: Assignment = {
   id: "S5-Ch08-02-update-cart-item",
@@ -72,7 +73,7 @@ updateCartItem(cart, 999, 1);
 - カート全体も items 配列も **常に新しいインスタンスを返す** こと。 該当 id が無い場合に \`return cart\` してしまうと、 「該当無しでも別インスタンス」 のテストが落ちます。 Redux/React の reducer に倣えば 「未変更なら元の参照を返す」 のが一般的ですが、 この課題では返却規約を単純化するため あえて 「常に新インスタンス」 に統一しています。
 - 影響を受けないアイテムは新オブジェクトを作らない (\`{ ...item }\` を全件にかけない)。 全件コピーすると、 React 等で 「全部変わった」 と誤検知して再レンダリングが多発します。
 `,
-  starterCode: `function updateCartItem(cart, id, delta) {
+  starterFiles: singleFile(`function updateCartItem(cart, id, delta) {
   // 1) 結果用の空の配列を用意する。
   //
   // 2) for...of で cart.items を 1 件ずつ見る。
@@ -84,7 +85,7 @@ updateCartItem(cart, 999, 1);
   //
   // 3) 最後に { ...cart, items: 上で作った配列 } を return する。
 }
-`,
+`),
   entryPoints: ["updateCartItem"],
   demoCall: `console.log(updateCartItem({ customerId: "u01", items: [{ id: 1, name: "Apple", qty: 2 }] }, 1, 3));`,
   tests: [

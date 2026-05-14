@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch05CategorizeAge: Assignment = {
   id: "S3-Ch05-03-categorize-age",
@@ -32,10 +33,10 @@ categorizeAge(100);  // → "シニア"
 - 早期 return を使うと境界の判定が読みやすくなります。
 - \`if (age < 18) return "未成年";\` の形が定石。
 `,
-  starterCode: `function categorizeAge(age) {
+  starterFiles: singleFile(`function categorizeAge(age) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["categorizeAge"],
   demoCall: `console.log(categorizeAge(25));`,
   tests: [

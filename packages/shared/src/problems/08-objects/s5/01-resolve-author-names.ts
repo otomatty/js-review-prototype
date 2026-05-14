@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch08ResolveAuthorNames: Assignment = {
   id: "S5-Ch08-01-resolve-author-names",
@@ -57,7 +58,7 @@ resolvePostAuthors(posts, users);
 - \`Object.hasOwn(index, key)\` で「キーが存在するか」を判定すると、 値が \`undefined\` でも安全に区別できます。 ここでは \`name\` が \`undefined\` の users は想定しないため、 \`index[post.authorId]\` の真偽でも判定できますが、 推奨は \`Object.hasOwn\` (S3 で学習済み)。
 - 新しい post を作るときは **スプレッド** \`{ ...post, author }\` で書くと、 元の post が将来 \`description\` などのフィールドを増やしても勝手に引き継げて壊れにくい。 これも設計判断のひとつ。
 `,
-  starterCode: `function buildUserIndex(users) {
+  starterFiles: singleFile(`function buildUserIndex(users) {
   // users を { [id]: name } のオブジェクトに変換して返す。
   // const index = {};
   // for...of で users を 1 周し、 index[user.id] = user.name を入れる。
@@ -73,7 +74,7 @@ function resolvePostAuthors(posts, users) {
   //    { ...post, author } を結果配列に push する。
   // 4) 結果配列を return する。
 }
-`,
+`),
   entryPoints: ["buildUserIndex", "resolvePostAuthors"],
   demoCall: `console.log(resolvePostAuthors(
   [{ id: 10, title: "Hello", authorId: 1 }],

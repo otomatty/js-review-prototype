@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04Includes: Assignment = {
   id: "S2-Ch04-02-includes",
@@ -25,12 +26,12 @@ true
 - \`arr.includes(値)\` で \`true\` / \`false\` が返ります。
 - 「存在チェック」 だけが目的なら \`indexOf !== -1\` より \`includes\` の方が読みやすいです。
 `,
-  starterCode: `// 数値の配列を const の変数に入れる
+  starterFiles: singleFile(`// 数値の配列を const の変数に入れる
 
 
 // その配列に対して includes で対象要素を含むかを判定した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が true になる",

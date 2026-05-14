@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch12FixBinarySearch: Assignment = {
   id: "S4-Ch12-01-fix-binary-search",
@@ -27,7 +28,7 @@ binarySearch([42], 42);              // → 0   (現状は -1 を返す)
 - 大きい入力 (1 万件) でも末尾要素が見つかるかを最小再現でチェックすると、 境界バグは小さい配列で先に再現できる。
 - バグの位置を特定するには \`while\` の中で \`console.log(left, right, mid)\` を出して、 **末尾要素を渡したときに何回ループが回ったか** を確認すると早い。
 `,
-  starterCode: `function binarySearch(arr, target) {
+  starterFiles: singleFile(`function binarySearch(arr, target) {
   let left = 0;
   let right = arr.length - 1;
   while (left < right) {
@@ -43,7 +44,7 @@ binarySearch([42], 42);              // → 0   (現状は -1 を返す)
   }
   return -1;
 }
-`,
+`),
   entryPoints: ["binarySearch"],
   demoCall: `console.log(binarySearch([1, 3, 5, 7, 9], 9));`,
   tests: [

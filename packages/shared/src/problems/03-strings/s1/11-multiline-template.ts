@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03MultilineTemplate: Assignment = {
   id: "S1-Ch03-11-multiline-template",
@@ -24,10 +25,10 @@ export const s1Ch03MultilineTemplate: Assignment = {
 - バッククォートで囲んだ文字列は **そのまま改行を入れられます** (\`\\n\` は不要)。
 - 通常の \`"..."\` だと改行を入れるとエラーになります。
 `,
-  starterCode: `// バッククォートで囲んだテンプレートリテラルの中で実際に改行を入れて、
+  starterFiles: singleFile(`// バッククォートで囲んだテンプレートリテラルの中で実際に改行を入れて、
 // 期待出力と同じ複数行の文字列を作り、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 2 行になる",

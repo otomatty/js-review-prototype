@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch13RetryWithFallback: Assignment = {
   id: "S4-Ch13-03-retry-with-fallback",
@@ -37,10 +38,10 @@ retry(() => 42, 5, -1);
 - ループを抜けた = 全試行失敗、 なので最後に \`return fallback;\` します。
 - AST で **TryStatement** を必須にしています。 \`fn()\` のエラーを **try で受けずに伝搬させる** とリトライにならないので注意。
 `,
-  starterCode: `function retry(fn, max, fallback) {
+  starterFiles: singleFile(`function retry(fn, max, fallback) {
   // max 回まで fn() を試行し、 成功時はその値を、 全失敗時は fallback を返す
 }
-`,
+`),
   entryPoints: ["retry"],
   demoCall: `console.log(retry(() => 42, 3, -1));`,
   tests: [

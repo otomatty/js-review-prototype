@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03ReplaceBasic: Assignment = {
   id: "S2-Ch03-03-replace-basic",
@@ -25,12 +26,12 @@ Hello JavaScript
 - \`"Hello World".replace("World", "JavaScript")\` → \`"Hello JavaScript"\`
 - \`replace\` は **最初に見つかった 1 箇所だけ** を置き換えます。 全箇所を置きたいときは次の \`replaceAll\` を使います。
 `,
-  starterCode: `// 文字列を const の変数に入れる
+  starterFiles: singleFile(`// 文字列を const の変数に入れる
 
 
 // その変数に対して replace で部分文字列を置換した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が Hello JavaScript になる",

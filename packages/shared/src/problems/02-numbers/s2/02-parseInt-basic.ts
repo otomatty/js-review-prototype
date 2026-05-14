@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch02ParseIntBasic: Assignment = {
   id: "S2-Ch02-02-parseInt-basic",
@@ -32,7 +33,7 @@ const text = "123円";
 - \`Number("123円")\` だと \`NaN\` になります。 \`parseInt\` は「数字として読める部分まで」 を切り取ります。
 - 第 2 引数は **基数** (10 進数なら \`10\`)。 省略は非推奨です。
 `,
-  starterCode: `// 数字+単位の文字列を const の変数に入れる
+  starterFiles: singleFile(`// 数字+単位の文字列を const の変数に入れる
 
 
 // その変数を parseInt で 10 進数として整数に変換し、 別の const の変数に入れる
@@ -40,7 +41,7 @@ const text = "123円";
 
 // 変換後の値を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 123 になる",

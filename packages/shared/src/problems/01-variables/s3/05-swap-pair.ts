@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch01SwapPair: Assignment = {
   id: "S3-Ch01-05-swap-pair",
@@ -25,10 +26,10 @@ swapPair(true, false);  // → [false, true]
 - 配列リテラル \`[b, a]\` で要素の順番を直接書けば一発です。
 - テストは \`Array.isArray\` と要素の === で確認します。
 `,
-  starterCode: `function swapPair(a, b) {
+  starterFiles: singleFile(`function swapPair(a, b) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["swapPair"],
   demoCall: `console.log(swapPair(1, 2));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch10TopSellersCapstone: Assignment = {
   id: "S4-Ch10-07-top-sellers-capstone",
@@ -46,10 +47,10 @@ topNSellers([{ product: "x", quantity: 1 }], 0);   // → []
 - 同じ合計値の場合は **先に登場した product** を優先します。 Map の挿入順は最初に登場した順なので、 \`Array.sort\` の安定性 (ES2019+) によって自然にそうなります。
 - AST で **Map の使用** と **\`sort\` メソッドの使用** を必須にしているので、 配列だけで処理する実装では通りません。
 `,
-  starterCode: `function topNSellers(sales, n) {
+  starterFiles: singleFile(`function topNSellers(sales, n) {
   // Map で集計 → entries() → sort で降順 → slice(0, n)
 }
-`,
+`),
   entryPoints: ["topNSellers"],
   demoCall: `console.log(topNSellers([{ product: "apple", quantity: 3 }, { product: "banana", quantity: 5 }, { product: "apple", quantity: 2 }], 2));`,
   tests: [

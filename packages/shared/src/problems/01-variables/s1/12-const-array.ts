@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch01ConstArray: Assignment = {
   id: "S1-Ch01-12-const-array",
@@ -26,12 +27,12 @@ red
 - 最初の要素は **0 番目** で、 \`colors[0]\` で取り出せます。
 - 配列の詳しい使い方は Ch04 で扱います。
 `,
-  starterCode: `// 3 つの色の文字列を [ ] で並べた配列を const の変数に入れる
+  starterFiles: singleFile(`// 3 つの色の文字列を [ ] で並べた配列を const の変数に入れる
 
 
 // 配列の最初の要素 (添字 0) を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が red になる",

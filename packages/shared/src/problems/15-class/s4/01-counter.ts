@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch15Counter: Assignment = {
   id: "S4-Ch15-01-counter",
@@ -39,11 +40,11 @@ c2.getCount();  // → 10
 - 引数 \`initial = 0\` のように **デフォルト引数** を書いておくと、 \`new Counter()\` のように省略しても 0 で初期化されます。
 - AST で **\`ClassDeclaration\`** を必須にしています。 \`function Counter(...) { ... }\` + \`prototype.xxx = ...\` のような旧来の書き方では通りません。
 `,
-  starterCode: `class Counter {
+  starterFiles: singleFile(`class Counter {
   // constructor(initial = 0) で this.count を初期化
   // increment / decrement / getCount を定義する
 }
-`,
+`),
   entryPoints: ["Counter"],
   demoCall: `const c = new Counter(); c.increment(); console.log(c.getCount());`,
   tests: [

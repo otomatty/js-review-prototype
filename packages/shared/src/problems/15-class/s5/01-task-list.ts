@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch15TaskList: Assignment = {
   id: "S5-Ch15-01-task-list",
@@ -76,7 +77,7 @@ list.count();                          // → 2 のまま
 - \`#id\` / \`#title\` / \`#done\` / \`#tasks\` / \`#nextId\` を **private フィールド** で持つ。
 - \`var\` / \`==\` / \`!=\` は使わない。
 `,
-  starterCode: `// Task と TaskList の 2 つのクラスを定義してください
+  starterFiles: singleFile(`// Task と TaskList の 2 つのクラスを定義してください
 class Task {
   // #id / #title / #done を private フィールドで持つ
   // getId() / getTitle() / isDone() / complete() / reopen() を実装する
@@ -89,7 +90,7 @@ class TaskList {
   // pending() / completed() → 新しい配列を返す
   // count() → number
 }
-`,
+`),
   entryPoints: ["Task", "TaskList"],
   demoCall: `const list = new TaskList(); const t = list.add("買い物"); list.completeById(t.getId()); console.log(list.completed().length);`,
   tests: [

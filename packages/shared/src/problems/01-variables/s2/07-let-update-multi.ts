@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch01LetUpdateMulti: Assignment = {
   id: "S2-Ch01-07-let-update-multi",
@@ -32,13 +33,13 @@ export const s2Ch01LetUpdateMulti: Assignment = {
 - \`let\` は何度でも再代入できます。 後から値が変わる変数には \`let\` を使います。
 - \`const\` で同じことをしようとするとエラーになります。
 `,
-  starterCode: `// let で変数を宣言し、 初期値を入れる
+  starterFiles: singleFile(`// let で変数を宣言し、 初期値を入れる
 
 
 // 説明文に書かれた段階値の順に、 値を再代入しては console.log で出力する
 // (let は最初の 1 回だけ書き、 再代入時は変数名 = 値 だけ)
 
-`,
+`),
   tests: [
     {
       name: "stdout が 10/30/100 の 3 行になる",

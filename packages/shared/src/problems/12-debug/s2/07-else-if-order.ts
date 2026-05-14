@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12ElseIfOrder: Assignment = {
   id: "S2-Ch12-07-else-if-order",
@@ -37,7 +38,7 @@ A
 - 大きい範囲の条件 (\`>= 60\`) を先に書くと、 95 点でも先に B にマッチして A の判定に進めません。
 - 解決策は「条件をより厳しい順 (大きい順) に並べる」 こと。
 `,
-  starterCode: `const score = 95;
+  starterFiles: singleFile(`const score = 95;
 if (score >= 60) {
   console.log("B");
 } else if (score >= 90) {
@@ -45,7 +46,7 @@ if (score >= 60) {
 } else {
   console.log("C");
 }
-`,
+`),
   tests: [
     {
       name: "stdout が A になる",

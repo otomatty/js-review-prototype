@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch05ValidateUserInput: Assignment = {
   id: "S4-Ch05-02-validate-user-input",
@@ -45,7 +46,7 @@ validateUserInput({ name: "山田", age: 30, email: "no-at-sign" });
 - 「最初に違反したものだけ返す」 ので、 **チェックの順番がそのまま return の順番** になります。 ネストした if/else を書く必要はありません。
 - \`Number.isInteger\` で 「整数か」 を判定できます。 \`typeof x === "string"\` で文字列判定、 \`s.includes("@")\` で \`@\` 判定が便利です。
 `,
-  starterCode: `function validateUserInput(input) {
+  starterFiles: singleFile(`function validateUserInput(input) {
   // 早期 return (guard clause) で順に異常系を弾いてください
   // 1. オブジェクトでない → "入力はオブジェクトで指定してください"
   // 2. name が空文字列または文字列以外 → "名前は必須です"
@@ -53,7 +54,7 @@ validateUserInput({ name: "山田", age: 30, email: "no-at-sign" });
   // 4. email が文字列でない / "@" を含まない → "メールアドレスの形式が正しくありません"
   // 全部 OK なら "OK"
 }
-`,
+`),
   entryPoints: ["validateUserInput"],
   demoCall: `console.log(validateUserInput({ name: "山田", age: 30, email: "y@example.com" }));`,
   tests: [

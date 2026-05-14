@@ -1,7 +1,7 @@
 /**
- * starterCode のコメント規約違反を検出する一時スクリプト。
+ * starter のコメント規約違反を検出する一時スクリプト。
  *
- * `packages/shared/src/problems/README.md` の「`starterCode` のコメント規約」
+ * `packages/shared/src/problems/README.md` の「スターターのコメント規約」
  * に照らし、 コメント行に JavaScript のリテラル断片が混入している課題を
  * 列挙する。
  *
@@ -13,6 +13,7 @@
  *   bun run scripts/scan-starter-comments.ts --summary  # 章別件数のみ
  */
 
+import { getLanguage } from "../src/assignment-helpers.js";
 import type { Assignment } from "../src/types.js";
 
 const JS_KEYWORD_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
@@ -70,6 +71,7 @@ const JS_KEYWORD_PATTERNS: Array<{ pattern: RegExp; label: string }> = [
 interface Violation {
   assignmentId: string;
   chapterId: string;
+  path: string;
   line: number;
   text: string;
   reasons: string[];
@@ -83,24 +85,32 @@ async function main(): Promise<void> {
   const violations: Violation[] = [];
 
   for (const a of assignments) {
-    const lines = a.starterCode.split("\n");
-    lines.forEach((rawLine, idx) => {
-      const reasons: string[] = [];
-      for (const { pattern, label } of JS_KEYWORD_PATTERNS) {
-        if (pattern.test(rawLine)) {
-          reasons.push(label);
+    // JS 課題のみ走査 (コメント規約は JS スタイル前提)
+    if (getLanguage(a) !== "javascript") {
+      continue;
+    }
+    // 多ファイル課題でも全てのスターターファイルを走査する。
+    for (const file of a.starterFiles) {
+      const lines = file.content.split("\n");
+      lines.forEach((rawLine, idx) => {
+        const reasons: string[] = [];
+        for (const { pattern, label } of JS_KEYWORD_PATTERNS) {
+          if (pattern.test(rawLine)) {
+            reasons.push(label);
+          }
         }
-      }
-      if (reasons.length > 0) {
-        violations.push({
-          assignmentId: a.id,
-          chapterId: a.chapterId,
-          line: idx + 1,
-          text: rawLine,
-          reasons,
-        });
-      }
-    });
+        if (reasons.length > 0) {
+          violations.push({
+            assignmentId: a.id,
+            chapterId: a.chapterId,
+            path: file.path,
+            line: idx + 1,
+            text: rawLine,
+            reasons,
+          });
+        }
+      });
+    }
   }
 
   if (violations.length === 0) {
@@ -134,7 +144,9 @@ async function main(): Promise<void> {
     console.log(`  ${ch}: ${files.size} file(s), ${lines} line(s)`);
   }
 
-  if (summaryOnly) return;
+  if (summaryOnly) {
+    return;
+  }
 
   console.log("\n## 詳細");
   const grouped = new Map<string, Violation[]>();
@@ -149,7 +161,9 @@ async function main(): Promise<void> {
   for (const [id, list] of grouped) {
     console.log(`\n# ${id}`);
     for (const v of list) {
-      console.log(`  L${v.line} [${v.reasons.join(", ")}]: ${v.text}`);
+      console.log(
+        `  ${v.path}:L${v.line} [${v.reasons.join(", ")}]: ${v.text}`,
+      );
     }
   }
 }

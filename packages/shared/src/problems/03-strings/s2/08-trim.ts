@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03Trim: Assignment = {
   id: "S2-Ch03-08-trim",
@@ -26,12 +27,12 @@ Hello
 - ユーザー入力のフォーム値を扱うときの定番処理です。
 - 片側だけなら \`trimStart\` / \`trimEnd\` を使います。
 `,
-  starterCode: `// 前後に空白を含む文字列を const の変数に入れる
+  starterFiles: singleFile(`// 前後に空白を含む文字列を const の変数に入れる
 
 
 // その変数に対して trim を呼んで前後の空白を取り除いた結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が Hello になる",

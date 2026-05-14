@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch11BinarySearch: Assignment = {
   id: "S4-Ch11-02-binary-search",
@@ -42,10 +43,10 @@ binarySearch([], 5);                // → -1
 - 真ん中を整数にするために **\`Math.floor((left + right) / 2)\`** を使ってください。
 - 範囲が反転 (\`left > right\`) したらループは終わります。 そのときは見つからなかったということ。
 `,
-  starterCode: `function binarySearch(sortedArr, target) {
+  starterFiles: singleFile(`function binarySearch(sortedArr, target) {
   // left / right を動かして探索範囲を半分にしていく
 }
-`,
+`),
   entryPoints: ["binarySearch"],
   demoCall: `console.log(binarySearch([1, 3, 5, 7, 9], 5));`,
   tests: [

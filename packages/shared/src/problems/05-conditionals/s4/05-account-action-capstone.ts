@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch05AccountActionCapstone: Assignment = {
   id: "S4-Ch05-05-account-action-capstone",
@@ -64,14 +65,14 @@ applyAccountAction({ status: "closed", balance: 0 }, { type: "deposit", amount: 
 - 残高更新時に **元のオブジェクトを変更しない** よう、 \`{ ...account, balance: ... }\` のようにスプレッドで新しいオブジェクトを返します。
 - 「不正な額」 と「残高不足」 は両方とも \`null\` を返すので、 \`amount > 0 && balance >= amount\` のように **複合条件** を組み立てるとすっきりします。
 `,
-  starterCode: `function applyAccountAction(account, action) {
+  starterFiles: singleFile(`function applyAccountAction(account, action) {
   // 1. switch (account.status) で状態ごとに分岐
   //    - "closed" → null
   //    - "frozen" → unfreeze だけ受け付け、 それ以外は null
   //    - "open"   → action.type に応じて新しい account を返す。 不正なら null
   // 2. 戻り値は元の account を変更せず、 新しいオブジェクトにする
 }
-`,
+`),
   entryPoints: ["applyAccountAction"],
   demoCall: `console.log(applyAccountAction({ status: "open", balance: 100 }, { type: "deposit", amount: 50 }));`,
   tests: [

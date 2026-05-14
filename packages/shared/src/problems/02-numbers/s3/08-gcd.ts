@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02Gcd: Assignment = {
   id: "S3-Ch02-08-gcd",
@@ -26,10 +27,10 @@ gcd(100, 75);  // → 25
 - **ユークリッド互除法**: \`b\` が 0 でない間、 \`(a, b)\` を \`(b, a % b)\` に置き換え続ける。 \`b\` が 0 になったときの \`a\` が GCD。
 - ループでも再帰でも書けます。 ループの方がスタック消費がなく安全です。
 `,
-  starterCode: `function gcd(a, b) {
+  starterFiles: singleFile(`function gcd(a, b) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["gcd"],
   demoCall: `console.log(gcd(12, 8));`,
   tests: [

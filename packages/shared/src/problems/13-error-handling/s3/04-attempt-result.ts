@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch13AttemptResult: Assignment = {
   id: "S3-Ch13-04-attempt-result",
@@ -33,10 +34,10 @@ attempt(() => "hello");
 - try/catch の典型応用。 結果をオブジェクトに包んで返すと、 呼び出し側が **失敗を分岐しやすく** なります。
 - catch (e) で受けた例外の \`.message\` プロパティをエラーフィールドに入れます。
 `,
-  starterCode: `function attempt(fn) {
+  starterFiles: singleFile(`function attempt(fn) {
   // try/catch で成功/失敗をオブジェクトで返す
 }
-`,
+`),
   entryPoints: ["attempt"],
   demoCall: `console.log(attempt(() => 42));`,
   tests: [

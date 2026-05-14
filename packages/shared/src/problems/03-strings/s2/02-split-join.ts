@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch03SplitJoin: Assignment = {
   id: "S2-Ch03-02-split-join",
@@ -27,7 +28,7 @@ export const s2Ch03SplitJoin: Assignment = {
 - \`split\` で配列に → \`join\` で文字列に戻すと **区切り文字の入れ替え** ができます。
 - \`replaceAll\` でも実現できますが、 配列を経由するこの組み合わせは応用範囲が広いです。
 `,
-  starterCode: `// ハイフン区切りの日付文字列を const の変数に入れる
+  starterFiles: singleFile(`// ハイフン区切りの日付文字列を const の変数に入れる
 
 
 // その変数を split で配列に分解し、 別の const の変数に入れる
@@ -35,7 +36,7 @@ export const s2Ch03SplitJoin: Assignment = {
 
 // 分解した配列を join で別の区切り文字に繋ぎ直し、 console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 2024/01/15 になる",

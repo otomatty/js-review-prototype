@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch07ApplyTwice: Assignment = {
   id: "S3-Ch07-03-apply-twice",
@@ -25,10 +26,10 @@ applyTwice((s) => s + "!", "hi"); // → "hi!!"
 - 引数として渡される \`fn\` は普通の関数として呼べます (\`fn(x)\` のように)。
 - \`fn(fn(x))\` を return すれば 1 行で済みます。
 `,
-  starterCode: `function applyTwice(fn, x) {
+  starterFiles: singleFile(`function applyTwice(fn, x) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["applyTwice"],
   demoCall: `console.log(applyTwice((n) => n + 1, 5));`,
   tests: [

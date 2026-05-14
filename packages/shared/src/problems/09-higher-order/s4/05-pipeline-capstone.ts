@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch09PipelineCapstone: Assignment = {
   id: "S4-Ch09-05-pipeline-capstone",
@@ -40,10 +41,10 @@ topCategoriesBySales([{ category: "x", product: "p", amount: 1 }], 0);   // → 
 - AST で **\`reduce\`** と **\`new Map()\`** と **\`sort\`** を必須にしているので、 \`map\` だけ / \`filter\` だけの実装や、 配列のままソートする実装では通りません。
 - 入力配列 \`orders\` を **書き換えない** こと (非破壊)。
 `,
-  starterCode: `function topCategoriesBySales(orders, n) {
+  starterFiles: singleFile(`function topCategoriesBySales(orders, n) {
   // reduce で Map に集計 → entries() → sort で降順 → slice(0, n)
 }
-`,
+`),
   entryPoints: ["topCategoriesBySales"],
   demoCall: `console.log(topCategoriesBySales([
   { category: "fruit", product: "apple",  amount: 300 },

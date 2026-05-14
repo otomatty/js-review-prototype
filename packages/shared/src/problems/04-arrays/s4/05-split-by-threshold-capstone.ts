@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch04SplitByThresholdCapstone: Assignment = {
   id: "S4-Ch04-05-split-by-threshold-capstone",
@@ -48,12 +49,12 @@ splitByThreshold([1, 2, 3], 10);    // → []
 - **ループ終了後に、 末尾でまだ区間内のままなら最後の push を忘れずに**。 これを忘れる badSolution は典型的な落とし穴です。
 - AST で \`reduce\` / \`filter\` / \`map\` は禁止。 添字 for と if で状態遷移を手書きしてください。
 `,
-  starterCode: `function splitByThreshold(arr, threshold) {
+  starterFiles: singleFile(`function splitByThreshold(arr, threshold) {
   // 状態: start (区間外なら -1)、 sum (現在の区間の累積)
   // for で 1 周し、 閾値以上なら区間を始めるか継続、 閾値未満なら確定 push
   // ループ終了後、 まだ区間内なら最後の push を忘れない
 }
-`,
+`),
   entryPoints: ["splitByThreshold"],
   demoCall: `console.log(splitByThreshold([1, 5, 6, 2, 8, 9, 1], 4));`,
   tests: [

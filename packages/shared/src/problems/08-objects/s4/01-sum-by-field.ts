@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch08SumByField: Assignment = {
   id: "S4-Ch08-01-sum-by-field",
@@ -43,10 +44,10 @@ sumByField([], "price");   // → 0
 - 集計用の変数は \`let total = 0\` で用意し、 ループの中で \`total += item[field]\` のように **動的なキー** でアクセスします。
 - 空配列のときは初期値の \`0\` がそのまま返るので、 特別なガードは不要です。
 `,
-  starterCode: `function sumByField(items, field) {
+  starterFiles: singleFile(`function sumByField(items, field) {
   // for...of でアイテムを走査し、 item[field] を total に足し込んでください
 }
-`,
+`),
   entryPoints: ["sumByField"],
   demoCall: `console.log(sumByField([{ price: 100 }, { price: 200 }], "price"));`,
   tests: [

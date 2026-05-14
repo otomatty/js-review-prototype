@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12ConditionFlipped: Assignment = {
   id: "S2-Ch12-02-condition-flipped",
@@ -34,13 +35,13 @@ if (score < 60) {
 - 「60 点以上で合格」 は \`score >= 60\` です。
 - 比較演算子の **向きが逆** だと意味が反対になります。
 `,
-  starterCode: `const score = 75;
+  starterFiles: singleFile(`const score = 75;
 if (score < 60) {
   console.log("合格");
 } else {
   console.log("不合格");
 }
-`,
+`),
   tests: [
     {
       name: "stdout が 合格 になる",

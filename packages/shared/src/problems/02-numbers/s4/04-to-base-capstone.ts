@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch02ToBaseCapstone: Assignment = {
   id: "S4-Ch02-04-to-base-capstone",
@@ -37,7 +38,7 @@ toBase(2748, 16);  // → "abc"
 - \`n === 0\` はループに入らないので、 最初に \`"0"\` を返す特別扱いが必要です。
 - 組み込みの \`Number.prototype.toString(base)\` を使うと逃げられてしまうため、 AST で **\`toString\` の呼び出しを禁止** しています。
 `,
-  starterCode: `function toBase(n, base) {
+  starterFiles: singleFile(`function toBase(n, base) {
   // n が 0 のときは説明文の特別扱いに従って文字列を return する
 
 
@@ -55,7 +56,7 @@ toBase(2748, 16);  // → "abc"
 
   // ループを抜けたら結果文字列を return する
 }
-`,
+`),
   entryPoints: ["toBase"],
   demoCall: `console.log(toBase(255, 16));`,
   tests: [

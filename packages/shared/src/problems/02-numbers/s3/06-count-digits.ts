@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch02CountDigits: Assignment = {
   id: "S3-Ch02-06-count-digits",
@@ -28,10 +29,10 @@ countDigits(99999); // → 5
 - 文字列に変換して \`.length\` を取る方法もありますが、 ここでは数値演算で実装してみましょう。
 - \`n === 0\` のときは特別扱いが必要です。
 `,
-  starterCode: `function countDigits(n) {
+  starterFiles: singleFile(`function countDigits(n) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["countDigits"],
   demoCall: `console.log(countDigits(12345));`,
   tests: [

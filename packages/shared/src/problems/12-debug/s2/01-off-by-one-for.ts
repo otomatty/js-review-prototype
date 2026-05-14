@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch12OffByOneFor: Assignment = {
   id: "S2-Ch12-01-off-by-one-for",
@@ -34,11 +35,11 @@ c
 - 配列の添字は **0 から length - 1** まで。 \`i <= length\` だと最後に存在しない添字 (\`length\`) を読みに行きます。
 - 正しくは \`i < items.length\`。
 `,
-  starterCode: `const items = ["a", "b", "c"];
+  starterFiles: singleFile(`const items = ["a", "b", "c"];
 for (let i = 0; i <= items.length; i++) {
   console.log(items[i]);
 }
-`,
+`),
   tests: [
     {
       name: "stdout が a/b/c の 3 行になる",

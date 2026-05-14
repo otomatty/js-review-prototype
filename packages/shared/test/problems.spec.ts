@@ -4,7 +4,7 @@
  * 問題定義 (`@jsreview/shared` の Assignment) が以下を満たすかを CI で検証する:
  *
  *  1. ID に重複がない
- *  2. `starterCode` が AST forbidden パターンを違反していない
+ *  2. `starterFiles` のエントリが AST forbidden パターンを違反していない
  *  3. `solution` が定義されているなら、それは「全チェック通過 (cleared)」になる
  *  4. `badSolutions[*].code` が定義されているなら、何らかのチェックを失敗する (cleared にならない)
  *
@@ -13,7 +13,11 @@
 import { describe, expect, it } from "bun:test";
 
 import { analyzeAst } from "../src/grading/ast.js";
-import { getLanguage, getStaticAnalysisSettings } from "../src/assignment-helpers.js";
+import {
+  getEntryFile,
+  getLanguage,
+  getStaticAnalysisSettings,
+} from "../src/assignment-helpers.js";
 import { assignments } from "../src/problems/index.js";
 
 import { gradeCode } from "./grade.js";
@@ -27,21 +31,27 @@ describe("problems metadata", () => {
     }
   });
 
-  it("starterCode は AST forbidden パターンを踏んでいない", () => {
+  it("starterFiles のエントリは AST forbidden パターンを踏んでいない", () => {
     for (const a of assignments) {
       // JS 以外の課題は Babel パーサが受け付けないので AST 検証から除外
       if (getLanguage(a) !== "javascript") {
         continue;
       }
       const settings = getStaticAnalysisSettings(a);
-      const result = analyzeAst(a.starterCode, settings.ast);
+      const entryPath = getEntryFile(a);
+      const entry = a.starterFiles.find((f) => f.path === entryPath);
+      expect(
+        entry,
+        `assignment "${a.id}" entryFile "${entryPath}" not found in starterFiles`,
+      ).toBeDefined();
+      const result = analyzeAst(entry!.content, settings.ast);
       expect(
         result.parseError,
-        `assignment "${a.id}" starterCode parse error: ${result.parseError ?? ""}`,
+        `assignment "${a.id}" starter (${entry!.path}) parse error: ${result.parseError ?? ""}`,
       ).toBeUndefined();
       expect(
         result.forbidden.map((v) => v.label),
-        `assignment "${a.id}" starterCode forbidden`,
+        `assignment "${a.id}" starter (${entry!.path}) forbidden`,
       ).toEqual([]);
     }
   });

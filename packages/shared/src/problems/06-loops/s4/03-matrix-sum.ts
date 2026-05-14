@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s4Ch06MatrixSum: Assignment = {
   id: "S4-Ch06-03-matrix-sum",
@@ -31,10 +32,10 @@ matrixSum([[], [1, 2], []]); // → 3
 - 累積パターン: \`let total = 0\` を関数のはじめに置き、 内側で \`total += value\` を繰り返します。
 - ジャグ配列に対応するには **\`row.length\` を頼りにする** か、 \`for...of\` を使うのが確実です。
 `,
-  starterCode: `function matrixSum(matrix) {
+  starterFiles: singleFile(`function matrixSum(matrix) {
   // 二重ループで行列の全要素を合計してください
 }
-`,
+`),
   entryPoints: ["matrixSum"],
   demoCall: `console.log(matrixSum([[1, 2, 3], [4, 5, 6]]));`,
   tests: [

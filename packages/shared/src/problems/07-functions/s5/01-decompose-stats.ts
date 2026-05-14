@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s5Ch07DecomposeStats: Assignment = {
   id: "S5-Ch07-01-decompose-stats",
@@ -52,7 +53,7 @@ variance = (Σ (xᵢ - mean)²) / n
 - \`summarize\` は **「集約点」** として 3 関数を呼び出して並べるだけ。 自前で平均や分散を計算するべきではありません。
 - AST で **\`FunctionDeclaration\`** (\`function 名(...) { ... }\` 形式) と **\`ReturnStatement\`** を必須にし、 **配列を破壊する \`.push\` / \`.sort\` / \`.splice\`** を禁止にしています。
 `,
-  starterCode: `function mean(numbers) {
+  starterFiles: singleFile(`function mean(numbers) {
   // 平均を返す。 空配列なら 0。
   // ヒント: for...of で合計を取り、 numbers.length で割る。
 }
@@ -72,7 +73,7 @@ function summarize(numbers) {
   // { count, mean, variance, stdDev } を返す。
   // count は numbers.length。 他 3 つは上の関数を呼ぶ。
 }
-`,
+`),
   entryPoints: ["mean", "variance", "stdDev", "summarize"],
   demoCall: `console.log(summarize([1, 2, 3, 4, 5]));`,
   tests: [

@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch04ArrayIsArray: Assignment = {
   id: "S2-Ch04-08-array-isarray",
@@ -25,12 +26,12 @@ true
 - \`typeof [1,2,3]\` は \`"object"\` で配列かどうか分かりません。
 - \`Array.isArray\` を使えば配列かどうかを **\`true\` / \`false\` で正確に判定** できます。
 `,
-  starterCode: `// 値を const の変数に入れる
+  starterFiles: singleFile(`// 値を const の変数に入れる
 
 
 // その変数を Array.isArray に渡した結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が true になる",

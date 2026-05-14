@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch06Factorial: Assignment = {
   id: "S2-Ch06-06-factorial",
@@ -25,7 +26,7 @@ export const s2Ch06Factorial: Assignment = {
 - 累積積では **初期値を 1** にします (0 にすると常に 0)。
 - ループの中で \`result *= i;\` を繰り返します。
 `,
-  starterCode: `// 結果を入れる let の変数を 1 で初期化する
+  starterFiles: singleFile(`// 結果を入れる let の変数を 1 で初期化する
 
 
 // for ループで 1 から上限まで回し、 *= で値を掛け込む
@@ -33,7 +34,7 @@ export const s2Ch06Factorial: Assignment = {
 
 // 結果を console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が 120 になる",

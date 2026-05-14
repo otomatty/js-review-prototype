@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s3Ch03Initials: Assignment = {
   id: "S3-Ch03-07-initials",
@@ -27,10 +28,10 @@ initials("");                  // → ""
 - 各単語の先頭 \`word[0]\` を大文字化して集める。
 - 空文字列のときは split の結果が \`[""]\` になることに注意。
 `,
-  starterCode: `function initials(fullName) {
+  starterFiles: singleFile(`function initials(fullName) {
   // ここを実装してください
 }
-`,
+`),
   entryPoints: ["initials"],
   demoCall: `console.log(initials("alice jane brown"));`,
   tests: [

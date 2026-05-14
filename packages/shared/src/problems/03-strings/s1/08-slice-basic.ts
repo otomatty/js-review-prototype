@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s1Ch03SliceBasic: Assignment = {
   id: "S1-Ch03-08-slice-basic",
@@ -27,9 +28,9 @@ World
 - インデックスは 0 から始まります。 \`"Hello, World"\` の 0 番目は \`H\`、 7 番目は \`W\`。
 - \`"Hello, World".slice(7)\` は \`"World"\` を返します。
 `,
-  starterCode: `// 説明文の文字列に slice を使い、 説明文で指定された開始位置以降を取り出して console.log で出力する
+  starterFiles: singleFile(`// 説明文の文字列に slice を使い、 説明文で指定された開始位置以降を取り出して console.log で出力する
 
-`,
+`),
   tests: [
     {
       name: "stdout が World になる",

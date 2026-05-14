@@ -1,4 +1,5 @@
 import type { Assignment } from "../../../types.js";
+import { singleFile } from "../../_common.js";
 
 export const s2Ch07FunctionGreet: Assignment = {
   id: "S2-Ch07-01-function-greet",
@@ -25,12 +26,12 @@ export const s2Ch07FunctionGreet: Assignment = {
 - \`function 名前() { ... }\` で関数を **宣言** します。
 - 関数は宣言しただけでは実行されません。 \`greet()\` のように呼ばないと中身は動きません。
 `,
-  starterCode: `// 引数を取らない function 文で関数を宣言し、 中で console.log で文字列を出力する
+  starterFiles: singleFile(`// 引数を取らない function 文で関数を宣言し、 中で console.log で文字列を出力する
 
 
 // 宣言した関数を呼び出す
 
-`,
+`),
   tests: [
     {
       name: "stdout が こんにちは になる",
