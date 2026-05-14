@@ -47,7 +47,7 @@ import { useGradeRunner } from "../hooks/useGradeRunner.js";
 import { useProgress } from "../hooks/useProgress.js";
 import { useRunResultReveal } from "../hooks/useRunResultReveal.js";
 import { useStageUnlocks } from "../hooks/useStageUnlocks.js";
-import { runFreeRun } from "../lib/api.js";
+import { getRunner } from "../lib/runners/index.js";
 
 /**
  * URL から課題を解決し、不正な ID なら一覧へリダイレクトするガード。
@@ -271,14 +271,28 @@ function PracticePageInner({ assignment }: InnerProps) {
     setBottomTab("output");
     setFreeRunPending(true);
     setFreeRun({ stdout: undefined, error: undefined });
+    // function 採点では assignment.demoCall を末尾に追記して entryPoint を呼ばせる。
+    // ランナー (CodeRunner) には合成済みの content を渡し、 ランナー側は entryFile を実行するだけ。
     const codeToRun =
       assignment.testKind === "function" && assignment.demoCall
         ? `${submittedCode}\n\n${assignment.demoCall}\n`
         : submittedCode;
     try {
-      const res = await runFreeRun(codeToRun);
+      const language = assignment.language ?? "javascript";
+      const runner = getRunner(language);
+      const response = await runner.run({
+        files: { ...files, [entryFile]: codeToRun },
+        entryFile,
+        tests: [],
+        testKind: assignment.testKind,
+        mode: "freerun",
+        entryPoints: assignment.entryPoints,
+        sqlSeed: assignment.sqlSeed,
+      });
       // 実行中に課題が切り替わったら結果を捨てる (古い useCallback の assignment は stale)
       if (activeAssignmentIdRef.current !== targetAssignmentId) {return;}
+      // freerun モードのランナーは必ず 1 件だけ返す契約。 念のためフォールバックを用意。
+      const res = response.results[0] ?? { name: "freerun", passed: true, stdout: "" };
       setFreeRun({
         stdout: res.stdout ?? "",
         error: res.error,
@@ -293,7 +307,17 @@ function PracticePageInner({ assignment }: InnerProps) {
         setFreeRunPending(false);
       }
     }
-  }, [code, assignment.id, assignment.testKind, assignment.demoCall]);
+  }, [
+    code,
+    files,
+    entryFile,
+    assignment.id,
+    assignment.language,
+    assignment.testKind,
+    assignment.demoCall,
+    assignment.entryPoints,
+    assignment.sqlSeed,
+  ]);
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr]">
