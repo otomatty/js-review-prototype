@@ -120,6 +120,14 @@ export class QuickJsRunner {
         return this.runStdoutTest(code, test);
       case "function":
         return this.runFunctionTest(code, test, options.entryPoints ?? []);
+      case "sql":
+        // QuickJS ランナは SQL を扱えない。 SQL 課題は sql-runner にディスパッチされる前提
+        // (#100 / #109)。 ここに到達した場合は呼び出し側のディスパッチ漏れなので明示的にエラー化する。
+        return {
+          name: test.name,
+          passed: false,
+          error: "INVALID_TEST_KIND: sql tests must be routed to sql-runner",
+        };
       default: {
         const exhaustive: never = options.testKind;
         return exhaustive;

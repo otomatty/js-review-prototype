@@ -11,7 +11,29 @@
 
 export type Stage = "S0" | "S1" | "S2" | "S3" | "S4" | "S5";
 
-export type TestKind = "stdout" | "function";
+/**
+ * 課題の対象言語。
+ *
+ * 現状サポートしているのは `"javascript"` と `"sql"` のみ。
+ * Python / PHP / Vitest / ESLint は roadmap (#100) で別 issue として後追い予定。
+ */
+export type Language = "javascript" | "sql";
+
+/**
+ * 多ファイル教材で 1 ファイルを表す。
+ *
+ * - `path` は仮想ワークスペース上の相対パス (例: `"main.js"`, `"schema.sql"`)
+ * - `language` 省略時は所属 Assignment の `language` を継承
+ * - `readonly: true` は UI 上で編集不可表示 (例: 課題が与える seed.sql)
+ */
+export interface AssignmentFile {
+  path: string;
+  content: string;
+  language?: Language;
+  readonly?: boolean;
+}
+
+export type TestKind = "stdout" | "function" | "sql";
 
 export type ChapterId =
   | "Ch00"
@@ -108,9 +130,38 @@ export interface Assignment {
   testKind: TestKind;
   /** 課題説明 (Markdown) */
   description: string;
+  /**
+   * 課題の対象言語。 省略時は `"javascript"` 扱い。
+   * 多言語化 roadmap (#100) で導入。 `getLanguage(assignment)` でデフォルト解決する。
+   */
+  language?: Language;
+  /**
+   * 多ファイル課題のスターターファイル群。
+   * 省略時は `starterCode` を `[{ path: "main.js" | "query.sql", content: starterCode }]` に詰め替える
+   * (`getStarterFiles(assignment)` ヘルパ参照)。 単一ファイル課題では未指定で良い。
+   */
+  starterFiles?: AssignmentFile[];
+  /**
+   * 採点・実行の入口ファイルパス。 省略時は `starterFiles[0].path` または言語に応じた既定値。
+   * `getEntryFile(assignment)` で解決する。
+   *
+   * 注意: 既存の `entryPoints` フィールド (lint で「未使用とみなさない名前」のリスト) とは別物。
+   * 命名が紛らわしいが、 `entryFile` は 1 つの path 文字列、 `entryPoints` は識別子の配列。
+   */
+  entryFile?: string;
+  /**
+   * SQL 課題で採点前に実行される DDL + seed SQL。
+   * 採点ランごとに新規 `Database` を生成してこの SQL を流してから、 学習者の `entryFile` を実行する。
+   */
+  sqlSeed?: string;
   /** エディタ初期表示のスタータコード。 */
   starterCode: string;
-  /** function 採点でコードから取り出す関数名・クラス名。 */
+  /**
+   * function 採点でコードから取り出す関数名・クラス名 (lint の「未使用とみなさない名前」)。
+   *
+   * 注意: 上記の `entryFile` (採点・実行入口ファイルの path) とは別物。
+   * 多ファイル化 roadmap (#100) で `entryFile` が追加されたが、 リネームは scope 外。
+   */
   entryPoints?: string[];
   /**
    * function 採点課題で「▶ 関数を試す」 を押したときに、 提出コードの末尾に
@@ -166,13 +217,14 @@ export interface CommonMistake {
   message: string;
 }
 
-export type TestCase = StdoutTestCase | FunctionTestCase;
+export type TestCase = StdoutTestCase | FunctionTestCase | SqlTestCase;
 
 export interface StdoutTestCase {
   name: string;
   /** console.log で捕捉した標準出力。末尾改行は比較時に無視される。 */
   expectedStdout: string;
   code?: never;
+  query?: never;
 }
 
 export interface FunctionTestCase {
@@ -185,7 +237,26 @@ export interface FunctionTestCase {
    */
   code: string;
   expectedStdout?: never;
+  query?: never;
 }
+
+/** SQL 採点用テストケース。学習者の SQL 実行後にこの `query` を流して結果を比較する。 */
+export interface SqlTestCase {
+  name: string;
+  /**
+   * 採点用アサーション SQL。 学習者の `entryFile` 実行後に、 同じ Database 上で実行され、
+   * `expectedRows` (および任意で `expectedColumns`) と比較される。
+   */
+  query: string;
+  /** 期待される行 (列順は `expectedColumns` または query の SELECT 順)。 */
+  expectedRows: SqlRow[];
+  expectedColumns?: string[];
+  code?: never;
+  expectedStdout?: never;
+}
+
+/** SQL クエリの 1 行。 NULL は `null` で表現。 */
+export type SqlRow = (string | number | null | boolean)[];
 
 export type ESLintRuleConfig =
   | "off"

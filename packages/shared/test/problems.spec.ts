@@ -13,7 +13,7 @@
 import { describe, expect, it } from "bun:test";
 
 import { analyzeAst } from "../src/grading/ast.js";
-import { getStaticAnalysisSettings } from "../src/assignment-helpers.js";
+import { getLanguage, getStaticAnalysisSettings } from "../src/assignment-helpers.js";
 import { assignments } from "../src/problems/index.js";
 
 import { gradeCode } from "./grade.js";
@@ -29,6 +29,10 @@ describe("problems metadata", () => {
 
   it("starterCode は AST forbidden パターンを踏んでいない", () => {
     for (const a of assignments) {
+      // JS 以外の課題は Babel パーサが受け付けないので AST 検証から除外
+      if (getLanguage(a) !== "javascript") {
+        continue;
+      }
       const settings = getStaticAnalysisSettings(a);
       const result = analyzeAst(a.starterCode, settings.ast);
       expect(
@@ -53,6 +57,11 @@ describe("solutions", () => {
   });
 
   for (const a of withSolution) {
+    // SQL 等の非 JS 課題は Node 側ランナがまだ無いので solution 回帰から除外する。
+    // フォローアップ: Node 側に sql.js ランナを足して通す (#100 sub-issue 候補)。
+    if (getLanguage(a) !== "javascript") {
+      continue;
+    }
     it(`${a.id}: solution は全チェックを通過する`, async () => {
       const report = await gradeCode(a, a.solution!);
       const detail = JSON.stringify(
@@ -82,6 +91,10 @@ describe("badSolutions", () => {
   );
 
   for (const { assignment, bad, idx } of withBad) {
+    // 非 JS 課題は Node 側ランナがまだ無いので除外。 当面 SQL 課題に badSolutions は持たせない方針。
+    if (getLanguage(assignment) !== "javascript") {
+      continue;
+    }
     it(`${assignment.id} bad[${idx}] (${bad.description}) はクリアにならない`, async () => {
       const report = await gradeCode(assignment, bad.code);
       const detail = JSON.stringify(

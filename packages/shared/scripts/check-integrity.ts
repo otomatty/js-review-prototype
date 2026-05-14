@@ -17,7 +17,7 @@
  */
 
 import { analyzeAst } from "../src/grading/ast.js";
-import { getStaticAnalysisSettings } from "../src/assignment-helpers.js";
+import { getLanguage, getStaticAnalysisSettings } from "../src/assignment-helpers.js";
 import type { Assignment, Chapter } from "../src/types.js";
 
 interface IntegrityIssue {
@@ -54,8 +54,11 @@ async function main(): Promise<void> {
     }
   }
 
-  // 2. starterCode が ast.forbidden を踏んでいない
+  // 2. starterCode が ast.forbidden を踏んでいない (JS 課題のみ — 他言語は別途検証)
   for (const a of assignments) {
+    if (getLanguage(a) !== "javascript") {
+      continue;
+    }
     const result = analyzeAst(a.starterCode, getStaticAnalysisSettings(a).ast);
     if (result.parseError) {
       issues.push({
