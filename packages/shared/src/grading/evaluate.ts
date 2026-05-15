@@ -8,6 +8,11 @@
  * - Lint: severity===2 (error) が 0 件
  * - AST: parseError なし & 必須要件すべて充足 & 禁止違反 0 件
  * - Tests: 全テストが passed
+ *
+ * 未適用 (= 静的解析ディスパッチャが no-op を返す非 JS 言語) は
+ * `lintViolations: []` / `astResult: { required: [], forbidden: [] }` として
+ * 渡される。 この場合 `every()` / `length === 0` は自然に true になり、
+ * `lintPassed` / `astPassed` は通過扱いとなる (#104)。
  */
 
 import type {

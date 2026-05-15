@@ -16,7 +16,7 @@
  * 失敗箇所を列挙したいので、import を try/catch して個別に集計し直す。
  */
 
-import { analyzeAst } from "../src/grading/ast.js";
+import { analyzeAst } from "../src/grading/index.js";
 import {
   getEntryFile,
   getLanguage,
@@ -106,7 +106,7 @@ async function main(): Promise<void> {
       });
       continue;
     }
-    const result = analyzeAst(entry.content, getStaticAnalysisSettings(a).ast);
+    const result = analyzeAst(getLanguage(a), entry.content, getStaticAnalysisSettings(a).ast);
     if (result.parseError) {
       issues.push({
         assignmentId: a.id,

@@ -13,5 +13,4 @@ export {
   assignmentsByStage,
 } from "./problems/index.js";
 export { stages } from "./curriculum/stages.js";
-export { analyzeAst } from "./grading/ast.js";
-export { evaluate } from "./grading/evaluate.js";
+export { analyzeAst, analyzeJsAst, evaluate } from "./grading/index.js";

@@ -3,8 +3,9 @@
  *
  * - 結果は React state として常時反映され、画面の左ペインに表示される
  * - サーバ通信は一切しない (クライアント完結)
- * - JavaScript 以外の課題 (SQL 等) では ESLint / Babel が SQL テキストを構文エラーとして
- *   報告してしまうため、 解析自体をスキップして空の結果を返す (#100 / #109 / codex P2 対応)。
+ * - 言語別ディスパッチャ (`getLinter` / `analyzeAst`) を経由するため、
+ *   未対応言語 (SQL 等) では自動で空結果を返す。 空結果は `evaluate()` で
+ *   「未適用 = 通過扱い」 になり、 cleared を阻害しない (#104 / #100)。
  */
 
 import { useEffect, useState } from "react";
@@ -13,13 +14,13 @@ import type {
   Assignment,
   LintViolation,
 } from "@jsreview/shared/types";
-import { analyzeAst } from "@jsreview/shared/grading/ast";
+import { analyzeAst } from "@jsreview/shared/grading";
 import {
   getLanguage,
   getStaticAnalysisSettings,
 } from "@jsreview/shared/assignment-helpers";
 
-import { lintCode } from "../lib/eslint-runner.js";
+import { getLinter } from "../lib/linters/index.js";
 
 const DEBOUNCE_MS = 500;
 const EMPTY_AST: ASTResult = { required: [], forbidden: [] };
@@ -29,22 +30,16 @@ export function useStaticAnalysis(code: string, assignment: Assignment) {
   const [ast, setAst] = useState<ASTResult>(EMPTY_AST);
 
   useEffect(() => {
-    // 非 JS 課題では JS 用 ESLint / Babel を回さない (パースエラーが大量に出るため)。
-    // 評価ロジック (`runners/index.ts`) も SQL 採点では Lint/AST を採点対象から除外している。
-    if (getLanguage(assignment) !== "javascript") {
-      setLint([]);
-      setAst(EMPTY_AST);
-      return;
-    }
     const timer = setTimeout(() => {
+      const language = getLanguage(assignment);
       const settings = getStaticAnalysisSettings(assignment);
-      const lintResult = lintCode(code, settings.eslintRules, {
-        ignoredUnusedNames: settings.ignoredUnusedNames,
-      });
-      setLint(lintResult);
-
-      const astResult = analyzeAst(code, settings.ast);
-      setAst(astResult);
+      const linter = getLinter(language);
+      setLint(
+        linter(code, settings.eslintRules, {
+          ignoredUnusedNames: settings.ignoredUnusedNames,
+        }),
+      );
+      setAst(analyzeAst(language, code, settings.ast));
     }, DEBOUNCE_MS);
 
     return () => clearTimeout(timer);
