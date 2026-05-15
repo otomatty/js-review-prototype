@@ -219,13 +219,22 @@ async function runOne(
       opts.kind === "function" && opts.test
         ? buildFunctionSource(learnerCode, opts.test as FunctionTestCase)
         : learnerCode;
+    const work = pyodide.runPythonAsync(source, {
+      globals,
+      filename: "main.py",
+    });
+    // タイムアウトが勝った場合、 work は中断できず後から reject する可能性がある。
+    // 何もハンドラを付けないと unhandled rejection になるので no-op catch で吸収する。
+    work.catch(() => {
+      /* swallow late rejection after timeout */
+    });
+    let timer: ReturnType<typeof setTimeout> | undefined;
     try {
       await Promise.race([
-        pyodide.runPythonAsync(source, {
-          globals,
-          filename: "main.py",
+        work,
+        new Promise<never>((_, reject) => {
+          timer = setTimeout(() => reject(new PythonTimeoutError()), TIMEOUT_MS);
         }),
-        timeoutReject(TIMEOUT_MS),
       ]);
     } catch (e) {
       if (isTimeout(e)) {
@@ -238,6 +247,9 @@ async function runOne(
         stdout: stdoutChunks.join(""),
         error: `RUNNER_ERROR: ${formatErr(e, stderrChunks.join(""))}`,
       };
+    } finally {
+      // work が先に終わった場合、 タイマを残すと TIMEOUT_MS 後に空 reject が走り無駄。
+      if (timer !== undefined) {clearTimeout(timer);}
     }
 
     const stdout = stripFunctionMarkers(stdoutChunks.join(""));
@@ -333,12 +345,6 @@ class PythonTimeoutError extends Error {
     super("Python execution exceeded TIMEOUT_MS");
     this.name = "PythonTimeoutError";
   }
-}
-
-function timeoutReject(ms: number): Promise<never> {
-  return new Promise((_, reject) => {
-    setTimeout(() => reject(new PythonTimeoutError()), ms);
-  });
 }
 
 function isTimeout(e: unknown): boolean {
