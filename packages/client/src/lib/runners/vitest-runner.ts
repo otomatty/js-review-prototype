@@ -63,17 +63,19 @@ async function runScenario(
   const stdout = single.stdout ?? "";
   const lines = stdout.split("\n");
   // 末尾から探す。 学習者コードの誤った console.log が後続行に混入する可能性は低いが、
-  // 念のため最後の REPORT 行を採用する。
+  // 念のため最後の REPORT 行を採用する。 extraLines は末尾から push して、 最後に
+  // reverse で元順序に戻す (unshift の O(N^2) を避ける)。
   let reportLine: string | undefined;
-  const extraLines: string[] = [];
+  const extraLinesReversed: string[] = [];
   for (let i = lines.length - 1; i >= 0; i--) {
     const line = lines[i];
     if (reportLine === undefined && line.startsWith(VITEST_REPORT_PREFIX)) {
       reportLine = line;
     } else if (line.length > 0) {
-      extraLines.unshift(line);
+      extraLinesReversed.push(line);
     }
   }
+  const extraLines = extraLinesReversed.reverse();
 
   if (reportLine === undefined) {
     return {

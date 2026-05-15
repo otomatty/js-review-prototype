@@ -102,6 +102,14 @@ function buildVitestShim(): string {
     if (typeof a !== typeof b) { return false; }
     if (a === null || b === null) { return a === b; }
     if (typeof a !== "object") { return false; }
+    // Date / RegExp は Object.keys が空を返すため、 値ベース比較を先に行う必要がある。
+    // それ以外の組み込み型 (Map / Set 等) は学習教材では使わない想定で未対応。
+    if (a instanceof Date || b instanceof Date) {
+      return a instanceof Date && b instanceof Date && a.getTime() === b.getTime();
+    }
+    if (a instanceof RegExp || b instanceof RegExp) {
+      return a instanceof RegExp && b instanceof RegExp && a.toString() === b.toString();
+    }
     if (Array.isArray(a) !== Array.isArray(b)) { return false; }
     if (Array.isArray(a)) {
       if (a.length !== b.length) { return false; }
@@ -197,6 +205,11 @@ function buildVitestShim(): string {
           const msg = (err && err.message !== undefined) ? String(err.message) : String(err);
           if (typeof matcher === "string") { matched = msg.indexOf(matcher) >= 0; }
           else if (matcher instanceof RegExp) { matched = matcher.test(msg); }
+          else if (typeof matcher === "function") {
+            // Error コンストラクタによる型チェック (例: expect(fn).toThrow(TypeError))。
+            // Vitest/Jest 互換のため instanceof で判定する。
+            matched = err instanceof matcher;
+          }
           else { matched = false; }
         }
         assert(matched, matcher === undefined

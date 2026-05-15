@@ -150,6 +150,14 @@ async function main(): Promise<void> {
                 message: `mutant "${m.id}" code must not be empty`,
               });
             }
+            if (m.description.trim().length === 0) {
+              // description は UI で「mutant {id} を撃破: {description}」 として表示される
+              // ため、 空のままだと学習者にどんな mutant か伝わらない。
+              issues.push({
+                assignmentId: a.id,
+                message: `mutant "${m.id}" description must not be empty`,
+              });
+            }
           }
         }
       }
