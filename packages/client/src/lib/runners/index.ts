@@ -2,9 +2,12 @@
  * 言語別ランナーのディスパッチャ (#105 / #100)。
  *
  * `getRunner(language)` は `CodeRunner` インタフェースを満たす言語別実装を返す。
- * 未実装言語 (PHP / Vitest / ESLint) は placeholder ランナーが「未実装」 エラーを
+ * 未実装言語 (PHP / ESLint) は placeholder ランナーが「未実装」 エラーを
  * throw する設計で、 UI 側 (`useGradeRunner`) はそれを `RUNNER_ERROR` メッセージとして
- * そのまま表示する。 Python (#108) は Pyodide 実装が登録済み。
+ * そのまま表示する。 Python (#108) / Vitest (#110) は実装済み。
+ *
+ * Vitest ランナーは dynamic import で別 chunk 化し、 JS / SQL / Python 学習者の
+ * 初期ロードに影響しないようにしている (#110 受け入れ条件: dynamic import で別 chunk)。
  *
  * `runGrading` は採点呼び出し側 (`useGradeRunner`) 向けの薄いラッパで、
  * ランナーで実行した結果と手元の Lint / AST を合算して `evaluate()` を返す。
@@ -33,6 +36,19 @@ import { createPlaceholderRunner } from "./placeholder-runner.js";
 /** 既存の placeholder インスタンスをキャッシュ (毎回新規生成しないため)。 */
 const placeholderCache = new Map<Language, CodeRunner>();
 
+/**
+ * Vitest ランナーを dynamic import で遅延ロードする薄いラッパ (#110)。
+ * 採点ボタンを押した瞬間に初めて `vitest-runner.ts` chunk が fetch される。
+ * JS / SQL / Python 学習者には影響しない (chunk が読み込まれないため)。
+ */
+const vitestLazyRunner: CodeRunner = {
+  language: "vitest",
+  async run(input) {
+    const mod = await import("./vitest-runner.js");
+    return mod.vitestRunner.run(input);
+  },
+};
+
 export function getRunner(language: Language): CodeRunner {
   switch (language) {
     case "javascript":
@@ -41,8 +57,9 @@ export function getRunner(language: Language): CodeRunner {
       return sqlRunner;
     case "python":
       return pythonRunner;
-    case "php":
     case "vitest":
+      return vitestLazyRunner;
+    case "php":
     case "eslint": {
       const cached = placeholderCache.get(language);
       if (cached) {return cached;}
@@ -96,6 +113,7 @@ export async function runGrading(args: RunArgs): Promise<DispatchResult> {
     mode: "test",
     entryPoints: args.assignment.entryPoints,
     sqlSeed: args.assignment.sqlSeed,
+    mutation: args.assignment.mutation,
   });
 
   // 非 JS 課題 (SQL / Python / ...) では Lint / AST は採点対象外。 tests のみで判定する。

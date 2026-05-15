@@ -11,6 +11,7 @@
 
 import type {
   Language,
+  MutationConfig,
   RunTestsResponse,
   TestCase,
   TestKind,
@@ -43,6 +44,12 @@ export interface RunInput {
   entryPoints?: string[];
   /** SQL 課題の DDL + seed SQL (採点ごとに新規 DB に流す)。 */
   sqlSeed?: string;
+  /**
+   * Vitest mutation testing 課題の正解実装 + mutants (#110)。
+   * `testKind: "mutation"` のときに必須。 ランナーは reference + 各 mutant を順に実行し、
+   * 学習者のテストが reference では全 pass、 各 mutant では 1 件以上 fail (kill) するかを集約する。
+   */
+  mutation?: MutationConfig;
 }
 
 export type RunOutput = RunTestsResponse;

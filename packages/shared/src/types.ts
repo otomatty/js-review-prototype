@@ -41,7 +41,7 @@ export interface AssignmentFile {
   readonly?: boolean;
 }
 
-export type TestKind = "stdout" | "function" | "sql";
+export type TestKind = "stdout" | "function" | "sql" | "mutation";
 
 export type ChapterId =
   | "Ch00"
@@ -185,6 +185,15 @@ export interface Assignment {
   commonMistakes?: CommonMistake[];
   isCapstone?: boolean;
   /**
+   * Vitest mutation testing 採点用設定 (#110)。
+   * `testKind: "mutation"` の課題で必須。 学習者は `entryFile` (例: `main.test.js`) に
+   * `describe` / `it` / `expect` でテストを書き、 採点では:
+   *   1. `referenceImpl + userTest` で全テスト pass することを確認
+   *   2. 各 `mutants[i]` について `mutants[i].code + userTest` で 1 件以上 fail することを確認 (mutant kill)
+   * の両方を満たした場合のみクリア扱いになる。
+   */
+  mutation?: MutationConfig;
+  /**
    * 模範解答。
    * 全テストにパスし、AST `required` を全充足、`forbidden` 違反ゼロ、
    * Lint エラーゼロで「全チェック通過 = クリア」に到達できる必要がある
@@ -212,6 +221,29 @@ export interface Assignment {
 export interface StaticAnalysisConfig {
   eslint?: { rules: Record<string, ESLintRuleConfig> };
   ast?: ASTRequirement;
+}
+
+/**
+ * mutation testing で使用するバグ入り実装 1 件 (#110)。
+ * 学習者のテストがこの実装に対して 1 件以上 fail することを期待する (= 撃破)。
+ */
+export interface Mutant {
+  /** 課題内で一意な識別子 (例: "m1", "off-by-one")。 UI 表示と TestResult 名に使う。 */
+  id: string;
+  /** バグ入り実装の完全ソース (関数定義込み)。 学習者のテストファイルと結合して実行される。 */
+  code: string;
+  /** どの種類のバグかを説明する短い日本語 (例: "+ を - に取り違え")。 採点結果表示に使う。 */
+  description: string;
+}
+
+export interface MutationConfig {
+  /**
+   * 正解実装の完全ソース。 採点では学習者のテストファイルと結合され、
+   * 全テスト pass しなければクリア扱いにならない。
+   */
+  referenceImpl: string;
+  /** バグ入り実装の集合。 各 mutant について撃破 (1 件以上 fail) が必要。 */
+  mutants: Mutant[];
 }
 
 export interface BadSolution {

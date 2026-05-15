@@ -31,6 +31,7 @@ import { ch15Class } from "./15-class/_index.js";
 import { ch16Async } from "./16-async/_index.js";
 import { langSqlAssignments } from "./_lang/sql/_index.js";
 import { langPythonAssignments } from "./_lang/python/_index.js";
+import { langVitestAssignments } from "./_lang/vitest/_index.js";
 
 export { chapters };
 
@@ -55,6 +56,7 @@ export const assignments: Assignment[] = [
   // 多言語化 roadmap (#100): 言語別課題は `_lang/{lang}/` 配下にまとめて末尾に連結する。
   ...langSqlAssignments,
   ...langPythonAssignments,
+  ...langVitestAssignments,
 ];
 
 export function findAssignment(id: string): Assignment | undefined {
