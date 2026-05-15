@@ -37,6 +37,31 @@ const FUNCTION_FAIL_MARKER = "__JSREVIEW_PY_TEST_FAIL__";
 /** Pyodide が `loadPyodide` 実行時に既定で使う HOME (`env.HOME` 未指定時)。 */
 const PY_HOME = "/home/pyodide";
 
+/**
+ * `run()` を直列化するためのモジュールスコープロック。
+ * Pyodide はシングルトン、 `setStdout` / `setStderr` はインスタンスグローバルなので、
+ * 並行 `run()` を許すと stdout 捕捉が混線する (採点と freerun の重なり等)。
+ * UI 側は spinner で重なりを抑止しているが、 ランナー実装としても安全側に倒す。
+ */
+let runLock: Promise<void> = Promise.resolve();
+
+async function withRunLock<T>(fn: () => Promise<T>): Promise<T> {
+  const prev = runLock;
+  let release!: () => void;
+  runLock = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  try {
+    await prev;
+    return await fn();
+  } finally {
+    release();
+  }
+}
+
+/** 前回 `run()` で FS に書き込んだ仮想ワークスペース相対 path 群。 stale 検出に使う。 */
+const writtenPaths = new Set<string>();
+
 interface PyProxyLike {
   destroy(): void;
 }
@@ -57,6 +82,7 @@ interface PyodideAPI {
       opts?: { encoding?: string },
     ): void;
     mkdirTree(path: string): void;
+    unlink(path: string): void;
   };
 }
 
@@ -80,10 +106,22 @@ const getPyodide = memoizePromiseFactory(async (): Promise<PyodideAPI> => {
   // FS のワークスペースディレクトリは HOME 既定 (`/home/pyodide`) があれば不要だが、
   // 将来 HOME を変える可能性に備えて mkdirTree を明示。 既存ディレクトリは no-op。
   pyodide.FS.mkdirTree(PY_HOME);
-  // sys.path に HOME を追加 (既定で含まれることもあるが明示)。 多ファイル課題で
-  // `from helpers import x` のような相対 import が解決できるようにする。
+  // sys.path に HOME を追加し、 後段でユーザー由来モジュールを掃除するための
+  // 「初期 sys.modules スナップショット」 と reset 関数を仕込む。
+  // - スナップショット (`_jsreview_initial_modules`) は Pyodide 起動直後の標準ライブラリ等を含む。
+  // - `_jsreview_reset_modules()` を各テスト前に呼び、 学習者コードが import した
+  //   モジュールだけを sys.modules から取り除く (順序依存テストの再現を防ぐ)。
   pyodide.runPython(
-    `import sys\nif ${JSON.stringify(PY_HOME)} not in sys.path: sys.path.insert(0, ${JSON.stringify(PY_HOME)})`,
+    [
+      `import sys`,
+      `_PY_HOME = ${JSON.stringify(PY_HOME)}`,
+      `if _PY_HOME not in sys.path:`,
+      `    sys.path.insert(0, _PY_HOME)`,
+      `_jsreview_initial_modules = frozenset(sys.modules.keys())`,
+      `def _jsreview_reset_modules():`,
+      `    for k in [m for m in sys.modules if m not in _jsreview_initial_modules]:`,
+      `        del sys.modules[k]`,
+    ].join("\n"),
   );
   return pyodide;
 });
@@ -91,58 +129,67 @@ const getPyodide = memoizePromiseFactory(async (): Promise<PyodideAPI> => {
 export const pythonRunner: CodeRunner = {
   language: "python",
   async run(input: RunInput): Promise<RunOutput> {
-    const pyodide = await getPyodide();
-    const startedAt = performance.now();
-
-    // FS に提出ファイルを書き込む。 同名ファイルは上書きされる (前テストの残骸が残らない)。
-    writeFilesToFS(pyodide, input.files);
-
-    if (input.mode === "freerun") {
-      const result = await runOne(pyodide, input.files[input.entryFile] ?? "", {
-        name: input.entryPoints?.[0] ?? "実行結果",
-        kind: "freerun",
-      });
-      return {
-        durationMs: Math.round(performance.now() - startedAt),
-        results: [result],
-      };
-    }
-
-    if (input.testKind === "sql") {
-      throw new Error(
-        "Python ランナは SQL testKind に対応していません (課題定義の不整合)",
-      );
-    }
-
-    const code = input.files[input.entryFile] ?? "";
-    const results: TestResult[] = [];
-    let timedOutAlready = false;
-    for (const test of input.tests) {
-      if (timedOutAlready) {
-        // タイムアウト後は Python 実行が走り続けている可能性があるので後続テストを早期に失敗扱いに。
-        results.push({
-          name: test.name,
-          passed: false,
-          error: "TIMEOUT",
-        });
-        continue;
-      }
-      const result = await runOne(pyodide, code, {
-        name: test.name,
-        kind: input.testKind,
-        test,
-      });
-      if (result.error === "TIMEOUT") {
-        timedOutAlready = true;
-      }
-      results.push(result);
-    }
-    return {
-      durationMs: Math.round(performance.now() - startedAt),
-      results,
-    };
+    // setStdout / setStderr は Pyodide インスタンスに対してグローバルで、 ランナーは
+    // シングルトンのため、 複数の `run()` 呼び出しが重なると stdout 捕捉が混線する。
+    // モジュールスコープのロックで `run()` 全体を直列化する (UI 側でも spinner で抑止
+    // しているが、 ランナー実装としても安全側に倒す)。
+    return withRunLock(() => runUnlocked(input));
   },
 };
+
+async function runUnlocked(input: RunInput): Promise<RunOutput> {
+  const pyodide = await getPyodide();
+  const startedAt = performance.now();
+
+  // FS に提出ファイルを書き込む。 前回 `run()` で書き込んだが今回入力に存在しない
+  // ファイルは unlink し、 前の課題の `helpers.py` 等が `import` で誤って解決されるのを防ぐ。
+  writeFilesToFS(pyodide, input.files);
+
+  if (input.mode === "freerun") {
+    const result = await runOne(pyodide, input.files[input.entryFile] ?? "", {
+      name: input.entryPoints?.[0] ?? "実行結果",
+      kind: "freerun",
+    });
+    return {
+      durationMs: Math.round(performance.now() - startedAt),
+      results: [result],
+    };
+  }
+
+  if (input.testKind === "sql") {
+    throw new Error(
+      "Python ランナは SQL testKind に対応していません (課題定義の不整合)",
+    );
+  }
+
+  const code = input.files[input.entryFile] ?? "";
+  const results: TestResult[] = [];
+  let timedOutAlready = false;
+  for (const test of input.tests) {
+    if (timedOutAlready) {
+      // タイムアウト後は Python 実行が走り続けている可能性があるので後続テストを早期に失敗扱いに。
+      results.push({
+        name: test.name,
+        passed: false,
+        error: "TIMEOUT",
+      });
+      continue;
+    }
+    const result = await runOne(pyodide, code, {
+      name: test.name,
+      kind: input.testKind,
+      test,
+    });
+    if (result.error === "TIMEOUT") {
+      timedOutAlready = true;
+    }
+    results.push(result);
+  }
+  return {
+    durationMs: Math.round(performance.now() - startedAt),
+    results,
+  };
+}
 
 interface RunOneOptions {
   name: string;
@@ -159,6 +206,11 @@ async function runOne(
   const stderrChunks: string[] = [];
   pyodide.setStdout({ batched: (s) => stdoutChunks.push(s) });
   pyodide.setStderr({ batched: (s) => stderrChunks.push(s) });
+
+  // 前のテスト / 前の `run()` で学習者コードが import したモジュールを sys.modules から
+  // 取り除き、 import が毎回 fresh に解決されるようにする (順序依存の擬陽性/陰性を防ぐ)。
+  // 標準ライブラリの初期キャッシュは残るので、 import 自体のコストは ほぼゼロ。
+  pyodide.runPython("_jsreview_reset_modules()");
 
   // テスト毎に fresh な globals dict を渡し、 前のテストで定義した変数/関数を引きずらない。
   const globals = pyodide.runPython("dict()") as PyProxyLike;
@@ -226,9 +278,13 @@ function buildFunctionSource(
 }
 
 function stripFunctionMarkers(stdout: string): string {
+  // 末尾改行付きの方を先に消し、 残りの bare マーカも除去する。
+  // 動的 RegExp を避けることで静的解析 (ast-grep の regexp-from-variable) も静かになる。
   return stdout
-    .replace(new RegExp(`${FUNCTION_OK_MARKER}\\n?`, "g"), "")
-    .replace(new RegExp(`${FUNCTION_FAIL_MARKER}\\n?`, "g"), "");
+    .replaceAll(`${FUNCTION_OK_MARKER}\n`, "")
+    .replaceAll(FUNCTION_OK_MARKER, "")
+    .replaceAll(`${FUNCTION_FAIL_MARKER}\n`, "")
+    .replaceAll(FUNCTION_FAIL_MARKER, "");
 }
 
 function normalizeStdout(s: string): string {
@@ -240,11 +296,36 @@ function writeFilesToFS(
   pyodide: PyodideAPI,
   files: Record<string, string>,
 ): void {
-  for (const [path, content] of Object.entries(files)) {
-    // path は仮想ワークスペース相対 (例: "main.py")。 HOME 配下に絶対パスで書き込む。
-    const abs = path.startsWith("/") ? path : `${PY_HOME}/${path}`;
-    pyodide.FS.writeFile(abs, content, { encoding: "utf8" });
+  // 前回 `run()` で書いたファイルのうち、 今回入力に存在しないものを unlink する。
+  // 別課題に切り替えたとき・テストケース間で starterFiles が変わったときに、
+  // 前の課題の補助ファイルが残って `import` で誤解決されるのを防ぐ。
+  // (注: sys.modules の import キャッシュは別問題で、 多ファイル Python 課題が
+  //  本格化したら別途対応が必要。 単一 main.py の現サンプルでは影響しない。)
+  for (const stale of writtenPaths) {
+    if (!(stale in files)) {
+      try {
+        pyodide.FS.unlink(absFsPath(stale));
+      } catch {
+        // 既に存在しない / 権限エラー等は無視 (Pyodide 側で先に消えているケース)。
+      }
+    }
   }
+  writtenPaths.clear();
+  for (const [path, content] of Object.entries(files)) {
+    const abs = absFsPath(path);
+    // 多階層パス (例: "pkg/utils.py") に備え、 親ディレクトリを先に作る。
+    // 既存ディレクトリは Pyodide 側で no-op。
+    const slash = abs.lastIndexOf("/");
+    if (slash > 0) {
+      pyodide.FS.mkdirTree(abs.slice(0, slash));
+    }
+    pyodide.FS.writeFile(abs, content, { encoding: "utf8" });
+    writtenPaths.add(path);
+  }
+}
+
+function absFsPath(path: string): string {
+  return path.startsWith("/") ? path : `${PY_HOME}/${path}`;
 }
 
 class PythonTimeoutError extends Error {
