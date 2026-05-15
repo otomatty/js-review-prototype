@@ -79,11 +79,78 @@ async function main(): Promise<void> {
       });
       continue;
     }
-    if (getLanguage(a) !== "javascript") {
-      // 言語非依存の最低限チェック
+    // 言語 / testKind の整合性検査と mutation 設定検査は、 言語に依らず必ず実行する。
+    // (`language: "javascript", testKind: "mutation"` のような不正組み合わせを
+    //  非 JS 分岐の中に閉じ込めていると取りこぼすため、 ここで全課題に対して評価する)
+    const language = getLanguage(a);
+    const isMutation = a.testKind === "mutation";
+    if (language === "vitest" && !isMutation) {
+      issues.push({
+        assignmentId: a.id,
+        message: `vitest assignment must use testKind: "mutation" (got ${a.testKind})`,
+      });
+    }
+    if (isMutation && language !== "vitest") {
+      issues.push({
+        assignmentId: a.id,
+        message: `testKind "mutation" is only supported for language "vitest" (got ${language})`,
+      });
+    }
+    if (isMutation) {
+      if (!a.mutation) {
+        issues.push({
+          assignmentId: a.id,
+          message: "mutation assignment requires `mutation` config",
+        });
+      } else {
+        if (a.mutation.referenceImpl.trim().length === 0) {
+          issues.push({
+            assignmentId: a.id,
+            message: "mutation.referenceImpl must not be empty",
+          });
+        }
+        if (a.mutation.mutants.length === 0) {
+          issues.push({
+            assignmentId: a.id,
+            message: "mutation.mutants must contain at least one mutant",
+          });
+        }
+        const seenMutantIds = new Set<string>();
+        for (const m of a.mutation.mutants) {
+          if (m.id.trim().length === 0) {
+            issues.push({
+              assignmentId: a.id,
+              message: "mutant id must not be empty",
+            });
+          }
+          if (seenMutantIds.has(m.id)) {
+            issues.push({
+              assignmentId: a.id,
+              message: `duplicate mutant id "${m.id}"`,
+            });
+          }
+          seenMutantIds.add(m.id);
+          if (m.code.trim().length === 0) {
+            issues.push({
+              assignmentId: a.id,
+              message: `mutant "${m.id}" code must not be empty`,
+            });
+          }
+          if (m.description.trim().length === 0) {
+            // description は UI で「mutant {id} を撃破: {description}」 として表示される
+            // ため、 空のままだと学習者にどんな mutant か伝わらない。
+            issues.push({
+              assignmentId: a.id,
+              message: `mutant "${m.id}" description must not be empty`,
+            });
+          }
+        }
+      }
+    }
+
+    if (language !== "javascript") {
+      // 非 JS 言語のみに適用される最低限チェック (AST 検証は別途下で JS のみに行う)。
       // mutation 課題 (#110): `tests` は採点側で合成するため空でも良い。
-      // 代わりに `mutation` 設定の存在と内容を検証する。
-      const isMutation = a.testKind === "mutation";
       if (!isMutation && a.tests.length === 0) {
         issues.push({
           assignmentId: a.id,
@@ -95,71 +162,6 @@ async function main(): Promise<void> {
           assignmentId: a.id,
           message: "non-javascript assignment requires entryFile",
         });
-      }
-      // vitest 課題は必ず testKind: "mutation" でなければならない。
-      // mutation testKind は逆に vitest 以外 (例: python / sql) では現状想定外。
-      if (getLanguage(a) === "vitest" && !isMutation) {
-        issues.push({
-          assignmentId: a.id,
-          message: `vitest assignment must use testKind: "mutation" (got ${a.testKind})`,
-        });
-      }
-      if (isMutation && getLanguage(a) !== "vitest") {
-        issues.push({
-          assignmentId: a.id,
-          message: `testKind "mutation" is only supported for language "vitest" (got ${getLanguage(a)})`,
-        });
-      }
-      if (isMutation) {
-        if (!a.mutation) {
-          issues.push({
-            assignmentId: a.id,
-            message: "mutation assignment requires `mutation` config",
-          });
-        } else {
-          if (a.mutation.referenceImpl.trim().length === 0) {
-            issues.push({
-              assignmentId: a.id,
-              message: "mutation.referenceImpl must not be empty",
-            });
-          }
-          if (a.mutation.mutants.length === 0) {
-            issues.push({
-              assignmentId: a.id,
-              message: "mutation.mutants must contain at least one mutant",
-            });
-          }
-          const seenMutantIds = new Set<string>();
-          for (const m of a.mutation.mutants) {
-            if (m.id.trim().length === 0) {
-              issues.push({
-                assignmentId: a.id,
-                message: "mutant id must not be empty",
-              });
-            }
-            if (seenMutantIds.has(m.id)) {
-              issues.push({
-                assignmentId: a.id,
-                message: `duplicate mutant id "${m.id}"`,
-              });
-            }
-            seenMutantIds.add(m.id);
-            if (m.code.trim().length === 0) {
-              issues.push({
-                assignmentId: a.id,
-                message: `mutant "${m.id}" code must not be empty`,
-              });
-            }
-            if (m.description.trim().length === 0) {
-              // description は UI で「mutant {id} を撃破: {description}」 として表示される
-              // ため、 空のままだと学習者にどんな mutant か伝わらない。
-              issues.push({
-                assignmentId: a.id,
-                message: `mutant "${m.id}" description must not be empty`,
-              });
-            }
-          }
-        }
       }
       continue;
     }
