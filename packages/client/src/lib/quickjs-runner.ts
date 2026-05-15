@@ -128,6 +128,16 @@ export class QuickJsRunner {
           passed: false,
           error: "INVALID_TEST_KIND: sql tests must be routed to sql-runner",
         };
+      case "mutation":
+        // mutation testKind は vitest-runner が orchestrate して、 QuickJS への入力時には
+        // mode: "freerun" に変換するため、 ここに直接 mutation が来ることはない。
+        // 来た場合は呼び出し側のディスパッチ漏れなので明示的にエラー化する (#110)。
+        return {
+          name: test.name,
+          passed: false,
+          error:
+            "INVALID_TEST_KIND: mutation tests must be routed to vitest-runner",
+        };
       default: {
         const exhaustive: never = options.testKind;
         return exhaustive;

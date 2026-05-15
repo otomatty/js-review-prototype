@@ -205,6 +205,12 @@ async function runUnlocked(input: RunInput): Promise<RunOutput> {
       "Python ランナは SQL テストに対応していません (課題定義の不整合)",
     );
   }
+  if (input.testKind === "mutation") {
+    // mutation は vitest 教材専用 testKind (#110)。 Python では未対応。
+    throw new Error(
+      "Python ランナは mutation テストに対応していません (課題定義の不整合)",
+    );
+  }
 
   const code = input.files[input.entryFile] ?? "";
   const results: TestResult[] = [];

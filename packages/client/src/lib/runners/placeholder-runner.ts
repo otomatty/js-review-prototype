@@ -1,11 +1,11 @@
 /**
  * 未実装言語向けの placeholder ランナー (#105 / #100)。
  *
- * `getRunner("python")` 等が呼ばれたときに「未実装」 を明示的に伝える役割。
+ * `getRunner("php")` 等が呼ばれたときに「未実装」 を明示的に伝える役割。
  * これは仕様上の挙動で、 各言語の実装は roadmap (#100) の後続 issue で追加する:
  *
- * - `"python"` (#108) … Pyodide ベース
- * - `"vitest"` (#110) … mutation testing 採点エンジン
+ * - `"python"` (#108) … 実装済み (Pyodide ベース)
+ * - `"vitest"` (#110) … 実装済み (mutation testing 採点エンジン)
  * - `"eslint"` (#111) … ルール設計 mutation 採点
  * - `"php"`   (#112) … php-wasm ベース
  *

@@ -41,6 +41,10 @@ export function evaluate(
       case "stdout":
       case "function":
       case "sql":
+      case "mutation":
+        // mutation も他と同じ「全 TestResult が pass」 判定で良い。
+        // ランナー (vitest-runner) 側が「reference 全 pass」 と「各 mutant kill」 を
+        // それぞれ 1 件の TestResult に集約しており、 すべて成功で testsPassed=true。
         return testResults.length > 0 && testResults.every((t) => t.passed);
       default: {
         const exhaustive: never = testKind;

@@ -288,6 +288,7 @@ function PracticePageInner({ assignment }: InnerProps) {
         mode: "freerun",
         entryPoints: assignment.entryPoints,
         sqlSeed: assignment.sqlSeed,
+        mutation: assignment.mutation,
       });
       // 実行中に課題が切り替わったら結果を捨てる (古い useCallback の assignment は stale)
       if (activeAssignmentIdRef.current !== targetAssignmentId) {return;}
