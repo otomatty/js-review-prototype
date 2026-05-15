@@ -13,7 +13,13 @@
 import type { ASTRequirement, ASTResult, Language } from "../types.js";
 import { analyzeJsAst } from "./ast.js";
 
-const EMPTY_AST: ASTResult = { required: [], forbidden: [] };
+/**
+ * 未対応言語向けの空結果。 呼び出し側で配列を mutate しても他の呼び出しに
+ * 波及しないよう、 共有定数ではなく毎回新規オブジェクト/配列を生成して返す。
+ */
+function emptyAst(): ASTResult {
+  return { required: [], forbidden: [] };
+}
 
 export function analyzeAst(
   language: Language,
@@ -28,11 +34,11 @@ export function analyzeAst(
     case "php":
     case "vitest":
     case "eslint":
-      return EMPTY_AST;
+      return emptyAst();
     default: {
       const _exhaustive: never = language;
       void _exhaustive;
-      return EMPTY_AST;
+      return emptyAst();
     }
   }
 }

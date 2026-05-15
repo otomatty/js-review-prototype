@@ -41,8 +41,8 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "../shared/src/grading/score.ts"),
       },
       {
-        // より specific な /grading/ast, /grading/score の後に置く (Vite は配列順に prefix match)
-        find: "@jsreview/shared/grading",
+        // 完全一致のみ (prefix match は他の /grading/* import を奪うため正規表現で固定する)
+        find: /^@jsreview\/shared\/grading$/,
         replacement: path.resolve(__dirname, "../shared/src/grading/index.ts"),
       },
     ],
