@@ -20,7 +20,7 @@ interface RawMessage {
   column: number;
 }
 
-interface LintCodeOptions {
+export interface LintCodeOptions {
   ignoredUnusedNames?: string[];
 }
 

@@ -9,10 +9,13 @@
  * 本番が見るのと同じ test+lint+ast の3軸で全問チェックできる。
  */
 
-import { analyzeAst } from "../src/grading/ast.js";
+import { analyzeAst } from "../src/grading/index.js";
 import { evaluate } from "../src/grading/evaluate.js";
 import type { Assignment, EvaluationResult } from "../src/types.js";
-import { getStaticAnalysisSettings } from "../src/assignment-helpers.js";
+import {
+  getLanguage,
+  getStaticAnalysisSettings,
+} from "../src/assignment-helpers.js";
 
 import { lintCode } from "./lint.js";
 import { runTests } from "./runner.js";
@@ -37,7 +40,7 @@ export async function gradeCode(
     assignment.testKind,
     assignment.entryPoints ?? [],
   );
-  const astResult = analyzeAst(code, settings.ast);
+  const astResult = analyzeAst(getLanguage(assignment), code, settings.ast);
   const lintViolations = lintCode(code, settings.eslintRules, {
     ignoredUnusedNames: settings.ignoredUnusedNames,
   });

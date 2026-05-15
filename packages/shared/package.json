@@ -16,6 +16,7 @@
     "./assignment-helpers": "./src/assignment-helpers.ts",
     "./curriculum/chapters": "./src/curriculum/chapters.ts",
     "./curriculum/stages": "./src/curriculum/stages.ts",
+    "./grading": "./src/grading/index.ts",
     "./grading/ast": "./src/grading/ast.ts",
     "./grading/evaluate": "./src/grading/evaluate.ts",
     "./runner/types": {
@@ -48,7 +49,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "test": "bun test test/problems.spec.ts",
+    "test": "bun test",
     "check-integrity": "bun run scripts/check-integrity.ts",
     "scan-starter-comments": "bun run scripts/scan-starter-comments.ts"
   },

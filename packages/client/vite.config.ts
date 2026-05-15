@@ -40,6 +40,11 @@ export default defineConfig({
         find: "@jsreview/shared/grading/score",
         replacement: path.resolve(__dirname, "../shared/src/grading/score.ts"),
       },
+      {
+        // 完全一致のみ (prefix match は他の /grading/* import を奪うため正規表現で固定する)
+        find: /^@jsreview\/shared\/grading$/,
+        replacement: path.resolve(__dirname, "../shared/src/grading/index.ts"),
+      },
     ],
   },
   server: {

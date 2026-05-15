@@ -12,7 +12,7 @@
  */
 import { describe, expect, it } from "bun:test";
 
-import { analyzeAst } from "../src/grading/ast.js";
+import { analyzeAst } from "../src/grading/index.js";
 import {
   getEntryFile,
   getLanguage,
@@ -44,7 +44,7 @@ describe("problems metadata", () => {
         entry,
         `assignment "${a.id}" entryFile "${entryPath}" not found in starterFiles`,
       ).toBeDefined();
-      const result = analyzeAst(entry!.content, settings.ast);
+      const result = analyzeAst(getLanguage(a), entry!.content, settings.ast);
       expect(
         result.parseError,
         `assignment "${a.id}" starter (${entry!.path}) parse error: ${result.parseError ?? ""}`,

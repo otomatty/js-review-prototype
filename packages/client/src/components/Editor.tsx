@@ -11,7 +11,7 @@ import type { Extension } from "@codemirror/state";
 
 import type { ESLintRuleConfig, Language } from "@jsreview/shared/types";
 import { useTheme } from "../hooks/useTheme.js";
-import { lintCode } from "../lib/eslint-runner.js";
+import { getLinter } from "../lib/linters/index.js";
 
 interface Props {
   code: string;
@@ -39,10 +39,12 @@ export function Editor({
   const { theme } = useTheme();
   const eslintExtension = useMemo<Extension | null>(
     () => {
+      // 非 JS では CodeMirror の linter 拡張自体を載せない (no-op を毎回回すより軽い)。
       if (language !== "javascript") {return null;}
+      const runLint = getLinter(language);
       return linter((view) => {
         const text = view.state.doc.toString();
-        const violations = lintCode(text, eslintRules, {
+        const violations = runLint(text, eslintRules, {
           ignoredUnusedNames: entryPoints,
         });
 

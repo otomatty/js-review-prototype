@@ -1,5 +1,8 @@
 /**
- * AST解析 (Babel)。 **クライアント側のみ** で使用される。
+ * JavaScript 専用の AST 解析 (Babel)。 **クライアント側のみ** で使用される。
+ *
+ * 言語別ディスパッチは `./index.ts` の `analyzeAst(language, ...)` を経由する。
+ * 直接呼び出しは「JS と分かっている」 場面 (テスト・整合性スクリプト等) のみ。
  *
  * 対応するパターン:
  * - method: `x.NAME(...)` 形式のメソッド呼び出し
@@ -38,7 +41,7 @@ interface Found {
 /**
  * コード文字列を AST に変換し、要件を満たすかどうかをチェックする。
  */
-export function analyzeAst(code: string, requirement: ASTRequirement): ASTResult {
+export function analyzeJsAst(code: string, requirement: ASTRequirement): ASTResult {
   // パース
   let ast: ReturnType<typeof parse>;
   try {
