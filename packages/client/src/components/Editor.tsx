@@ -20,8 +20,9 @@ interface Props {
   entryPoints: string[];
   /**
    * 現在表示中のファイルの言語。 省略時は "javascript" 扱い。
-   * "sql" のときは ESLint linter を無効化する。 言語拡張 (`@codemirror/lang-sql`) の
-   * 動的 import は Phase 5 (#109) で導入する。
+   * 非 JS (sql / python / ...) のときは ESLint linter を無効化する。
+   * SQL / Python の言語拡張 (`@codemirror/lang-sql` / `@codemirror/lang-python`) は
+   * 動的 import で取得し、 該当言語の課題を開いた瞬間にだけロードする (#109 / #108)。
    */
   language?: Language;
   /** 編集を禁止する (readonly ファイル表示用)。 */
@@ -91,18 +92,37 @@ export function Editor({
     };
   }, [language]);
 
+  // Python の場合は `@codemirror/lang-python` を動的 import (vendor-pyodide chunk に同梱、 #108)。
+  // ランナー (Pyodide) と同じく Python 課題を開いた瞬間にしか fetch されない。
+  const [pythonExtension, setPythonExtension] = useState<Extension | null>(null);
+  useEffect(() => {
+    if (language !== "python") {
+      setPythonExtension(null);
+      return;
+    }
+    let cancelled = false;
+    void import("@codemirror/lang-python").then((mod) => {
+      if (!cancelled) {setPythonExtension(mod.python());}
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
+
   const extensions = useMemo<Extension[]>(() => {
     const exts: Extension[] = [];
     if (language === "javascript") {
       exts.push(javascript());
     } else if (language === "sql" && sqlExtension) {
       exts.push(sqlExtension);
+    } else if (language === "python" && pythonExtension) {
+      exts.push(pythonExtension);
     }
     if (eslintExtension) {
       exts.push(eslintExtension, lintGutter());
     }
     return exts;
-  }, [language, eslintExtension, sqlExtension]);
+  }, [language, eslintExtension, sqlExtension, pythonExtension]);
 
   return (
     <CodeMirror

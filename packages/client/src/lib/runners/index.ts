@@ -2,9 +2,9 @@
  * 言語別ランナーのディスパッチャ (#105 / #100)。
  *
  * `getRunner(language)` は `CodeRunner` インタフェースを満たす言語別実装を返す。
- * 未実装言語 (Python / PHP / Vitest / ESLint) は placeholder ランナーが
- * 「未実装」 エラーを throw する設計で、 UI 側 (`useGradeRunner`) はそれを
- * `RUNNER_ERROR` メッセージとしてそのまま表示する。
+ * 未実装言語 (PHP / Vitest / ESLint) は placeholder ランナーが「未実装」 エラーを
+ * throw する設計で、 UI 側 (`useGradeRunner`) はそれを `RUNNER_ERROR` メッセージとして
+ * そのまま表示する。 Python (#108) は Pyodide 実装が登録済み。
  *
  * `runGrading` は採点呼び出し側 (`useGradeRunner`) 向けの薄いラッパで、
  * ランナーで実行した結果と手元の Lint / AST を合算して `evaluate()` を返す。
@@ -27,6 +27,7 @@ import { evaluate } from "@jsreview/shared/grading/evaluate";
 
 import { jsRunner } from "./js-runner.js";
 import { sqlRunner } from "./sql-runner.js";
+import { pythonRunner } from "./python-runner.js";
 import { createPlaceholderRunner } from "./placeholder-runner.js";
 
 /** 既存の placeholder インスタンスをキャッシュ (毎回新規生成しないため)。 */
@@ -39,6 +40,7 @@ export function getRunner(language: Language): CodeRunner {
     case "sql":
       return sqlRunner;
     case "python":
+      return pythonRunner;
     case "php":
     case "vitest":
     case "eslint": {
