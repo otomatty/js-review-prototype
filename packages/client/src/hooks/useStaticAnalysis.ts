@@ -23,10 +23,13 @@ import {
 import { getLinter } from "../lib/linters/index.js";
 
 const DEBOUNCE_MS = 500;
+// 空クリア時に参照を固定して React の Object.is バイルアウトを効かせ、 余計な再レンダーを防ぐ。
+// 受け取り側 (PracticePage / useGradeRunner) はこの配列・オブジェクトを mutate しない契約。
+const EMPTY_LINT: LintViolation[] = [];
 const EMPTY_AST: ASTResult = { required: [], forbidden: [] };
 
 export function useStaticAnalysis(code: string, assignment: Assignment) {
-  const [lint, setLint] = useState<LintViolation[]>([]);
+  const [lint, setLint] = useState<LintViolation[]>(EMPTY_LINT);
   const [ast, setAst] = useState<ASTResult>(EMPTY_AST);
 
   useEffect(() => {
@@ -36,8 +39,8 @@ export function useStaticAnalysis(code: string, assignment: Assignment) {
     //  grading 実行時のスナップショット (`lintAtRun` / `astAtRun`) も汚染される。 #132 P2)
     // 将来 Pyodide AST など重い解析が増えたら、 その言語もここで debounce 対象に追加する。
     if (language !== "javascript") {
-      setLint([]);
-      setAst({ required: [], forbidden: [] });
+      setLint(EMPTY_LINT);
+      setAst(EMPTY_AST);
       return;
     }
     const timer = setTimeout(() => {
