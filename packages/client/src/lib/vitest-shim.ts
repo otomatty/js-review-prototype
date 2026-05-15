@@ -105,6 +105,17 @@ function buildVitestShim(nonce: string): string {
     return function () { /* no-op */ };
   })();
 
+  // JSON.stringify も学習者が後から差し替えできるので、 シム読み込み時に bind して原参照を固定する
+  // (codex P1)。 これがないと emit 関数が \`JSON.stringify(records)\` を評価する時点で
+  // 上書きされた関数が走り、 偽の records 文字列が出力されてしまう。
+  const safeStringify = (function () {
+    try {
+      return JSON.stringify.bind(JSON);
+    } catch (_) {
+      return null;
+    }
+  })();
+
   globalThis.describe = function (name, fn) {
     if (typeof fn !== "function") {
       records.push({ name: String(name), passed: false, error: "describe: callback is not a function" });
@@ -299,9 +310,10 @@ function buildVitestShim(nonce: string): string {
   // 偽レポート行を学習者が console.log で生成しても nonce が一致しないので採点に影響しない。
   Object.defineProperty(globalThis, ${JSON.stringify(VITEST_EMIT_GLOBAL)}, {
     value: function () {
-      // safeLog はクロージャ捕獲したログ関数。 学習者が後から console.log を
-      // 上書きしても傍受・偽造できない (codex P1)。
-      safeLog(fullPrefix + JSON.stringify(records));
+      // safeLog / safeStringify はクロージャ捕獲した原参照。 学習者が後から
+      // console.log や JSON.stringify を上書きしても傍受・偽造できない (codex P1)。
+      const json = safeStringify ? safeStringify(records) : "[]";
+      safeLog(fullPrefix + json);
     },
     writable: false,
     configurable: false,
