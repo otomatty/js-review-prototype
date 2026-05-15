@@ -30,8 +30,17 @@ export function useStaticAnalysis(code: string, assignment: Assignment) {
   const [ast, setAst] = useState<ASTResult>(EMPTY_AST);
 
   useEffect(() => {
+    const language = getLanguage(assignment);
+    // 非 JS のディスパッチャは常に no-op (空結果) を返すので、 debounce を経由せず即時にクリアする。
+    // (待つと JS 課題 → SQL 課題に切り替えた直後の 500ms 旧 JS の lint/AST が UI に残り、
+    //  grading 実行時のスナップショット (`lintAtRun` / `astAtRun`) も汚染される。 #132 P2)
+    // 将来 Pyodide AST など重い解析が増えたら、 その言語もここで debounce 対象に追加する。
+    if (language !== "javascript") {
+      setLint([]);
+      setAst({ required: [], forbidden: [] });
+      return;
+    }
     const timer = setTimeout(() => {
-      const language = getLanguage(assignment);
       const settings = getStaticAnalysisSettings(assignment);
       const linter = getLinter(language);
       setLint(
