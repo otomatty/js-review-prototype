@@ -1,7 +1,7 @@
 /**
  * Python 採点ランナ (Pyodide / WebAssembly, ブラウザ完結) (#108)。
  *
- * - Pyodide は dynamic import + memoize で初回のみロード (~10MB 超)。
+ * - Pyodide は dynamic import + キャッシュで初回のみロード (~10MB 超)。
  *   JS / SQL 学習者には一切影響しない (Python 課題を開かない限り fetch されない)。
  * - 実体の wasm / stdlib は固定バージョンの jsDelivr CDN から取得する (再現性確保)。
  *   CDN URL は npm パッケージの `version` を参照して必ずローダ JS と一致させる。
@@ -10,10 +10,13 @@
  * - 各テスト毎に fresh な globals dict を渡し、 前のテストの状態が漏れないようにする。
  * - stdout / stderr は `setStdout` / `setStderr` の `batched` フックで捕捉する。
  *
- * TIMEOUT の限界:
+ * TIMEOUT の限界と回復:
  *   `Promise.race` は外側 Promise を解決するだけで、 Python 実行を実際に停止できない。
- *   タイムアウト後の Pyodide はバックグラウンドで動き続け、 後続テスト結果は呼び出し側で破棄される
- *   (ランナー内では「タイムアウト発生後はそれ以降のテストも TIMEOUT 扱いに短絡」 する)。
+ *   タイムアウト後の Pyodide はバックグラウンドで動き続け、 そのまま次の `run()` で再利用すると
+ *   zombie 実行の stdout が新しい採点に混入してしまう。 そのため timeout 発生時は当該
+ *   インスタンスを **broken マーク** し、 次の `getPyodide()` で fresh init を走らせる
+ *   (CDN は immutable キャッシュなので再 fetch は ms オーダ)。 zombie 実行は WASM メモリ上で
+ *   完走するまで残るが、 新インスタンスとは別アドレス空間で並走しないため互いに影響しない。
  *   真の中断には Web Worker 化が必要だが本 issue (#108) の scope 外 (#100 後続で検討)。
  */
 
@@ -28,8 +31,6 @@ import type {
   TestCase,
   TestResult,
 } from "@jsreview/shared/types";
-
-import { memoizePromiseFactory } from "quickjs-emscripten-core";
 
 const TIMEOUT_MS = 10_000;
 const FUNCTION_OK_MARKER = "__JSREVIEW_PY_TEST_OK__";
@@ -87,11 +88,40 @@ interface PyodideAPI {
 }
 
 /**
- * Pyodide ローダの dynamic import + memoize。
- * 1 回目: ~50KB のローダ JS を fetch (vendor-pyodide chunk) → CDN から wasm/stdlib をロード (~10MB)。
- * 2 回目以降: memoize 済 Promise を即返す (再 fetch ゼロ)。
+ * Pyodide ローダの dynamic import + 自前キャッシュ。
+ * - 通常 ケース: 1 回ロードしたインスタンスを使い回す (再 fetch ゼロ)。
+ * - timeout で `markPyodideBroken()` された場合: 次の `getPyodide()` で fresh init。
+ *
+ * 自前 `memoize` を使わない理由は、 `quickjs-emscripten-core` の `memoizePromiseFactory` は
+ * invalidation 機構を持たず、 broken インスタンスを抱え続けてしまうため。
  */
-const getPyodide = memoizePromiseFactory(async (): Promise<PyodideAPI> => {
+interface PyodideHolder {
+  loadPromise: Promise<PyodideAPI>;
+  broken: boolean;
+}
+let pyodideHolder: PyodideHolder | null = null;
+
+function getPyodide(): Promise<PyodideAPI> {
+  if (!pyodideHolder || pyodideHolder.broken) {
+    pyodideHolder = { loadPromise: loadFreshPyodide(), broken: false };
+  }
+  return pyodideHolder.loadPromise;
+}
+
+/** timeout 発生時に呼ぶ。 zombie 実行を抱えた instance を捨て、 次回 init を予約する。 */
+function markPyodideBroken(zombieWork: Promise<unknown>): void {
+  // zombie はメモリに残るが、 unhandled rejection だけは抑止する (no-op catch)。
+  zombieWork.catch(() => {
+    /* swallow zombie rejection */
+  });
+  if (pyodideHolder) {
+    pyodideHolder.broken = true;
+  }
+  // 旧 FS 状態 (writeFile 履歴) も無効化。 fresh instance は空 FS で始まる。
+  writtenPaths.clear();
+}
+
+async function loadFreshPyodide(): Promise<PyodideAPI> {
   const mod = (await import("pyodide")) as unknown as {
     loadPyodide: (opts?: {
       indexURL?: string;
@@ -124,7 +154,7 @@ const getPyodide = memoizePromiseFactory(async (): Promise<PyodideAPI> => {
     ].join("\n"),
   );
   return pyodide;
-});
+}
 
 export const pythonRunner: CodeRunner = {
   language: "python",
@@ -223,11 +253,6 @@ async function runOne(
       globals,
       filename: "main.py",
     });
-    // タイムアウトが勝った場合、 work は中断できず後から reject する可能性がある。
-    // 何もハンドラを付けないと unhandled rejection になるので no-op catch で吸収する。
-    work.catch(() => {
-      /* swallow late rejection after timeout */
-    });
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
       await Promise.race([
@@ -238,6 +263,9 @@ async function runOne(
       ]);
     } catch (e) {
       if (isTimeout(e)) {
+        // Python 実行は止められないので、 instance ごと捨てて次回 fresh init。
+        // zombie の late rejection は markPyodideBroken 内の no-op catch で吸収する。
+        markPyodideBroken(work);
         return { name: opts.name, passed: false, error: "TIMEOUT" };
       }
       // Python 例外も Traceback を含めて RUNNER_ERROR としてそのまま見せる。
@@ -352,8 +380,11 @@ function isTimeout(e: unknown): boolean {
 }
 
 function formatErr(e: unknown, stderr: string): string {
-  if (e instanceof Error) {
-    return e.message || stderr || String(e);
-  }
-  return stderr || String(e);
+  // Pyodide の例外メッセージは Python の Traceback を含む。 一方 setStderr で捕捉した
+  // `stderr` には `print(..., file=sys.stderr)` 等の追加診断が入っている可能性がある。
+  // 学習者が原因究明できるよう、 両者が非空なら連結して返す。
+  const msg = e instanceof Error ? e.message : String(e);
+  const tail = stderr.trim();
+  if (msg && tail) {return `${msg}\n${tail}`;}
+  return msg || tail || String(e);
 }
