@@ -226,11 +226,19 @@ async function runGrading(
 
 function buildReferenceResult(outcome: ScenarioOutcome): TestResult {
   const name = "正解実装でユーザのテストがすべて PASS する";
-  if (outcome.scenarioError && outcome.tests.length === 0) {
+  // QuickJS 側で何らかのエラー (TIMEOUT / COMPILE_ERROR / 未捕捉例外) が出ていれば、
+  // 既にパース済みの tests レコードがあっても信頼してはいけない (#134 codex P1)。
+  // 学習者が偽の `__JSREVIEW_VITEST_REPORT__:` 行を console.log で出した直後に
+  // throw すると、 シムの本来のレポート行が出る前にスクリプトが止まり、 偽レコードが
+  // scenarioError と共存してしまうため。 安全側に倒して常に fail 扱いにする。
+  if (outcome.scenarioError) {
     return {
       name,
       passed: false,
-      stdout: outcome.extraStdout,
+      stdout:
+        outcome.tests.length > 0
+          ? formatScenarioStdout(outcome.tests)
+          : outcome.extraStdout,
       error: outcome.scenarioError,
     };
   }
@@ -261,10 +269,11 @@ function buildMutantResult(
   outcome: ScenarioOutcome,
 ): TestResult {
   const name = `mutant ${mutant.id} を撃破: ${mutant.description}`;
-  // mutant 実装に構文エラーがあると QuickJS で読み込めない。 学習者の責任ではないため
-  // 「撃破できた」 扱いとする (任意の正しいテストは構文エラーを検出するし、 学習者の
-  //  テストが原因で発生したエラーは reference シナリオで既に弾かれている)。
-  if (outcome.scenarioError && outcome.tests.length === 0) {
+  // mutant 実装に構文エラー / 例外 / TIMEOUT が出るのは reference シナリオでは出なかった
+  // = 学習者のテストが mutant 実装に対して実際に問題を引き起こした、 と解釈する。
+  // パース済みの tests レコードがあっても scenarioError が立っていれば信頼せず、
+  // 一律 「撃破」 扱いにする (#134 codex P1: 偽レコード + throw による不正クリア対策)。
+  if (outcome.scenarioError) {
     return {
       name,
       passed: true,
