@@ -58,5 +58,21 @@ export default defineConfig({
   optimizeDeps: {
     // eslint-linter-browserify は CJS を ESM ラップしているので明示
     include: ["eslint-linter-browserify"],
+    // Pyodide は dev 時に CJS interop でロードできず、 また巨大なため事前 bundle 対象から外す。
+    // dynamic import で Python 課題を開いた瞬間にだけ chunk として fetch される (#108)。
+    exclude: ["pyodide"],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        // Pyodide ローダ + Python 用 CodeMirror 言語拡張を `vendor-pyodide` chunk に切り出す (#108)。
+        // 主バンドルが Pyodide を含まないため、 JS / SQL 学習者には ~10MB の追加コストが一切かからない。
+        manualChunks(id) {
+          if (id.includes("/node_modules/pyodide/")) {return "vendor-pyodide";}
+          if (id.includes("/node_modules/@codemirror/lang-python/")) {return "vendor-pyodide";}
+          return undefined;
+        },
+      },
+    },
   },
 });

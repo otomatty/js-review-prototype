@@ -12,6 +12,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
     "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-python": "^6.1.6",
     "@codemirror/lang-sql": "^6.10.0",
     "@codemirror/lint": "^6.5.0",
     "@codemirror/state": "^6.4.1",
@@ -32,6 +33,7 @@
     "eslint-linter-browserify": "^9.1.0",
     "highlight.js": "^11.11.1",
     "lucide-react": "^1.14.0",
+    "pyodide": "^0.27.5",
     "quickjs-emscripten-core": "^0.32.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
