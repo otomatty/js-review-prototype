@@ -82,22 +82,18 @@ function buildVitestShim(nonce: string): string {
   // 文字列定数は JSON.stringify で安全にエスケープ
   const prefixWithNonce = `${VITEST_REPORT_PREFIX}${nonce}:`;
   return `
-;(function () {
+;(function (__jsreview_log_inj__) {
   if (globalThis.${VITEST_EMIT_GLOBAL}) { return; }
-  // records / fullPrefix はクロージャ内に閉じ込め、 学習者コードから直接書き換え不可。
-  const records = [];
+  // fullPrefix はクロージャ内に閉じ込め、 学習者コードから直接書き換え不可。
   const fullPrefix = ${JSON.stringify(prefixWithNonce)};
 
   // 学習者が後から console.log を上書きしてレポートを傍受・偽造する経路を塞ぐため、
-  // ログ関数の参照をシム読み込み時にクロージャへ捕獲する (codex P1)。
-  // QuickJS ランナーが setProp で渡す \`__jsreview_log__\` を最優先で利用し、
-  // 無い環境 (Node vm test 等) では console.log を bind して原参照を固定する。
+  // ログ関数の参照をシム読み込み時にクロージャへ捕獲する (codex P1 / coderabbit critical)。
+  // 引数 __jsreview_log_inj__ には buildScenarioCode が \`globalThis.__jsreview_log__\` を
+  // 渡しており、 学習者 top-level の \`function __jsreview_log__\` 宣言は外側 IIFE スコープに
+  // 限定されるため、 この引数は必ず runner 注入の関数 (もしくは undefined) になる。
   const safeLog = (function () {
-    try {
-      if (typeof globalThis.__jsreview_log__ === "function") {
-        return globalThis.__jsreview_log__;
-      }
-    } catch (_) { /* ignore */ }
+    if (typeof __jsreview_log_inj__ === "function") { return __jsreview_log_inj__; }
     try {
       const cl = console.log;
       return cl.bind(console);
@@ -105,33 +101,53 @@ function buildVitestShim(nonce: string): string {
     return function () { /* no-op */ };
   })();
 
-  // JSON.stringify も学習者が後から差し替えできるので、 シム読み込み時に bind して原参照を固定する
-  // (codex P1)。 これがないと emit 関数が \`JSON.stringify(records)\` を評価する時点で
-  // 上書きされた関数が走り、 偽の records 文字列が出力されてしまう。
-  const safeStringify = (function () {
-    try {
-      return JSON.stringify.bind(JSON);
-    } catch (_) {
-      return null;
-    }
+  // JSON.stringify / String も学習者が後から差し替えできるので、 シム読み込み時に
+  // bind / 参照を固定する (codex P1 / coderabbit critical)。
+  // 注: JSON.stringify.bind だけでは Array.prototype.toJSON や Object.prototype.toJSON の
+  // 汚染で内容を改竄できる。 そのため records は **配列に貯めず、 都度 JSON 文字列を
+  // 連結する** 設計 (下記 recordsJson)。 JSON.stringify は string primitive にのみ使い、
+  // primitives は仕様上 toJSON を呼ばないため安全。
+  const _String = String;
+  const _stringify = (function () {
+    try { return JSON.stringify.bind(JSON); } catch (_) { return null; }
   })();
+
+  // 累積シリアライズ: records を Array で持つと Array.prototype.toJSON 汚染で
+  // emit 時に偽の JSON を返される。 each it / describe で即 JSON 文字列化して連結する
+  // ことで、 emit 時点ではただの文字列結合だけになり toJSON 経由の改竄を完全に防ぐ。
+  let recordCount = 0;
+  let recordsJson = "";
+  function pushRecord(name, passed, error) {
+    if (!_stringify) { return; }
+    if (recordCount > 0) { recordsJson += ","; }
+    recordCount += 1;
+    // _stringify(_String(x)) は string primitive 化してから JSON 化するので、
+    // Object/Array prototype の toJSON 汚染を踏まない (string primitives は toJSON 不適用)。
+    let item = "{\\"name\\":" + _stringify(_String(name));
+    item += ",\\"passed\\":" + (passed ? "true" : "false");
+    if (error !== undefined) {
+      item += ",\\"error\\":" + _stringify(_String(error));
+    }
+    item += "}";
+    recordsJson += item;
+  }
 
   globalThis.describe = function (name, fn) {
     if (typeof fn !== "function") {
-      records.push({ name: String(name), passed: false, error: "describe: callback is not a function" });
+      pushRecord(_String(name), false, "describe: callback is not a function");
       return;
     }
     try {
       fn();
     } catch (e) {
-      records.push({ name: String(name) + " (describe)", passed: false, error: errMsg(e) });
+      pushRecord(_String(name) + " (describe)", false, errMsg(e));
     }
   };
 
   function runIt(name, fn) {
-    const label = String(name);
+    const label = _String(name);
     if (typeof fn !== "function") {
-      records.push({ name: label, passed: false, error: "it: callback is not a function" });
+      pushRecord(label, false, "it: callback is not a function");
       return;
     }
     try {
@@ -139,20 +155,20 @@ function buildVitestShim(nonce: string): string {
       if (out && typeof out.then === "function") {
         // QuickJS の runFreeRun はトップレベル await や Promise の解決を待たないため、
         // async テストの結果は確定的に取れない。 v1 では明示エラー扱い。
-        records.push({ name: label, passed: false, error: "async tests are not supported in this runner" });
+        pushRecord(label, false, "async tests are not supported in this runner");
         return;
       }
-      records.push({ name: label, passed: true });
+      pushRecord(label, true);
     } catch (e) {
-      records.push({ name: label, passed: false, error: errMsg(e) });
+      pushRecord(label, false, errMsg(e));
     }
   }
   globalThis.it = runIt;
   globalThis.test = runIt;
 
   function errMsg(e) {
-    if (e && typeof e === "object" && "message" in e) { return String(e.message); }
-    return String(e);
+    if (e && typeof e === "object" && "message" in e) { return _String(e.message); }
+    return _String(e);
   }
 
   function fmt(v) {
@@ -310,16 +326,16 @@ function buildVitestShim(nonce: string): string {
   // 偽レポート行を学習者が console.log で生成しても nonce が一致しないので採点に影響しない。
   Object.defineProperty(globalThis, ${JSON.stringify(VITEST_EMIT_GLOBAL)}, {
     value: function () {
-      // safeLog / safeStringify はクロージャ捕獲した原参照。 学習者が後から
-      // console.log や JSON.stringify を上書きしても傍受・偽造できない (codex P1)。
-      const json = safeStringify ? safeStringify(records) : "[]";
-      safeLog(fullPrefix + json);
+      // safeLog はクロージャ捕獲したログ関数。 recordsJson は pushRecord で
+      // 都度 JSON 文字列として組み立てた累積結果。 ここでは Array や Object の
+      // serialize は一切行わないので、 学習者の prototype 汚染 (toJSON 等) を踏まない。
+      safeLog(fullPrefix + "[" + recordsJson + "]");
     },
     writable: false,
     configurable: false,
     enumerable: false,
   });
-})();
+})(typeof globalThis !== "undefined" ? globalThis.__jsreview_log__ : undefined);
 `;
 }
 
