@@ -256,7 +256,12 @@ async function runOne(
   pyodide.runPython("_jsreview_reset_modules()");
 
   // テスト毎に fresh な globals dict を渡し、 前のテストで定義した変数/関数を引きずらない。
-  const globals = pyodide.runPython("dict()") as PyProxyLike;
+  // `__name__` を `"__main__"` に設定しておかないと、 `if __name__ == "__main__":` 内の
+  // コードが採点時に実行されない (グローバル名前空間がスクリプト相当ではなくモジュール相当に
+  // なってしまうため) — 学習者の典型スクリプトを正しく走らせるのに必要。
+  const globals = pyodide.runPython(
+    "{'__name__': '__main__'}",
+  ) as PyProxyLike;
   try {
     const source =
       opts.kind === "function" && opts.test
@@ -341,8 +346,10 @@ function stripFunctionMarkers(stdout: string): string {
 }
 
 function normalizeStdout(s: string): string {
-  // 末尾改行と末尾空白は無視する (JS / SQL ランナと同じ感覚で比較できるように)。
-  return s.replace(/\s+$/g, "");
+  // JS ランナ (`quickjs-runner.ts` の同名関数) と同じ正規化: CRLF を LF に揃え、
+  // 末尾の連続改行のみ除去する。 末尾のスペース / タブは意味のある差分として残し、
+  // 学習者が誤って余計な空白を出力しているケースを見逃さない。
+  return s.replace(/\r\n/g, "\n").replace(/\n+$/g, "");
 }
 
 function writeFilesToFS(
