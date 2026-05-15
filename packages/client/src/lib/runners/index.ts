@@ -2,12 +2,12 @@
  * 言語別ランナーのディスパッチャ (#105 / #100)。
  *
  * `getRunner(language)` は `CodeRunner` インタフェースを満たす言語別実装を返す。
- * 未実装言語 (PHP / ESLint) は placeholder ランナーが「未実装」 エラーを
- * throw する設計で、 UI 側 (`useGradeRunner`) はそれを `RUNNER_ERROR` メッセージとして
- * そのまま表示する。 Python (#108) / Vitest (#110) は実装済み。
+ * 未実装言語 (PHP) は placeholder ランナーが「未実装」 エラーを throw する設計で、
+ * UI 側 (`useGradeRunner`) はそれを `RUNNER_ERROR` メッセージとしてそのまま表示する。
+ * Python (#108) / Vitest (#110) / ESLint (#111) は実装済み。
  *
- * Vitest ランナーは dynamic import で別 chunk 化し、 JS / SQL / Python 学習者の
- * 初期ロードに影響しないようにしている (#110 受け入れ条件: dynamic import で別 chunk)。
+ * Vitest / ESLint ランナーは dynamic import で別 chunk 化し、 JS / SQL / Python 学習者の
+ * 初期ロードに影響しないようにしている (#110 / #111 受け入れ条件: dynamic import で別 chunk)。
  *
  * `runGrading` は採点呼び出し側 (`useGradeRunner`) 向けの薄いラッパで、
  * ランナーで実行した結果と手元の Lint / AST を合算して `evaluate()` を返す。
@@ -49,6 +49,18 @@ const vitestLazyRunner: CodeRunner = {
   },
 };
 
+/**
+ * ESLint 設定採点ランナーを dynamic import で遅延ロードする (#111)。
+ * Vitest と同じく chunk 分離で、 ESLint 教材を選んだ瞬間に初めて fetch される。
+ */
+const eslintConfigLazyRunner: CodeRunner = {
+  language: "eslint",
+  async run(input) {
+    const mod = await import("./eslint-config-runner.js");
+    return mod.eslintConfigRunner.run(input);
+  },
+};
+
 export function getRunner(language: Language): CodeRunner {
   switch (language) {
     case "javascript":
@@ -59,8 +71,9 @@ export function getRunner(language: Language): CodeRunner {
       return pythonRunner;
     case "vitest":
       return vitestLazyRunner;
-    case "php":
-    case "eslint": {
+    case "eslint":
+      return eslintConfigLazyRunner;
+    case "php": {
       const cached = placeholderCache.get(language);
       if (cached) {return cached;}
       const created = createPlaceholderRunner(language);

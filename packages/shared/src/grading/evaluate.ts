@@ -42,9 +42,11 @@ export function evaluate(
       case "function":
       case "sql":
       case "mutation":
-        // mutation も他と同じ「全 TestResult が pass」 判定で良い。
-        // ランナー (vitest-runner) 側が「reference 全 pass」 と「各 mutant kill」 を
-        // それぞれ 1 件の TestResult に集約しており、 すべて成功で testsPassed=true。
+      case "eslint-config":
+        // mutation / eslint-config も他と同じ「全 TestResult が pass」 判定で良い。
+        // ランナー側が reference (Vitest なら全 pass / ESLint なら違反 0 件) と各 mutant
+        // (Vitest なら kill / ESLint なら違反 ≥ 1 件) を 1 件ずつの TestResult に集約しており、
+        // すべて成功で testsPassed=true。
         return testResults.length > 0 && testResults.every((t) => t.passed);
       default: {
         const exhaustive: never = testKind;

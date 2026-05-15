@@ -24,9 +24,17 @@ export interface LintCodeOptions {
   ignoredUnusedNames?: string[];
 }
 
-const linter = new Linter();
+/**
+ * ESLint Linter シングルトン。 ESLint 設定教材ランナー (#111) からも再利用する。
+ * `eslint-linter-browserify` は内部状態を持たないので 1 インスタンスを共有して問題ない。
+ */
+export const linter = new Linter();
 
-const GLOBALS: Record<string, "readonly"> = {
+/**
+ * 採点時に「定義済み識別子」 とみなす browser/JS グローバル群。
+ * eslint-config-runner からも `languageOptions.globals` として再利用される (#111)。
+ */
+export const GLOBALS: Record<string, "readonly"> = {
   Array: "readonly",
   BigInt: "readonly",
   Boolean: "readonly",

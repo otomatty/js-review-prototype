@@ -41,7 +41,7 @@ export interface AssignmentFile {
   readonly?: boolean;
 }
 
-export type TestKind = "stdout" | "function" | "sql" | "mutation";
+export type TestKind = "stdout" | "function" | "sql" | "mutation" | "eslint-config";
 
 export type ChapterId =
   | "Ch00"
@@ -185,12 +185,18 @@ export interface Assignment {
   commonMistakes?: CommonMistake[];
   isCapstone?: boolean;
   /**
-   * Vitest mutation testing 採点用設定 (#110)。
-   * `testKind: "mutation"` の課題で必須。 学習者は `entryFile` (例: `main.test.js`) に
-   * `describe` / `it` / `expect` でテストを書き、 採点では:
-   *   1. `referenceImpl + userTest` で全テスト pass することを確認
-   *   2. 各 `mutants[i]` について `mutants[i].code + userTest` で 1 件以上 fail することを確認 (mutant kill)
-   * の両方を満たした場合のみクリア扱いになる。
+   * mutation 採点用設定 (#110 / #111)。
+   * `testKind: "mutation"` (Vitest) または `testKind: "eslint-config"` (ESLint) の課題で必須。
+   *
+   * - Vitest: 学習者は `entryFile` (例: `main.test.js`) に `describe`/`it`/`expect` を書き、
+   *     1. `referenceImpl + userTest` で全テスト pass
+   *     2. 各 `mutants[i]` について `mutants[i].code + userTest` で 1 件以上 fail (mutant kill)
+   * - ESLint: 学習者は `entryFile` (例: `eslint.config.js`) に rules を書き、
+   *     1. `referenceImpl` (正解コード) を学習者 rules で lint → 違反 0 件
+   *     2. 各 `mutants[i].code` (バグコード) を学習者 rules で lint → 違反 ≥ 1 件
+   *        (`expectedRuleId` 指定時はその ruleId が違反に含まれること)
+   *
+   * 上記をすべて満たした場合のみクリア扱いになる。
    */
   mutation?: MutationConfig;
   /**
@@ -224,25 +230,40 @@ export interface StaticAnalysisConfig {
 }
 
 /**
- * mutation testing で使用するバグ入り実装 1 件 (#110)。
- * 学習者のテストがこの実装に対して 1 件以上 fail することを期待する (= 撃破)。
+ * mutation 採点で使用するバグ入りスニペット 1 件 (#110 / #111)。
+ *
+ * - `testKind: "mutation"` (Vitest教材): `code` はバグ入り実装。 学習者のテストファイルと
+ *   結合して実行され、 1 件以上 fail することを期待する (= 撃破)。
+ * - `testKind: "eslint-config"` (ESLint教材): `code` は学習者の rules で検査すべきバグコード片。
+ *   違反 1 件以上 (かつ `expectedRuleId` 指定時はその ruleId が含まれること) で撃破扱い。
  */
 export interface Mutant {
   /** 課題内で一意な識別子 (例: "m1", "off-by-one")。 UI 表示と TestResult 名に使う。 */
   id: string;
-  /** バグ入り実装の完全ソース (関数定義込み)。 学習者のテストファイルと結合して実行される。 */
+  /** バグ入りソースの完全形。 testKind により扱いが変わる (上のコメント参照)。 */
   code: string;
   /** どの種類のバグかを説明する短い日本語 (例: "+ を - に取り違え")。 採点結果表示に使う。 */
   description: string;
+  /**
+   * `testKind: "eslint-config"` 限定の任意フィールド (#111)。 指定された場合、 検出された
+   * 違反一覧のうち少なくとも 1 件がこの ruleId と一致しないと撃破扱いにならない。
+   * 「このバグはこのルールで止めてほしい」 を採点で明示する用途。 Vitest mutation では未使用。
+   */
+  expectedRuleId?: string;
 }
 
+/**
+ * mutation 採点用の共通設定 (#110 / #111)。
+ *
+ * - `testKind: "mutation"` (Vitest教材): `referenceImpl` は正解実装、 各 `mutant.code` は
+ *   バグ入り実装。 学習者のテストが reference では全 pass、 各 mutant では 1 件以上 fail することを期待。
+ * - `testKind: "eslint-config"` (ESLint教材): `referenceImpl` は違反 0 件であるべき正解コード、
+ *   各 `mutant.code` は学習者の rules で違反を出すべきバグコード片。
+ */
 export interface MutationConfig {
-  /**
-   * 正解実装の完全ソース。 採点では学習者のテストファイルと結合され、
-   * 全テスト pass しなければクリア扱いにならない。
-   */
+  /** testKind により意味が変わる完全ソース (上のコメント参照)。 */
   referenceImpl: string;
-  /** バグ入り実装の集合。 各 mutant について撃破 (1 件以上 fail) が必要。 */
+  /** バグ入りスニペット集合。 各 mutant について撃破 (1 件以上 fail / 違反) が必要。 */
   mutants: Mutant[];
 }
 

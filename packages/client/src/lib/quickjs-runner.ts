@@ -138,6 +138,15 @@ export class QuickJsRunner {
           error:
             "INVALID_TEST_KIND: mutation tests must be routed to vitest-runner",
         };
+      case "eslint-config":
+        // eslint-config testKind は eslint-config-runner が browser ESLint Linter で
+        // 直接採点するので、 QuickJS へは来ない。 来た場合はディスパッチ漏れ (#111)。
+        return {
+          name: test.name,
+          passed: false,
+          error:
+            "INVALID_TEST_KIND: eslint-config tests must be routed to eslint-config-runner",
+        };
       default: {
         const exhaustive: never = options.testKind;
         return exhaustive;
