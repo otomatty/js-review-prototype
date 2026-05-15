@@ -3,8 +3,8 @@
  *
  * QuickJS ランタイム内に注入される文字列として export する。
  * Vitest / Jest 互換のサブセットを提供し、 学習者は `describe` / `it` / `expect` で
- * テストを書ける。 シムは `__JSREVIEW_VITEST_RESULTS__` (TestRecord[]) に
- * 各 `it` の結果を蓄積し、 ランナー側で `JSON.stringify` してマーカー付きで出力する。
+ * テストを書ける。 シムはクロージャ内に閉じ込めた `records` (TestRecord[]) に各 `it` の
+ * 結果を蓄積し、 ランナー側が末尾で呼び出す emit 関数経由でレポート行を出力する。
  *
  * 提供 API:
  * - `describe(name, fn)` … その場で fn() を実行する (グルーピングのみ)。
@@ -18,6 +18,15 @@
  * - async テスト (戻り値が Promise の `it`) は明示エラー扱い ("async tests not supported")。
  *   QuickJS の `runFreeRun` がプロミス解決を待たないため、 確定的な結果が得られないため。
  * - `beforeEach` / `afterEach` / モック (`vi.fn()`) / snapshot。 学習目的では未提供。
+ *
+ * セキュリティ:
+ * - `records` は IIFE のクロージャに閉じ込めており、 学習者コードから直接読み書きできない
+ *   (codereview: globalThis 露出経由の偽結果注入を防ぐ)。
+ * - レポート行は呼び出しごとにランナーが生成する nonce (16 byte の hex) を含む。
+ *   学習者が事前に偽レポート行を console.log で出しても nonce が一致しないため runner は無視する
+ *   (codereview: stdout の「最後の prefix 行」 を信用する設計の穴を塞ぐ)。
+ * - emit 関数は `Object.defineProperty` で writable/configurable: false にしており、
+ *   学習者からの上書き・削除を防ぐ (代入は非 strict で no-op、 strict で例外)。
  */
 
 export interface VitestTestRecord {
@@ -27,25 +36,51 @@ export interface VitestTestRecord {
   error?: string;
 }
 
-/** 結果配列を読み出すための QuickJS グローバル名。 ランナー側で同じ識別子を使う。 */
-export const VITEST_RESULTS_GLOBAL = "__JSREVIEW_VITEST_RESULTS__";
-
-/** stdout 経由で結果を取り出すためのマーカー。 ランナー側で同じ識別子を使う。 */
+/**
+ * レポート行の固定 prefix。 nonce はこの後ろに連結されるため、
+ * stdout からは `__JSREVIEW_VITEST_REPORT__:<nonce>:<json>` の形式になる。
+ */
 export const VITEST_REPORT_PREFIX = "__JSREVIEW_VITEST_REPORT__:";
 
+/** emit 関数の globalThis 上の名前。 学習者から見えるが値を上書きできない (defineProperty)。 */
+export const VITEST_EMIT_GLOBAL = "__jsreview_vitest_emit__";
+
 /**
- * QuickJS に注入するシム本体。
- *
- * 文字列リテラルとして埋め込むため、 内部から `VITEST_RESULTS_GLOBAL` 等の
- * 外側定数を参照したくても TypeScript の置換が効かない。 同期するために
- * builder 関数で組み立てて、 1 箇所だけで定数を差し込む。
+ * 偽造を防ぐためのランダム nonce を生成する。
+ * crypto.getRandomValues は QuickJS でも利用可能 (web-crypto polyfill 経由)。 利用できない
+ * 環境では Math.random で fallback する (学習者教材では十分な entropy)。
  */
-function buildVitestShim(): string {
+function generateNonce(): string {
+  const cryptoApi: { getRandomValues?: (a: Uint8Array) => Uint8Array } | undefined =
+    typeof crypto !== "undefined" ? (crypto as { getRandomValues?: (a: Uint8Array) => Uint8Array }) : undefined;
+  if (cryptoApi && typeof cryptoApi.getRandomValues === "function") {
+    const arr = new Uint8Array(16);
+    cryptoApi.getRandomValues(arr);
+    return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  // crypto が無いケースは現状の Vite + browser + bun では発生しないが、 fallback として
+  // Math.random を 2 回連結。 30 文字程度なので推測困難。
+  return (
+    Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+  );
+}
+
+/**
+ * QuickJS に注入するシム本体を生成する。
+ *
+ * `nonce` は呼び出しごとに変化するため、 シム source も呼び出しごとに生成する。
+ * (シム source 末尾の emit 関数が nonce を closure 経由で保持し、 ランナー側は
+ *  自分が生成した nonce と一致する行だけを採点に使う)
+ */
+function buildVitestShim(nonce: string): string {
+  // 文字列定数は JSON.stringify で安全にエスケープ
+  const prefixWithNonce = `${VITEST_REPORT_PREFIX}${nonce}:`;
   return `
 ;(function () {
-  if (globalThis.${VITEST_RESULTS_GLOBAL}) { return; }
+  if (globalThis.${VITEST_EMIT_GLOBAL}) { return; }
+  // records / fullPrefix はクロージャ内に閉じ込め、 学習者コードから直接書き換え不可。
   const records = [];
-  globalThis.${VITEST_RESULTS_GLOBAL} = records;
+  const fullPrefix = ${JSON.stringify(prefixWithNonce)};
 
   globalThis.describe = function (name, fn) {
     if (typeof fn !== "function") {
@@ -225,22 +260,39 @@ function buildVitestShim(): string {
     matchers.not = buildMatchers(actual, true);
     return matchers;
   };
+
+  // emit 関数は学習者が上書き・削除できないよう defineProperty で固定する。
+  // ランナーが末尾で呼ぶこの関数のみが nonce 入りのレポート行を吐けるため、
+  // 偽レポート行を学習者が console.log で生成しても nonce が一致しないので採点に影響しない。
+  Object.defineProperty(globalThis, ${JSON.stringify(VITEST_EMIT_GLOBAL)}, {
+    value: function () {
+      console.log(fullPrefix + JSON.stringify(records));
+    },
+    writable: false,
+    configurable: false,
+    enumerable: false,
+  });
 })();
 `;
 }
 
-export const VITEST_SHIM_SOURCE = buildVitestShim();
-
 /**
- * シナリオごとの実行スクリプトを組み立てる (#110)。
+ * 1 シナリオ分の実行スクリプト + 検証用 nonce を組み立てる (#110)。
  *
- * `${VITEST_SHIM_SOURCE}` でシムを注入 → 実装本体 (reference または mutant) →
- * 学習者のテストファイル → 末尾でレポート行を `console.log` する形。
- * QuickJS 側の `console.log` はワーカーが捕捉した stdout に流すため、
- * vitest ランナー側で `VITEST_REPORT_PREFIX` を含む行をパースすれば結果が取れる。
+ * シム source (nonce 入り) → 実装本体 → 学習者テスト → emit 呼び出しの順で連結。
+ * 戻り値の `nonce` をランナー側が保持し、 stdout から該当 nonce のレポート行だけを採点に使う。
  */
-export function buildScenarioCode(impl: string, userTest: string): string {
-  // テスト末尾で結果を 1 行 JSON として出す。 マーカー付きで他の console.log と区別する。
-  const reportLine = `console.log(${JSON.stringify(VITEST_REPORT_PREFIX)} + JSON.stringify(${VITEST_RESULTS_GLOBAL}));`;
-  return `${VITEST_SHIM_SOURCE}\n${impl}\n${userTest}\n${reportLine}\n`;
+export function buildScenarioCode(
+  impl: string,
+  userTest: string,
+): { code: string; nonce: string } {
+  const nonce = generateNonce();
+  const shim = buildVitestShim(nonce);
+  // ランナー側が呼び出す末尾の 1 行。 シムの emit 関数は defineProperty で固定済みなので
+  // 学習者が上書きしても挙動は変わらない。
+  const reportLine = `globalThis[${JSON.stringify(VITEST_EMIT_GLOBAL)}]();`;
+  return {
+    code: `${shim}\n${impl}\n${userTest}\n${reportLine}\n`,
+    nonce,
+  };
 }

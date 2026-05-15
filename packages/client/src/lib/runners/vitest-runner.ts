@@ -49,7 +49,10 @@ async function runScenario(
   impl: string,
   userTest: string,
 ): Promise<ScenarioOutcome> {
-  const code = buildScenarioCode(impl, userTest);
+  // nonce は呼び出しごとにユニーク。 シムが nonce 入りのレポート行を吐き、
+  // ランナーは自分が生成した nonce と一致する行だけを採点に使う (codereview: stdout 偽装対策)。
+  const { code, nonce } = buildScenarioCode(impl, userTest);
+  const expectedPrefix = `${VITEST_REPORT_PREFIX}${nonce}:`;
   const response = await runTestsLocally({
     code,
     testKind: "stdout",
@@ -62,14 +65,14 @@ async function runScenario(
   }
   const stdout = single.stdout ?? "";
   const lines = stdout.split("\n");
-  // 末尾から探す。 学習者コードの誤った console.log が後続行に混入する可能性は低いが、
-  // 念のため最後の REPORT 行を採用する。 extraLines は末尾から push して、 最後に
-  // reverse で元順序に戻す (unshift の O(N^2) を避ける)。
+  // nonce で固有化された prefix を持つ行だけを採点対象とする。 学習者が
+  // 偽の REPORT 行を console.log で先に出しても nonce が一致しないため無視される。
+  // extraLines は末尾から push して、 最後に reverse で元順序に戻す (unshift の O(N^2) を避ける)。
   let reportLine: string | undefined;
   const extraLinesReversed: string[] = [];
   for (let i = lines.length - 1; i >= 0; i--) {
     const line = lines[i];
-    if (reportLine === undefined && line.startsWith(VITEST_REPORT_PREFIX)) {
+    if (reportLine === undefined && line.startsWith(expectedPrefix)) {
       reportLine = line;
     } else if (line.length > 0) {
       extraLinesReversed.push(line);
@@ -89,7 +92,7 @@ async function runScenario(
 
   let parsed: VitestTestRecord[];
   try {
-    const json = reportLine.slice(VITEST_REPORT_PREFIX.length);
+    const json = reportLine.slice(expectedPrefix.length);
     const raw: unknown = JSON.parse(json);
     if (!Array.isArray(raw)) {
       throw new Error("expected array");
@@ -165,14 +168,19 @@ async function runFreerun(
   const startedAt = performance.now();
   const outcome = await runScenario(mutation.referenceImpl, userTest);
   const durationMs = Math.round(performance.now() - startedAt);
-  if (outcome.scenarioError && outcome.tests.length === 0) {
+  // grading と同じく、 scenarioError が立っていれば tests がパース済みでも失敗扱いにする
+  // (codereview: 偽レポート + throw / 例外発生時にも UI に正しく失敗を伝えるため)。
+  if (outcome.scenarioError) {
     return {
       durationMs,
       results: [
         {
           name: "正解実装でテストを実行",
           passed: false,
-          stdout: outcome.extraStdout,
+          stdout:
+            outcome.tests.length > 0
+              ? formatScenarioStdout(outcome.tests)
+              : outcome.extraStdout,
           error: outcome.scenarioError,
         },
       ],
