@@ -103,7 +103,17 @@ let pyodideHolder: PyodideHolder | null = null;
 
 function getPyodide(): Promise<PyodideAPI> {
   if (!pyodideHolder || pyodideHolder.broken) {
-    pyodideHolder = { loadPromise: loadFreshPyodide(), broken: false };
+    // ロード失敗 (CDN 断・ネットワーク等) の rejected promise を抱え続けると、
+    // 以降の Python 課題が二度と動かなくなる。 失敗を観測したら holder を null に戻し、
+    // 次の `getPyodide()` で再 fetch できるようにする。
+    const loadPromise = loadFreshPyodide();
+    const guarded = loadPromise.catch((e) => {
+      if (pyodideHolder && pyodideHolder.loadPromise === guarded) {
+        pyodideHolder = null;
+      }
+      throw e;
+    });
+    pyodideHolder = { loadPromise: guarded, broken: false };
   }
   return pyodideHolder.loadPromise;
 }
@@ -171,11 +181,9 @@ async function runUnlocked(input: RunInput): Promise<RunOutput> {
   const pyodide = await getPyodide();
   const startedAt = performance.now();
 
-  // FS に提出ファイルを書き込む。 前回 `run()` で書き込んだが今回入力に存在しない
-  // ファイルは unlink し、 前の課題の `helpers.py` 等が `import` で誤って解決されるのを防ぐ。
-  writeFilesToFS(pyodide, input.files);
-
   if (input.mode === "freerun") {
+    // freerun は単発実行なので、 ここで 1 回だけ書き込めばよい。
+    writeFilesToFS(pyodide, input.files);
     const result = await runOne(pyodide, input.files[input.entryFile] ?? "", {
       name: input.entryPoints?.[0] ?? "実行結果",
       kind: "freerun",
@@ -188,7 +196,7 @@ async function runUnlocked(input: RunInput): Promise<RunOutput> {
 
   if (input.testKind === "sql") {
     throw new Error(
-      "Python ランナは SQL testKind に対応していません (課題定義の不整合)",
+      "Python ランナは SQL テストに対応していません (課題定義の不整合)",
     );
   }
 
@@ -205,6 +213,11 @@ async function runUnlocked(input: RunInput): Promise<RunOutput> {
       });
       continue;
     }
+    // テスト毎に提出ファイルを書き戻すことで、 学習者コードが starterFiles の
+    // path に書き込んだ副作用 (例: `open("main.py", "w").write(...)`) を次テスト前に元へ戻す。
+    // (新規パスに書かれた orphan ファイルは残るが、 sample 単一ファイル課題では影響しない。
+    //  本格的な多ファイル サンドボックス化は #100 後続 issue で検討。)
+    writeFilesToFS(pyodide, input.files);
     const result = await runOne(pyodide, code, {
       name: test.name,
       kind: input.testKind,
