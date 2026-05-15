@@ -14,6 +14,12 @@
  *   `.toBeGreaterThan/.toBeLessThan/.toBeGreaterThanOrEqual/.toBeLessThanOrEqual`,
  *   `.toContain`, `.toHaveLength`, `.toThrow`, `.not.<同上>`
  *
+ * Vitest との挙動差 (教材用に意図的に簡略化したもの):
+ * - `toStrictEqual` は `toEqual` の単純なエイリアス。 本来の Vitest は
+ *   プロトタイプ一致や `undefined` を含むキー差まで厳密比較するが、 学習教材では
+ *   両者を区別する必要が薄いため共通化している。 厳密な型比較を学ぶ段階の課題では
+ *   `.toBe` (Object.is) を使う前提。
+ *
  * 非対応 (v1):
  * - async テスト (戻り値が Promise の `it`) は明示エラー扱い ("async tests not supported")。
  *   QuickJS の `runFreeRun` がプロミス解決を待たないため、 確定的な結果が得られないため。
@@ -82,6 +88,23 @@ function buildVitestShim(nonce: string): string {
   const records = [];
   const fullPrefix = ${JSON.stringify(prefixWithNonce)};
 
+  // 学習者が後から console.log を上書きしてレポートを傍受・偽造する経路を塞ぐため、
+  // ログ関数の参照をシム読み込み時にクロージャへ捕獲する (codex P1)。
+  // QuickJS ランナーが setProp で渡す \`__jsreview_log__\` を最優先で利用し、
+  // 無い環境 (Node vm test 等) では console.log を bind して原参照を固定する。
+  const safeLog = (function () {
+    try {
+      if (typeof globalThis.__jsreview_log__ === "function") {
+        return globalThis.__jsreview_log__;
+      }
+    } catch (_) { /* ignore */ }
+    try {
+      const cl = console.log;
+      return cl.bind(console);
+    } catch (_) { /* ignore */ }
+    return function () { /* no-op */ };
+  })();
+
   globalThis.describe = function (name, fn) {
     if (typeof fn !== "function") {
       records.push({ name: String(name), passed: false, error: "describe: callback is not a function" });
@@ -133,6 +156,12 @@ function buildVitestShim(nonce: string): string {
   }
 
   function deepEqual(a, b) {
+    // 公開 API。 循環参照を抱えたオブジェクトでも infinite recursion で stack overflow に
+    // ならないよう WeakMap で訪問済みペアを記録しながら比較する (coderabbit nitpick)。
+    return _deepEqualSeen(a, b, new WeakMap());
+  }
+
+  function _deepEqualSeen(a, b, seen) {
     if (Object.is(a, b)) { return true; }
     if (typeof a !== typeof b) { return false; }
     if (a === null || b === null) { return a === b; }
@@ -146,10 +175,14 @@ function buildVitestShim(nonce: string): string {
       return a instanceof RegExp && b instanceof RegExp && a.toString() === b.toString();
     }
     if (Array.isArray(a) !== Array.isArray(b)) { return false; }
+    // 循環検出: 以前 a を比較したときに同じ b と組み合わせていれば、 一貫性 (= 等しい) と
+    // 仮定して再帰を止める。 Jest/Vitest の equals と同じ bisimulation 風の処理。
+    if (seen.has(a)) { return seen.get(a) === b; }
+    seen.set(a, b);
     if (Array.isArray(a)) {
       if (a.length !== b.length) { return false; }
       for (let i = 0; i < a.length; i++) {
-        if (!deepEqual(a[i], b[i])) { return false; }
+        if (!_deepEqualSeen(a[i], b[i], seen)) { return false; }
       }
       return true;
     }
@@ -158,7 +191,7 @@ function buildVitestShim(nonce: string): string {
     if (aKeys.length !== bKeys.length) { return false; }
     for (const k of aKeys) {
       if (!Object.prototype.hasOwnProperty.call(b, k)) { return false; }
-      if (!deepEqual(a[k], b[k])) { return false; }
+      if (!_deepEqualSeen(a[k], b[k], seen)) { return false; }
     }
     return true;
   }
@@ -266,7 +299,9 @@ function buildVitestShim(nonce: string): string {
   // 偽レポート行を学習者が console.log で生成しても nonce が一致しないので採点に影響しない。
   Object.defineProperty(globalThis, ${JSON.stringify(VITEST_EMIT_GLOBAL)}, {
     value: function () {
-      console.log(fullPrefix + JSON.stringify(records));
+      // safeLog はクロージャ捕獲したログ関数。 学習者が後から console.log を
+      // 上書きしても傍受・偽造できない (codex P1)。
+      safeLog(fullPrefix + JSON.stringify(records));
     },
     writable: false,
     configurable: false,

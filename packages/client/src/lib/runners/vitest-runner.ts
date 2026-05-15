@@ -208,10 +208,11 @@ async function runGrading(
   const refOutcome = await runScenario(mutation.referenceImpl, userTest);
   const referenceResult = buildReferenceResult(refOutcome);
 
-  // reference 自体に COMPILE_ERROR が出るのは 「正解実装か学習者テストの構文壊れ」 のどちらか。
-  // どちらにせよ mutant 評価は意味が無くなる (同じエラーが全 mutant でも起きるだけ) ため、
-  // mutant シナリオはスキップして時間節約する。
-  if (refOutcome.scenarioError && refOutcome.tests.length === 0) {
+  // reference 自体に COMPILE_ERROR / TIMEOUT / 例外が出た場合、 同じエラーは全 mutant でも
+  // 発生する想定なので mutant シナリオはスキップして時間節約する。
+  // scenarioError があれば最終結果は不合格になるため tests がパース済みでもスキップして問題ない
+  // (coderabbit: 一貫性のため scenarioError の有無だけで判定する)。
+  if (refOutcome.scenarioError) {
     const skipped: TestResult[] = mutation.mutants.map((m) =>
       buildMutantSkipped(m, "reference 実装の評価に失敗したためスキップ"),
     );
