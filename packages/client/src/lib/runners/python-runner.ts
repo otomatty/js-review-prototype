@@ -154,6 +154,7 @@ async function loadFreshPyodide(): Promise<PyodideAPI> {
   pyodide.runPython(
     [
       `import sys`,
+      `import importlib`,
       `_PY_HOME = ${JSON.stringify(PY_HOME)}`,
       `if _PY_HOME not in sys.path:`,
       `    sys.path.insert(0, _PY_HOME)`,
@@ -161,6 +162,11 @@ async function loadFreshPyodide(): Promise<PyodideAPI> {
       `def _jsreview_reset_modules():`,
       `    for k in [m for m in sys.modules if m not in _jsreview_initial_modules]:`,
       `        del sys.modules[k]`,
+      // sys.modules を消すだけでは Python の import finder が抱える negative cache
+      // (前回失敗した module 名 / path) は残るため、 invalidate_caches() で
+      // ファインダ側のキャッシュも掃除する。 これがないと writeFilesToFS で
+      // 新ファイルを書いても ModuleNotFoundError が出続けるケースがある。
+      `    importlib.invalidate_caches()`,
     ].join("\n"),
   );
   return pyodide;
