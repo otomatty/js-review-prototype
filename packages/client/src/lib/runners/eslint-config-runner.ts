@@ -278,7 +278,13 @@ async function runFreerun(
   let allOk = refMessages.length === 0;
   for (const m of mutation.mutants) {
     const messages = lintScenario(m.code, config);
-    if (messages.length === 0) {
+    // 採点側 (buildMutantResult) と同じ条件で freerun の pass/fail を判定する。
+    // 「違反 ≥ 1 件」 だけでなく expectedRuleId 指定時はその ruleId が含まれていることまで要求。
+    const hasViolation = messages.length > 0;
+    const expectedHit =
+      m.expectedRuleId === undefined ||
+      messages.some((msg) => msg.ruleId === m.expectedRuleId);
+    if (!hasViolation || !expectedHit) {
       allOk = false;
     }
     sections.push(
