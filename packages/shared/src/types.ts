@@ -125,7 +125,15 @@ export type Difficulty = 1 | 2 | 3;
 
 export type LintPreset = "S1" | "S2" | "S3" | "S4" | "S5";
 
-export interface Assignment {
+/**
+ * `mutation` 設定 (referenceImpl + mutants) を必須とする testKind。
+ * 採点ランナー側 (`vitest-runner` / `eslint-config-runner`) が `referenceImpl` と
+ * `mutants` を直接参照するため、 課題定義時点で省略を型エラーにしたい (#135 P1)。
+ */
+export type MutationRequiredKind = "mutation" | "eslint-config";
+
+/** Assignment の共通フィールド。 testKind / mutation 以外のすべて。 */
+interface AssignmentBase {
   id: string;
   stage: Stage;
   chapterId: ChapterId;
@@ -135,7 +143,6 @@ export interface Assignment {
   newConcept: string;
   estimatedMinutes: number;
   difficulty: Difficulty;
-  testKind: TestKind;
   /** 課題説明 (Markdown) */
   description: string;
   /**
@@ -185,21 +192,6 @@ export interface Assignment {
   commonMistakes?: CommonMistake[];
   isCapstone?: boolean;
   /**
-   * mutation 採点用設定 (#110 / #111)。
-   * `testKind: "mutation"` (Vitest) または `testKind: "eslint-config"` (ESLint) の課題で必須。
-   *
-   * - Vitest: 学習者は `entryFile` (例: `main.test.js`) に `describe`/`it`/`expect` を書き、
-   *     1. `referenceImpl + userTest` で全テスト pass
-   *     2. 各 `mutants[i]` について `mutants[i].code + userTest` で 1 件以上 fail (mutant kill)
-   * - ESLint: 学習者は `entryFile` (例: `eslint.config.js`) に rules を書き、
-   *     1. `referenceImpl` (正解コード) を学習者 rules で lint → 違反 0 件
-   *     2. 各 `mutants[i].code` (バグコード) を学習者 rules で lint → 違反 ≥ 1 件
-   *        (`expectedRuleId` 指定時はその ruleId が違反に含まれること)
-   *
-   * 上記をすべて満たした場合のみクリア扱いになる。
-   */
-  mutation?: MutationConfig;
-  /**
    * 模範解答。
    * 全テストにパスし、AST `required` を全充足、`forbidden` 違反ゼロ、
    * Lint エラーゼロで「全チェック通過 = クリア」に到達できる必要がある
@@ -223,6 +215,29 @@ export interface Assignment {
    */
   mdnSections?: MdnSection[];
 }
+
+/**
+ * 課題定義の公開型。
+ *
+ * `testKind` に応じて `mutation` の必須性を型レベルで強制する判別共用体 (#135 P1):
+ * - `testKind: "mutation"` (Vitest) または `testKind: "eslint-config"` (ESLint) →
+ *   `mutation: MutationConfig` が必須。 ランナーが referenceImpl/mutants を直接読むため。
+ * - それ以外の testKind → `mutation` は指定不可 (`?: never`)。
+ *
+ * 既存課題は JS / SQL / Python が大多数で testKind="stdout"|"function"|"sql" のため、
+ * 後者分岐に自動的にマッチする。 ランタイム検証は `check-integrity.ts` が引き続き行う。
+ */
+export type Assignment =
+  | (AssignmentBase & {
+      testKind: MutationRequiredKind;
+      /** referenceImpl + mutants。 該当 testKind では必須 (型で強制)。 */
+      mutation: MutationConfig;
+    })
+  | (AssignmentBase & {
+      testKind: Exclude<TestKind, MutationRequiredKind>;
+      /** 非 mutation 系課題では mutation は指定不可。 */
+      mutation?: never;
+    });
 
 export interface StaticAnalysisConfig {
   eslint?: { rules: Record<string, ESLintRuleConfig> };
