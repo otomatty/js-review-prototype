@@ -79,10 +79,19 @@ function extractUserConfig(userCode: string): ExtractedConfig {
       continue;
     }
     const e = entry as { rules?: unknown; languageOptions?: unknown };
-    if (e.rules && typeof e.rules === "object") {
+    // 配列を `Object.assign` するとインデックスをキーにマージしてしまうので、 plain object のみを受ける。
+    if (
+      e.rules &&
+      typeof e.rules === "object" &&
+      !Array.isArray(e.rules)
+    ) {
       Object.assign(merged.rules, e.rules as Record<string, ESLintRuleConfig>);
     }
-    if (e.languageOptions && typeof e.languageOptions === "object") {
+    if (
+      e.languageOptions &&
+      typeof e.languageOptions === "object" &&
+      !Array.isArray(e.languageOptions)
+    ) {
       merged.languageOptions = {
         ...(merged.languageOptions ?? {}),
         ...(e.languageOptions as Record<string, unknown>),
@@ -211,7 +220,8 @@ function runFreerun(
   userConfigCode: string,
 ): RunOutput {
   // freerun: 採点ではなく「いま定義した rules で何が出るか確認」 用途。
-  // reference と各 mutant をそれぞれ 1 件の情報的 result として出す。
+  // freerun のランナー契約は「結果 1 件のみ」 (PracticePage で `response.results[0]` を渡す)
+  // のため、 reference + 各 mutant のシナリオ別違反一覧を 1 つの stdout に集約する。
   const startedAt = performance.now();
   let config: ExtractedConfig;
   try {
@@ -225,24 +235,28 @@ function runFreerun(
       ],
     };
   }
-  const results: TestResult[] = [];
+  const sections: string[] = [];
   const refMessages = lintScenario(mutation.referenceImpl, config);
-  results.push({
-    name: "正解コードでの検査結果",
-    passed: refMessages.length === 0,
-    stdout: formatMessages(refMessages),
-  });
+  sections.push(`▼ 正解コード\n${formatMessages(refMessages)}`);
+  let allOk = refMessages.length === 0;
   for (const m of mutation.mutants) {
     const messages = lintScenario(m.code, config);
-    results.push({
-      name: `mutant ${m.id} (${m.description}) での検査結果`,
-      passed: messages.length >= 1,
-      stdout: formatMessages(messages),
-    });
+    if (messages.length === 0) {
+      allOk = false;
+    }
+    sections.push(
+      `▼ mutant ${m.id} (${m.description})\n${formatMessages(messages)}`,
+    );
   }
   return {
     durationMs: Math.round(performance.now() - startedAt),
-    results,
+    results: [
+      {
+        name: "ESLint 設定の動作確認",
+        passed: allOk,
+        stdout: sections.join("\n\n"),
+      },
+    ],
   };
 }
 
