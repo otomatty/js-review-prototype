@@ -32,6 +32,7 @@ import { ch16Async } from "./16-async/_index.js";
 import { langSqlAssignments } from "./_lang/sql/_index.js";
 import { langPythonAssignments } from "./_lang/python/_index.js";
 import { langVitestAssignments } from "./_lang/vitest/_index.js";
+import { langEslintAssignments } from "./_lang/eslint/_index.js";
 
 export { chapters };
 
@@ -57,6 +58,7 @@ export const assignments: Assignment[] = [
   ...langSqlAssignments,
   ...langPythonAssignments,
   ...langVitestAssignments,
+  ...langEslintAssignments,
 ];
 
 export function findAssignment(id: string): Assignment | undefined {

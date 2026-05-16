@@ -6,7 +6,7 @@
  *
  * - `"python"` (#108) … 実装済み (Pyodide ベース)
  * - `"vitest"` (#110) … 実装済み (mutation testing 採点エンジン)
- * - `"eslint"` (#111) … ルール設計 mutation 採点
+ * - `"eslint"` (#111) … 実装済み (ルール設計 mutation 採点)
  * - `"php"`   (#112) … php-wasm ベース
  *
  * 採点時は `useGradeRunner` が `RUNNER_ERROR: ...` 文言として UI に流す。

@@ -83,20 +83,35 @@ async function main(): Promise<void> {
     // (`language: "javascript", testKind: "mutation"` のような不正組み合わせを
     //  非 JS 分岐の中に閉じ込めていると取りこぼすため、 ここで全課題に対して評価する)
     const language = getLanguage(a);
-    const isMutation = a.testKind === "mutation";
-    if (language === "vitest" && !isMutation) {
+    const isVitestMutation = a.testKind === "mutation";
+    const isEslintConfig = a.testKind === "eslint-config";
+    // mutation / eslint-config はどちらも `mutation` 設定 (referenceImpl + mutants) を使う共通枠組み。
+    const usesMutationConfig = isVitestMutation || isEslintConfig;
+    if (language === "vitest" && !isVitestMutation) {
       issues.push({
         assignmentId: a.id,
         message: `vitest assignment must use testKind: "mutation" (got ${a.testKind})`,
       });
     }
-    if (isMutation && language !== "vitest") {
+    if (isVitestMutation && language !== "vitest") {
       issues.push({
         assignmentId: a.id,
         message: `testKind "mutation" is only supported for language "vitest" (got ${language})`,
       });
     }
-    if (isMutation) {
+    if (language === "eslint" && !isEslintConfig) {
+      issues.push({
+        assignmentId: a.id,
+        message: `eslint assignment must use testKind: "eslint-config" (got ${a.testKind})`,
+      });
+    }
+    if (isEslintConfig && language !== "eslint") {
+      issues.push({
+        assignmentId: a.id,
+        message: `testKind "eslint-config" is only supported for language "eslint" (got ${language})`,
+      });
+    }
+    if (usesMutationConfig) {
       if (!a.mutation) {
         issues.push({
           assignmentId: a.id,
@@ -150,8 +165,8 @@ async function main(): Promise<void> {
 
     if (language !== "javascript") {
       // 非 JS 言語のみに適用される最低限チェック (AST 検証は別途下で JS のみに行う)。
-      // mutation 課題 (#110): `tests` は採点側で合成するため空でも良い。
-      if (!isMutation && a.tests.length === 0) {
+      // mutation / eslint-config 課題 (#110 / #111): `tests` は採点側で合成するため空でも良い。
+      if (!usesMutationConfig && a.tests.length === 0) {
         issues.push({
           assignmentId: a.id,
           message: "non-javascript assignment must define at least one test",

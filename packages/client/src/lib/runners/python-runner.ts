@@ -211,6 +211,12 @@ async function runUnlocked(input: RunInput): Promise<RunOutput> {
       "Python ランナは mutation テストに対応していません (課題定義の不整合)",
     );
   }
+  if (input.testKind === "eslint-config") {
+    // eslint-config は ESLint 教材専用 testKind (#111)。 Python では未対応。
+    throw new Error(
+      "Python ランナは eslint-config テストに対応していません (課題定義の不整合)",
+    );
+  }
 
   const code = input.files[input.entryFile] ?? "";
   const results: TestResult[] = [];
