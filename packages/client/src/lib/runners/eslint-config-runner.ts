@@ -121,7 +121,22 @@ async function extractUserConfig(userCode: string): Promise<ExtractedConfig> {
     if (entry === null || typeof entry !== "object") {
       continue;
     }
-    const e = entry as { rules?: unknown; languageOptions?: unknown };
+    const e = entry as {
+      rules?: unknown;
+      languageOptions?: unknown;
+      files?: unknown;
+      ignores?: unknown;
+    };
+    // flat-config の files / ignores パターン絞り込みは、 採点側に「snippet の path」 が無いため
+    // 簡単には simulator できない。 黙って無視すると本物の ESLint と挙動が乖離し
+    // (codex P1: `files: ["**/*.test.js"]` 限定のルールが全 snippet に適用されてしまう)、
+    // 学習者は flat-config の誤った理解を持つことになる。 明示的なエラーで止める。
+    if (e.files !== undefined || e.ignores !== undefined) {
+      throw new Error(
+        "本採点では flat-config の files / ignores によるファイル絞り込みは未対応です。 " +
+          "rules はパターン無しで定義してください。",
+      );
+    }
     // 配列を `Object.assign` するとインデックスをキーにマージしてしまうので、 plain object のみを受ける。
     if (
       e.rules &&

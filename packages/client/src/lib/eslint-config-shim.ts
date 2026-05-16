@@ -64,6 +64,40 @@ export function buildEslintConfigExtractionCode(userCode: string): {
   var __fullPrefix = ${escapedPrefix};
   var __myModule = { exports: {} };
   var __captureError = null;
+
+  // JSON.stringify の lossy 挙動 (関数/Symbol/undefined の silent drop、 RegExp/Date/Map/Set
+  // が {} になる等) を採点に混入させないため、 シリアライズ前に値を再帰的に検査して
+  // plain object / array / string / number / boolean / null のみを許容する (codex P2)。
+  function __assertJsonSafe(value, path, seen) {
+    if (value === null) return;
+    var t = typeof value;
+    if (t === "string" || t === "number" || t === "boolean") return;
+    if (t === "function") throw new Error("関数値はサポートしていません (" + path + ")");
+    if (t === "symbol") throw new Error("Symbol 値はサポートしていません (" + path + ")");
+    if (t === "undefined") throw new Error("undefined 値はサポートしていません (" + path + ")");
+    if (t !== "object") throw new Error("サポート外の型: " + t + " (" + path + ")");
+    if (seen.indexOf(value) !== -1) throw new Error("循環参照を検出: " + path);
+    seen.push(value);
+    if (Array.isArray(value)) {
+      for (var i = 0; i < value.length; i++) {
+        __assertJsonSafe(value[i], path + "[" + i + "]", seen);
+      }
+      return;
+    }
+    var proto = Object.getPrototypeOf(value);
+    if (proto !== null && proto !== Object.prototype) {
+      throw new Error(
+        "plain object / array のみ受け付けます (RegExp / Date / Map / Set / クラスインスタンス は不可: " +
+          path + ")"
+      );
+    }
+    for (var k in value) {
+      if (Object.prototype.hasOwnProperty.call(value, k)) {
+        __assertJsonSafe(value[k], path ? path + "." + k : k, seen);
+      }
+    }
+  }
+
   try {
     (function (module, exports) {
 ${userCode}
@@ -76,11 +110,12 @@ ${userCode}
     __payload = JSON.stringify({ ok: false, error: __captureError });
   } else {
     try {
+      __assertJsonSafe(__myModule.exports, "module.exports", []);
       __payload = JSON.stringify({ ok: true, exports: __myModule.exports });
     } catch (e) {
       __payload = JSON.stringify({
         ok: false,
-        error: "config が JSON シリアライズ不能 (関数や循環参照を含んでいる可能性)",
+        error: (e && (e.message || String(e))) || "config の検証に失敗しました",
       });
     }
   }
