@@ -148,12 +148,23 @@ async function extractUserConfig(userCode: string): Promise<ExtractedConfig> {
 function lintScenario(code: string, config: ExtractedConfig): LintMessage[] {
   let messages: LintMessage[];
   try {
+    // 学習者の languageOptions を浅マージで上書きすると、 `globals` を渡された途端に
+    // 既定の `console` 等が消えて `no-undef` 誤検出が増え、 採点に通らなくなる
+    // (codex P2)。 globals だけは `GLOBALS` + 学習者指定の deep merge にする。
+    const userLO = config.languageOptions ?? {};
+    const userGlobalsRaw = userLO.globals;
+    const userGlobals =
+      userGlobalsRaw &&
+      typeof userGlobalsRaw === "object" &&
+      !Array.isArray(userGlobalsRaw)
+        ? (userGlobalsRaw as Record<string, unknown>)
+        : undefined;
     messages = linter.verify(code, {
       languageOptions: {
         ecmaVersion: 2022,
         sourceType: "script",
-        globals: GLOBALS,
-        ...(config.languageOptions ?? {}),
+        ...userLO,
+        globals: { ...GLOBALS, ...(userGlobals ?? {}) } as never,
       },
       rules: config.rules as never,
     });
