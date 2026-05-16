@@ -20,7 +20,11 @@ import {
   useState,
 } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { assignments, findAssignment } from "@jsreview/shared/assignments";
+import {
+  assignments,
+  assignmentsByStage,
+  findAssignment,
+} from "@jsreview/shared/assignments";
 import type { Assignment } from "@jsreview/shared/types";
 import {
   getEntryFile,
@@ -47,6 +51,8 @@ import { useGradeRunner } from "../hooks/useGradeRunner.js";
 import { useProgress } from "../hooks/useProgress.js";
 import { useRunResultReveal } from "../hooks/useRunResultReveal.js";
 import { useStageUnlocks } from "../hooks/useStageUnlocks.js";
+import { getClearedSnapshot } from "../lib/progress-store.js";
+import { hasShownClearPage } from "../lib/stage-clear-store.js";
 import { getRunner } from "../lib/runners/index.js";
 
 /**
@@ -134,11 +140,23 @@ function PracticePageInner({ assignment }: InnerProps) {
 
   // 採点完了でクリアになった瞬間に celebration ダイアログを自動オープン。
   // 通常結果 (未クリア) は下部パネルの「採点結果」タブに表示する。
+  //
+  // ただしこの 1 問でステージ内の全問題が cleared に揃い、 かつ初回なら、
+  // ダイアログを開かずステージクリア演出ページへ自動遷移する (#72)。
   useEffect(() => {
-    if (phase === "done" && result?.evaluation.cleared) {
-      setResultDialogOpen(true);
+    if (phase !== "done" || !result?.evaluation.cleared) {return;}
+    const stage = assignment.stage;
+    const stageAssignmentIds = assignmentsByStage(stage).map((a) => a.id);
+    const cleared = getClearedSnapshot();
+    const allCleared =
+      stageAssignmentIds.length > 0 &&
+      stageAssignmentIds.every((id) => cleared.has(id));
+    if (allCleared && !hasShownClearPage(stage)) {
+      navigate(`/stages/${stage}/clear`);
+      return;
     }
-  }, [phase, result]);
+    setResultDialogOpen(true);
+  }, [phase, result, assignment.stage, navigate]);
 
   // 一覧での順序に従う「次の課題」。最終問題なら null。
   // ダイアログでクリア時に「次の問題へ」リンクを出すために使う。

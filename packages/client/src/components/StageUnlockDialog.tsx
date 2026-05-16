@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { stages } from "@jsreview/shared/curriculum/stages";
 import type { Stage, StageInfo } from "@jsreview/shared/types";
 
@@ -29,8 +30,12 @@ const stageInfo: ReadonlyMap<Stage, StageInfo> = new Map(
   stages.map((s) => [s.id, s] as const),
 );
 
+const CLEAR_PAGE_PATH_RE = /^\/stages\/[^/]+\/clear\/?$/;
+
 export function StageUnlockDialog() {
   const [unlocked, setUnlocked] = useState<Stage | null>(null);
+  const location = useLocation();
+  const isClearPage = CLEAR_PAGE_PATH_RE.test(location.pathname);
 
   useEffect(() => {
     const tryConsume = () => {
@@ -43,11 +48,22 @@ export function StageUnlockDialog() {
     return unsub;
   }, []);
 
+  // ステージクリア演出ページ滞在中はステージ解禁ダイアログを抑止し、
+  // 演出と queue を一本化する (#72)。 ここで state を null に戻すことで、
+  // クリアページから他ルートへ遷移したあとに dialog が遅延発火しない。
+  useEffect(() => {
+    if (isClearPage && unlocked !== null) {
+      setUnlocked(null);
+    }
+  }, [isClearPage, unlocked]);
+
   function handleOpenChange(open: boolean) {
     if (open) {return;}
     // 閉じるタイミングで次の queue を覗く
     setUnlocked(consumeRecentUnlock() ?? null);
   }
+
+  if (isClearPage) {return null;}
 
   const open = unlocked !== null;
   const info = unlocked ? stageInfo.get(unlocked) : undefined;

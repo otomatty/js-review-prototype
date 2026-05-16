@@ -4,6 +4,7 @@
  * 画面の構造:
  * - `/`                              … ステージ選択 (SelectPage)
  * - `/stages/:stage`                 … ステージ詳細・章セクション (StagePage)
+ * - `/stages/:stage/clear`           … ステージクリア演出 (StageClearPage)
  * - `/problems/:assignmentId`        … 問題演習画面 (PracticePage)
  * - `/problems/:assignmentId/chat`   … AI 質問チャット画面 (ChatPage)
  * - その他                           … `/` へリダイレクト
@@ -15,6 +16,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { SelectPage } from "./pages/SelectPage.js";
 import { StagePage } from "./pages/StagePage.js";
+import { StageClearPage } from "./pages/StageClearPage.js";
 import { PracticePage } from "./pages/PracticePage.js";
 import { ChatPage } from "./pages/ChatPage.js";
 import { StageUnlockDialog } from "./components/StageUnlockDialog.js";
@@ -33,6 +35,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<SelectPage />} />
         <Route path="/stages/:stage" element={<StagePage />} />
+        <Route path="/stages/:stage/clear" element={<StageClearPage />} />
         <Route
           path="/problems/:assignmentId"
           element={<PracticePage />}
