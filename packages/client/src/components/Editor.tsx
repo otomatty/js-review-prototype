@@ -20,9 +20,10 @@ interface Props {
   entryPoints: string[];
   /**
    * 現在表示中のファイルの言語。 省略時は "javascript" 扱い。
-   * 非 JS (sql / python / ...) のときは ESLint linter を無効化する。
-   * SQL / Python の言語拡張 (`@codemirror/lang-sql` / `@codemirror/lang-python`) は
-   * 動的 import で取得し、 該当言語の課題を開いた瞬間にだけロードする (#109 / #108)。
+   * 非 JS (sql / python / php / ...) のときは ESLint linter を無効化する。
+   * SQL / Python / PHP の言語拡張 (`@codemirror/lang-sql` / `@codemirror/lang-python` /
+   * `@codemirror/lang-php`) は動的 import で取得し、 該当言語の課題を開いた瞬間にだけ
+   * ロードする (#109 / #108 / #112)。
    */
   language?: Language;
   /** 編集を禁止する (readonly ファイル表示用)。 */
@@ -109,6 +110,23 @@ export function Editor({
     };
   }, [language]);
 
+  // PHP の場合は `@codemirror/lang-php` を動的 import (vendor-php chunk に同梱、 #112)。
+  // ランナー (php-wasm) と同じく PHP 課題を開いた瞬間にしか fetch されない。
+  const [phpExtension, setPhpExtension] = useState<Extension | null>(null);
+  useEffect(() => {
+    if (language !== "php") {
+      setPhpExtension(null);
+      return;
+    }
+    let cancelled = false;
+    void import("@codemirror/lang-php").then((mod) => {
+      if (!cancelled) {setPhpExtension(mod.php());}
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
+
   const extensions = useMemo<Extension[]>(() => {
     const exts: Extension[] = [];
     if (language === "javascript") {
@@ -117,12 +135,14 @@ export function Editor({
       exts.push(sqlExtension);
     } else if (language === "python" && pythonExtension) {
       exts.push(pythonExtension);
+    } else if (language === "php" && phpExtension) {
+      exts.push(phpExtension);
     }
     if (eslintExtension) {
       exts.push(eslintExtension, lintGutter());
     }
     return exts;
-  }, [language, eslintExtension, sqlExtension, pythonExtension]);
+  }, [language, eslintExtension, sqlExtension, pythonExtension, phpExtension]);
 
   return (
     <CodeMirror

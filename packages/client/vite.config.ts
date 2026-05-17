@@ -65,11 +65,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // Pyodide ローダ + Python 用 CodeMirror 言語拡張を `vendor-pyodide` chunk に切り出す (#108)。
-        // 主バンドルが Pyodide を含まないため、 JS / SQL 学習者には ~10MB の追加コストが一切かからない。
+        // 言語別の重い依存を vendor chunk に切り出す。 主バンドルに含まれないため、
+        // 該当言語の課題を開かない学習者には追加コストが一切かからない (#108 / #112)。
+        // - vendor-pyodide: Pyodide ローダ + Python 言語拡張 (#108)
+        // - vendor-php:     PHP 言語拡張 (#112)。 php-wasm ローダ自体は CDN 直 fetch なので
+        //                   バンドルには含まれない。 chunk としては小さいが、 PHP 課題を
+        //                   開かない限り読み込まれないようにしておく。
         manualChunks(id) {
           if (id.includes("/node_modules/pyodide/")) {return "vendor-pyodide";}
           if (id.includes("/node_modules/@codemirror/lang-python/")) {return "vendor-pyodide";}
+          if (id.includes("/node_modules/@codemirror/lang-php/")) {return "vendor-php";}
           return undefined;
         },
       },
