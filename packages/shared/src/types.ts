@@ -14,10 +14,9 @@ export type Stage = "S0" | "S1" | "S2" | "S3" | "S4" | "S5";
 /**
  * 課題の対象言語。
  *
- * 実装済みランナーは `"javascript"` と `"sql"` のみ。
- * `"python"` / `"php"` / `"vitest"` / `"eslint"` は型としては予約済みだが、
- * `getRunner(language)` を呼ぶと placeholder ランナーが「未実装」 エラーを返す (#105)。
- * 実体の実装は roadmap (#100) の後続 issue で追加する。
+ * 全 6 言語のランナーが実装済み: `"javascript"` (#105) / `"sql"` (#109) /
+ * `"python"` (#108) / `"php"` (#112) / `"vitest"` (#110) / `"eslint"` (#111)。
+ * `getRunner(language)` で言語別ランナー実装を取得する。
  */
 export type Language =
   | "javascript"

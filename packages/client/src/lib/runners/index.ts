@@ -2,12 +2,11 @@
  * 言語別ランナーのディスパッチャ (#105 / #100)。
  *
  * `getRunner(language)` は `CodeRunner` インタフェースを満たす言語別実装を返す。
- * 未実装言語 (PHP) は placeholder ランナーが「未実装」 エラーを throw する設計で、
- * UI 側 (`useGradeRunner`) はそれを `RUNNER_ERROR` メッセージとしてそのまま表示する。
- * Python (#108) / Vitest (#110) / ESLint (#111) は実装済み。
+ * 全 6 言語が実装済み: JavaScript (#105) / SQL (#109) / Python (#108) /
+ * Vitest (#110) / ESLint (#111) / PHP (#112)。
  *
- * Vitest / ESLint ランナーは dynamic import で別 chunk 化し、 JS / SQL / Python 学習者の
- * 初期ロードに影響しないようにしている (#110 / #111 受け入れ条件: dynamic import で別 chunk)。
+ * Vitest / ESLint / PHP ランナーは dynamic import で別 chunk 化し、 JS / SQL / Python
+ * 学習者の初期ロードに影響しないようにしている (各 issue の受け入れ条件: dynamic import で別 chunk)。
  *
  * `runGrading` は採点呼び出し側 (`useGradeRunner`) 向けの薄いラッパで、
  * ランナーで実行した結果と手元の Lint / AST を合算して `evaluate()` を返す。
@@ -31,10 +30,6 @@ import { evaluate } from "@jsreview/shared/grading/evaluate";
 import { jsRunner } from "./js-runner.js";
 import { sqlRunner } from "./sql-runner.js";
 import { pythonRunner } from "./python-runner.js";
-import { createPlaceholderRunner } from "./placeholder-runner.js";
-
-/** 既存の placeholder インスタンスをキャッシュ (毎回新規生成しないため)。 */
-const placeholderCache = new Map<Language, CodeRunner>();
 
 /**
  * Vitest ランナーを dynamic import で遅延ロードする薄いラッパ (#110)。
@@ -61,6 +56,20 @@ const eslintConfigLazyRunner: CodeRunner = {
   },
 };
 
+/**
+ * PHP ランナーを dynamic import で遅延ロードする (#112)。
+ * `php-runner.ts` 自体は小さいが、 実行時に CDN から php-wasm のローダと wasm
+ * (~5MB+) を fetch する。 PHP 課題を開いた瞬間に初めて chunk + CDN ロードが走り、
+ * JS / SQL / Python 学習者の初期ロードには影響しない (受け入れ条件)。
+ */
+const phpLazyRunner: CodeRunner = {
+  language: "php",
+  async run(input) {
+    const mod = await import("./php-runner.js");
+    return mod.phpRunner.run(input);
+  },
+};
+
 export function getRunner(language: Language): CodeRunner {
   switch (language) {
     case "javascript":
@@ -73,13 +82,8 @@ export function getRunner(language: Language): CodeRunner {
       return vitestLazyRunner;
     case "eslint":
       return eslintConfigLazyRunner;
-    case "php": {
-      const cached = placeholderCache.get(language);
-      if (cached) {return cached;}
-      const created = createPlaceholderRunner(language);
-      placeholderCache.set(language, created);
-      return created;
-    }
+    case "php":
+      return phpLazyRunner;
     default: {
       const _exhaustive: never = language;
       void _exhaustive;
